@@ -20,8 +20,11 @@ users.each do |user|
   end
 
   25.times do
-    user.posts.find_or_create_by!(title: Faker::Book.title) do |post|
-      post.body = Faker::Lorem.paragraph
+    user.posts.find_or_create_by!(slug: Faker::Internet.slug) do |post|
+      post.body = Faker::Lorem.paragraphs(number: Faker::Number.number(digits: 2)).join("\n\n")
+      post.title = Faker::Book.title
+      post.published = Faker::Boolean.boolean
+      post.published_at = Faker::Date.between(from: 2.days.ago, to: Date.today)
     end
   end
 end
