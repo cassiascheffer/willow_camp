@@ -1,15 +1,24 @@
 <% content_for :title, "Showing post" %>
 
-<div class="md:w-2/3 w-full">
+<div class="max-w-3xl mx-auto px-4 py-8">
   <% if notice.present? %>
     <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-md inline-block" id="notice"><%= notice %></p>
   <% end %>
 
-  <h1 class="font-bold text-4xl">Showing post</h1>
+  <article class="prose lg:prose-xl mb-8">
+    <h1 class="font-bold text-4xl mb-6"><%= @post.title %></h1>
+    <div class="text-sm mb-4">
+      <p>Published on <%= @post.published_at.strftime("%B %d, %Y") %></p>
+    </div>
+    
+    <div class="pb-4 mb-6">
+      <%= render @post %>
+    </div>
+  </article>
 
-  <%= render @post %>
-
-  <%= link_to "Edit this post", edit_post_path(@post), class: "w-full sm:w-auto text-center rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
-  <%= link_to "Back to posts", posts_path, class: "w-full sm:w-auto text-center mt-2 sm:mt-0 sm:ml-2 rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
-  <%= button_to "Destroy this post", @post, method: :delete, form_class: "sm:inline-block mt-2 sm:mt-0 sm:ml-2", class: "w-full rounded-md px-3.5 py-2.5 text-white bg-red-600 hover:bg-red-500 font-medium cursor-pointer", data: { turbo_confirm: "Are you sure?" } %>
+  <div class="flex flex-wrap items-center gap-2 mt-8 pt-4 border-t border-gray-200 dark:border-gray-700">
+    <%= link_to "Edit this post", edit_post_path(@post), class: "text-xs rounded px-2.5 py-1 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 dark:bg-indigo-900/20 dark:text-indigo-300 dark:hover:bg-indigo-800/30 font-medium transition-colors" %>
+    <%= link_to "Back to posts", posts_path, class: "text-xs rounded px-2.5 py-1 bg-slate-50 text-slate-600 hover:bg-slate-100 dark:bg-slate-800/30 dark:text-slate-300 dark:hover:bg-slate-700/40 font-medium transition-colors" %>
+    <%= button_to "Destroy this post", @post, method: :delete, class: "text-xs rounded px-2.5 py-1 bg-rose-50 text-rose-600 hover:bg-rose-100 dark:bg-rose-900/20 dark:text-rose-300 dark:hover:bg-rose-800/30 font-medium cursor-pointer transition-colors", data: { turbo_confirm: "Are you sure?" } %>
+  </div>
 </div>

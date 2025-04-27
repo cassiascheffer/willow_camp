@@ -1,18 +1,5 @@
-<div id="<%= dom_id post %>" class="w-full sm:w-auto my-5 space-y-5">
-  <div>
-    <strong class="block font-medium mb-1">Title:</strong>
-    <%= post.title %>
-  </div>
-  <div>
-    <strong class="block font-medium mb-1">Body:</strong>
+<article id="<%= dom_id post %>" class="w-full max-w-3xl mx-auto my-8 p-6">
+  <div class="prose prose-sm sm:prose lg:prose-lg">
     <%= post.body %>
   </div>
-  <div>
-    <strong class="block font-medium mb-1">Published:</strong>
-    <%= post.published? ? "Yes" : "No" %>
-  </div>
-  <div>
-    <strong class="block font-medium mb-1">Published at:</strong>
-    <%= post.published_at %>
-  </div>
-</div>
+</article>
