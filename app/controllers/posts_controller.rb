@@ -10,7 +10,6 @@ class PostsController < ApplicationController
 
   # GET /posts/1 or /posts/1.json
   def show
-    @post_body = Redcarpet::Markdown.new(Redcarpet::Render::HTML, autolink: true, tables: true).render(@post.body)
   end
 
   private

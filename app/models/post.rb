@@ -2,6 +2,7 @@ class Post < ApplicationRecord
   belongs_to :author, class_name: "User", foreign_key: "author_id"
   before_save :set_slug
   before_create :set_published_at
+  before_save :set_html
 
   def to_key
     [ self.slug ]
@@ -20,6 +21,14 @@ class Post < ApplicationRecord
     def set_published_at
       if self.published && self.published_at.blank?
         self.published_at = DateTime.now
+      end
+    end
+
+    def set_html
+      if self.body_markdown.present?
+        renderer = Redcarpet::Render::HTML.new(hard_wrap: true, filter_html: true)
+        markdown = Redcarpet::Markdown.new(renderer, autolink: true, tables: true)
+        self.body_html = markdown.render(self.body_markdown)
       end
     end
 end
