@@ -17,8 +17,6 @@
   </article>
 
   <div class="flex flex-wrap items-center gap-2 mt-8 pt-4 border-t border-gray-200 dark:border-gray-700">
-    <%= link_to "Edit this post", edit_post_path(@post), class: "text-xs rounded px-2.5 py-1 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 dark:bg-indigo-900/20 dark:text-indigo-300 dark:hover:bg-indigo-800/30 font-medium transition-colors" %>
     <%= link_to "Back to posts", posts_path, class: "text-xs rounded px-2.5 py-1 bg-slate-50 text-slate-600 hover:bg-slate-100 dark:bg-slate-800/30 dark:text-slate-300 dark:hover:bg-slate-700/40 font-medium transition-colors" %>
-    <%= button_to "Destroy this post", @post, method: :delete, class: "text-xs rounded px-2.5 py-1 bg-rose-50 text-rose-600 hover:bg-rose-100 dark:bg-rose-900/20 dark:text-rose-300 dark:hover:bg-rose-800/30 font-medium cursor-pointer transition-colors", data: { turbo_confirm: "Are you sure?" } %>
   </div>
 </div>

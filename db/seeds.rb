@@ -9,8 +9,8 @@
 #   end
 
 users = [
-  { email_address: "winter@acorn.com", password: "winter", subdomain: "winter" },
-  { email_address: "willow@acorn.com", password: "willow", subdomain: "willow" }
+  { email_address: "winter@acorn.ca", password: "winter", subdomain: "winter" },
+  { email_address: "willow@acorn.ca", password: "willow", subdomain: "willow" }
 ]
 
 users.each do |user|

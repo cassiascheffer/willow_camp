@@ -1,5 +1,5 @@
-<article id="<%= dom_id post %>" class="w-full max-w-3xl mx-auto my-8 p-6">
+<article id="<%= dom_id post %>" class="w-full max-w-3xl mx-auto p-6">
   <div class="prose prose-sm sm:prose lg:prose-lg">
-    <%= post.body %>
+    <%= @post_body.html_safe %>
   </div>
 </article>
