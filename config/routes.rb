@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   get "dashboard" => "dashboard#show", as: :dashboard
   namespace :dashboard do
     resources :posts, except: %i[ index show ]
+    resources :users, only: %i[ edit update ]
   end
   constraints(subdomain: /.+/) do
     get "/", to: "posts#index", as: :posts
