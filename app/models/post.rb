@@ -3,6 +3,7 @@ class Post < ApplicationRecord
   before_save :set_slug
   before_create :set_published_at
   before_save :set_html
+  delegate :name, to: :author, prefix: true
 
   def to_key
     [ self.slug ]
@@ -26,9 +27,10 @@ class Post < ApplicationRecord
 
     def set_html
       if self.body_markdown.present?
-        renderer = Redcarpet::Render::HTML.new(hard_wrap: true, filter_html: true)
-        markdown = Redcarpet::Markdown.new(renderer, autolink: true, tables: true)
-        self.body_html = markdown.render(self.body_markdown)
+        self.body_html = Commonmarker.parse(self.body_markdown, options: {
+          extension: { footnotes: true },
+          parse: { smart: true }
+        }).to_html
       end
     end
 end

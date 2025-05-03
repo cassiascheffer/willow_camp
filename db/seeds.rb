@@ -12,8 +12,8 @@
 User.destroy_all
 
 users = [
-  { email_address: "winter@acorn.ca", password: "winter", subdomain: "winter" },
-  { email_address: "willow@acorn.ca", password: "willow", subdomain: "willow" }
+  { email_address: "winter@acorn.ca", password: "winter", subdomain: "winter", name: "Winter Solstice" },
+  { email_address: "willow@acorn.ca", password: "willow", subdomain: "willow", name: "Will-o-the-Whisp" }
 ]
 
 users.each do |user|
@@ -25,8 +25,8 @@ users.each do |user|
 
   25.times do
     user.posts.find_or_create_by!(slug: Faker::Internet.slug) do |post|
-      post.title = Faker::Book.title
-      post.body_markdown = Faker::Markdown.sandwich(sentences: 3, repeat: 2)
+      post.title = Faker::Books::Lovecraft.tome
+      post.body_markdown = Faker::Markdown.sandwich(sentences: 6, repeat: 3)
       post.published = Faker::Boolean.boolean
       post.published_at = Faker::Date.between(from: 2.days.ago, to: Date.today)
     end
