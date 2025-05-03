@@ -1,4 +1,4 @@
-name: "willow_blog"
+name: "willow_page"
 
 services:
   rails-app:

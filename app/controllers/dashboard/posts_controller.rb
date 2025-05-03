@@ -1,6 +1,6 @@
 class Dashboard::PostsController < ApplicationController
   layout "dashboard"
-  before_action :set_author
+  before_action :set_user
   before_action :set_post, only: %i[ edit update destroy ]
   before_action :authorize_user!, only: %i[ edit update destroy ]
 
@@ -10,7 +10,7 @@ class Dashboard::PostsController < ApplicationController
 
   def create
     @post = Post.new(post_params)
-    @post.author = @author
+    @post.author = @user
     if @post.save
       redirect_to dashboard_path, notice: "Post was successfully created."
     else
@@ -35,8 +35,8 @@ class Dashboard::PostsController < ApplicationController
   end
 
   private
-    def set_author
-      @author = Current.user
+    def set_user
+      @user = Current.user
     end
 
     def set_post
@@ -44,7 +44,7 @@ class Dashboard::PostsController < ApplicationController
     end
 
     def authorize_user!
-      unless @post.author == @author
+      unless @post.author == @user
         redirect_to dashboard_path, alert: "You are not authorized to perform this action."
       end
     end
