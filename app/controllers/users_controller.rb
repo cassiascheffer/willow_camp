@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  allow_unauthenticated_access only: [ :show, :create ]
   def new
     @user = User.new
   end
