@@ -18,6 +18,6 @@ class Dashboard::UsersController < ApplicationController
     end
 
     def user_params
-      params.require(:user).permit(:name, :email_address, :password, :password_confirmation, :subdomain)
+      params.require(:user).permit(:name, :email_address, :password, :password_confirmation, :subdomain, :blog_title, :theme)
     end
 end

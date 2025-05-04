@@ -25,7 +25,7 @@
 
       <div class="my-5">
         <%= form.label :name, class: "text-muted" %>
-        <%= form.text_field :name, required: true, class: "willow-input" %>
+        <%= form.text_field :name, required: false, class: "willow-input" %>
       </div>
 
       <div class="my-5">
@@ -44,13 +44,18 @@
       </div>
 
       <div class="my-5">
-        <%= form.label :blog_title, class: "text-muted" %>
-        <%= form.text_field :blog_title, required: true, class: "willow-input" %>
+        <%= form.label :blog_name, class: "text-muted" %>
+        <%= form.text_field :blog_title, required: false, class: "willow-input" %>
       </div>
 
       <div class="my-5">
         <%= form.label :subdomain, class: "text-muted" %>
         <%= form.text_field :subdomain, required: true, class: "willow-input" %>
+      </div>
+
+      <div class="my-5">
+        <%= form.label :theme, class: "text-muted" %>
+        <%= form.text_field :theme, required: false, class: "willow-input" %>
       </div>
 
       <div class="my-5">

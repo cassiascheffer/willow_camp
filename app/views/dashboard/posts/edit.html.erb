@@ -9,9 +9,9 @@
     <div class="flex flex-wrap gap-2 mt-4">
       <%= link_to "Delete", dashboard_post_path(@post), data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: "willow-button-secondary text-[#EF4444] dark:text-[#F87171] hover:bg-red-50 dark:hover:bg-red-900/10" %>
       <% if @post.published? %>
-        <%= link_to "View this post", post_url(@post.slug, subdomain: @post.author.subdomain), class: "willow-button-secondary", target: "_blank" %>
+        <%= link_to "View post", post_url(@post.slug, subdomain: @post.author.subdomain), class: "willow-button-secondary", target: "_blank" %>
       <% end %>
-      <%= link_to "Back to posts", dashboard_posts_path, class: "willow-button-secondary" %>
+      <%= link_to "Back to Dashboard", dashboard_path, class: "willow-button-secondary" %>
     </div>
   </div>
 </div>

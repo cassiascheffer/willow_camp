@@ -8,7 +8,7 @@
 @layer base {
   :root {
     /* Theme Selection - Change to 'solarized' to switch themes */
-    --theme: 'solarized';
+    --theme: 'tokyo';
 
     /* Tokyo Night Theme Colors */
     --tokyo-light-bg: #FAFAFA;
