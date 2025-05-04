@@ -18,25 +18,25 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="font-mono bg-[#FAFAFA] text-[#16161E] dark:bg-[#1A1B26] dark:text-[#A9B1D6] min-h-screen transition-colors duration-300">
+  <body>
     <% unless controller_name == 'home' && action_name == 'show' || controller_name == 'sessions' && action_name == 'new' %>
-      <header class="border-b border-gray-200 dark:border-gray-700 py-4 px-5">
+      <header class="border-b border-[#E5E7EB] dark:border-[#3A3D4D] py-4 px-5">
       <div class="container mx-auto flex justify-between items-center">
-      <a href="/" class="text-xl font-bold text-[#006A93] dark:text-[#7AA2F7]"><%= @author&.blog_title || "Willow Camp" %></a>
+      <a href="/" class="text-xl font-bold text-accent"><%= @author&.blog_title || "Willow Camp" %></a>
       <nav class="space-x-4">
-        <a href="/" class="hover:text-[#006A93] dark:hover:text-[#7AA2F7]">Home</a>
-        <a href="/posts class="hover:text-[#006A93] dark:hover:text-[#7AA2F7]">Posts</a>
+        <a href="/" class="bg-hover">Home</a>
+        <a href="/posts" class="bg-hover">Posts</a>
       </nav>
       </div>
       </header>
     <% end %>
     
-    <main class="container mx-auto py-8 px-5 md:px-8">
+    <main class="container-narrow">
       <%= yield %>
     </main>
     
-    <footer class="border-t border-gray-200 dark:border-gray-700 py-4 px-5 mt-12">
-      <div class="container mx-auto text-sm text-gray-500 dark:text-gray-400">
+    <footer class="border-t border-[#E5E7EB] dark:border-[#3A3D4D] py-4 px-5 mt-12">
+      <div class="container mx-auto text-sm text-muted">
         &copy; <%= Time.current.year %> Willow Camp
       </div>
     </footer>

@@ -1,13 +1,17 @@
 <% content_for :title, "Editing post" %>
 
-<div class="w-2/3 max-w-[800px] mx-auto">
-  <h1 class="font-bold text-4xl">Editing post</h1>
+<div class="container-narrow">
+  <div class="tokyo-card">
+    <h1 class="font-bold text-2xl mb-6">Editing post</h1>
 
-  <%= render "form", post: @post %>
+    <%= render "form", post: @post %>
 
-  <%= link_to "Delete", dashboard_post_path(@post), data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: "w-full sm:w-auto text-center mt-2 sm:mt-0 sm:ml-2 rounded-md px-3.5 py-2.5 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-600 inline-block font-medium" %>
-  <% if @post.published? %>
-    <%= link_to "View this post", post_url(@post.slug, subdomain: @post.author.subdomain), class: "w-full sm:w-auto text-center mt-2 sm:mt-0 sm:ml-2 rounded-md px-3.5 py-2.5 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-600 inline-block font-medium" %>
-  <% end %>
-  <%= link_to "Back to posts", dashboard_posts_path, class: "w-full sm:w-auto text-center mt-2 sm:mt-0 sm:ml-2 rounded-md px-3.5 py-2.5 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-600 inline-block font-medium" %>
+    <div class="flex flex-wrap gap-2 mt-4">
+      <%= link_to "Delete", dashboard_post_path(@post), data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: "tokyo-button-secondary text-[#EF4444] dark:text-[#F87171] hover:bg-red-50 dark:hover:bg-red-900/10" %>
+      <% if @post.published? %>
+        <%= link_to "View this post", post_url(@post.slug, subdomain: @post.author.subdomain), class: "tokyo-button-secondary", target: "_blank" %>
+      <% end %>
+      <%= link_to "Back to posts", dashboard_posts_path, class: "tokyo-button-secondary" %>
+    </div>
+  </div>
 </div>

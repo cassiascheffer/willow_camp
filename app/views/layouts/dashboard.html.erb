@@ -18,46 +18,46 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="font-mono bg-[#FAFAFA] text-[#16161E] dark:bg-[#1A1B26] dark:text-[#A9B1D6] min-h-screen transition-colors duration-300">
+  <body>
     <% if flash.any? %>
       <div id="flash-messages" class="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 w-11/12 max-w-md">
         <% flash.each do |type, message| %>
           <% 
             case type.to_s
             when "notice"
-              alert_class = "bg-green-50 border-green-200 text-green-700"
+              alert_class = "tokyo-notice"
             when "alert"
-              alert_class = "bg-red-50 border-red-200 text-red-700"
+              alert_class = "tokyo-alert"
             else
-              alert_class = "bg-blue-50 border-blue-200 text-blue-700"
+              alert_class = "tokyo-notice"
             end
           %>
-          <div class="<%= alert_class %> border px-4 py-3 rounded relative shadow-lg" role="alert">
+          <div class="<%= alert_class %> shadow-lg" role="alert">
             <span class="block sm:inline"><%= message %></span>
-            <button onclick="this.parentElement.remove();" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
+            <button onclick="this.parentElement.remove();" class="absolute top-2 right-2 text-muted hover:text-accent">
               &times;
             </button>
           </div>
         <% end %>
       </div>
     <% end %>
-    <nav class="bg-white dark:bg-gray-800 shadow">
+    <nav class="bg-card shadow-md">
       <div class="container mx-auto px-5 md:px-8 py-3 flex items-center justify-between">
-      <div class="text-lg font-bold">
+      <div class="text-lg font-bold text-accent">
         <%= @user.blog_title %>
       </div>
       <div>
-        <%= link_to "Edit Profile", edit_dashboard_user_path(@user), class: "text-blue-500 hover:text-blue-700" %>
+        <%= link_to "Edit Profile", edit_dashboard_user_path(@user), class: "text-accent hover:text-[#005273] dark:hover:text-[#5D7FE3]" %>
       </div>
       </div>
     </nav>
 
-    <main class="container mx-auto py-8 px-5 md:px-8">
+    <main class="container-standard">
       <%= yield %>
     </main>
 
-    <footer class="border-t border-gray-200 dark:border-gray-700 py-4 px-5 mt-12">
-      <div class="container mx-auto text-sm text-gray-500 dark:text-gray-400">
+    <footer class="border-t border-[#E5E7EB] dark:border-[#3A3D4D] py-4 px-5 mt-12">
+      <div class="container mx-auto text-sm text-muted">
         &copy; <%= Time.current.year %> Willow Camp
       </div>
     </footer>
