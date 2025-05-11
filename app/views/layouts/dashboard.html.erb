@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html data-theme=<%= @user&.theme || "tokyo" %>
   <head>
-    <title><%= content_for(:title) || "Willow Camp" %></title>
+    <title><%= content_for(:title) || "willow.camp" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
@@ -44,7 +44,7 @@
     <nav class="bg-card shadow-md">
       <div class="container mx-auto px-5 md:px-8 py-3 flex items-center justify-between">
       <div class="text-lg font-bold text-accent">
-        <%= @user.blog_title %>
+        <%= @user.blog_title || "#{@user.subdomain}.willow.camp" %>
       </div>
       <div>
         <%= link_to "Settings", edit_dashboard_user_path(@user), class: "text-accent hover:text-[#005273] dark:hover:text-[#5D7FE3]" %>
