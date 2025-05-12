@@ -1,5 +1,5 @@
 <%= turbo_stream.replace @user do %>
-  <%= render "dashboard/settings/form", user: @user %>
+  <%= render "dashboard/settings/user_form", user: @user %>
 <% end %>
 
 <%= turbo_stream.replace "flash" do %>
@@ -8,4 +8,15 @@
       <p class="notice" id="notice"><%= notice %></p>
     <% end %>
   </div>
+<% end %>
+
+<%= turbo_stream.append "flash-messages" do %>
+  <% if notice = flash[:notice] %>
+    <div class="willow-notice shadow-lg" role="alert">
+      <span class="block sm:inline"><%= notice %></span>
+      <button onclick="this.parentElement.remove();" class="absolute top-2 right-2 text-muted hover:text-accent">
+        &times;
+      </button>
+    </div>
+  <% end %>
 <% end %>

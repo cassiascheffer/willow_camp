@@ -3,8 +3,8 @@
     <%= render "dashboard/settings/token_form", token: UserToken.new %>
   <% end %>
 
-  <%= turbo_stream.replace "token_list" do %>
-    <%= render "dashboard/settings/token_list", token: @token %>
+  <%= turbo_stream.replace "tokens" do %>
+    <%= render "dashboard/settings/token_list", tokens: @tokens %>
   <% end %>
 
   <%= turbo_stream.replace "flash" do %>

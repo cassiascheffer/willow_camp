@@ -1,4 +1,4 @@
-class Api::PostsController < ApplicationController
+class Api::PostsController < Api::BaseController
   def create
     @post = Post.new(post_params)
     if @post.save
