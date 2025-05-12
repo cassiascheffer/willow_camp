@@ -1,0 +1,2 @@
+module Dashboard::TokensHelper
+end

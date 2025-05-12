@@ -47,7 +47,7 @@
         <%= @user.blog_title || "#{@user.subdomain}.willow.camp" %>
       </div>
       <div>
-        <%= link_to "Settings", edit_dashboard_user_path(@user), class: "text-accent hover:text-[#005273] dark:hover:text-[#5D7FE3]" %>
+        <%= link_to "Settings", dashboard_settings_path, class: "text-accent hover:text-[#005273] dark:hover:text-[#5D7FE3]" %>
       </div>
       </div>
     </nav>

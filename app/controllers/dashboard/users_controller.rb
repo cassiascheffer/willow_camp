@@ -4,11 +4,14 @@ class Dashboard::UsersController < ApplicationController
   end
 
   def update
-    if @user.update!(user_params)
-      redirect_to dashboard_path, notice: "Your profile has been updated."
-    else
-      format.html { render :edit, status: :unprocessable_entity, notice: "There was a problem updating your profile." }
-      format.json { render json: @user.errors, status: :unprocessable_entity }
+    respond_to do |format|
+      if @user.update(user_params)
+        format.turbo_stream { flash.now[:notice] = "Your profile has been updated." }
+        format.html { redirect_to dashboard_settings_path, notice: "Your profile has been updated." }
+      else
+        format.turbo_stream { render turbo_stream: turbo_stream.replace(@user, partial: "dashboard/settings/form", locals: { user: @user }) }
+        format.html { render "dashboard/settings/show", status: :unprocessable_entity }
+      end
     end
   end
 
