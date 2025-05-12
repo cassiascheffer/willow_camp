@@ -239,7 +239,7 @@
   }
   
   .willow-table-wrapper {
-    @apply overflow-scroll shadow ring-1 ring-black ring-opacity-5 md:rounded-lg;
+    @apply overflow-scroll shadow ring-1 ring-black md:rounded-lg;
   }
   
   .willow-table {
