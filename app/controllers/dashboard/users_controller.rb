@@ -1,5 +1,6 @@
-class Dashboard::UsersController < ApplicationController
+class Dashboard::UsersController < Dashboard::BaseController
   before_action :set_user, only: [ :edit, :update ]
+
   def edit
   end
 
