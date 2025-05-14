@@ -13,7 +13,7 @@ Rails.application.routes.draw do
     get "/:slug", to: "posts#show", as: :post
   end
   namespace :api do
-    resources :posts, only: %i[ create]
+    resources :posts, param: :id
   end
   get "up" => "rails/health#show", as: :rails_health_check
   root "home#show"

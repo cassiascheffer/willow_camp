@@ -5,6 +5,8 @@ class Post < ApplicationRecord
   before_save :set_html
   delegate :name, to: :author, prefix: true
 
+  validates :title, presence: true
+
   def to_key
     [ self.slug ]
   end

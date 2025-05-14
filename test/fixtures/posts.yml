@@ -1,17 +1,19 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  title: MyString
-  body: MyText
+  title: My First Post
+  body_markdown: "# Hello World\n\nThis is a test post."
+  body_html: "<h1>Hello World</h1>\n<p>This is a test post.</p>"
   author_id: <%= ActiveRecord::FixtureSet.identify(:one) %>
-  published: false
+  published: true
   published_at: 2025-04-27 13:32:14
   slug: 'my-post'
 
 two:
-  title: MyString
-  body: MyText
+  title: My Second Post
+  body_markdown: "# Hello Again\n\nThis is another test post."
+  body_html: "<h1>Hello Again</h1>\n<p>This is another test post.</p>"
   author_id: <%= ActiveRecord::FixtureSet.identify(:two) %>
   published: false
   published_at: 2025-04-27 13:32:14
-  slug: 'my-post-1'
+  slug: 'my-post-2'
