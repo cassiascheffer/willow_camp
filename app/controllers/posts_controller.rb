@@ -18,7 +18,7 @@ class PostsController < ApplicationController
     end
 
     def set_post
-      @post = Post.find_by(slug: params.expect(:slug), author: @author, published: true)
+      @post = Post.find_by(slug: params[:slug], author: @author, published: true)
       if @post.nil?
         redirect_to posts_path, alert: "Post not found."
       end
