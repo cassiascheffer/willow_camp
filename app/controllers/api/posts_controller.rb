@@ -1,6 +1,6 @@
 class Api::PostsController < Api::BaseController
-  before_action :set_post, only: [:show, :update, :destroy]
-  before_action :ensure_author, only: [:show, :update, :destroy]
+  before_action :set_post, only: [ :show, :update, :destroy ]
+  before_action :ensure_author, only: [ :show, :update, :destroy ]
 
   def index
     @posts = Post.where(author: @current_user)
@@ -14,7 +14,7 @@ class Api::PostsController < Api::BaseController
   def create
     @post = Post.new(post_params)
     @post.author = @current_user
-    
+
     if @post.save
       render json: { post: @post }, status: :created
     else
