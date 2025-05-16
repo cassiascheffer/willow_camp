@@ -103,7 +103,6 @@ class Api::PostsControllerTest < ActionDispatch::IntegrationTest
           as: :json
     assert_response :unauthorized
 
-    # Verify post was not updated
     @post.reload
     assert_not_equal "Updated Title", @post.title
   end

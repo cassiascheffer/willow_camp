@@ -9,21 +9,26 @@ class Dashboard::UsersController < Dashboard::BaseController
       if @user.update(user_params)
         format.turbo_stream do
           flash.now[:notice] = "Your profile has been updated."
+          render turbo_stream: turbo_stream.replace(@user, partial: "dashboard/settings/user_form", locals: { user: @user })
         end
-        format.html { redirect_to dashboard_path, notice: "Your profile has been updated." }
       else
         format.turbo_stream do
           flash.now[:alert] = "There was a problem updating your profile."
           render turbo_stream: turbo_stream.replace(@user, partial: "dashboard/settings/user_form", locals: { user: @user })
         end
-        format.html { render :edit, status: :unprocessable_entity, alert: "There was a problem updating your profile." }
       end
     end
   end
 
   private
     def set_user
-      @user = Current.user
+      if params[:id].present?
+        @user = User.find_by(id: params[:id])
+      end
+
+      if @user != Current.user
+        head :not_found
+      end
     end
 
     def user_params

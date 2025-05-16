@@ -22,7 +22,6 @@ class Api::BaseControllerTest < ActionDispatch::IntegrationTest
   end
 
   teardown do
-    # Reset routes to their original state
     Rails.application.reload_routes!
   end
 
