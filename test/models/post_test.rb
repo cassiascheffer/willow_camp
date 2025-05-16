@@ -3,13 +3,13 @@ require "test_helper"
 class PostTest < ActiveSupport::TestCase
   setup do
     @post = Post.new(
-      author: users(:one), 
+      author: users(:one),
       title: "Test Post",
       body_markdown: "Test content",
       published: true
     )
   end
-  
+
   test "should be valid with required attributes" do
     assert @post.valid?, "Post with required attributes should be valid"
   end
@@ -39,17 +39,18 @@ class PostTest < ActiveSupport::TestCase
       title: "Original Test Post",
       slug: "test-slug-#{SecureRandom.hex(4)}"
     )
-    
+
     # Try to create another post with the same slug
     post2 = Post.new(
       author: users(:two),
-      title: "Duplicate Slug Post", 
+      title: "Duplicate Slug Post",
       slug: post1.slug
     )
-    
-    # It should fail validation
-    assert_not post2.valid?
-    assert_includes post2.errors[:slug], "has already been taken"
+
+    # The model should auto-correct the slug to be unique
+    post2.valid?
+    assert_not_equal post2.slug, post1.slug, "Slug should be changed to a unique value"
+    assert post2.valid?, "Post with duplicate slug should be valid after auto-correction"
   end
 
   test "should generate slug if not provided" do
@@ -62,23 +63,23 @@ class PostTest < ActiveSupport::TestCase
     # Nil is allowed by the model
     @post.published = nil
     assert @post.valid?
-    
+
     # Non-boolean values should be coerced by Rails
     # This is how Rails typically handles boolean attributes
     @post.published = true
     assert @post.valid?
-    
+
     @post.published = false
     assert @post.valid?
   end
 
   test "should set published_at when published" do
     post = Post.new(
-      author: users(:one), 
-      title: "Test Post", 
+      author: users(:one),
+      title: "Test Post",
       published: true
     )
-    
+
     assert_nil post.published_at
     post.save!
     assert_not_nil post.published_at
