@@ -10,9 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_17_112950) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_17_201224) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "friendly_id_slugs", force: :cascade do |t|
+    t.string "slug", null: false
+    t.integer "sluggable_id", null: false
+    t.string "sluggable_type", limit: 50
+    t.string "scope"
+    t.datetime "created_at"
+    t.index ["slug", "sluggable_type", "scope"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type_and_scope", unique: true
+    t.index ["slug", "sluggable_type"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type"
+    t.index ["sluggable_type", "sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_type_and_sluggable_id"
+  end
 
   create_table "posts", force: :cascade do |t|
     t.string "title"
@@ -21,15 +32,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_17_112950) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "author_id", null: false
-    t.string "slug", null: false
     t.text "body_markdown"
     t.text "body_html"
-    t.string "base_slug"
-    t.integer "slug_suffix", default: 0
-    t.index ["author_id", "slug"], name: "index_posts_on_author_id_and_slug", unique: true
+    t.string "slug"
     t.index ["author_id"], name: "index_posts_on_author_id"
-    t.index ["base_slug", "slug_suffix"], name: "index_posts_on_base_slug_and_slug_suffix"
-    t.index ["base_slug"], name: "index_posts_on_base_slug"
+    t.index ["slug"], name: "index_posts_on_slug", unique: true
   end
 
   create_table "sessions", force: :cascade do |t|
@@ -63,7 +70,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_17_112950) do
     t.string "theme"
     t.string "token"
     t.datetime "token_expires_at", precision: nil
+    t.string "slug"
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
+    t.index ["slug"], name: "index_users_on_slug", unique: true
     t.index ["subdomain"], name: "index_users_on_subdomain", unique: true
   end
 

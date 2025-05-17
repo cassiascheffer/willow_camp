@@ -1,6 +1,6 @@
 class Post < ApplicationRecord
-  include Sluggable
-  slug_unique_within_scope :author_id
+  extend FriendlyId
+  friendly_id :title, use: [ :sequentially_slugged, :scoped ], scoped: :author
 
   belongs_to :author, class_name: "User", foreign_key: "author_id"
 
@@ -13,6 +13,10 @@ class Post < ApplicationRecord
   validates :published, inclusion: { in: [ true, false ] }, allow_nil: true
   validates :body_markdown, length: { maximum: 100000 }, allow_blank: true
 
+  # Determines when friendly_id should generate a new slug
+  def should_generate_new_friendly_id?
+    title_changed? || super
+  end
 
   private
 

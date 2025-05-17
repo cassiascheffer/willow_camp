@@ -286,23 +286,22 @@ class SluggableTest < ActiveSupport::TestCase
       published: true
     )
 
+    assert_equal "wow", first.slug
+
     second = SluggedModel.create!(
       author_id: @user_one.id,
       title: "Wow",
       published: true
     )
+    assert_equal "wow-2", second.slug
 
     third = SluggedModel.create!(
-      author_id: @user_one.id,
-      title: "Second Wow",
-      slug: "wow-2",
-      published: true
-    )
-
-    # Should auto-increment the suffix
-    assert_equal "wow", first.slug
-    assert_equal "wow-2", second.slug
-    assert_equal "wow-2-2", third.slug
+        author_id: @user_one.id,
+        title: "Second Wow",
+        slug: "wow-2",
+        published: true
+      )
+    assert_equal "wow-3", third.slug
   end
 
   test "should handle numeric slugs properly" do
