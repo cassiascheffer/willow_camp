@@ -38,7 +38,7 @@ class Dashboard::PostsController < Dashboard::BaseController
     end
 
     def set_post
-      @post = Post.find(params[:id])
+      @post = Post.find_by(slug: params[:slug])
     end
 
     def authorize_user!

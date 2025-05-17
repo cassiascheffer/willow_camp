@@ -70,7 +70,7 @@ class Api::PostsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should get post by slug if owned by current user" do
-    get api_post_url(id: @post.slug), headers: @headers, as: :json
+    get api_post_url(slug: @post.slug), headers: @headers, as: :json
     assert_response :success
 
     json_response = JSON.parse(response.body)
@@ -79,7 +79,7 @@ class Api::PostsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should not get post by slug if not owned by current user" do
-    get api_post_url(id: @post_two.slug), headers: @headers, as: :json
+    get api_post_url(slug: @post_two.slug), headers: @headers, as: :json
     assert_response :forbidden
 
     json_response = JSON.parse(response.body)
@@ -87,7 +87,7 @@ class Api::PostsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update post" do
-    patch api_post_url(id: @post.slug),
+    patch api_post_url(slug: @post.slug),
           params: { post: { title: "Updated Title" } },
           headers: @headers,
           as: :json
@@ -98,7 +98,7 @@ class Api::PostsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should not update post without authentication" do
-    patch api_post_url(id: @post.slug),
+    patch api_post_url(slug: @post.slug),
           params: { post: { title: "Updated Title" } },
           as: :json
     assert_response :unauthorized
@@ -109,14 +109,14 @@ class Api::PostsControllerTest < ActionDispatch::IntegrationTest
 
   test "should delete post" do
     assert_difference("Post.count", -1) do
-      delete api_post_url(id: @post.slug), headers: @headers, as: :json
+      delete api_post_url(slug: @post.slug), headers: @headers, as: :json
     end
     assert_response :no_content
   end
 
   test "should not delete post without authentication" do
     assert_no_difference("Post.count") do
-      delete api_post_url(id: @post.slug), as: :json
+      delete api_post_url(slug: @post.slug), as: :json
     end
     assert_response :unauthorized
   end
