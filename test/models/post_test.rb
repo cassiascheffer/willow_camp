@@ -69,4 +69,6 @@ class PostTest < ActiveSupport::TestCase
     post = Post.create(author: user, title: "Test Post")
     assert_equal user.id, post.author_id, "Post's author_id should match the author's id"
   end
+
+
 end
