@@ -6,6 +6,7 @@ class SluggedModelWithCustomSource < ApplicationRecord
 
   include Sluggable
   slug_source :body_markdown
+  slug_unique_within_scope :author_id
 
   def published?
     self[:published] || false
@@ -17,6 +18,20 @@ class SluggedModel < ApplicationRecord
   self.table_name = "posts" # Reuse posts table for testing
 
   include Sluggable
+  slug_unique_within_scope :author_id
+
+  # Add a published method to satisfy the Sluggable concern's dependency
+  def published?
+    self[:published] || false
+  end
+end
+
+# Test model class with scoped uniqueness
+class ScopedSluggedModel < ApplicationRecord
+  self.table_name = "posts" # Reuse posts table for testing
+
+  include Sluggable
+  slug_unique_within_scope :author_id
 
   # Add a published method to satisfy the Sluggable concern's dependency
   def published?
@@ -30,9 +45,10 @@ end
 
 class SluggableTest < ActiveSupport::TestCase
   setup do
-    @user = users(:one)
+    @user_one = users(:one)
+    @user_two = users(:two)
     @model = SluggedModel.new(
-      author_id: @user.id, # Required by the post table schema
+      author_id: @user_one.id, # Required by the post table schema
       title: "Test Sluggable",
       body_markdown: "Test content"
     )
@@ -54,7 +70,7 @@ class SluggableTest < ActiveSupport::TestCase
 
     # Second model with the same title
     second_model = SluggedModel.new(
-      author_id: @user.id,
+      author_id: @user_one.id,
       title: "Test Sluggable"
     )
     second_model.save!
@@ -64,7 +80,7 @@ class SluggableTest < ActiveSupport::TestCase
 
     # Third model with the same title
     third_model = SluggedModel.new(
-      author_id: @user.id,
+      author_id: @user_one.id,
       title: "Test Sluggable"
     )
     third_model.save!
@@ -76,14 +92,14 @@ class SluggableTest < ActiveSupport::TestCase
   test "should validate slug uniqueness" do
     # Create a model with a specific slug
     model1 = SluggedModel.create!(
-      author_id: @user.id,
+      author_id: @user_one.id,
       title: "Original Test Model",
       slug: "test-slug-#{SecureRandom.hex(4)}"
     )
 
     # Try to create another model with the same slug
     model2 = SluggedModel.new(
-      author_id: @user.id,
+      author_id: @user_one.id,
       title: "Duplicate Slug Model",
       slug: model1.slug
     )
@@ -148,9 +164,9 @@ class SluggableTest < ActiveSupport::TestCase
 
   test "should handle deletion and maintain correct suffix sequence" do
     # Create models with same title
-    model1 = SluggedModel.create!(author_id: @user.id, title: "Sequence Test")
-    model2 = SluggedModel.create!(author_id: @user.id, title: "Sequence Test")
-    model3 = SluggedModel.create!(author_id: @user.id, title: "Sequence Test")
+    model1 = SluggedModel.create!(author_id: @user_one.id, title: "Sequence Test")
+    model2 = SluggedModel.create!(author_id: @user_one.id, title: "Sequence Test")
+    model3 = SluggedModel.create!(author_id: @user_one.id, title: "Sequence Test")
 
     assert_equal "sequence-test", model1.slug
     assert_equal "sequence-test-2", model2.slug
@@ -160,7 +176,7 @@ class SluggableTest < ActiveSupport::TestCase
     model2.destroy
 
     # Create a new model with the same title
-    model4 = SluggedModel.create!(author_id: @user.id, title: "Sequence Test")
+    model4 = SluggedModel.create!(author_id: @user_one.id, title: "Sequence Test")
 
     # Should use next suffix (4), not reuse the deleted model's suffix
     assert_equal "sequence-test-4", model4.slug
@@ -169,7 +185,7 @@ class SluggableTest < ActiveSupport::TestCase
   test "should handle custom slugs with numbers correctly" do
     # Create a model with a custom slug that contains numbers
     model1 = SluggedModel.create!(
-      author_id: @user.id,
+      author_id: @user_one.id,
       title: "Title Doesn't Matter",
       slug: "watermelon-1"
     )
@@ -180,7 +196,7 @@ class SluggableTest < ActiveSupport::TestCase
 
     # Create another model with the same custom slug
     model2 = SluggedModel.create!(
-      author_id: @user.id,
+      author_id: @user_one.id,
       title: "Different Title",
       slug: "watermelon-1"
     )
@@ -191,7 +207,7 @@ class SluggableTest < ActiveSupport::TestCase
 
     # Create a third model with the same custom slug
     model3 = SluggedModel.create!(
-      author_id: @user.id,
+      author_id: @user_one.id,
       title: "Yet Another Title",
       slug: "watermelon-1"
     )
@@ -203,7 +219,7 @@ class SluggableTest < ActiveSupport::TestCase
 
   test "should use default title as slug source when not specified" do
     model = SluggedModel.new(
-      author_id: @user.id,
+      author_id: @user_one.id,
       title: "Test Title",
       body_markdown: "Test Content"
     )
@@ -215,7 +231,7 @@ class SluggableTest < ActiveSupport::TestCase
 
   test "should use custom field as slug source when specified" do
     model = SluggedModelWithCustomSource.new(
-      author_id: @user.id,
+      author_id: @user_one.id,
       title: "Test Title",
       body_markdown: "Custom Slug Source"
     )
@@ -232,7 +248,7 @@ class SluggableTest < ActiveSupport::TestCase
 
   test "should update slug based on custom slug source when changed" do
     model = SluggedModelWithCustomSource.new(
-      author_id: @user.id,
+      author_id: @user_one.id,
       title: "Test Title",
       body_markdown: "Original Content",
       published: false
@@ -249,14 +265,14 @@ class SluggableTest < ActiveSupport::TestCase
 
   test "should inherit slug_source from parent class" do
     parent = SluggedModelWithCustomSource.new(
-      author_id: @user.id,
+      author_id: @user_one.id,
       title: "Parent Title",
       body_markdown: "Parent Content",
       published: false
     )
 
     child = ChildSluggedModel.new(
-      author_id: @user.id,
+      author_id: @user_one.id,
       title: "Child Title",
       body_markdown: "Child Content",
       published: false
@@ -275,7 +291,7 @@ class SluggableTest < ActiveSupport::TestCase
   test "should handle custom slugs that already exist" do
     # Create the first model with a custom slug
     model1 = SluggedModel.create!(
-      author_id: @user.id,
+      author_id: @user_one.id,
       title: "First Wow",
       slug: "wow-1",
       published: true
@@ -284,7 +300,7 @@ class SluggableTest < ActiveSupport::TestCase
 
     # Try creating a second model with the same slug
     model2 = SluggedModel.create!(
-      author_id: @user.id,
+      author_id: @user_one.id,
       title: "Second Wow",
       slug: "wow-1",
       published: true
@@ -298,7 +314,7 @@ class SluggableTest < ActiveSupport::TestCase
 
   test "should handle numeric slugs properly" do
     model1 = SluggedModel.create!(
-      author_id: @user.id,
+      author_id: @user_one.id,
       title: "Numeric Test",
       slug: "123",
       published: true
@@ -306,7 +322,7 @@ class SluggableTest < ActiveSupport::TestCase
     assert_equal "123", model1.slug
 
     model2 = SluggedModel.create!(
-      author_id: @user.id,
+      author_id: @user_one.id,
       title: "Numeric Test 2",
       slug: "123",
       published: true
@@ -314,5 +330,87 @@ class SluggableTest < ActiveSupport::TestCase
     assert_equal "123-2", model2.slug
     assert_equal "123", model2.base_slug
     assert_equal 2, model2.slug_suffix
+  end
+
+  test "should allow same slug for different scopes" do
+    # Use fixture users
+    @user_one = users(:one)
+    @user_two = users(:two)
+
+    # Create a model with a slug for the first user
+    model1 = ScopedSluggedModel.create!(
+      author_id: @user_one.id,
+      title: "Scoped Test",
+      published: true
+    )
+    assert_equal "scoped-test", model1.slug
+    assert_equal 1, model1.slug_suffix
+
+    # Create a model with the same slug but for a different user
+    model2 = ScopedSluggedModel.create!(
+      author_id: @user_two.id,
+      title: "Scoped Test",
+      published: true
+    )
+
+    # Should have the same slug, not incremented, because it's a different scope
+    assert_equal "scoped-test", model2.slug
+    assert_equal 1, model2.slug_suffix
+  end
+
+  test "should enforce unique slugs within same scope" do
+    # Create a model with a slug
+    model1 = ScopedSluggedModel.create!(
+      author_id: @user_one.id,
+      title: "Scope Unique Test",
+      published: true
+    )
+    assert_equal "scope-unique-test", model1.slug
+
+    # Create another model with the same slug in the same scope
+    model2 = ScopedSluggedModel.create!(
+      author_id: @user_one.id,
+      title: "Scope Unique Test",
+      published: true
+    )
+
+    # Should increment the slug suffix within the same scope
+    assert_equal "scope-unique-test-2", model2.slug
+    assert_equal "scope-unique-test", model2.base_slug
+    assert_equal 2, model2.slug_suffix
+  end
+
+  test "should handle custom slug with scope" do
+    # Create a model with a custom slug
+    model1 = ScopedSluggedModel.create!(
+      author_id: @user_one.id,
+      title: "Title Doesn't Matter",
+      slug: "custom-scoped-slug",
+      published: true
+    )
+    assert_equal "custom-scoped-slug", model1.slug
+
+    # Create a model with the same custom slug in a different scope
+    model2 = ScopedSluggedModel.create!(
+      author_id: @user_two.id,
+      title: "Title Irrelevant",
+      slug: "custom-scoped-slug",
+      published: true
+    )
+
+    # Should have the same slug since it's a different scope
+    assert_equal "custom-scoped-slug", model2.slug
+
+    # Create another model with the same custom slug in the same scope
+    model3 = ScopedSluggedModel.create!(
+      author_id: @user_one.id,
+      title: "Another Irrelevant Title",
+      slug: "custom-scoped-slug",
+      published: true
+    )
+
+    # Should increment the suffix for the same scope
+    assert_equal "custom-scoped-slug-2", model3.slug
+    assert_equal 2, model3.slug_suffix
   end
 end
