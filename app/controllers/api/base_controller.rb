@@ -1,4 +1,5 @@
 class Api::BaseController < ApplicationController
+  skip_before_action :verify_authenticity_token
   allow_unauthenticated_access
   before_action :authenticate_with_token!
 

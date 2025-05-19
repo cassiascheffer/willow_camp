@@ -59,17 +59,17 @@ class Api::PostsControllerTest < ActionDispatch::IntegrationTest
   test "should get index with only current user's posts" do
     get api_posts_url, headers: @headers, as: :json
     assert_response :success
-    
+
     json_response = JSON.parse(response.body)
     assert_includes json_response, "posts"
     assert_instance_of Array, json_response["posts"]
-    
+
     # Verify only posts belonging to the current user are returned
     post_ids = json_response["posts"].map { |p| p["id"] }
-    
+
     # Should include the user's own post
     assert_includes post_ids, @post.id
-    
+
     # Should not include other users' posts
     assert_not_includes post_ids, @post_two.id
   end
@@ -77,7 +77,7 @@ class Api::PostsControllerTest < ActionDispatch::IntegrationTest
   test "should get post by slug if owned by current user" do
     get api_post_url(id: @post.slug), headers: @headers, as: :json
     assert_response :success
-    
+
     json_response = JSON.parse(response.body)
     assert_includes json_response, "post"
     assert_equal @post.title, json_response["post"]["title"]
@@ -86,7 +86,7 @@ class Api::PostsControllerTest < ActionDispatch::IntegrationTest
   test "should not get post by slug if not owned by current user" do
     get api_post_url(id: @post_two.slug), headers: @headers, as: :json
     assert_response :forbidden
-    
+
     json_response = JSON.parse(response.body)
     assert_includes json_response, "error"
   end
