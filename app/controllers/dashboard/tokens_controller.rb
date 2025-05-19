@@ -9,9 +9,12 @@ class Dashboard::TokensController < Dashboard::BaseController
         @tokens = Current.user.tokens.order(created_at: :desc)
         format.turbo_stream do
           flash.now[:form_status] = { type: "success", message: "Created" }
+          # Create a fresh token instance to clear the form
+          @new_token = UserToken.new
           render turbo_stream: [
-            turbo_stream.replace("new_token", partial: "dashboard/settings/token_form", locals: { token: UserToken.new }),
-            turbo_stream.replace("tokens", partial: "dashboard/settings/token_list", locals: { tokens: @tokens })
+            turbo_stream.replace("tokens", partial: "dashboard/settings/token_list", locals: { tokens: @tokens }),
+            turbo_stream.replace("new_token", partial: "dashboard/settings/token_form", locals: { token: @new_token }),
+            turbo_stream.append_all("body", partial: "shared/form_reset_trigger")
           ]
         end
         format.html do
@@ -39,7 +42,8 @@ class Dashboard::TokensController < Dashboard::BaseController
           flash.now[:form_status] = { type: "success", message: "Deleted" }
           render turbo_stream: [
             turbo_stream.replace("tokens", partial: "dashboard/settings/token_list", locals: { tokens: @tokens }),
-            turbo_stream.replace("new_token", partial: "dashboard/settings/token_form", locals: { token: UserToken.new })
+            turbo_stream.replace("new_token", partial: "dashboard/settings/token_form", locals: { token: UserToken.new }),
+            turbo_stream.append_all("body", partial: "shared/form_reset_trigger")
           ]
         end
         format.html do
