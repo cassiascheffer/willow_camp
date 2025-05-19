@@ -17,6 +17,105 @@
 # For optimal performance, add the following indexes:
 # - add_index :table_name, :slug, unique: true
 # - add_index :table_name, :base_slug
+#
+# Slug Generation Flow:
+#
+#                            START
+#                              |
+#                              v
+#              +---------------------------------+
+#              | before_validation: ensure_slug  |
+#              +---------------------------------+
+#                              |
+#                              v
+# +-----------------------------------------------------------------+
+# | needs_slug_update?                                              |
+# |                                                                 |
+# | IF (slug.blank? OR                                              |
+# |     base_slug.blank? OR                                         |
+# |     (slug_source_changed? AND !slug_changed?))                  |
+# +-----------------------------------------------------------------+
+#                              |
+#           +-----------------+ +-------------------+
+#           |                                       |
+#           | YES                                   | NO
+#           v                                       v
+# +-----------------------------+       +------------------------+
+# | update_base_slug            |       | Skip slug update       |
+# |                             |       | (return from method)   |
+# | Custom slug provided?       |       +------------------------+
+# +-----------------------------+
+#           |
+#  +--------+ +----------+
+#  |                     |
+#  | YES                 | NO
+#  v                     v
+# +----------------+    +-------------------------+
+# | base_slug =    |    | Should regenerate?      |
+# | slug.param     |    | IF (base_slug.blank? OR |
+# +----------------+    |     slug.blank? OR      |
+#  |                    |     (!published? AND    |
+#  |                    |      source_changed?))  |
+#  |                    +-------------------------+
+#  |                     |
+#  |             +-------+ +--------+
+#  |             |                  |
+#  |             | YES              | NO
+#  |             v                  v
+#  |    +----------------+    +----------------+
+#  |    | base_slug =    |    | Keep existing  |
+#  |    | source.param   |    | base_slug      |
+#  |    +----------------+    +----------------+
+#  |             |                  |
+#  +-------------+------------------+
+#                |
+#                v
+# +---------------------------------------------------+
+# | needs_suffix_update?                              |
+# |                                                   |
+# | IF (new_record? OR                                |
+# |     base_slug_changed? OR                         |
+# |     slug_already_exists?)                         |
+# +---------------------------------------------------+
+#                |
+#       +--------+ +--------+
+#       |                   |
+#       | YES               | NO
+#       v                   v
+# +-------------------+    +-----------------+
+# | update_slug_suffix|    | Keep existing   |
+# |                   |    | slug_suffix     |
+# | suffix = max + 1  |    +-----------------+
+# | (at least 1)      |            |
+# +-------------------+            |
+#       |                          |
+#       +--------------------------+
+#                |
+#                v
+# +-------------------------------------------+
+# | generate_final_slug                       |
+# |                                           |
+# | IF (slug_suffix > 1)                      |
+# |    slug = "#{base_slug}-#{slug_suffix}"   |
+# | ELSE                                      |
+# |    slug = base_slug                       |
+# +-------------------------------------------+
+#                |
+#                v
+# +---------------------------------------------------+
+# | before_validation: check_slug_uniqueness          |
+# |                                                   |
+# | IF (slug.blank? OR                                |
+# |    (id.present? AND !slug_already_exists?))       |
+# |    → return (no action needed)                    |
+# | ELSE                                              |
+# |    → update_slug_suffix                           |
+# |    → generate_final_slug                          |
+# +---------------------------------------------------+
+#                |
+#                v
+#              FINISH
+#
 module Sluggable
   extend ActiveSupport::Concern
 
@@ -62,7 +161,9 @@ module Sluggable
     generate_final_slug
   rescue => e
     Rails.logger.error("Error generating slug: #{e.message}") if defined?(Rails)
-    self.slug ||= "#{SecureRandom.hex(5)}-#{Time.now.to_i}"
+    self.slug ||= "#{SecureRandom.hex(5)}"
+    self.base_slug ||= self.slug
+    self.slug_suffix ||= 0
   end
 
   def needs_slug_update?
@@ -102,37 +203,35 @@ module Sluggable
   end
 
   def next_available_suffix
-    @next_available_suffix ||= find_max_slug_suffix + 1
+    find_max_slug_suffix + 1
   end
 
   def find_max_slug_suffix
     return 0 unless existing_slugs_with_same_base?
 
-    @max_slug_suffix ||= begin
-      self.class
-        .where(base_slug: base_slug)
-        .where.not(id: id)
-        .maximum(:slug_suffix) || 0
-    end
+    @max_slug_suffix ||= self.class
+      .where(base_slug: base_slug)
+      .where.not(id: id)
+      .maximum(:slug_suffix) || 0
   end
 
   def existing_slugs_with_same_base?
     return false if new_record? && !self.class.exists?(base_slug: base_slug)
-    true
+    return false if base_slug.blank?
+    self.class.where(base_slug: base_slug).where.not(id: id).exists?
   end
 
   def check_slug_uniqueness
-    return if slug.blank? || id.present? && self.class.where(slug: slug).where.not(id: id).none?
+    return if slug.blank?
+    return if id.present? && !slug_already_exists?
 
-    if slug_already_exists?
-      update_slug_suffix
-      generate_final_slug
-    end
+    update_slug_suffix
+    generate_final_slug
   end
 
   def slug_already_exists?
     return false if slug.blank?
-    self.class.where(slug: slug).where.not(id: id).exists?
+    @slug_exists ||= self.class.where(slug: slug).where.not(id: id).exists?
   end
 
   def generate_final_slug
