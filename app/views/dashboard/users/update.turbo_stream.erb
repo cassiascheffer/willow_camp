@@ -1,0 +1,11 @@
+<%= turbo_stream.replace @user do %>
+  <%= render "dashboard/settings/form", user: @user %>
+<% end %>
+
+<%= turbo_stream.replace "flash" do %>
+  <div id="flash" class="flash">
+    <% if notice = flash[:notice] %>
+      <p class="notice" id="notice"><%= notice %></p>
+    <% end %>
+  </div>
+<% end %>

@@ -1,0 +1,27 @@
+<%= form_with model: token, url: dashboard_tokens_path, class: "contents max-w-full", id: "new_token_form" do |form| %>
+  <% if token.errors.any? %>
+    <div id="error_explanation" class="willow-alert">
+      <h2><%= pluralize(token.errors.count, "error") %> prohibited this token from being saved:</h2>
+
+      <ul class="list-disc list-inside">
+        <% token.errors.full_messages.each do |message| %>
+          <li class="truncate"><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="my-5">
+    <%= form.label :name, "Token name", class: "text-muted block mb-1" %>
+    <%= form.text_field :name, required: true, class: "willow-input w-full", placeholder: "API Key #1" %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :expires_at, "Expiration date (optional)", class: "text-muted block mb-1" %>
+    <%= form.date_field :expires_at, class: "willow-input w-full" %>
+  </div>
+
+  <div class="my-5">
+    <%= form.submit "Generate token", class: "willow-button" %>
+  </div>
+<% end %>

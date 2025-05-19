@@ -1,0 +1,15 @@
+<% if @token.persisted? %>
+  <%= turbo_stream.replace "new_token" do %>
+    <%= render "dashboard/settings/token_form", token: UserToken.new %>
+  <% end %>
+
+  <%= turbo_stream.replace "token_list" do %>
+    <%= render "dashboard/settings/token_list", token: @token %>
+  <% end %>
+
+  <%= turbo_stream.replace "flash" do %>
+    <div id="flash" class="flash">
+      <p class="notice" id="notice"><%= flash[:notice] %></p>
+    </div>
+  <% end %>
+<% end %>

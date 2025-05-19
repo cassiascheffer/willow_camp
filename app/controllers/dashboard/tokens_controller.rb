@@ -1,0 +1,47 @@
+class Dashboard::TokensController < ApplicationController
+  before_action :set_token, only: [ :destroy ]
+
+  def create
+    @token = Current.user.tokens.new(token_params)
+
+    respond_to do |format|
+      if @token.save
+        @tokens = Current.user.tokens.order(created_at: :desc)
+        format.turbo_stream do
+          flash.now[:notice] = "Token created successfully"
+          # Render multiple turbo stream actions
+          render turbo_stream: [
+            turbo_stream.replace("tokens", partial: "dashboard/settings/token_list", locals: { tokens: @tokens }),
+            turbo_stream.replace("new_token", partial: "dashboard/settings/token_form", locals: { token: Current.user.tokens.new })
+          ]
+        end
+        format.html { redirect_to dashboard_settings_path, notice: "Token created successfully" }
+      else
+        format.turbo_stream { render turbo_stream: turbo_stream.replace("new_token", partial: "dashboard/settings/token_form", locals: { token: @token }) }
+        format.html { redirect_to dashboard_settings_path, alert: "Failed to create token" }
+      end
+    end
+  end
+
+  def destroy
+    respond_to do |format|
+      if @token.destroy
+        format.turbo_stream { flash.now[:notice] = "Token deleted successfully" }
+        format.html { redirect_to dashboard_settings_path, notice: "Token deleted successfully" }
+      else
+        format.turbo_stream { flash.now[:alert] = "Failed to delete token" }
+        format.html { redirect_to dashboard_settings_path, alert: "Failed to delete token" }
+      end
+    end
+  end
+
+  private
+
+  def set_token
+    @token = Current.user.tokens.find(params[:id])
+  end
+
+  def token_params
+    params.require(:user_token).permit(:name, :expires_at)
+  end
+end

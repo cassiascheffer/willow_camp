@@ -233,6 +233,47 @@
     @apply w-full max-w-3xl mx-auto p-6;
   }
   
+  /* Table components */
+  .willow-table-container {
+    @apply w-full overflow-x-auto;
+  }
+  
+  .willow-table-wrapper {
+    @apply overflow-scroll shadow ring-1 ring-black ring-opacity-5 md:rounded-lg;
+  }
+  
+  .willow-table {
+    @apply min-w-full divide-y divide-[var(--light-border)] dark:divide-[var(--dark-border)];
+  }
+  
+  .willow-table-header {
+    @apply bg-[var(--light-card-hover)] dark:bg-[var(--dark-card-hover)];
+  }
+  
+  .willow-table-header-cell {
+    @apply px-6 py-3 text-left text-xs font-medium text-[var(--light-muted)] dark:text-[var(--dark-muted)] uppercase tracking-wider;
+  }
+  
+  .willow-table-body {
+    @apply bg-[var(--light-card)] dark:bg-[var(--dark-card)] divide-y divide-[var(--light-border)] dark:divide-[var(--dark-border)];
+  }
+  
+  .willow-table-row {
+    @apply hover:bg-[var(--light-card-hover)] dark:hover:bg-[var(--dark-card-hover)] transition-colors duration-200;
+  }
+  
+  .willow-table-cell {
+    @apply px-6 py-4 whitespace-nowrap text-sm text-[var(--light-text)] dark:text-[var(--dark-text)];
+  }
+  
+  .willow-table-cell-truncate {
+    @apply px-6 py-4 whitespace-nowrap text-sm text-[var(--light-text)] dark:text-[var(--dark-text)] overflow-hidden text-ellipsis max-w-xs;
+  }
+  
+  .willow-table-empty {
+    @apply text-center text-[var(--light-muted)] dark:text-[var(--dark-muted)] py-4;
+  }
+
   /* Typography */
   .prose-custom {
     @apply text-lg leading-relaxed [&>p]:mb-6 [&>h1]:text-3xl [&>h1]:mb-4 [&>h2]:text-2xl [&>h2]:mb-3 [&>h3]:text-xl [&>h3]:mb-2 [&>ul]:mb-6 [&>ol]:mb-6;

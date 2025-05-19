@@ -1,0 +1,24 @@
+<div id="tokens" class="willow-table-container overflow-x-auto">
+  <% if tokens.any? %>
+    <div class="willow-table-wrapper">
+      <table class="willow-table w-full table-fixed">
+        <thead class="willow-table-header">
+          <tr>
+            <th scope="col" class="willow-table-header-cell w-1/5">Name</th>
+            <th scope="col" class="willow-table-header-cell w-2/5">Token</th>
+            <th scope="col" class="willow-table-header-cell w-1/6">Created</th>
+            <th scope="col" class="willow-table-header-cell w-1/6">Expires</th>
+            <th scope="col" class="willow-table-header-cell w-1/10 text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="willow-table-body">
+          <% tokens.each do |token| %>
+            <%= render "dashboard/settings/token", token: token %>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <p class="willow-table-empty">No tokens created yet.</p>
+  <% end %>
+</div>
