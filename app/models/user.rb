@@ -1,6 +1,6 @@
 class User < ApplicationRecord
   extend FriendlyId
-  friendly_id :subdomain, use: :slugged
+  friendly_id :subdomain
 
   has_secure_password
   has_many :sessions, dependent: :destroy
@@ -21,4 +21,8 @@ class User < ApplicationRecord
   validates :password, presence: true, length: { minimum: 6 }, allow_nil: false
   validates :name, presence: true, length: { maximum: 255 }, allow_blank: true
   validates :blog_title, length: { maximum: 255 }, allow_blank: true
+
+  def to_key
+    [ subdomain ]
+  end
 end

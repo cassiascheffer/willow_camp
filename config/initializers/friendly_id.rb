@@ -10,8 +10,10 @@
 # http://norman.github.io/friendly_id/file.Guide.html
 
 FriendlyId.defaults do |config|
+  config.routes = :friendly
+  config.use :finders
   config.use :reserved
-
+  config.treat_reserved_as_conflict = true
   config.reserved_words = %w[
     _dmarc
     _spf
@@ -84,41 +86,4 @@ FriendlyId.defaults do |config|
     webmail
     www
   ]
-
-  config.treat_reserved_as_conflict = true
-  config.use :finders
-  config.slug_limit = 255
-  config.sequence_separator = "-"
-
-  #  ## Tips and Tricks
-  #
-  #  ### Controlling when slugs are generated
-  #
-  # As of FriendlyId 5.0, new slugs are generated only when the slug field is
-  # nil, but if you're using a column as your base method can change this
-  # behavior by overriding the `should_generate_new_friendly_id?` method that
-  # FriendlyId adds to your model. The change below makes FriendlyId 5.0 behave
-  # more like 4.0.
-  # Note: Use(include) Slugged module in the config if using the anonymous module.
-  # If you have `friendly_id :name, use: slugged` in the model, Slugged module
-  # is included after the anonymous module defined in the initializer, so it
-  # overrides the `should_generate_new_friendly_id?` method from the anonymous module.
-  #
-  # config.use :slugged
-  # config.use Module.new {
-  #   def should_generate_new_friendly_id?
-  #     slug.blank? || <your_column_name_here>_changed?
-  #   end
-  # }
-  #
-  # FriendlyId uses Rails's `parameterize` method to generate slugs, but for
-  # languages that don't use the Roman alphabet, that's not usually sufficient.
-  # Here we use the Babosa library to transliterate Russian Cyrillic slugs to
-  # ASCII. If you use this, don't forget to add "babosa" to your Gemfile.
-  #
-  # config.use Module.new {
-  #   def normalize_friendly_id(text)
-  #     text.to_slug.normalize! :transliterations => [:russian, :latin]
-  #   end
-  # }
 end

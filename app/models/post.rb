@@ -1,6 +1,6 @@
 class Post < ApplicationRecord
   extend FriendlyId
-  friendly_id :title, use: [ :sequentially_slugged, :scoped ], scoped: :author
+  friendly_id :title, use: [ :sequentially_slugged, :scoped, :history ], scope: :author
 
   belongs_to :author, class_name: "User", foreign_key: "author_id"
 
@@ -16,6 +16,10 @@ class Post < ApplicationRecord
   # Determines when friendly_id should generate a new slug
   def should_generate_new_friendly_id?
     title_changed? || super
+  end
+
+  def to_key
+    [ slug ]
   end
 
   private
