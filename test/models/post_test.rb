@@ -53,10 +53,21 @@ class PostTest < ActiveSupport::TestCase
     assert post2.valid?, "Post with duplicate slug should be valid after auto-correction"
   end
 
-  test "should generate slug if not provided" do
+  test "should generate slug without random hex if not provided and title is unique" do
     post = Post.create!(author: users(:one), title: "Auto Slug Test")
     assert_not_nil post.slug
-    assert_includes post.slug, "auto-slug-test"
+    assert_equal "auto-slug-test", post.slug, "Slug should be just the parameterized title for unique titles"
+  end
+
+  test "should generate slug with random hex if title is not unique" do
+    # First post with this title
+    first_post = Post.create!(author: users(:one), title: "Duplicate Title")
+    assert_equal "duplicate-title", first_post.slug
+
+    # Second post with the same title should get a slug with random hex
+    second_post = Post.create!(author: users(:two), title: "Duplicate Title")
+    assert_not_equal first_post.slug, second_post.slug, "Slugs should be different for posts with same title"
+    assert_match(/^duplicate-title-[0-9a-f]{8}$/, second_post.slug, "Slug for duplicate title should have random hex appended")
   end
 
   test "should validate published is boolean" do
@@ -95,10 +106,5 @@ class PostTest < ActiveSupport::TestCase
     user = users(:one)
     post = Post.create(author: user, title: "Test Post")
     assert_equal user.id, post.author_id, "Post's author_id should match the author's id"
-  end
-
-  test "should generate HTML from markdown if Commonmarker is available" do
-    # Skip this test for now since Commonmarker doesn't seem to be available
-    skip "Commonmarker gem not available"
   end
 end

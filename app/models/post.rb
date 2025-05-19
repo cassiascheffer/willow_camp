@@ -25,7 +25,15 @@ class Post < ApplicationRecord
   private
     def set_slug
       if self.slug.blank?
-        self.slug = "#{self.title.parameterize}-#{SecureRandom.hex(4)}"
+        # Use just the parameterized title as the slug
+        parameterized_slug = self.title.parameterize
+
+        # If this slug already exists, add a random hex
+        if Post.where(slug: parameterized_slug).where.not(id: self.id).exists?
+          self.slug = "#{parameterized_slug}-#{SecureRandom.hex(4)}"
+        else
+          self.slug = parameterized_slug
+        end
       elsif Post.where(slug: self.slug).where.not(id: self.id).exists?
         self.slug = "#{self.slug}-#{SecureRandom.hex(4)}"
       end
