@@ -8,6 +8,8 @@ one:
   published: true
   published_at: 2025-04-27 13:32:14
   slug: 'my-post'
+  base_slug: 'my-post'
+  slug_suffix: 1
 
 two:
   title: My Second Post
@@ -17,3 +19,5 @@ two:
   published: false
   published_at: 2025-04-27 13:32:14
   slug: 'my-post-2'
+  base_slug: 'my-post'
+  slug_suffix: 2
