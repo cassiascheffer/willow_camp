@@ -31,12 +31,10 @@ class Api::PostsControllerTest < ActionDispatch::IntegrationTest
     end
     assert_response :created
 
-    # Verify response contains the post
     json_response = JSON.parse(response.body)
     assert_includes json_response, "post"
     assert_equal "New Post", json_response["post"]["title"]
 
-    # Verify author is set to current user
     created_post = Post.find_by(title: "New Post")
     assert_equal @user.id, created_post.author_id
   end
@@ -64,13 +62,10 @@ class Api::PostsControllerTest < ActionDispatch::IntegrationTest
     assert_includes json_response, "posts"
     assert_instance_of Array, json_response["posts"]
 
-    # Verify only posts belonging to the current user are returned
     post_ids = json_response["posts"].map { |p| p["id"] }
 
-    # Should include the user's own post
     assert_includes post_ids, @post.id
 
-    # Should not include other users' posts
     assert_not_includes post_ids, @post_two.id
   end
 
@@ -98,7 +93,6 @@ class Api::PostsControllerTest < ActionDispatch::IntegrationTest
           as: :json
     assert_response :success
 
-    # Verify post was updated
     @post.reload
     assert_equal "Updated Title", @post.title
   end

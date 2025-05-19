@@ -3,12 +3,10 @@ class PostsController < ApplicationController
   before_action :set_author, only: %i[ index show ]
   before_action :set_post, only: %i[ show ]
 
-  # GET /posts or /posts.json
   def index
     @posts = Post.where(author: @author, published: true).order(published_at: :desc, created_at: :desc)
   end
 
-  # GET /posts/1 or /posts/1.json
   def show
   end
 
