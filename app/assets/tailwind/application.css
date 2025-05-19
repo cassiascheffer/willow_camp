@@ -1,1 +1,87 @@
 @import "tailwindcss";
+
+/* Base layer customizations */
+@layer base {
+  body {
+    @apply bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold text-slate-900 dark:text-white;
+  }
+}
+
+/* Component layer customizations */
+@layer components {
+  /* Container layouts */
+  .container-narrow {
+    @apply max-w-3xl mx-auto px-4 py-8;
+  }
+  
+  .container-standard {
+    @apply max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10;
+  }
+  
+  /* Post components */
+  .post-card {
+    @apply border-b border-gray-200 dark:border-gray-700 last:border-0;
+  }
+  
+  .post-card-link {
+    @apply block px-3 py-4 hover:bg-slate-100 dark:hover:bg-slate-800 rounded transition duration-200;
+  }
+  
+  .post-title {
+    @apply font-bold text-4xl mb-6;
+  }
+  
+  .post-metadata {
+    @apply text-sm mb-4;
+  }
+  
+  .post-content {
+    @apply text-lg/7 leading-7 mb-4 [&>*]:mb-4;
+  }
+  
+  .post-article {
+    @apply w-full max-w-3xl mx-auto p-6;
+  }
+  
+  /* Typography */
+  .prose-custom {
+    @apply text-lg leading-relaxed [&>p]:mb-6 [&>h1]:text-3xl [&>h1]:mb-4 [&>h2]:text-2xl [&>h2]:mb-3 [&>h3]:text-xl [&>h3]:mb-2 [&>ul]:mb-6 [&>ol]:mb-6;
+  }
+  
+  /* Notifications */
+  .notice {
+    @apply py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-md inline-block;
+  }
+  
+  .alert {
+    @apply py-2 px-3 mb-5 bg-red-100 text-red-700 font-medium inline-block rounded-md;
+  }
+  
+  /* Buttons and actions */
+  .btn-secondary {
+    @apply text-xs rounded px-2.5 py-1 bg-slate-50 text-slate-600 hover:bg-slate-100 dark:bg-slate-800/30 dark:text-slate-300 dark:hover:bg-slate-700/40 font-medium transition-colors;
+  }
+  
+  /* Section dividers */
+  .section-divider {
+    @apply flex flex-wrap items-center gap-2 mt-8 pt-4 border-t border-gray-200 dark:border-gray-700;
+  }
+  
+  /* Empty states */
+  .empty-state {
+    @apply text-center py-16 rounded-lg shadow-sm;
+  }
+}
+
+/* Utility layer customizations */
+@layer utilities {
+  .text-date {
+    @apply text-slate-500 dark:text-slate-400;
+  }
+}
+
+
