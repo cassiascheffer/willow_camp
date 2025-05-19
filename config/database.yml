@@ -13,20 +13,20 @@ development:
     <<: *default
   cache:
     <<: *default
-    database: willow_page_development_cache
+    database: willow_camp_development_cache
     migrations_paths: db/cache_migrate
   queue:
     <<: *default
-    database: willow_page_development_queue
+    database: willow_camp_development_queue
     migrations_paths: db/queue_migrate
   cable:
     <<: *default
-    database: willow_page_development_cable
+    database: willow_camp_development_cable
     migrations_paths: db/cable_migrate
 
 test:
   <<: *default
-  database: willow_page_test
+  database: willow_camp_test
 
 production:
   primary: &primary_production
@@ -35,15 +35,15 @@ production:
   cache:
     <<: *primary_production
     url: <%= ENV["CACHE_DATABASE_URL"] %>
-    database: willow_page_production_cache
+    database: willow_camp_production_cache
     migrations_paths: db/cache_migrate
   queue:
     <<: *primary_production
     url: <%= ENV["QUEUE_DATABASE_URL"] %>
-    database: willow_page_production_queue
+    database: willow_camp_production_queue
     migrations_paths: db/queue_migrate
   cable:
     <<: *primary_production
     url: <%= ENV["CABLE_DATABASE_URL"] %>
-    database: willow_page_production_cable
+    database: willow_camp_production_cable
     migrations_paths: db/cable_migrate
