@@ -1,0 +1,31 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="flex justify-between items-center mb-8">
+    <h1 class="text-2xl font-bold">Dashboard</h1>
+    <a href="<%= new_dashboard_post_path %>" class="py-2 px-4 border shadow">New Post</a>
+  </div>
+
+  <div class="w-full">
+    <% if @posts.present? %>
+      <table class="w-full border-collapse">
+        <thead>
+          <tr class="border-b">
+            <th class="text-left py-2">Title</th>
+            <th class="text-left py-2">Status</th>
+            <th class="text-left py-2">Published</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @posts.each do |post| %>
+            <tr onclick="window.location='<%= edit_dashboard_post_path(post) %>';" class="border-b hover:bg-gray-100 dark:hover:bg-gray-900 cursor-pointer">
+              <td class="py-2"><%= post.title %></td>
+              <td class="py-2"><%= post.published? ? 'Published' : 'Draft' %></td>
+              <td class="py-2"><%= post.published_at&.strftime('%B %d, %Y') || 'Not published' %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <p class="text-center py-4">No posts yet</p>
+    <% end %>
+  </div>
+</div>

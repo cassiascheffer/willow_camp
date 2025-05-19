@@ -8,6 +8,9 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
+
+User.destroy_all
+
 users = [
   { email_address: "winter@acorn.ca", password: "winter", subdomain: "winter" },
   { email_address: "willow@acorn.ca", password: "willow", subdomain: "willow" }
@@ -18,13 +21,15 @@ users.each do |user|
     u.password = user[:password]
     u.subdomain = user[:subdomain]
   end
+  puts "Created user: #{user.email_address} with subdomain: #{user.subdomain}"
 
   25.times do
     user.posts.find_or_create_by!(slug: Faker::Internet.slug) do |post|
-      post.body = Faker::Lorem.paragraphs(number: Faker::Number.number(digits: 2)).join("\n\n")
       post.title = Faker::Book.title
+      post.body_markdown = Faker::Markdown.sandwich(sentences: 3, repeat: 2)
       post.published = Faker::Boolean.boolean
       post.published_at = Faker::Date.between(from: 2.days.ago, to: Date.today)
     end
   end
+  puts "Created 25 posts for user: #{user.email_address}"
 end
