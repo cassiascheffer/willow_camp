@@ -1,5 +1,1 @@
 <%= turbo_stream.remove dom_id(@token) %>
-
-<%= turbo_stream.prepend "flash-messages" do %>
-  <%= render "shared/flash", type: "notice", message: flash[:notice] %>
-<% end %>

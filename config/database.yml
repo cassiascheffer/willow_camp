@@ -11,6 +11,7 @@ default: &default
 development:
   primary:
     <<: *default
+    database: willow_camp_development
   cache:
     <<: *default
     database: willow_camp_development_cache

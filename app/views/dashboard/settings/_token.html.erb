@@ -22,7 +22,7 @@
     <% end %>
   </td>
   <td class="willow-table-cell text-right font-medium whitespace-nowrap">
-    <%= button_to dashboard_token_path(token), method: :delete, form: { data: { turbo_confirm: "Are you sure you want to revoke this token?" } }, class: "text-[var(--light-error)] hover:text-[var(--light-error)]/75 dark:text-[var(--dark-error)] dark:hover:text-[var(--dark-error)]/75" do %>
+    <%= button_to dashboard_token_path(token), method: :delete, form: { data: { turbo_confirm: "Are you sure you want to revoke this token?", turbo_frame: "_top" } }, class: "text-[var(--light-error)] hover:text-[var(--light-error)]/75 dark:text-[var(--dark-error)] dark:hover:text-[var(--dark-error)]/75" do %>
       Revoke
     <% end %>
   </td>
