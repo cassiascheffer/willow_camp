@@ -92,7 +92,7 @@
     --light-card-hover: var(--solarized-light-card-hover);
     --light-success: var(--solarized-light-success);
     --light-error: var(--solarized-light-error);
-    
+
     --dark-bg: var(--solarized-dark-bg);
     --dark-text: var(--solarized-dark-text);
     --dark-muted: var(--solarized-dark-muted);
@@ -108,8 +108,13 @@
   body {
     @apply bg-[var(--light-bg)] dark:bg-[var(--dark-bg)] text-[var(--light-text)] dark:text-[var(--dark-text)] font-mono transition-colors duration-300;
   }
-  
-  h1, h2, h3, h4, h5, h6 {
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-bold text-[var(--light-text)] dark:text-[var(--dark-text)];
   }
 
@@ -120,20 +125,21 @@
 
 /* Component layer customizations */
 @layer components {
+
   /* Container layouts */
   .container-narrow {
     @apply max-w-3xl mx-auto px-4 py-8;
   }
-  
+
   .container-standard {
     @apply max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10;
   }
-  
+
   /* Willow custom components (renamed from tokyo-*) */
   .willow-shadow {
     @apply shadow-md;
   }
-  
+
   .willow-card {
     @apply bg-[var(--light-card)] dark:bg-[var(--dark-card)] border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md p-5 transition-all duration-200;
   }
@@ -141,7 +147,7 @@
   .willow-button {
     @apply inline-block px-4 py-2 font-medium rounded-md transition-all duration-200 bg-[var(--light-accent)] hover:bg-[var(--light-accent-hover)] dark:bg-[var(--dark-accent)] dark:hover:bg-[var(--dark-accent-hover)] text-white;
   }
-  
+
   .willow-button-secondary {
     @apply inline-block px-4 py-2 font-medium rounded-md transition-all duration-200 bg-transparent border border-[var(--light-border)] dark:border-[var(--dark-border)] text-[var(--light-text)] dark:text-[var(--dark-text)] hover:bg-[var(--light-card-hover)] dark:hover:bg-[var(--dark-card-hover)];
   }
@@ -166,110 +172,65 @@
   .post-card {
     @apply border-b border-[var(--light-border)] dark:border-[var(--dark-border)] last:border-0;
   }
-  
+
   .post-card-link {
     @apply block px-3 py-4 hover:bg-[var(--light-card-hover)] dark:hover:bg-[var(--dark-card-hover)] rounded transition duration-200;
   }
-  
+
   .post-title {
     @apply font-bold text-4xl mb-6;
   }
-  
+
   .post-metadata {
     @apply text-sm text-[var(--light-muted)] dark:text-[var(--dark-muted)] mb-4;
   }
-  
+
   /* Post content and other styles remain the same, just updating color variables */
   .post-content {
-    @apply text-lg/7 leading-7
-      [&_p]:mb-7
-      [&_ul]:list-disc
-      [&_ul]:list-inside
-      [&_ul]:mb-7
-      [&_ol]:list-decimal
-      [&_ol]:list-inside
-      [&_ol]:mb-7
-      [&_ul_ul]:list-inside
-      [&_ol_ul]:list-inside
-      [&_ul_ol]:list-inside
-      [&_ol_ol]:list-inside
-      [&_table]:w-full
-      [&_table]:border-collapse
-      [&_table]:mb-7
-      [&_table_th]:bg-[var(--light-card-hover)]
-      [&_table_th]:dark:bg-[var(--dark-card-hover)]
-      [&_table_th]:text-left [&_table_th]:p-2
-      [&_table_td]:border [&_table_td]:border-[var(--light-border)]
-      [&_table_td]:dark:border-[var(--dark-border)] [&_table_td]:p-2
-      [&_pre]:m-4
-      [&_pre]:rounded-md
-      [&_pre]:overflow-x-auto
-      [&_pre]:mb-7
-      [&_code]:font-mono
-      [&_code]:p-1
-      [&_code]:m-2
-      [&_code]:inline-block
-      [&_code]:rounded
-      [&_pre_code]:whitespace-pre
-      [&_pre_code]:block
-      [&>h1]:text-3xl
-      [&>h1]:mb-7
-      [&>h2]:text-2xl
-      [&>h2]:mb-7
-      [&>h3]:text-xl
-      [&>h3]:mb-7
-      [&>h4]:text-lg
-      [&>h4]:italic
-      [&>h4]:mb-7
-      [&>h5]:text-base
-      [&>h5]:italic
-      [&>h5]:mb-7
-      [&>h6]:text-sm
-      [&>h6]:italic
-      [&>h6]:mb-7;
+    @apply text-lg/7 leading-7 [&_p]:mb-7 [&_ul]:list-disc [&_ul]:list-inside [&_ul]:mb-7 [&_ol]:list-decimal [&_ol]:list-inside [&_ol]:mb-7 [&_ul_ul]:list-inside [&_ol_ul]:list-inside [&_ul_ol]:list-inside [&_ol_ol]:list-inside [&_table]:w-full [&_table]:border-collapse [&_table]:mb-7 [&_table_th]:bg-[var(--light-card-hover)] [&_table_th]:dark:bg-[var(--dark-card-hover)] [&_table_th]:text-left [&_table_th]:p-2 [&_table_td]:border [&_table_td]:border-[var(--light-border)] [&_table_td]:dark:border-[var(--dark-border)] [&_table_td]:p-2 [&_pre]:m-4 [&_pre]:rounded-md [&_pre]:overflow-x-auto [&_pre]:mb-7 [&_code]:font-mono [&_code]:p-1 [&_code]:m-2 [&_code]:inline-block [&_code]:rounded [&_pre_code]:whitespace-pre [&_pre_code]:block [&>h1]:text-3xl [&>h1]:mb-7 [&>h2]:text-2xl [&>h2]:mb-7 [&>h3]:text-xl [&>h3]:mb-7 [&>h4]:text-lg [&>h4]:italic [&>h4]:mb-7 [&>h5]:text-base [&>h5]:italic [&>h5]:mb-7 [&>h6]:text-sm [&>h6]:italic [&>h6]:mb-7 [&_a]:text-[var(--light-text)] [&_a]:dark:text-[var(--dark-text)] [&_a]:underline [&_a]:drop-shadow-[0_0_2px_var(--light-bg)] [&_a]:dark:drop-shadow-[0_0_2px_var(--dark-bg)];
   }
-  
+
   .post-article {
     @apply w-full max-w-3xl mx-auto p-6;
   }
-  
+
   /* Table components */
   .willow-table-container {
     @apply w-full overflow-x-auto;
   }
-  
+
   .willow-table-wrapper {
     @apply overflow-scroll shadow ring-1 ring-black md:rounded-lg;
   }
-  
+
   .willow-table {
     @apply min-w-full divide-y divide-[var(--light-border)] dark:divide-[var(--dark-border)];
   }
-  
+
   .willow-table-header {
     @apply bg-[var(--light-card-hover)] dark:bg-[var(--dark-card-hover)];
   }
-  
+
   .willow-table-header-cell {
     @apply px-6 py-3 text-left text-xs font-medium text-[var(--light-muted)] dark:text-[var(--dark-muted)] uppercase tracking-wider;
   }
-  
+
   .willow-table-body {
     @apply bg-[var(--light-card)] dark:bg-[var(--dark-card)] divide-y divide-[var(--light-border)] dark:divide-[var(--dark-border)];
   }
-  
+
   .willow-table-row {
     @apply hover:bg-[var(--light-card-hover)] dark:hover:bg-[var(--dark-card-hover)] transition-colors duration-200;
   }
-  
+
   .willow-table-cell {
     @apply px-6 py-4 whitespace-nowrap text-sm text-[var(--light-text)] dark:text-[var(--dark-text)];
   }
-  
+
   .willow-table-cell-truncate {
     @apply px-6 py-4 whitespace-nowrap text-sm text-[var(--light-text)] dark:text-[var(--dark-text)] overflow-hidden text-ellipsis max-w-xs;
   }
-  
+
   .willow-table-empty {
     @apply text-center text-[var(--light-muted)] dark:text-[var(--dark-muted)] py-4;
   }
@@ -278,26 +239,26 @@
   .prose-custom {
     @apply text-lg leading-relaxed [&>p]:mb-6 [&>h1]:text-3xl [&>h1]:mb-4 [&>h2]:text-2xl [&>h2]:mb-3 [&>h3]:text-xl [&>h3]:mb-2 [&>ul]:mb-6 [&>ol]:mb-6;
   }
-  
+
   /* Notifications */
   .notice {
     @apply py-2 px-3 bg-green-50 dark:bg-green-900/10 mb-5 text-[var(--light-success)] dark:text-[var(--dark-success)] font-medium rounded-md inline-block;
   }
-  
+
   .alert {
     @apply py-2 px-3 mb-5 bg-red-50 dark:bg-red-900/10 text-[var(--light-error)] dark:text-[var(--dark-error)] font-medium inline-block rounded-md;
   }
-  
+
   /* Buttons and actions */
   .btn-secondary {
     @apply text-xs rounded px-2.5 py-1 bg-[var(--light-card-hover)] dark:bg-[var(--dark-card)] text-[var(--light-muted)] dark:text-[var(--dark-muted)] hover:bg-[var(--light-border)] dark:hover:bg-[var(--dark-card-hover)] font-medium transition-colors;
   }
-  
+
   /* Section dividers */
   .section-divider {
     @apply flex flex-wrap items-center gap-2 mt-8 pt-4 border-t border-[var(--light-border)] dark:border-[var(--dark-border)];
   }
-  
+
   /* Empty states */
   .empty-state {
     @apply text-center py-16 rounded-lg shadow-sm bg-[var(--light-card)] dark:bg-[var(--dark-card)] text-[var(--light-muted)] dark:text-[var(--dark-muted)];
@@ -309,22 +270,20 @@
   .text-date {
     @apply text-[var(--light-muted)] dark:text-[var(--dark-muted)];
   }
-  
+
   .text-accent {
     @apply text-[var(--light-accent)] dark:text-[var(--dark-accent)];
   }
-  
+
   .text-muted {
     @apply text-[var(--light-muted)] dark:text-[var(--dark-muted)];
   }
-  
+
   .bg-card {
     @apply bg-[var(--light-card)] dark:bg-[var(--dark-card)];
   }
-  
+
   .bg-hover {
     @apply hover:bg-[var(--light-card-hover)] dark:hover:bg-[var(--dark-card-hover)];
   }
 }
-
-
