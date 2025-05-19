@@ -7,9 +7,15 @@
     <%= render "dashboard/settings/token_list", tokens: @tokens %>
   <% end %>
 
-  <%= turbo_stream.replace "flash" do %>
-    <div id="flash" class="flash">
-      <p class="notice" id="notice"><%= flash[:notice] %></p>
-    </div>
+  <%= turbo_stream.prepend "flash-messages" do %>
+    <%= render "shared/flash", type: "notice", message: flash[:notice] %>
+  <% end %>
+<% else %>
+  <%= turbo_stream.replace "new_token" do %>
+    <%= render "dashboard/settings/token_form", token: @token %>
+  <% end %>
+
+  <%= turbo_stream.prepend "flash-messages" do %>
+    <%= render "shared/flash", type: "alert", message: flash[:alert] %>
   <% end %>
 <% end %>

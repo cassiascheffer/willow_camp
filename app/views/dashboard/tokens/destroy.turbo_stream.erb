@@ -1,7 +1,5 @@
 <%= turbo_stream.remove dom_id(@token) %>
 
-<%= turbo_stream.replace "flash" do %>
-  <div id="flash" class="flash">
-    <p class="notice" id="notice"><%= flash[:notice] %></p>
-  </div>
+<%= turbo_stream.prepend "flash-messages" do %>
+  <%= render "shared/flash", type: "notice", message: flash[:notice] %>
 <% end %>

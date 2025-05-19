@@ -1,5 +1,7 @@
 module Dashboard
   class BaseController < ApplicationController
+    include TurboFlashConcern
+
     layout "dashboard"
     before_action :set_user
 

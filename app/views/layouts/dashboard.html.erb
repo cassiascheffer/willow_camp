@@ -19,6 +19,22 @@
   </head>
 
   <body>
+    <div id="flash-messages" class="fixed top-0 left-0 right-0 z-50 transform transition-transform duration-300">
+      <% if notice %>
+        <div data-controller="flash" class="flash flash-notice p-4 bg-green-100 border-l-4 border-green-500 text-green-700 mb-2 flex justify-between items-center">
+          <div><%= notice %></div>
+          <button class="flash-close ml-4" data-action="click->flash#dismiss">&times;</button>
+        </div>
+      <% end %>
+      
+      <% if alert %>
+        <div data-controller="flash" class="flash flash-alert p-4 bg-red-100 border-l-4 border-red-500 text-red-700 mb-2 flex justify-between items-center">
+          <div><%= alert %></div>
+          <button class="flash-close ml-4" data-action="click->flash#dismiss">&times;</button>
+        </div>
+      <% end %>
+    </div>
+
     <nav class="bg-card shadow-md">
       <div class="container mx-auto px-5 md:px-8 py-3 flex items-center justify-between">
       <div class="text-lg font-bold text-accent">

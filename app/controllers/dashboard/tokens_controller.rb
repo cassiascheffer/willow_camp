@@ -21,9 +21,21 @@ class Dashboard::TokensController < Dashboard::BaseController
   def destroy
     respond_to do |format|
       if @token.destroy
-        format.turbo_stream { flash.now[:notice] = "Token deleted successfully" }
+        @tokens = Current.user.tokens.order(created_at: :desc)
+        format.turbo_stream do
+          flash.now[:notice] = "Token deleted successfully"
+          render turbo_stream: [
+            turbo_stream.replace("tokens", partial: "dashboard/settings/token_list", locals: { tokens: @tokens }),
+            turbo_stream.prepend("flash-messages", partial: "shared/flash", locals: { type: "notice", message: "Token deleted successfully" })
+          ]
+        end
+        format.html { redirect_to dashboard_settings_path, notice: "Token deleted successfully" }
       else
-        format.turbo_stream { flash.now[:alert] = "Failed to delete token" }
+        format.turbo_stream do
+          flash.now[:alert] = "Failed to delete token"
+          render turbo_stream: turbo_stream.prepend("flash-messages", partial: "shared/flash", locals: { type: "alert", message: "Failed to delete token" })
+        end
+        format.html { redirect_to dashboard_settings_path, alert: "Failed to delete token" }
       end
     end
   end
