@@ -12,7 +12,8 @@ class Dashboard::PostsController < Dashboard::BaseController
     if @post.save
       redirect_to dashboard_path, notice: "Post was successfully created."
     else
-      render :new, alert: "There was an error creating the post."
+      flash.now[:alert] = "There was an error creating the post."
+      render :new, status: :unprocessable_entity
     end
   end
 
@@ -23,7 +24,8 @@ class Dashboard::PostsController < Dashboard::BaseController
     if @post.update(post_params)
       redirect_to dashboard_path, notice: "Post was successfully updated."
     else
-      render :edit
+      flash.now[:alert] = "There was an error updating the post."
+      render :edit, status: :unprocessable_entity
     end
   end
 
@@ -33,9 +35,7 @@ class Dashboard::PostsController < Dashboard::BaseController
   end
 
   private
-    def set_user
-      @user = Current.user
-    end
+
 
     def set_post
       @post = Post.find_by(slug: params[:slug])
