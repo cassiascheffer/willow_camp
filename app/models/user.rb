@@ -18,7 +18,7 @@ class User < ApplicationRecord
                        format: { with: /\A[a-z0-9\-_]+\z/, message: "may only contain letters, numbers, hyphens and underscores" },
                        length: { minimum: 3, maximum: 63 },
                        exclusion: { in: friendly_id_config.reserved_words }
-  validates :password, presence: true, length: { minimum: 6 }, allow_nil: false
+  validates :password, presence: true, length: { minimum: 6 }, allow_nil: true
   validates :name, presence: true, length: { maximum: 255 }, allow_blank: true
   validates :blog_title, length: { maximum: 255 }, allow_blank: true
 
