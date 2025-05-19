@@ -8,6 +8,7 @@
   <article class="prose-custom">
     <h1 class="post-title"><%= @post.title %></h1>
     <div class="post-metadata">
+      <p><%= @post.author_name %></p>
       <p>Published on <%= @post.published_at.strftime("%B %d, %Y") %></p>
     </div>
     
