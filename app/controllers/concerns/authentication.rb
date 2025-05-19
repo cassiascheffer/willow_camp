@@ -18,6 +18,7 @@ module Authentication
     end
 
     def require_authentication
+      puts "I am in require_authentication"
       resume_session || request_authentication
     end
 
@@ -41,7 +42,11 @@ module Authentication
     def start_new_session_for(user)
       user.sessions.create!(user_agent: request.user_agent, ip_address: request.remote_ip).tap do |session|
         Current.session = session
-        cookies.signed.permanent[:session_id] = { value: session.id, httponly: true, same_site: :lax }
+        cookies.signed.permanent[:session_id] = {
+          value: session.id,
+          httponly: true,
+          same_site: :lax
+        }
       end
     end
 
