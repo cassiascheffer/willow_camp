@@ -1,22 +1,22 @@
-<div class="tokyo-container my-10">
+<div class="willow-container my-10">
   <% if alert = flash[:alert] %>
     <p class="alert" id="alert"><%= alert %></p>
   <% end %>
 
-  <div class="tokyo-card">
+  <div class="willow-card">
     <h1 class="font-bold text-2xl mb-6">Update your password</h1>
 
     <%= form_with url: password_path(params[:token]), method: :put, class: "contents" do |form| %>
       <div class="my-5">
-        <%= form.password_field :password, required: true, autocomplete: "new-password", placeholder: "Enter new password", maxlength: 72, class: "tokyo-input" %>
+        <%= form.password_field :password, required: true, autocomplete: "new-password", placeholder: "Enter new password", maxlength: 72, class: "willow-input" %>
       </div>
 
       <div class="my-5">
-        <%= form.password_field :password_confirmation, required: true, autocomplete: "new-password", placeholder: "Repeat new password", maxlength: 72, class: "tokyo-input" %>
+        <%= form.password_field :password_confirmation, required: true, autocomplete: "new-password", placeholder: "Repeat new password", maxlength: 72, class: "willow-input" %>
       </div>
 
       <div class="inline">
-        <%= form.submit "Save", class: "tokyo-button" %>
+        <%= form.submit "Save", class: "willow-button" %>
       </div>
     <% end %>
   </div>

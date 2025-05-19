@@ -25,11 +25,11 @@
           <% 
             case type.to_s
             when "notice"
-              alert_class = "tokyo-notice"
+              alert_class = "willow-notice"
             when "alert"
-              alert_class = "tokyo-alert"
+              alert_class = "willow-alert"
             else
-              alert_class = "tokyo-notice"
+              alert_class = "willow-notice"
             end
           %>
           <div class="<%= alert_class %> shadow-lg" role="alert">

@@ -1,18 +1,18 @@
-<div class="tokyo-container my-10">
+<div class="willow-container my-10">
   <% if alert = flash[:alert] %>
     <p class="alert" id="alert"><%= alert %></p>
   <% end %>
 
-  <div class="tokyo-card">
+  <div class="willow-card">
     <h1 class="font-bold text-2xl mb-6">Forgot your password?</h1>
 
     <%= form_with url: passwords_path, class: "contents" do |form| %>
       <div class="my-5">
-        <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", placeholder: "Enter your email address", value: params[:email_address], class: "tokyo-input" %>
+        <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", placeholder: "Enter your email address", value: params[:email_address], class: "willow-input" %>
       </div>
 
       <div class="inline">
-        <%= form.submit "Email reset instructions", class: "tokyo-button" %>
+        <%= form.submit "Email reset instructions", class: "willow-button" %>
       </div>
     <% end %>
   </div>

@@ -1,6 +1,6 @@
 <%= form_with(model: post, url: post.new_record? ? dashboard_posts_path : dashboard_post_path(post), class: "contents") do |form| %>
   <% if post.errors.any? %>
-    <div id="error_explanation" class="tokyo-alert font-medium mt-3">
+    <div id="error_explanation" class="willow-alert font-medium mt-3">
       <h2><%= pluralize(post.errors.count, "error") %> prohibited this post from being saved:</h2>
 
       <ul class="list-disc ml-6">
@@ -13,17 +13,17 @@
 
   <div class="my-5">
     <%= form.label :title %>
-    <%= form.text_field :title, class: ["tokyo-input mt-2", {"focus:ring-[#006A93] dark:focus:ring-[#7AA2F7]": post.errors[:title].none?, "border-[#EF4444] dark:border-[#F87171] focus:ring-[#EF4444] dark:focus:ring-[#F87171]": post.errors[:title].any?}] %>
+    <%= form.text_field :title, class: ["willow-input mt-2", {"focus:ring-[#006A93] dark:focus:ring-[#7AA2F7]": post.errors[:title].none?, "border-[#EF4444] dark:border-[#F87171] focus:ring-[#EF4444] dark:focus:ring-[#F87171]": post.errors[:title].any?}] %>
   </div>
 
   <div class="my-5">
     <%= form.label :slug%>
-    <%= form.text_field :slug, class: ["tokyo-input mt-2", {"focus:ring-[#006A93] dark:focus:ring-[#7AA2F7]": post.errors[:slug].none?, "border-[#EF4444] dark:border-[#F87171] focus:ring-[#EF4444] dark:focus:ring-[#F87171]": post.errors[:slug].any?}] %>
+    <%= form.text_field :slug, class: ["willow-input mt-2", {"focus:ring-[#006A93] dark:focus:ring-[#7AA2F7]": post.errors[:slug].none?, "border-[#EF4444] dark:border-[#F87171] focus:ring-[#EF4444] dark:focus:ring-[#F87171]": post.errors[:slug].any?}] %>
   </div>
 
   <div class="my-5">
     <%= form.label :body %>
-    <%= form.text_area :body_markdown, rows: 4, class: ["tokyo-input mt-2 h-[400px]", {"focus:ring-[#006A93] dark:focus:ring-[#7AA2F7]": post.errors[:body_markdown].none?, "border-[#EF4444] dark:border-[#F87171] focus:ring-[#EF4444] dark:focus:ring-[#F87171]": post.errors[:body_markdown].any?}] %>
+    <%= form.text_area :body_markdown, rows: 4, class: ["willow-input mt-2 h-[400px]", {"focus:ring-[#006A93] dark:focus:ring-[#7AA2F7]": post.errors[:body_markdown].none?, "border-[#EF4444] dark:border-[#F87171] focus:ring-[#EF4444] dark:focus:ring-[#F87171]": post.errors[:body_markdown].any?}] %>
   </div>
 
   <div class="my-5 flex items-center gap-2">
@@ -33,10 +33,10 @@
 
   <div class="my-5">
     <%= form.label :published_at %>
-    <%= form.datetime_field :published_at, class: ["tokyo-input mt-2", {"focus:ring-[#006A93] dark:focus:ring-[#7AA2F7]": post.errors[:published_at].none?, "border-[#EF4444] dark:border-[#F87171] focus:ring-[#EF4444] dark:focus:ring-[#F87171]": post.errors[:published_at].any?}] %>
+    <%= form.datetime_field :published_at, class: ["willow-input mt-2", {"focus:ring-[#006A93] dark:focus:ring-[#7AA2F7]": post.errors[:published_at].none?, "border-[#EF4444] dark:border-[#F87171] focus:ring-[#EF4444] dark:focus:ring-[#F87171]": post.errors[:published_at].any?}] %>
   </div>
 
   <div class="inline">
-    <%= form.submit class: "tokyo-button" %>
+    <%= form.submit class: "willow-button" %>
   </div>
 <% end %>
