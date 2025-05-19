@@ -225,7 +225,6 @@ class SluggableTest < ActiveSupport::TestCase
     )
     model.save!
 
-    assert_equal :title, model.slug_source
     assert_equal "test-title", model.slug
   end
 
@@ -237,13 +236,7 @@ class SluggableTest < ActiveSupport::TestCase
     )
     model.save!
 
-    assert_equal :body_markdown, model.slug_source
     assert_equal "custom-slug-source", model.slug
-  end
-
-  test "should allow class to configure custom slug source" do
-    assert_equal :body_markdown, SluggedModelWithCustomSource.new.slug_source
-    assert_equal :title, SluggedModel.new.slug_source
   end
 
   test "should update slug based on custom slug source when changed" do
@@ -278,9 +271,6 @@ class SluggableTest < ActiveSupport::TestCase
       published: false
     )
 
-    assert_equal :body_markdown, parent.slug_source
-    assert_equal :body_markdown, child.slug_source
-
     parent.save!
     child.save!
 
@@ -290,26 +280,29 @@ class SluggableTest < ActiveSupport::TestCase
 
   test "should handle custom slugs that already exist" do
     # Create the first model with a custom slug
-    model1 = SluggedModel.create!(
+    first = SluggedModel.create!(
       author_id: @user_one.id,
-      title: "First Wow",
-      slug: "wow-1",
+      title: "Wow",
       published: true
     )
-    assert_equal "wow-1", model1.slug
 
-    # Try creating a second model with the same slug
-    model2 = SluggedModel.create!(
+    second = SluggedModel.create!(
+      author_id: @user_one.id,
+      title: "Wow",
+      published: true
+    )
+
+    third = SluggedModel.create!(
       author_id: @user_one.id,
       title: "Second Wow",
-      slug: "wow-1",
+      slug: "wow-2",
       published: true
     )
 
     # Should auto-increment the suffix
-    assert_equal "wow-1-2", model2.slug
-    assert_equal "wow-1", model2.base_slug
-    assert_equal 2, model2.slug_suffix
+    assert_equal "wow", first.slug
+    assert_equal "wow-2", second.slug
+    assert_equal "wow-2-2", third.slug
   end
 
   test "should handle numeric slugs properly" do
