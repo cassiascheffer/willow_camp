@@ -22,6 +22,7 @@ module Sluggable
 
   included do
     before_validation :ensure_slug_is_set
+    before_validation :check_slug_uniqueness
 
     # Validations
     validates :slug, presence: true, uniqueness: true
@@ -32,7 +33,7 @@ module Sluggable
       slug
     end
 
-   class_attribute :_slug_source, instance_writer: false
+    class_attribute :_slug_source, instance_writer: false
 
     def self.slug_source(field)
       self._slug_source = field
@@ -71,12 +72,12 @@ module Sluggable
   end
 
   def needs_suffix_update?
-    new_record? || base_slug_changed?
+    new_record? || base_slug_changed? || slug_already_exists?
   end
 
   def update_base_slug
     if custom_slug_provided?
-      self.base_slug = slug
+      self.base_slug = slug.to_s.parameterize
     elsif should_regenerate_base_slug?
       self.base_slug = generate_slug_from_title
     end
@@ -118,6 +119,20 @@ module Sluggable
   def existing_slugs_with_same_base?
     return false if new_record? && !self.class.exists?(base_slug: base_slug)
     true
+  end
+
+  def check_slug_uniqueness
+    return if slug.blank? || id.present? && self.class.where(slug: slug).where.not(id: id).none?
+
+    if slug_already_exists?
+      update_slug_suffix
+      generate_final_slug
+    end
+  end
+
+  def slug_already_exists?
+    return false if slug.blank?
+    self.class.where(slug: slug).where.not(id: id).exists?
   end
 
   def generate_final_slug

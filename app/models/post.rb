@@ -13,10 +13,6 @@ class Post < ApplicationRecord
   validates :published, inclusion: { in: [ true, false ] }, allow_nil: true
   validates :body_markdown, length: { maximum: 100000 }, allow_blank: true
 
-  def to_key
-    [ self.slug ]
-  end
-
   private
 
     def set_published_at

@@ -271,4 +271,48 @@ class SluggableTest < ActiveSupport::TestCase
     assert_equal "parent-content", parent.slug
     assert_equal "child-content", child.slug
   end
+
+  test "should handle custom slugs that already exist" do
+    # Create the first model with a custom slug
+    model1 = SluggedModel.create!(
+      author_id: @user.id,
+      title: "First Wow",
+      slug: "wow-1",
+      published: true
+    )
+    assert_equal "wow-1", model1.slug
+
+    # Try creating a second model with the same slug
+    model2 = SluggedModel.create!(
+      author_id: @user.id,
+      title: "Second Wow",
+      slug: "wow-1",
+      published: true
+    )
+
+    # Should auto-increment the suffix
+    assert_equal "wow-1-2", model2.slug
+    assert_equal "wow-1", model2.base_slug
+    assert_equal 2, model2.slug_suffix
+  end
+
+  test "should handle numeric slugs properly" do
+    model1 = SluggedModel.create!(
+      author_id: @user.id,
+      title: "Numeric Test",
+      slug: "123",
+      published: true
+    )
+    assert_equal "123", model1.slug
+
+    model2 = SluggedModel.create!(
+      author_id: @user.id,
+      title: "Numeric Test 2",
+      slug: "123",
+      published: true
+    )
+    assert_equal "123-2", model2.slug
+    assert_equal "123", model2.base_slug
+    assert_equal 2, model2.slug_suffix
+  end
 end
