@@ -18,7 +18,6 @@ module Authentication
     end
 
     def require_authentication
-      puts "I am in require_authentication"
       resume_session || request_authentication
     end
 
