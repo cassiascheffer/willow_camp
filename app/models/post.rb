@@ -1,22 +1,32 @@
 class Post < ApplicationRecord
   belongs_to :author, class_name: "User", foreign_key: "author_id"
-  before_save :set_slug
+
+  before_validation :set_slug, if: ->(post) { post.slug.blank? || post.title_changed? }
   before_create :set_published_at
   before_save :set_html
+
   delegate :name, to: :author, prefix: true
 
-  validates :title, presence: true
+  # Validations
+  validates :title, presence: true, length: { maximum: 255 }
+  validates :slug, presence: true, uniqueness: true
+  validates :published, inclusion: { in: [ true, false ] }, allow_nil: true
+  validates :body_markdown, length: { maximum: 100000 }, allow_blank: true
 
   def to_key
     [ self.slug ]
   end
 
+  # Define to_param for RESTful URLs based on slug
+  def to_param
+    slug
+  end
+
   private
     def set_slug
       if self.slug.blank?
-        return self.slug = "#{self.title.parameterize}-#{SecureRandom.hex(4)}"
-      end
-      if Post.where(slug: self.slug).where.not(id: self.id).exists?
+        self.slug = "#{self.title.parameterize}-#{SecureRandom.hex(4)}"
+      elsif Post.where(slug: self.slug).where.not(id: self.id).exists?
         self.slug = "#{self.slug}-#{SecureRandom.hex(4)}"
       end
     end

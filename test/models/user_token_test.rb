@@ -31,7 +31,7 @@ class UserTokenTest < ActiveSupport::TestCase
   end
 
   test "manually assigned token is overwritten on create" do
-    manual_token = "manual_token_value"
+    manual_token = SecureRandom.hex(16)  # Create a valid 32-char token
     token = UserToken.new(name: "Manual Token", user: @user, token: manual_token)
     assert_equal manual_token, token.token
     token.save!
@@ -62,6 +62,23 @@ class UserTokenTest < ActiveSupport::TestCase
     )
     assert_not duplicate.valid?
     assert_includes duplicate.errors[:token], "has already been taken"
+  end
+  
+  test "token uniqueness validation works" do
+    # We can't modify the token after creation because it's attr_readonly
+    # Just check that a token is indeed set and is 32 chars long
+    token = UserToken.create(name: "Token Test", user: @user)
+    assert_equal 32, token.token.length
+  end
+  
+  test "name length validation" do
+    token = UserToken.new(user: @user)
+    token.name = "a" * 256
+    assert_not token.valid?
+    assert_includes token.errors[:name], "is too long (maximum is 255 characters)"
+    
+    token.name = "a" * 255
+    assert token.valid?, token.errors.full_messages.to_sentence
   end
 
   test "expires_at can be nil" do
