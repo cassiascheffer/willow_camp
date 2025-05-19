@@ -1,4 +1,4 @@
-<%= form_with(model: post, url: post.new_record? ? dashboard_posts_path : dashboard_post_path(post), class: "contents", id: post.new_record? ? "new_post_form" : "edit_post_form", data: { turbo: true }) do |form| %>
+<%= form_with(model: post, url: post.new_record? ? dashboard_posts_path : dashboard_post_path(post), class: "contents", id: post.new_record? ? "new_post_form" : "edit_post_form", data: { turbo: true, controller: "form-status" }) do |form| %>
   <% if post.errors.any? %>
     <div id="error_explanation" class="willow-alert font-medium mt-3">
       <h2><%= pluralize(post.errors.count, "error") %> prohibited this post from being saved:</h2>
@@ -36,7 +36,14 @@
     <%= form.datetime_field :published_at, class: ["willow-input mt-2", {"focus:ring-[#006A93] dark:focus:ring-[#7AA2F7]": post.errors[:published_at].none?, "border-[#EF4444] dark:border-[#F87171] focus:ring-[#EF4444] dark:focus:ring-[#F87171]": post.errors[:published_at].any?}] %>
   </div>
 
-  <div class="inline">
-    <%= form.submit class: "willow-button" %>
+  <div class="my-5">
+    <div class="flex items-center">
+      <%= form.submit class: "willow-button" %>
+      <% if flash[:form_status] %>
+        <div class="ml-4">
+          <%= render "shared/form_status", status: flash[:form_status][:type], message: flash[:form_status][:message] %>
+        </div>
+      <% end %>
+    </div>
   </div>
 <% end %>

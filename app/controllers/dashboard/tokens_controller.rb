@@ -8,12 +8,25 @@ class Dashboard::TokensController < Dashboard::BaseController
       if @token.save
         @tokens = Current.user.tokens.order(created_at: :desc)
         format.turbo_stream do
-          flash.now[:notice] = "Token created successfully"
+          flash.now[:form_status] = { type: "success", message: "Created" }
+          render turbo_stream: [
+            turbo_stream.replace("new_token", partial: "dashboard/settings/token_form", locals: { token: UserToken.new }),
+            turbo_stream.replace("tokens", partial: "dashboard/settings/token_list", locals: { tokens: @tokens })
+          ]
         end
-        format.html { redirect_to dashboard_settings_path, notice: "Token created successfully" }
+        format.html do
+          flash[:form_status] = { type: "success", message: "Created" }
+          redirect_to dashboard_settings_path
+        end
       else
-        format.turbo_stream { render turbo_stream: turbo_stream.replace("new_token", partial: "dashboard/settings/token_form", locals: { token: @token }) }
-        format.html { redirect_to dashboard_settings_path, alert: "Failed to create token" }
+        format.turbo_stream do
+          flash.now[:form_status] = { type: "error", message: "There were errors" }
+          render turbo_stream: turbo_stream.replace("new_token", partial: "dashboard/settings/token_form", locals: { token: @token })
+        end
+        format.html do
+          flash[:form_status] = { type: "error", message: "There were errors" }
+          redirect_to dashboard_settings_path
+        end
       end
     end
   end
@@ -23,19 +36,25 @@ class Dashboard::TokensController < Dashboard::BaseController
       if @token.destroy
         @tokens = Current.user.tokens.order(created_at: :desc)
         format.turbo_stream do
-          flash.now[:notice] = "Token deleted successfully"
+          flash.now[:form_status] = { type: "success", message: "Deleted" }
           render turbo_stream: [
             turbo_stream.replace("tokens", partial: "dashboard/settings/token_list", locals: { tokens: @tokens }),
-            turbo_stream.prepend("flash-messages", partial: "shared/flash", locals: { type: "notice", message: "Token deleted successfully" })
+            turbo_stream.replace("new_token", partial: "dashboard/settings/token_form", locals: { token: UserToken.new })
           ]
         end
-        format.html { redirect_to dashboard_settings_path, notice: "Token deleted successfully" }
+        format.html do
+          flash[:form_status] = { type: "success", message: "Deleted" }
+          redirect_to dashboard_settings_path
+        end
       else
         format.turbo_stream do
-          flash.now[:alert] = "Failed to delete token"
-          render turbo_stream: turbo_stream.prepend("flash-messages", partial: "shared/flash", locals: { type: "alert", message: "Failed to delete token" })
+          flash.now[:form_status] = { type: "error", message: "Failed to delete" }
+          render turbo_stream: turbo_stream.replace("new_token", partial: "dashboard/settings/token_form", locals: { token: UserToken.new })
         end
-        format.html { redirect_to dashboard_settings_path, alert: "Failed to delete token" }
+        format.html do
+          flash[:form_status] = { type: "error", message: "Failed to delete" }
+          redirect_to dashboard_settings_path
+        end
       end
     end
   end

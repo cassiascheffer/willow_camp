@@ -8,22 +8,23 @@ class Dashboard::UsersController < Dashboard::BaseController
     respond_to do |format|
       if @user.update(user_params)
         format.turbo_stream do
-          flash.now[:notice] = "Your profile has been updated."
-          render turbo_stream: [
-            turbo_stream.replace(@user, partial: "dashboard/settings/user_form", locals: { user: @user }),
-            turbo_stream.prepend("flash-messages", partial: "shared/flash", locals: { type: "notice", message: "Your profile has been updated." })
-          ]
+          # Set flash for form status instead of global flash
+          flash.now[:form_status] = { type: "success", message: "Updated" }
+          render turbo_stream: turbo_stream.replace(@user, partial: "dashboard/settings/user_form", locals: { user: @user })
         end
-        format.html { redirect_to dashboard_settings_path, notice: "Your profile has been updated." }
+        format.html do
+          flash[:form_status] = { type: "success", message: "Updated" }
+          redirect_to dashboard_settings_path
+        end
       else
         format.turbo_stream do
-          flash.now[:alert] = "There was a problem updating your profile."
-          render turbo_stream: [
-            turbo_stream.replace(@user, partial: "dashboard/settings/user_form", locals: { user: @user }),
-            turbo_stream.prepend("flash-messages", partial: "shared/flash", locals: { type: "alert", message: "There was a problem updating your profile." })
-          ]
+          flash.now[:form_status] = { type: "error", message: "There were errors" }
+          render turbo_stream: turbo_stream.replace(@user, partial: "dashboard/settings/user_form", locals: { user: @user })
         end
-        format.html { redirect_to dashboard_settings_path, alert: "There was a problem updating your profile." }
+        format.html do
+          flash[:form_status] = { type: "error", message: "There were errors" }
+          redirect_to dashboard_settings_path
+        end
       end
     end
   end
