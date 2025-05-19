@@ -5,9 +5,10 @@ class Dashboard::UsersController < ApplicationController
 
   def update
     if @user.update!(user_params)
-      redirect_to edit_dashboard_user_path, notice: "Your profile has been updated."
+      redirect_to dashboard_path, notice: "Your profile has been updated."
     else
-      render :edit
+      format.html { render :edit, status: :unprocessable_entity, notice: "There was a problem updating your profile." }
+      format.json { render json: @user.errors, status: :unprocessable_entity }
     end
   end
 
