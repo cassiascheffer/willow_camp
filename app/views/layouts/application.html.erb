@@ -10,21 +10,34 @@
 
     <%= yield :head %>
 
-    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
-
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <main class="container mx-auto mt-28 px-5 flex">
+  <body class="font-mono bg-[#FAFAFA] text-[#16161E] dark:bg-[#1A1B26] dark:text-[#A9B1D6] min-h-screen transition-colors duration-300">
+    <header class="border-b border-gray-200 dark:border-gray-700 py-4 px-5">
+      <div class="container mx-auto flex justify-between items-center">
+        <a href="/" class="text-xl font-bold text-[#006A93] dark:text-[#7AA2F7]">Willow Blog</a>
+        <nav class="space-x-4">
+          <a href="/" class="hover:text-[#006A93] dark:hover:text-[#7AA2F7]">Home</a>
+          <a href="/posts" class="hover:text-[#006A93] dark:hover:text-[#7AA2F7]">Posts</a>
+          <a href="/about" class="hover:text-[#006A93] dark:hover:text-[#7AA2F7]">About</a>
+        </nav>
+      </div>
+    </header>
+    
+    <main class="container mx-auto py-8 px-5 md:px-8">
       <%= yield %>
     </main>
+    
+    <footer class="border-t border-gray-200 dark:border-gray-700 py-4 px-5 mt-12">
+      <div class="container mx-auto text-sm text-gray-500 dark:text-gray-400">
+        &copy; <%= Time.current.year %> Willow Blog
+      </div>
+    </footer>
   </body>
 </html>
