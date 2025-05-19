@@ -1,28 +1,39 @@
 require "test_helper"
 
 class Dashboard::PostsControllerTest < ActionDispatch::IntegrationTest
+  setup do
+    @user = users(:one)
+    @post = posts(:one)
+    # Login the user
+    post session_url, params: { email_address: @user.email_address, password: "password" }
+  end
+
   test "should get new" do
-    get dashboard_posts_new_url
+    get new_dashboard_post_url
     assert_response :success
   end
 
-  test "should get create" do
-    get dashboard_posts_create_url
-    assert_response :success
+  test "should post create" do
+    assert_difference("Post.count") do
+      post dashboard_posts_url, params: { post: { title: "New Test Post" } }
+    end
+    assert_redirected_to dashboard_url
   end
 
   test "should get edit" do
-    get dashboard_posts_edit_url
+    get edit_dashboard_post_url(@post)
     assert_response :success
   end
 
-  test "should get update" do
-    get dashboard_posts_update_url
-    assert_response :success
+  test "should patch update" do
+    patch dashboard_post_url(@post), params: { post: { title: "Updated Title" } }
+    assert_redirected_to dashboard_url
   end
 
-  test "should get destroy" do
-    get dashboard_posts_destroy_url
-    assert_response :success
+  test "should delete destroy" do
+    assert_difference("Post.count", -1) do
+      delete dashboard_post_url(@post)
+    end
+    assert_redirected_to dashboard_url
   end
 end

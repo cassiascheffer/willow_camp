@@ -6,7 +6,7 @@ class Api::PostsControllerTest < ActionDispatch::IntegrationTest
     @user_two = users(:two)
     @post = posts(:one)  # belongs to @user (one)
     @post_two = posts(:two)  # belongs to @user_two (two)
-    @token = UserToken.create(user: @user).token
+    @token = UserToken.create(user: @user, name: "Test Token").token
     @headers = { "Authorization" => "Bearer #{@token}" }
   end
 

@@ -2,7 +2,7 @@ require "test_helper"
 
 class PostTest < ActiveSupport::TestCase
   test "should be valid with required attributes" do
-    post = Post.new(author: users(:one))
+    post = Post.new(author: users(:one), title: "Test Post")
     # Add any other required attributes here
     assert post.valid?, "Post with required attributes should be valid"
   end

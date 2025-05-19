@@ -10,97 +10,97 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
 
   test "should get index" do
     get posts_url, headers: @headers
-    puts request.inspect
     assert_response :success
   end
 
   test "should show post" do
-    get post_url(@post), headers: @headers
+    get "/#{@post.slug}", headers: @headers
     assert_response :success
   end
 
+  # All the remaining tests should be redirected to the dashboard namespace since
+  # the main PostsController only handles index and show actions
   test "should get new when signed in" do
-    sign_in(@user)
-    get new_post_url, headers: @headers
+    post session_url, params: { email_address: @user.email_address, password: "password" }
+    get new_dashboard_post_url
     assert_response :success
   end
 
   test "should create post when signed in" do
-    sign_in(@user)
+    post session_url, params: { email_address: @user.email_address, password: "password" }
     assert_difference("Post.count") do
       post(
-        posts_url,
+        dashboard_posts_url,
         params: {
           post: {
             title: "Some good title",
-            body: "Some long body text",
+            body_markdown: "Some long body text",
             slug: "some-good-title",
             published: true,
             published_at: DateTime.now
           }
-        },
-        headers: @headers
+        }
       )
     end
 
-    assert_redirected_to post_url(Post.last)
+    # Redirects to dashboard after creation according to Dashboard::PostsController
+    assert_redirected_to dashboard_url
   end
 
   test "should get edit" do
-    sign_in(@user)
-    get edit_post_url(@post), headers: @headers
+    post session_url, params: { email_address: @user.email_address, password: "password" }
+    get edit_dashboard_post_url(@post)
     assert_response :success
   end
 
   test "should update post" do
-    sign_in(@user)
+    post session_url, params: { email_address: @user.email_address, password: "password" }
     patch(
-      post_url(@post),
-      params: { post: { body: @post.body, published: @post.published, published_at: @post.published_at, title: @post.title } },
-      headers: @headers
+      dashboard_post_url(@post),
+      params: { post: { body_markdown: "Updated body", published: @post.published, published_at: @post.published_at, title: @post.title } }
     )
-    assert_redirected_to post_url(@post)
+    assert_redirected_to dashboard_url
   end
 
   test "should destroy post" do
-    sign_in(@user)
+    post session_url, params: { email_address: @user.email_address, password: "password" }
     assert_difference("Post.count", -1) do
-      delete post_url(@post), headers: @headers
+      delete dashboard_post_url(@post)
     end
 
-    assert_redirected_to posts_url
+    assert_redirected_to dashboard_url
   end
 
   test "should redirect new when not logged in" do
-    sign_out @user
-    get new_post_url, headers: @headers
+    delete session_url if defined?(session[:user_id])
+    get new_dashboard_post_url
     assert_redirected_to new_session_url
   end
 
   test "should redirect create when not logged in" do
-    sign_out @user
+    delete session_url if defined?(session[:user_id])
     assert_no_difference("Post.count") do
-      post posts_url, params: { post: { body: "Test Body", title: "Test Title" } }, headers: @headers
+      post dashboard_posts_url, params: { post: { body_markdown: "Test Body", title: "Test Title" } }
     end
     assert_redirected_to new_session_url
   end
 
   test "should redirect edit when not logged in" do
-    sign_out @user
-    get edit_post_url(@post), headers: @headers
+    delete session_url if defined?(session[:user_id])
+    get edit_dashboard_post_url(@post)
     assert_redirected_to new_session_url
   end
 
   test "should redirect update when not logged in" do
-    sign_out @user
-    patch post_url(@post), params: { post: { body: "Updated Body", title: "Updated Title" } }, headers: @headers
+    delete session_url if defined?(session[:user_id])
+    patch dashboard_post_url(@post), params: { post: { body_markdown: "Updated Body", title: "Updated Title" } }
     assert_redirected_to new_session_url
   end
 
   test "should redirect destroy when not logged in" do
-    sign_out @user
+    delete session_url if defined?(session[:user_id])
     assert_no_difference("Post.count") do
-      delete post_url(@post), headers: @headers
+      delete dashboard_post_url(@post)
     end
     assert_redirected_to new_session_url
   end
