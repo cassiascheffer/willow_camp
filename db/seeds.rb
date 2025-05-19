@@ -24,7 +24,7 @@ users.each do |user|
   puts "Created user: #{user.email_address} with subdomain: #{user.subdomain}"
 
   25.times do
-    user.posts.find_or_create_by!(slug: Faker::Internet.slug) do |post|
+    user.posts.create! do |post|
       post.title = Faker::Books::Lovecraft.tome
       post.body_markdown = Faker::Markdown.sandwich(sentences: 6, repeat: 3)
       post.published = Faker::Boolean.boolean

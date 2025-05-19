@@ -8,7 +8,7 @@ class User < ApplicationRecord
   has_many :tokens, class_name: "UserToken", dependent: :destroy
 
   normalizes :email_address, with: ->(e) { e.strip.downcase }
-  normalizes :subdomain, with: ->(s) { s.strip.downcase.parameterize }
+  normalizes :subdomain, with: ->(s) { s.strip.downcase.encode("UTF-8", invalid: :replace, undef: :replace, replace: "").parameterize }
 
   validates :email_address, presence: true,
                            uniqueness: true,

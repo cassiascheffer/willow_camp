@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_17_201224) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_18_154618) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -35,8 +35,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_17_201224) do
     t.text "body_markdown"
     t.text "body_html"
     t.string "slug"
-    t.index ["author_id"], name: "index_posts_on_author_id"
-    t.index ["slug"], name: "index_posts_on_slug", unique: true
+    t.index ["slug", "author_id"], name: "index_posts_on_slug_and_author", unique: true
   end
 
   create_table "sessions", force: :cascade do |t|
