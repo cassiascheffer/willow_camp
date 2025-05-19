@@ -70,19 +70,7 @@ class Dashboard::PostsController < Dashboard::BaseController
 
   def destroy
     @post.destroy
-
-    respond_to do |format|
-      format.turbo_stream do
-        # For destroy, we still want to show some sort of notification
-        # Since there's no form to update after deletion, we'll keep using the flash-messages
-        # But we'll modify it to be less intrusive in a future update if needed
-        render turbo_stream: [
-          turbo_stream.remove(dom_id(@post)),
-          turbo_stream.prepend("flash-messages", partial: "shared/flash", locals: { type: "notice", message: "Post was successfully destroyed." })
-        ]
-      end
-      format.html { redirect_to dashboard_path, notice: "Post was successfully destroyed." }
-    end
+    redirect_to dashboard_path, notice: "Post was successfully destroyed"
   end
 
   private
