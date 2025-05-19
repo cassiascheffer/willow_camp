@@ -30,7 +30,15 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     assert_difference("Post.count") do
       post(
         posts_url,
-        params: { post: { body: @post.body, published: @post.published, published_at: @post.published_at, title: @post.title } },
+        params: {
+          post: {
+            title: "Some good title",
+            body: "Some long body text",
+            slug: "some-good-title",
+            published: true,
+            published_at: DateTime.now
+          }
+        },
         headers: @headers
       )
     end

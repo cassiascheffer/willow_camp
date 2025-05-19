@@ -6,6 +6,7 @@ one:
   author_id: <%= ActiveRecord::FixtureSet.identify(:one) %>
   published: false
   published_at: 2025-04-27 13:32:14
+  slug: 'my-post'
 
 two:
   title: MyString
@@ -13,3 +14,4 @@ two:
   author_id: <%= ActiveRecord::FixtureSet.identify(:two) %>
   published: false
   published_at: 2025-04-27 13:32:14
+  slug: 'my-post-1'
