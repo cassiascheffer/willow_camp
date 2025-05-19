@@ -1,4 +1,4 @@
-class Dashboard::TokensController < ApplicationController
+class Dashboard::TokensController < Dashboard::BaseController
   before_action :set_token, only: [ :destroy ]
 
   def create
@@ -9,11 +9,6 @@ class Dashboard::TokensController < ApplicationController
         @tokens = Current.user.tokens.order(created_at: :desc)
         format.turbo_stream do
           flash.now[:notice] = "Token created successfully"
-          # Render multiple turbo stream actions
-          render turbo_stream: [
-            turbo_stream.replace("tokens", partial: "dashboard/settings/token_list", locals: { tokens: @tokens }),
-            turbo_stream.replace("new_token", partial: "dashboard/settings/token_form", locals: { token: Current.user.tokens.new })
-          ]
         end
         format.html { redirect_to dashboard_settings_path, notice: "Token created successfully" }
       else

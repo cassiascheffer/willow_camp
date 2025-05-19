@@ -19,32 +19,10 @@
   </head>
 
   <body>
-    <% if flash.any? %>
-      <div id="flash-messages" class="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 w-11/12 max-w-md">
-        <% flash.each do |type, message| %>
-          <% 
-            case type.to_s
-            when "notice"
-              alert_class = "willow-notice"
-            when "alert"
-              alert_class = "willow-alert"
-            else
-              alert_class = "willow-notice"
-            end
-          %>
-          <div class="<%= alert_class %> shadow-lg" role="alert">
-            <span class="block sm:inline"><%= message %></span>
-            <button onclick="this.parentElement.remove();" class="absolute top-2 right-2 text-muted hover:text-accent">
-              &times;
-            </button>
-          </div>
-        <% end %>
-      </div>
-    <% end %>
     <nav class="bg-card shadow-md">
       <div class="container mx-auto px-5 md:px-8 py-3 flex items-center justify-between">
       <div class="text-lg font-bold text-accent">
-        <%= @user.blog_title || "#{@user.subdomain}.willow.camp" %>
+        <%= link_to(@user.blog_title || "#{@user.subdomain}.willow.camp", dashboard_path, class: "text-accent") %>
       </div>
       <div>
         <%= link_to "Settings", dashboard_settings_path, class: "text-accent hover:text-[#005273] dark:hover:text-[#5D7FE3]" %>

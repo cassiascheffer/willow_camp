@@ -1,6 +1,4 @@
-class Dashboard::PostsController < ApplicationController
-  layout "dashboard"
-  before_action :set_user
+class Dashboard::PostsController < Dashboard::BaseController
   before_action :set_post, only: %i[ edit update destroy ]
   before_action :authorize_user!, only: %i[ edit update destroy ]
 
