@@ -22,10 +22,8 @@ class Dashboard::TokensController < Dashboard::BaseController
     respond_to do |format|
       if @token.destroy
         format.turbo_stream { flash.now[:notice] = "Token deleted successfully" }
-        format.html { redirect_to dashboard_settings_path, notice: "Token deleted successfully" }
       else
         format.turbo_stream { flash.now[:alert] = "Failed to delete token" }
-        format.html { redirect_to dashboard_settings_path, alert: "Failed to delete token" }
       end
     end
   end
@@ -33,7 +31,8 @@ class Dashboard::TokensController < Dashboard::BaseController
   private
 
   def set_token
-    @token = Current.user.tokens.find(params[:id])
+    @token = Current.user.tokens.find_by(id: params[:id])
+    head :not_found unless @token
   end
 
   def token_params
