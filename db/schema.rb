@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_17_000001) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_17_112950) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -26,10 +26,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_17_000001) do
     t.text "body_html"
     t.string "base_slug"
     t.integer "slug_suffix", default: 0
+    t.index ["author_id", "slug"], name: "index_posts_on_author_id_and_slug", unique: true
     t.index ["author_id"], name: "index_posts_on_author_id"
     t.index ["base_slug", "slug_suffix"], name: "index_posts_on_base_slug_and_slug_suffix"
     t.index ["base_slug"], name: "index_posts_on_base_slug"
-    t.index ["slug"], name: "index_posts_on_slug", unique: true
   end
 
   create_table "sessions", force: :cascade do |t|

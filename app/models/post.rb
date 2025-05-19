@@ -1,5 +1,6 @@
 class Post < ApplicationRecord
   include Sluggable
+  slug_unique_within_scope :author_id
 
   belongs_to :author, class_name: "User", foreign_key: "author_id"
 

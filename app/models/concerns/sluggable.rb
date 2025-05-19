@@ -123,8 +123,7 @@ module Sluggable
     before_validation :ensure_slug_is_set
     before_validation :check_slug_uniqueness
 
-    # Validations
-    validates :slug, presence: true, uniqueness: true
+    validates :slug, presence: true
     validates :base_slug, presence: true
     validates :slug_suffix, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 
@@ -133,14 +132,23 @@ module Sluggable
     end
 
     class_attribute :_slug_source, instance_writer: false
+    class_attribute :_slug_scope, instance_writer: false
 
     def self.slug_source(field)
       self._slug_source = field
     end
 
-    def slug_source
-      self.class._slug_source || :title
+    def self.slug_unique_within_scope(scope_field)
+      raise ArgumentError, "scope_field must be specified" unless scope_field.present?
+      self._slug_scope = scope_field
+
+      # Add the scoped uniqueness validator
+      validates :slug, uniqueness: { scope: scope_field }
     end
+  end
+
+  def slug_source
+    self.class._slug_source || :title
   end
 
   private
@@ -209,16 +217,26 @@ module Sluggable
   def find_max_slug_suffix
     return 0 unless existing_slugs_with_same_base?
 
-    @max_slug_suffix ||= self.class
+    query = self.class
       .where(base_slug: base_slug)
       .where.not(id: id)
-      .maximum(:slug_suffix) || 0
+
+    # Apply scope if defined
+    query = apply_scope_to_query(query)
+
+    @max_slug_suffix ||= query.maximum(:slug_suffix) || 0
   end
 
   def existing_slugs_with_same_base?
-    return false if new_record? && !self.class.exists?(base_slug: base_slug)
     return false if base_slug.blank?
-    self.class.where(base_slug: base_slug).where.not(id: id).exists?
+
+    query = self.class.where(base_slug: base_slug).where.not(id: id)
+    query = apply_scope_to_query(query)
+
+    # For new records, check if any exist with the same base_slug within scope
+    return false if new_record? && !query.exists?
+
+    query.exists?
   end
 
   def check_slug_uniqueness
@@ -231,7 +249,20 @@ module Sluggable
 
   def slug_already_exists?
     return false if slug.blank?
-    @slug_exists ||= self.class.where(slug: slug).where.not(id: id).exists?
+
+    query = self.class.where(slug: slug).where.not(id: id)
+    query = apply_scope_to_query(query)
+
+    @slug_exists ||= query.exists?
+  end
+
+  def apply_scope_to_query(query)
+    scope = self.class._slug_scope
+    if scope.present? && respond_to?(scope)
+      scope_value = send(scope)
+      query = query.where(scope => scope_value) if scope_value.present?
+    end
+    query
   end
 
   def generate_final_slug
