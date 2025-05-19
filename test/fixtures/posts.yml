@@ -3,13 +3,13 @@
 one:
   title: MyString
   body: MyText
-  author_id: user_one
+  author_id: <%= ActiveRecord::FixtureSet.identify(:one) %>
   published: false
   published_at: 2025-04-27 13:32:14
 
 two:
   title: MyString
   body: MyText
-  author_id: 1
+  author_id: <%= ActiveRecord::FixtureSet.identify(:two) %>
   published: false
   published_at: 2025-04-27 13:32:14
