@@ -1,0 +1,18 @@
+# User tokens fixtures
+
+active:
+  name: API Access Token
+  token: abc123token456789
+  user: one
+
+expired:
+  name: Expired Token
+  token: def456token789012
+  expires_at: <%= 1.day.ago %>
+  user: one
+
+future_expiry:
+  name: Token with Future Expiry
+  token: ghi789token012345
+  expires_at: <%= 30.days.from_now %>
+  user: two
