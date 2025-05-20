@@ -20,6 +20,7 @@ class Post < ApplicationRecord
   validates :published, inclusion: { in: [ true, false ] }, allow_nil: true
   validates :body_markdown, length: { maximum: 100000 }, allow_blank: true
   validates :published_at, presence: true, if: :published
+  validates :meta_description, length: { maximum: 160 }
 
   # Determines when friendly_id should generate a new slug
   def should_generate_new_friendly_id?

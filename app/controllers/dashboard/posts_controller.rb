@@ -1,4 +1,6 @@
 class Dashboard::PostsController < Dashboard::BaseController
+  include Pagy::Backend
+
   before_action :set_post, only: %i[ edit update destroy ]
   before_action :authorize_user!, only: %i[ edit update destroy ]
 
@@ -95,6 +97,7 @@ class Dashboard::PostsController < Dashboard::BaseController
         :published,
         :published_at,
         :updated_at,
+        :meta_description
       )
     end
 end

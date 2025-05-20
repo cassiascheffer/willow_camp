@@ -1,9 +1,11 @@
 class DashboardController < ApplicationController
+  include Pagy::Backend
+
   layout "dashboard"
   before_action :set_user
 
   def show
-    @posts = Post.where(author: Current.user).order(published_at: :desc, created_at: :desc)
+    @pagy, @posts = pagy(Post.where(author: Current.user).order(published_at: :desc, created_at: :desc))
   end
 
   private

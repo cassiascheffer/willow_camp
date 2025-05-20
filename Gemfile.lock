@@ -199,6 +199,7 @@ GEM
     nokogiri (1.18.8-x86_64-linux-musl)
       racc (~> 1.4)
     ostruct (0.6.1)
+    pagy (9.3.4)
     parallel (1.27.0)
     parser (3.3.8.0)
       ast (~> 2.4.1)
@@ -403,6 +404,7 @@ DEPENDENCIES
   importmap-rails
   jbuilder
   kamal
+  pagy
   pg (~> 1.1)
   propshaft
   puma (>= 5.0)
@@ -415,8 +417,8 @@ DEPENDENCIES
   solid_cache
   solid_queue
   stimulus-rails
-  tailwindcss-rails (~> 4.2)
-  tailwindcss-ruby (~> 4.1)
+  tailwindcss-rails
+  tailwindcss-ruby
   thruster
   turbo-rails
   tzinfo-data

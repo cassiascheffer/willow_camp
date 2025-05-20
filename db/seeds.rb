@@ -23,13 +23,16 @@ users.each do |user|
   end
   puts "Created user: #{user.email_address} with subdomain: #{user.subdomain}"
 
-  25.times do
+  100.times do
     user.posts.create! do |post|
       post.title = Faker::Books::Lovecraft.tome
       post.body_markdown = Faker::Markdown.sandwich(sentences: 6, repeat: 3)
       post.published = Faker::Boolean.boolean
       post.published_at = Faker::Date.between(from: 2.days.ago, to: Date.today)
+      post.tag_list = ["dogs", "cats", "fun!"]
     end
+    print '.'
   end
-  puts "Created 25 posts for user: #{user.email_address}"
+  puts ''
+  puts "Created 100 posts for user: #{user.email_address}"
 end

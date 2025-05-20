@@ -57,7 +57,8 @@ class Api::PostsController < Api::BaseController
         :tag_list,
         :body_markdown,
         :published,
-        :published_at
+        :published_at,
+        :meta_description
       )
     end
 end

@@ -1,4 +1,6 @@
 class TagsController < ApplicationController
+  include Pagy::Backend
+
   allow_unauthenticated_access only: %i[ index show ]
   before_action :set_author, only: %i[ index show ]
   before_action :set_tag, only: [ :show ]
@@ -8,7 +10,9 @@ class TagsController < ApplicationController
   end
 
   def show
-    @posts = Post.where(author: @author).tagged_with(@tag.name).order(created_at: :desc)
+    @pagy, @posts = pagy(
+      Post.where(author: @author).tagged_with(@tag.name).order(created_at: :desc)
+    )
   end
 
   private

@@ -1,10 +1,13 @@
 class PostsController < ApplicationController
+  include Pagy::Backend
   allow_unauthenticated_access only: %i[ index show ]
   before_action :set_author, only: %i[ index show ]
   before_action :set_post, only: %i[ show ]
 
   def index
-    @posts = Post.where(author: @author, published: true).order(published_at: :desc, created_at: :desc)
+    @pagy, @posts = pagy(
+      @author.posts.where(published: true).order(published_at: :desc, created_at: :desc)
+    )
   end
 
   def show
