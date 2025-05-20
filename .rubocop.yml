@@ -4,9 +4,9 @@ plugins:
   - standard-custom
   - standard-performance
   - rubocop-performance
+  - rubocop-rails
 
 inherit_gem:
-  # rubocop-rails-omakase: rubocop.yml
   standard: config/base.yml
   standard-custom: config/base.yml
   standard-performance: config/base.yml
