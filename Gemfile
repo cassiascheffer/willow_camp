@@ -43,6 +43,7 @@ gem "thruster", require: false
 gem "acts-as-taggable-on"
 gem "commonmarker"
 gem "friendly_id"
+gem "honeybadger"
 gem 'pagy'
 gem "tailwindcss-rails"
 gem "tailwindcss-ruby"
