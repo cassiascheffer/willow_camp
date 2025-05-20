@@ -39,7 +39,7 @@
     <footer class="border-t border-[#E5E7EB] dark:border-[#3A3D4D] py-4 px-5 mt-12">
       <% if @author.present? %>
         <div class="container mx-auto text-sm text-muted">
-          &copy; <%= Time.current.year %> <%= @author.blog_title || "#{@author.subdomain}.willow.camp" %> | Made with <%= link_to "willow.camp", root_url %>
+          Made with <%= link_to "willow.camp", root_url(subdomain: false, allow_other_subdomains: true) %>
         </div>
       <% end %>
     </footer>
