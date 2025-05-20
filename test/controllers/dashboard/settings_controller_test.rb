@@ -16,10 +16,10 @@ class Dashboard::SettingsControllerTest < ActionDispatch::IntegrationTest
     sign_in(@user)
     get dashboard_settings_path
     assert_response :success
-    assert_not_nil controller.instance_variable_get("@tokens")
-    assert_not_nil controller.instance_variable_get("@token")
-    assert_instance_of UserToken, controller.instance_variable_get("@token")
-    assert_includes controller.instance_variable_get("@tokens"), @token1
-    assert_includes controller.instance_variable_get("@tokens"), @token2
+    assert_not_nil controller.instance_variable_get(:@tokens)
+    assert_not_nil controller.instance_variable_get(:@token)
+    assert_instance_of UserToken, controller.instance_variable_get(:@token)
+    assert_includes controller.instance_variable_get(:@tokens), @token1
+    assert_includes controller.instance_variable_get(:@tokens), @token2
   end
 end

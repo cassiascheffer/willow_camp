@@ -4,7 +4,7 @@ class DashboardControllerTest < ActionDispatch::IntegrationTest
   setup do
     @user = users(:one)
     # Login the user
-    post session_url, params: { email_address: @user.email_address, password: "password" }
+    post session_url, params: {email_address: @user.email_address, password: "password"}
   end
 
   test "should get show" do

@@ -1,9 +1,9 @@
 class TagsController < ApplicationController
   include Pagy::Backend
 
-  allow_unauthenticated_access only: %i[ index show ]
-  before_action :set_author, only: %i[ index show ]
-  before_action :set_tag, only: [ :show ]
+  allow_unauthenticated_access only: %i[index show]
+  before_action :set_author, only: %i[index show]
+  before_action :set_tag, only: [:show]
 
   def index
     @tags = ActsAsTaggableOn::Tag.for_tenant(@author.id)

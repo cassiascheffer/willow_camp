@@ -5,7 +5,7 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     @post = posts(:one)
     @user = users(:one)
     host = "#{@user.subdomain}.example.com"
-    @headers = { host: host }
+    @headers = {host: host}
   end
 
   test "should get index" do

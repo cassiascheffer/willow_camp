@@ -1,8 +1,8 @@
 class Dashboard::PostsController < Dashboard::BaseController
   include Pagy::Backend
 
-  before_action :set_post, only: %i[ edit update destroy ]
-  before_action :authorize_user!, only: %i[ edit update destroy ]
+  before_action :set_post, only: %i[edit update destroy]
+  before_action :authorize_user!, only: %i[edit update destroy]
 
   def new
     @post = Post.new
@@ -15,24 +15,24 @@ class Dashboard::PostsController < Dashboard::BaseController
     respond_to do |format|
       if @post.save
         format.turbo_stream do
-          flash.now[:form_status] = { type: "success", message: "Updated" }
+          flash.now[:form_status] = {type: "success", message: "Updated"}
           render turbo_stream: [
-            turbo_stream.replace("new_post_form", partial: "dashboard/posts/form", locals: { post: Post.new })
+            turbo_stream.replace("new_post_form", partial: "dashboard/posts/form", locals: {post: Post.new})
           ]
         end
         format.html do
-          flash[:form_status] = { type: "success", message: "Updated" }
+          flash[:form_status] = {type: "success", message: "Updated"}
           redirect_to dashboard_path
         end
       else
         format.turbo_stream do
-          flash.now[:form_status] = { type: "error", message: "There were errors" }
+          flash.now[:form_status] = {type: "error", message: "There were errors"}
           render turbo_stream: [
-            turbo_stream.replace("new_post_form", partial: "dashboard/posts/form", locals: { post: @post })
+            turbo_stream.replace("new_post_form", partial: "dashboard/posts/form", locals: {post: @post})
           ]
         end
         format.html do
-          flash.now[:form_status] = { type: "error", message: "There were errors" }
+          flash.now[:form_status] = {type: "error", message: "There were errors"}
           render :new, status: :unprocessable_entity
         end
       end
@@ -46,24 +46,24 @@ class Dashboard::PostsController < Dashboard::BaseController
     respond_to do |format|
       if @post.update(post_params)
         format.turbo_stream do
-          flash.now[:form_status] = { type: "success", message: "Updated" }
+          flash.now[:form_status] = {type: "success", message: "Updated"}
           render turbo_stream: [
-            turbo_stream.replace("edit_post_form", partial: "dashboard/posts/form", locals: { post: @post })
+            turbo_stream.replace("edit_post_form", partial: "dashboard/posts/form", locals: {post: @post})
           ]
         end
         format.html do
-          flash[:form_status] = { type: "success", message: "Updated" }
+          flash[:form_status] = {type: "success", message: "Updated"}
           redirect_to dashboard_path
         end
       else
         format.turbo_stream do
-          flash.now[:form_status] = { type: "error", message: "There were errors" }
+          flash.now[:form_status] = {type: "error", message: "There were errors"}
           render turbo_stream: [
-            turbo_stream.replace("edit_post_form", partial: "dashboard/posts/form", locals: { post: @post })
+            turbo_stream.replace("edit_post_form", partial: "dashboard/posts/form", locals: {post: @post})
           ]
         end
         format.html do
-          flash.now[:form_status] = { type: "error", message: "There were errors" }
+          flash.now[:form_status] = {type: "error", message: "There were errors"}
           render :edit, status: :unprocessable_entity
         end
       end
@@ -77,27 +77,26 @@ class Dashboard::PostsController < Dashboard::BaseController
 
   private
 
+  def set_post
+    @post = Post.find_by(slug: params[:slug])
+  end
 
-    def set_post
-      @post = Post.find_by(slug: params[:slug])
+  def authorize_user!
+    unless @post.author == @user
+      redirect_to dashboard_path, alert: "You are not authorized to perform this action."
     end
+  end
 
-    def authorize_user!
-      unless @post.author == @user
-        redirect_to dashboard_path, alert: "You are not authorized to perform this action."
-      end
-    end
-
-    def post_params
-      params.require(:post).permit(
-        :title,
-        :tag_list,
-        :slug,
-        :body_markdown,
-        :published,
-        :published_at,
-        :updated_at,
-        :meta_description
-      )
-    end
+  def post_params
+    params.require(:post).permit(
+      :title,
+      :tag_list,
+      :slug,
+      :body_markdown,
+      :published,
+      :published_at,
+      :updated_at,
+      :meta_description
+    )
+  end
 end

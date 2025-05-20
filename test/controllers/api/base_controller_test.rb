@@ -3,7 +3,7 @@ require "test_helper"
 class Api::BaseControllerTest < ActionDispatch::IntegrationTest
   class TestController < Api::BaseController
     def index
-      render json: { success: true, user_id: @current_user.id }
+      render json: {success: true, user_id: @current_user.id}
     end
   end
 
@@ -11,7 +11,7 @@ class Api::BaseControllerTest < ActionDispatch::IntegrationTest
     @user = users(:one)
     # Create a test token for the user
     @token = UserToken.create(user: @user, name: "Test Token").token
-    @headers = { "Authorization" => "Bearer #{@token}" }
+    @headers = {"Authorization" => "Bearer #{@token}"}
 
     # Set up a test route that uses our test controller
     Rails.application.routes.draw do
@@ -35,7 +35,7 @@ class Api::BaseControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should reject access with invalid token" do
-    get api_test_url, headers: { "Authorization" => "Bearer invalid_token" }, as: :json
+    get api_test_url, headers: {"Authorization" => "Bearer invalid_token"}, as: :json
     assert_response :unauthorized
 
     json_response = JSON.parse(response.body)
@@ -51,7 +51,7 @@ class Api::BaseControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should reject access with malformed authorization header" do
-    get api_test_url, headers: { "Authorization" => "malformed_header" }, as: :json
+    get api_test_url, headers: {"Authorization" => "malformed_header"}, as: :json
     assert_response :unauthorized
 
     json_response = JSON.parse(response.body)
@@ -65,7 +65,7 @@ class Api::BaseControllerTest < ActionDispatch::IntegrationTest
       expires_at: 1.day.ago
     ).token
 
-    get api_test_url, headers: { "Authorization" => "Bearer #{expired_token}" }, as: :json
+    get api_test_url, headers: {"Authorization" => "Bearer #{expired_token}"}, as: :json
     assert_response :unauthorized
 
     json_response = JSON.parse(response.body)

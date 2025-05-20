@@ -4,7 +4,7 @@ class Dashboard::TokensControllerTest < ActionDispatch::IntegrationTest
   setup do
     @user = users(:one)
     sign_in @user
-    @token_params = { user_token: { name: "Test API Token", expires_at: 30.days.from_now } }
+    @token_params = {user_token: {name: "Test API Token", expires_at: 30.days.from_now}}
   end
 
   test "should create token with valid attributes" do
@@ -17,10 +17,10 @@ class Dashboard::TokensControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should not create token with invalid attributes" do
-    invalid_params = { user_token: { name: "", expires_at: 30.days.from_now } }
+    invalid_params = {user_token: {name: "", expires_at: 30.days.from_now}}
 
     assert_no_difference("@user.tokens.count") do
-      post dashboard_tokens_path, params: invalid_params, headers: { "Accept" => "text/vnd.turbo-stream.html" }
+      post dashboard_tokens_path, params: invalid_params, headers: {"Accept" => "text/vnd.turbo-stream.html"}
     end
 
     assert_response :success
@@ -29,7 +29,7 @@ class Dashboard::TokensControllerTest < ActionDispatch::IntegrationTest
 
   test "should create token with Turbo Stream request" do
     assert_difference("@user.tokens.count") do
-      post dashboard_tokens_path, params: @token_params, headers: { "Accept" => "text/vnd.turbo-stream.html" }
+      post dashboard_tokens_path, params: @token_params, headers: {"Accept" => "text/vnd.turbo-stream.html"}
     end
 
     assert_response :success
@@ -41,7 +41,7 @@ class Dashboard::TokensControllerTest < ActionDispatch::IntegrationTest
     token = user_tokens(:active)
 
     assert_difference("@user.tokens.count", -1) do
-      delete dashboard_token_path(token), headers: { "Accept" => "text/vnd.turbo-stream.html" }
+      delete dashboard_token_path(token), headers: {"Accept" => "text/vnd.turbo-stream.html"}
     end
 
     assert_response :success
@@ -53,7 +53,7 @@ class Dashboard::TokensControllerTest < ActionDispatch::IntegrationTest
     token = user_tokens(:active)
 
     assert_difference("@user.tokens.count", -1) do
-      delete dashboard_token_path(token), headers: { "Accept" => "text/vnd.turbo-stream.html" }
+      delete dashboard_token_path(token), headers: {"Accept" => "text/vnd.turbo-stream.html"}
     end
 
     assert_response :success
@@ -82,10 +82,10 @@ class Dashboard::TokensControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should handle token with past expiration date" do
-    invalid_params = { user_token: { name: "Test API Token", expires_at: 1.day.ago } }
+    invalid_params = {user_token: {name: "Test API Token", expires_at: 1.day.ago}}
 
     assert_no_difference("@user.tokens.count") do
-      post dashboard_tokens_path, params: invalid_params, headers: { "Accept" => "text/vnd.turbo-stream.html" }
+      post dashboard_tokens_path, params: invalid_params, headers: {"Accept" => "text/vnd.turbo-stream.html"}
     end
 
     assert_response :success

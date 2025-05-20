@@ -8,12 +8,11 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
-
 User.destroy_all
 
 users = [
-  { email_address: "winter@acorn.ca", password: "winter", subdomain: "winter", name: "Winter Solstice" },
-  { email_address: "willow@acorn.ca", password: "willow", subdomain: "willow", name: "Will-o-the-Whisp" }
+  {email_address: "winter@acorn.ca", password: "winter", subdomain: "winter", name: "Winter Solstice"},
+  {email_address: "willow@acorn.ca", password: "willow", subdomain: "willow", name: "Will-o-the-Whisp"}
 ]
 
 users.each do |user|
@@ -31,8 +30,8 @@ users.each do |user|
       post.published_at = Faker::Date.between(from: 2.days.ago, to: Date.today)
       post.tag_list = ["dogs", "cats", "fun!"]
     end
-    print '.'
+    print "."
   end
-  puts ''
+  puts ""
   puts "Created 100 posts for user: #{user.email_address}"
 end

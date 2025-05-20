@@ -17,7 +17,7 @@ class SessionTest < ActiveSupport::TestCase
   end
 
   test "should allow valid ip addresses" do
-    valid_ips = [ "192.168.1.1", "10.0.0.1", "172.16.0.1", "2001:0db8:85a3:0000:0000:8a2e:0370:7334" ]
+    valid_ips = ["192.168.1.1", "10.0.0.1", "172.16.0.1", "2001:0db8:85a3:0000:0000:8a2e:0370:7334"]
 
     valid_ips.each do |ip|
       @session.ip_address = ip
@@ -26,7 +26,7 @@ class SessionTest < ActiveSupport::TestCase
   end
 
   test "should reject invalid ip addresses" do
-    invalid_ips = [ "not-an-ip", "999.999.999.999", "::incorrect", "192.168.1" ]
+    invalid_ips = ["not-an-ip", "999.999.999.999", "::incorrect", "192.168.1"]
 
     invalid_ips.each do |ip|
       @session.ip_address = ip

@@ -7,5 +7,5 @@ class Session < ApplicationRecord
     allow_blank: true,
     message: "must be a valid IPv4 or IPv6 address"
   }
-  validates :user_agent, length: { maximum: 255 }, allow_blank: true
+  validates :user_agent, length: {maximum: 255}, allow_blank: true
 end

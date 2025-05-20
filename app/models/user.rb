@@ -15,18 +15,18 @@ class User < ApplicationRecord
 
   # Validations
   validates :email_address, presence: true,
-                           uniqueness: true,
-                           format: { with: URI::MailTo::EMAIL_REGEXP, message: "must be a valid email address" }
+    uniqueness: true,
+    format: {with: URI::MailTo::EMAIL_REGEXP, message: "must be a valid email address"}
   validates :subdomain, presence: true,
-                       uniqueness: true,
-                       format: { with: /\A[a-z0-9\-_]+\z/, message: "may only contain letters, numbers, hyphens and underscores" },
-                       length: { minimum: 3, maximum: 63 },
-                       exclusion: { in: friendly_id_config.reserved_words }
-  validates :password, presence: true, length: { minimum: 6 }, allow_nil: true
-  validates :name, presence: true, length: { maximum: 255 }, allow_blank: true
-  validates :blog_title, length: { maximum: 255 }, allow_blank: true
+    uniqueness: true,
+    format: {with: /\A[a-z0-9\-_]+\z/, message: "may only contain letters, numbers, hyphens and underscores"},
+    length: {minimum: 3, maximum: 63},
+    exclusion: {in: friendly_id_config.reserved_words}
+  validates :password, presence: true, length: {minimum: 6}, allow_nil: true
+  validates :name, presence: true, length: {maximum: 255}, allow_blank: true
+  validates :blog_title, length: {maximum: 255}, allow_blank: true
 
   def to_key
-    [ subdomain ]
+    [subdomain]
   end
 end

@@ -7,6 +7,6 @@ class AddBaseSlugAndSuffixToPosts < ActiveRecord::Migration[8.0]
     add_index :posts, :base_slug
 
     # Compound index for faster lookups when searching by both
-    add_index :posts, [ :base_slug, :slug_suffix ]
+    add_index :posts, [:base_slug, :slug_suffix]
   end
 end

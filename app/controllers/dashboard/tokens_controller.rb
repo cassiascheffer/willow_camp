@@ -1,5 +1,5 @@
 class Dashboard::TokensController < Dashboard::BaseController
-  before_action :set_token, only: [ :destroy ]
+  before_action :set_token, only: [:destroy]
 
   def create
     @token = Current.user.tokens.new(token_params)

@@ -8,7 +8,7 @@ module TurboFlashConcern
         respond_to do |format|
           format.turbo_stream do
             flash.now[:alert] = alert
-            render turbo_stream: turbo_stream.prepend("flash-messages", partial: "shared/flash", locals: { type: "alert", message: alert })
+            render turbo_stream: turbo_stream.prepend("flash-messages", partial: "shared/flash", locals: {type: "alert", message: alert})
           end
           format.html { super }
         end
@@ -16,7 +16,7 @@ module TurboFlashConcern
         respond_to do |format|
           format.turbo_stream do
             flash.now[:notice] = notice
-            render turbo_stream: turbo_stream.prepend("flash-messages", partial: "shared/flash", locals: { type: "notice", message: notice })
+            render turbo_stream: turbo_stream.prepend("flash-messages", partial: "shared/flash", locals: {type: "notice", message: notice})
           end
           format.html { super }
         end
@@ -35,7 +35,7 @@ module TurboFlashConcern
   def respond_with_turbo_flash(type, message)
     respond_to do |format|
       format.turbo_stream do
-        render turbo_stream: turbo_stream.prepend("flash-messages", partial: "shared/flash", locals: { type: type, message: message })
+        render turbo_stream: turbo_stream.prepend("flash-messages", partial: "shared/flash", locals: {type: type, message: message})
       end
       format.html do
         flash[type] = message

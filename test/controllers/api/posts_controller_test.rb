@@ -7,27 +7,27 @@ class Api::PostsControllerTest < ActionDispatch::IntegrationTest
     @post = posts(:one)  # belongs to @user (one)
     @post_two = posts(:two)  # belongs to @user_two (two)
     @token = UserToken.create(user: @user, name: "Test Token").token
-    @headers = { "Authorization" => "Bearer #{@token}" }
+    @headers = {"Authorization" => "Bearer #{@token}"}
   end
 
   test "should not create post without authentication" do
     assert_no_difference("Post.count") do
-      post api_posts_url, params: { post: {
+      post api_posts_url, params: {post: {
         title: "New Post",
         body_markdown: "# Hello World",
         published: true
-      } }, as: :json
+      }}, as: :json
     end
     assert_response :unauthorized
   end
 
   test "should create post with valid authentication and data" do
     assert_difference("Post.count") do
-      post api_posts_url, params: { post: {
+      post api_posts_url, params: {post: {
         title: "New Post",
         body_markdown: "# Hello World",
         published: true
-      } }, headers: @headers, as: :json
+      }}, headers: @headers, as: :json
     end
     assert_response :created
 
@@ -41,11 +41,11 @@ class Api::PostsControllerTest < ActionDispatch::IntegrationTest
 
   test "should not create post with invalid data" do
     assert_no_difference("Post.count") do
-      post api_posts_url, params: { post: {
+      post api_posts_url, params: {post: {
         title: "",
         body_markdown: "# Hello World",
         published: true
-      } }, headers: @headers, as: :json
+      }}, headers: @headers, as: :json
     end
     assert_response :unprocessable_entity
 
@@ -88,9 +88,9 @@ class Api::PostsControllerTest < ActionDispatch::IntegrationTest
 
   test "should update post" do
     patch api_post_url(slug: @post.slug),
-          params: { post: { title: "Updated Title" } },
-          headers: @headers,
-          as: :json
+      params: {post: {title: "Updated Title"}},
+      headers: @headers,
+      as: :json
     assert_response :success
 
     @post.reload
@@ -99,8 +99,8 @@ class Api::PostsControllerTest < ActionDispatch::IntegrationTest
 
   test "should not update post without authentication" do
     patch api_post_url(slug: @post.slug),
-          params: { post: { title: "Updated Title" } },
-          as: :json
+      params: {post: {title: "Updated Title"}},
+      as: :json
     assert_response :unauthorized
 
     @post.reload

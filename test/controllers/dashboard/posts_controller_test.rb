@@ -5,7 +5,7 @@ class Dashboard::PostsControllerTest < ActionDispatch::IntegrationTest
     @user = users(:one)
     @post = posts(:one)
     # Login the user
-    post session_url, params: { email_address: @user.email_address, password: "password" }
+    post session_url, params: {email_address: @user.email_address, password: "password"}
   end
 
   test "should get new" do
@@ -15,7 +15,7 @@ class Dashboard::PostsControllerTest < ActionDispatch::IntegrationTest
 
   test "should post create" do
     assert_difference("Post.count") do
-      post dashboard_posts_url, params: { post: { title: "New Test Post" } }
+      post dashboard_posts_url, params: {post: {title: "New Test Post"}}
     end
     assert_redirected_to dashboard_url
   end
@@ -26,7 +26,7 @@ class Dashboard::PostsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should patch update" do
-    patch dashboard_post_url(slug: @post.slug), params: { post: { title: "Updated Title" } }
+    patch dashboard_post_url(slug: @post.slug), params: {post: {title: "Updated Title"}}
     assert_redirected_to dashboard_url
   end
 

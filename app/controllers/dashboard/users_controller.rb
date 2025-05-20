@@ -1,5 +1,5 @@
 class Dashboard::UsersController < Dashboard::BaseController
-  before_action :set_user, only: [ :edit, :update ]
+  before_action :set_user, only: [:edit, :update]
 
   def edit
   end
@@ -15,17 +15,18 @@ class Dashboard::UsersController < Dashboard::BaseController
   end
 
   private
-    def set_user
-      if params[:slug].present?
-        @user = User.find(params[:slug])
-      end
 
-      if @user != Current.user
-        head :not_found
-      end
+  def set_user
+    if params[:slug].present?
+      @user = User.find(params[:slug])
     end
 
-    def user_params
-      params.require(:user).permit(:name, :email_address, :password, :password_confirmation, :subdomain, :blog_title, :theme)
+    if @user != Current.user
+      head :not_found
     end
+  end
+
+  def user_params
+    params.require(:user).permit(:name, :email_address, :password, :password_confirmation, :subdomain, :blog_title, :theme)
+  end
 end

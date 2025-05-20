@@ -5,8 +5,8 @@ class AddConstraintsToUserTokens < ActiveRecord::Migration[8.0]
 
     # Add CHECK constraint to ensure expires_at is in the future when not null
     execute <<-SQL
-      ALTER TABLE user_tokens#{' '}
-      ADD CONSTRAINT check_expires_at_in_future#{' '}
+      ALTER TABLE user_tokens#{" "}
+      ADD CONSTRAINT check_expires_at_in_future#{" "}
       CHECK (expires_at IS NULL OR expires_at > CURRENT_TIMESTAMP)
     SQL
   end
