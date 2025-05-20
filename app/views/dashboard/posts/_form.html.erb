@@ -22,6 +22,11 @@
   </div>
 
   <div class="my-5">
+    <%= form.label :tag_list%>
+    <%= form.text_field :tag_list, class: ["willow-input mt-2", {"focus:ring-[#006A93] dark:focus:ring-[#7AA2F7]": post.errors[:tag_list].none?, "border-[#EF4444] dark:border-[#F87171] focus:ring-[#EF4444] dark:focus:ring-[#F87171]": post.errors[:tag_list].any?}] %>
+  </div>
+
+  <div class="my-5">
     <%= form.label :body %>
     <%= form.text_area :body_markdown, rows: 4, class: ["willow-input mt-2 h-[400px]", {"focus:ring-[#006A93] dark:focus:ring-[#7AA2F7]": post.errors[:body_markdown].none?, "border-[#EF4444] dark:border-[#F87171] focus:ring-[#EF4444] dark:focus:ring-[#F87171]": post.errors[:body_markdown].any?}] %>
   </div>

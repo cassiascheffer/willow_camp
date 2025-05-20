@@ -6,12 +6,16 @@
   <% end %>
 
   <article class="prose-custom">
+    <p class="text-sm text-gray-500">
+      <%= @post.tags.map(&:name).join(', ') %>
+    </p>
+
     <h1 class="post-title"><%= @post.title %></h1>
     <div class="post-metadata">
       <p><%= @post.author_name %></p>
       <p>Published on <%= @post.published_at.strftime("%B %d, %Y") %></p>
     </div>
-    
+
     <div class="post-content">
       <%= render @post %>
     </div>

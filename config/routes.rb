@@ -11,6 +11,10 @@ Rails.application.routes.draw do
   end
 
   constraints(subdomain: /.+/) do
+    # Tags
+    get "/tags", to: "tags#index", as: :tags
+    get "/t/:tag", to: "tags#show", as: :tag
+    # Posts
     get "/", to: "posts#index", as: :posts
     get "/:slug", to: "posts#show", as: :post
   end

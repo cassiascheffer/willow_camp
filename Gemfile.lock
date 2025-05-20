@@ -72,6 +72,9 @@ GEM
       securerandom (>= 0.3)
       tzinfo (~> 2.0, >= 2.0.5)
       uri (>= 0.13.1)
+    acts-as-taggable-on (12.0.0)
+      activerecord (>= 7.1, < 8.1)
+      zeitwerk (>= 2.4, < 3.0)
     addressable (2.8.7)
       public_suffix (>= 2.0.2, < 7.0)
     ast (2.4.3)
@@ -260,6 +263,8 @@ GEM
     rake-compiler-dock (1.9.1)
     rb_sys (0.9.111)
       rake-compiler-dock (= 1.9.1)
+    rbs (3.9.4)
+      logger
     rdoc (6.13.1)
       psych (>= 4.0.0)
     regexp_parser (2.10.0)
@@ -294,6 +299,11 @@ GEM
       rubocop (>= 1.72)
       rubocop-performance (>= 1.24)
       rubocop-rails (>= 2.30)
+    ruby-lsp (0.23.20)
+      language_server-protocol (~> 3.17.0)
+      prism (>= 1.2, < 2.0)
+      rbs (>= 3, < 4)
+      sorbet-runtime (>= 0.5.10782)
     ruby-progressbar (1.13.0)
     rubyzip (2.4.1)
     securerandom (0.4.1)
@@ -319,6 +329,7 @@ GEM
       fugit (~> 1.11.0)
       railties (>= 7.1)
       thor (~> 1.3.1)
+    sorbet-runtime (0.5.12115)
     sshkit (1.24.0)
       base64
       logger
@@ -380,6 +391,7 @@ PLATFORMS
   x86_64-linux-musl
 
 DEPENDENCIES
+  acts-as-taggable-on
   bcrypt (~> 3.1.7)
   bootsnap
   brakeman
@@ -395,7 +407,9 @@ DEPENDENCIES
   propshaft
   puma (>= 5.0)
   rails (~> 8.0.2)
+  rubocop
   rubocop-rails-omakase
+  ruby-lsp
   selenium-webdriver
   solid_cable
   solid_cache

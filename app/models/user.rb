@@ -1,15 +1,19 @@
 class User < ApplicationRecord
+  # Utilities
+  has_secure_password
   extend FriendlyId
   friendly_id :subdomain
 
-  has_secure_password
+  # Associations
   has_many :sessions, dependent: :destroy
   has_many :posts, foreign_key: "author_id", dependent: :destroy
   has_many :tokens, class_name: "UserToken", dependent: :destroy
 
+  # Normalizations
   normalizes :email_address, with: ->(e) { e.strip.downcase }
   normalizes :subdomain, with: ->(s) { s.strip.downcase.encode("UTF-8", invalid: :replace, undef: :replace, replace: "").parameterize }
 
+  # Validations
   validates :email_address, presence: true,
                            uniqueness: true,
                            format: { with: URI::MailTo::EMAIL_REGEXP, message: "must be a valid email address" }

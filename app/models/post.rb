@@ -1,14 +1,21 @@
 class Post < ApplicationRecord
+  # Utilities
   extend FriendlyId
   friendly_id :title, use: [ :sequentially_slugged, :scoped, :history ], scope: :author
+  acts_as_taggable_on :tags
+  acts_as_taggable_tenant :author_id
 
+  # Associations
   belongs_to :author, class_name: "User", foreign_key: "author_id"
 
+  # Callbacks
   before_create :set_published_at
   before_save :set_html
 
+  # Delegations
   delegate :name, to: :author, prefix: true
 
+  # Validations
   validates :title, presence: true, length: { maximum: 255 }
   validates :published, inclusion: { in: [ true, false ] }, allow_nil: true
   validates :body_markdown, length: { maximum: 100000 }, allow_blank: true

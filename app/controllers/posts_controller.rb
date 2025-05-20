@@ -13,6 +13,9 @@ class PostsController < ApplicationController
   private
     def set_author
       @author = User.find_by(subdomain: request.subdomain)
+      if @author.nil?
+        redirect_to root_url(subdomain: false)
+      end
     end
 
     def set_post
