@@ -5,11 +5,10 @@ class Dashboard::TokensController < Dashboard::BaseController
     @token = Current.user.tokens.new(token_params)
     if @token.save
       flash[:notice] = "Token created successfully"
-      redirect_to dashboard_settings_path
     else
       flash[:alert] = "There were errors creating the token"
-      redirect_to dashboard_settings_path
     end
+    redirect_to dashboard_settings_path
   end
 
   def destroy

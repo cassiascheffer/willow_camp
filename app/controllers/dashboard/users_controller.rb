@@ -7,11 +7,10 @@ class Dashboard::UsersController < Dashboard::BaseController
   def update
     if @user.update(user_params)
       flash[:notice] = "User profile successfully updated"
-      redirect_to dashboard_settings_path
     else
       flash[:alert] = "There were errors updating your profile"
-      redirect_to dashboard_settings_path
     end
+    redirect_to dashboard_settings_path
   end
 
   private
