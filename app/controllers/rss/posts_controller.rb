@@ -1,5 +1,3 @@
-require "rss"
-
 module Rss
   class PostsController < ApplicationController
     allow_unauthenticated_access only: %i[show]
