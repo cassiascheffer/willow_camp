@@ -41,6 +41,7 @@ gem "thruster", require: false
 # gem "image_processing", "~> 1.2"
 
 gem "acts-as-taggable-on"
+gem "better_html"
 gem "commonmarker"
 gem "friendly_id"
 gem "honeybadger"
@@ -58,13 +59,14 @@ group :development, :test do
   gem "rubocop-rails-omakase", require: false
 
   gem "faker"
-  gem "lefthook"
 end
 
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
   gem "standardrb"
+  gem "lefthook"
+  gem "erb_lint", require: false
 end
 
 group :test do
