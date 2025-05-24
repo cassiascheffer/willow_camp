@@ -66,7 +66,6 @@ group :development do
   gem "web-console"
   gem "standardrb"
   gem "lefthook"
-  gem "erb_lint", require: false
   gem "rails_best_practices"
 end
 
