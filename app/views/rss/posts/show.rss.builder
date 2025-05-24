@@ -10,7 +10,9 @@ xml.rss version: "2.0", "xmlns:atom": "http://www.w3.org/2005/Atom" do
     @posts.each do |post|
       xml.item do
         xml.title post.title
-        xml.description post.body_html
+        xml.description ActionController::Base.helpers.sanitize(post.body_html,
+          tags: %w[a b strong i em p h1 h2 h3 h4 h5 h6 ul ol li blockquote pre code img],
+          attributes: %w[href src alt title])
         xml.pubDate post.published_at.to_fs(:rfc822)
         xml.link post_url(post.slug, subdomain: @author.subdomain)
         xml.guid post_url(post.slug, subdomain: @author.subdomain)
