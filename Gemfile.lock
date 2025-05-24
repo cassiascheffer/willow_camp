@@ -157,6 +157,7 @@ GEM
       thor (~> 1.3)
       zeitwerk (>= 2.6.18, < 3.0)
     language_server-protocol (3.17.0.4)
+    lefthook (1.11.13)
     lint_roller (1.1.0)
     logger (1.7.0)
     loofah (2.24.0)
@@ -414,6 +415,7 @@ DEPENDENCIES
   importmap-rails
   jbuilder
   kamal
+  lefthook
   pagy
   pg (~> 1.1)
   propshaft
