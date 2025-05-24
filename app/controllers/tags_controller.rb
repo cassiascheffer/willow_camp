@@ -11,7 +11,7 @@ class TagsController < ApplicationController
 
   def show
     @pagy, @posts = pagy(
-      Post.where(author: @author).tagged_with(@tag.name).order(created_at: :desc)
+      Post.published.where(author: @author).tagged_with(@tag.name).order(created_at: :desc)
     )
   end
 

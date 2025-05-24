@@ -22,6 +22,9 @@ class Post < ApplicationRecord
   validates :published_at, presence: true, if: :published
   validates :meta_description, length: {maximum: 160}
 
+  # Scopes
+  scope :published, -> { where(published: true) }
+
   # Determines when friendly_id should generate a new slug
   def should_generate_new_friendly_id?
     title_changed? || super

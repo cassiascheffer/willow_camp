@@ -35,7 +35,6 @@
       <a href="/" class="text-xl font-bold text-accent"><%= @author&.blog_title || "#{@author.subdomain}.willow.camp" %></a>
       <nav class="space-x-4">
         <a href="/" class="bg-hover">Home</a>
-        <a href="/posts" class="bg-hover">Posts</a>
         <a href="<%= rss_posts_path(format: :rss) %>" class="bg-hover" title="RSS Feed">RSS</a>
       </nav>
       </div>

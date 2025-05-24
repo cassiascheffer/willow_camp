@@ -7,7 +7,12 @@
 
   <article class="prose-custom">
     <p class="text-sm text-gray-500">
-      <%= @post.tags.map(&:name).join(', ') %>
+      <% @post.tags.each do |tag| %>
+        <%= link_to tag.name, tag_path(tag.name) %>
+        <% unless tag == @post.tags.last %>
+          ,
+        <% end %>
+      <% end %>
     </p>
 
     <h1 class="post-title"><%= @post.title %></h1>
@@ -23,10 +28,6 @@
 
   <div class="section-divider">
     <%= link_to "Back to posts", posts_path, class: "btn-secondary" %>
-    <div class="flex gap-2 mt-2">
-      <%= link_to "RSS Feed", rss_posts_path(format: :rss), class: "inline-block px-3 py-1 text-sm rounded bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600" %>
-      <%= link_to "Atom Feed", atom_posts_path(format: :atom), class: "inline-block px-3 py-1 text-sm rounded bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600" %>
-      <%= link_to "JSON Feed", json_posts_path(format: :json), class: "inline-block px-3 py-1 text-sm rounded bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600" %>
-    </div>
+    <%= link_to "RSS Feed", rss_posts_path(format: :rss), class: "btn-secondary" %>
   </div>
 </div>

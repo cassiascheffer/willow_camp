@@ -20,15 +20,15 @@ Rails.application.routes.draw do
 
     # Feed formats
     namespace :rss do
-      get "/posts", to: "posts#show", defaults: {format: "rss"}, as: :posts
+      get "/feed", to: "posts#show", defaults: {format: "rss"}, as: :posts
     end
-    
+
     namespace :atom do
-      get "/posts", to: "posts#show", defaults: {format: "atom"}, as: :posts
+      get "/feed", to: "posts#show", defaults: {format: "atom"}, as: :posts
     end
-    
+
     namespace :json do
-      get "/posts", to: "posts#show", defaults: {format: "json"}, as: :posts
+      get "/feed", to: "posts#show", defaults: {format: "json"}, as: :posts
     end
   end
 
