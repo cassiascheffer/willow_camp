@@ -67,6 +67,7 @@ group :development do
   gem "standardrb"
   gem "lefthook"
   gem "erb_lint", require: false
+  gem "rails_best_practices"
 end
 
 group :test do
