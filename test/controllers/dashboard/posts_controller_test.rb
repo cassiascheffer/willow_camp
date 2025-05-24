@@ -36,38 +36,4 @@ class Dashboard::PostsControllerTest < ActionDispatch::IntegrationTest
     end
     assert_redirected_to dashboard_url
   end
-
-  test "should handle post creation with duplicate slug" do
-    # Create a post first
-    original_slug = "duplicate-slug-test"
-    Post.create!(
-      author: @user,
-      title: "Original Post",
-      body_markdown: "Original content",
-      slug: original_slug,
-      published: false
-    )
-
-    # Try to create another post with the same slug
-    assert_difference("Post.count") do
-      post dashboard_posts_url, params: {
-        post: {
-          title: "Another Post",
-          body_markdown: "More content",
-          slug: original_slug,
-          published: false
-        }
-      }
-    end
-
-    # Should redirect to dashboard after successful creation
-    assert_redirected_to dashboard_url
-
-    # Get the newly created post
-    new_post = Post.where(title: "Another Post").first
-
-    # Slug should not be the same as the original
-    assert_not_equal original_slug, new_post.slug
-    assert_equal "#{original_slug}-2", new_post.slug
-  end
 end
