@@ -39,7 +39,7 @@
     <nav class="bg-card shadow-md">
       <div class="container mx-auto px-5 md:px-8 py-3 flex items-center justify-between">
       <div class="text-lg font-bold text-accent">
-        <%= link_to(@user.blog_title || "#{@user.subdomain}.willow.camp", dashboard_path, class: "text-accent") %>
+        <%= link_to(blog_title_for(@user), dashboard_path, class: "text-accent") %>
       </div>
       <div>
         <%= link_to "Settings", dashboard_settings_path, class: "text-accent hover:text-[#005273] dark:hover:text-[#5D7FE3]" %>

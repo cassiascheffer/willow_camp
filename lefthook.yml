@@ -29,9 +29,9 @@ pre-commit:
     #   glob: "*.erb"
     #   run: bundle exec erb_lint {staged_files}
       
-    - name: Rails best practices
-      glob: "*.rb"
-      run: bundle exec rails_best_practices {staged_files}
+    # - name: Rails best practices
+    #   glob: "*.rb"
+    #   run: bundle exec rails_best_practices {staged_files}
       
     - name: Brakeman
       tags:

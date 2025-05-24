@@ -1,7 +1,7 @@
 xml.instruct! :xml, version: "1.0", encoding: "UTF-8"
 xml.feed xmlns: "http://www.w3.org/2005/Atom" do
   xml.id posts_url(subdomain: @author.subdomain)
-  xml.title @author.blog_title.presence || "#{@author.name}'s Blog"
+  xml.title blog_title_for(@author)
   xml.updated @posts.first.published_at.iso8601 if @posts.present?
 
   xml.author do
@@ -21,9 +21,7 @@ xml.feed xmlns: "http://www.w3.org/2005/Atom" do
       xml.updated post.published_at.iso8601
       xml.summary post.meta_description.presence || "#{post.title} by #{@author.name}", type: "text"
 
-      xml.content ActionController::Base.helpers.sanitize(post.body_html,
-        tags: %w[a b strong i em p h1 h2 h3 h4 h5 h6 ul ol li blockquote pre code img],
-        attributes: %w[href src alt title]), type: "html"
+      xml.content sanitize_html_for_feed(post.body_html), type: "html"
     end
   end
 end
