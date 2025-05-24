@@ -8,6 +8,7 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
+# rubocop:disable Rails/Output
 User.destroy_all
 
 users = [
@@ -35,3 +36,5 @@ users.each do |user|
   puts ""
   puts "Created 100 posts for user: #{user.email_address}"
 end
+
+# rubocop:enable Rails/Output

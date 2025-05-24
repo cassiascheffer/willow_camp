@@ -11,7 +11,7 @@ class User < ApplicationRecord
 
   # Normalizations
   normalizes :email_address, with: ->(e) { e.strip.downcase }
-  normalizes :subdomain, with: ->(s) { s.strip.downcase.encode("UTF-8", invalid: :replace, undef: :replace, replace: "").parameterize }
+  normalizes :subdomain, with: ->(s) { s.strip.downcase.encode("UTF-8", invalid: :replace, undef: :replace, replace: "") }
 
   # Validations
   validates :email_address, presence: true,

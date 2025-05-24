@@ -48,7 +48,7 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "subdomain should be valid format" do
-    valid_subdomains = %w[user test-blog my_blog 123 a-b-c]
+    valid_subdomains = %w[myuser test-blog my_blog 123 a-b-c]
     valid_subdomains.each do |valid_subdomain|
       @user.subdomain = valid_subdomain
       assert @user.valid?, "#{valid_subdomain} should be valid"
