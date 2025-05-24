@@ -17,6 +17,11 @@ Rails.application.routes.draw do
     # Posts
     get "/", to: "posts#index", as: :posts
     get "/:slug", to: "posts#show", as: :post
+
+    # RSS feed
+    namespace :rss do
+      get "/posts", to: "posts#show", defaults: {format: "rss"}, as: :posts
+    end
   end
 
   namespace :api do

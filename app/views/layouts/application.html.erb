@@ -10,6 +10,10 @@
 
     <%= yield :head %>
 
+    <% if @author %>
+      <%= auto_discovery_link_tag(:rss, rss_posts_url(format: :rss, subdomain: @author.subdomain), title: "#{@author.name}'s RSS Feed") %>
+    <% end %>
+
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⛺</text></svg>">
     <!-- <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml"> -->
@@ -27,6 +31,7 @@
       <nav class="space-x-4">
         <a href="/" class="bg-hover">Home</a>
         <a href="/posts" class="bg-hover">Posts</a>
+        <a href="<%= rss_posts_path(format: :rss) %>" class="bg-hover" title="RSS Feed">RSS</a>
       </nav>
       </div>
       </header>
