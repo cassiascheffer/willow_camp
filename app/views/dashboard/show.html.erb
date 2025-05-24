@@ -18,7 +18,7 @@
           </thead>
           <tbody>
             <% @posts.each do |post| %>
-              <tr onclick="window.location='<%= edit_dashboard_post_path(post) %>';" class="border-b border-[#E5E7EB] dark:border-[#3A3D4D] bg-hover cursor-pointer">
+              <tr onclick="window.location=<%= edit_dashboard_post_path(post).to_json %>;" class="border-b border-[#E5E7EB] dark:border-[#3A3D4D] bg-hover cursor-pointer">
                 <td class="py-2"><%= post.title %></td>
                 <td class="py-2"><%= post.published? ? 'Published' : 'Draft' %></td>
                 <td class="py-2"><%= post.published_at&.strftime('%B %d, %Y') || 'Not published' %></td>
