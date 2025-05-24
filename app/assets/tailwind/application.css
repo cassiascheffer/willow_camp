@@ -5,6 +5,27 @@
  * Multi-theme system supporting Tokyo Night and Solarized color schemes
  */
 
+/* Feed buttons styling */
+.feed-links {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-sm {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.875rem;
+  border-radius: 0.25rem;
+  background-color: var(--btn-secondary-bg);
+  color: var(--btn-secondary-text);
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+}
+
+.btn-sm:hover {
+  background-color: var(--btn-secondary-hover);
+}
+
 @layer base {
     :root {
         /* Theme Selection - Change to 'solarized' to switch themes */

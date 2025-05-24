@@ -11,7 +11,12 @@
     <%= yield :head %>
 
     <% if @author %>
+      <%# RSS feed discovery link %>
       <%= auto_discovery_link_tag(:rss, rss_posts_url(format: :rss, subdomain: @author.subdomain), title: "#{@author.name}'s RSS Feed") %>
+      <%# Atom feed discovery link %>
+      <link type="application/atom+xml" rel="alternate" href="<%= atom_posts_url(format: :atom, subdomain: @author.subdomain) %>" title="<%= @author.name %>'s Atom Feed">
+      <%# JSON feed discovery link %>
+      <link type="application/feed+json" rel="alternate" href="<%= json_posts_url(format: :json, subdomain: @author.subdomain) %>" title="<%= @author.name %>'s JSON Feed">
     <% end %>
 
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⛺</text></svg>">

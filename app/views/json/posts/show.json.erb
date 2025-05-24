@@ -1,0 +1,25 @@
+json = {
+  version: "https://jsonfeed.org/version/1.1",
+  title: @author.blog_title.presence || "#{@author.name}'s Blog",
+  home_page_url: posts_url(subdomain: @author.subdomain),
+  feed_url: json_posts_url(format: :json, subdomain: @author.subdomain),
+  description: "Latest posts from #{@author.name}",
+  items: @posts.map do |post|
+    {
+      id: post_url(post.slug, subdomain: @author.subdomain),
+      url: post_url(post.slug, subdomain: @author.subdomain),
+      title: post.title,
+      content_html: ActionController::Base.helpers.sanitize(post.body_html,
+        tags: %w[a b strong i em p h1 h2 h3 h4 h5 h6 ul ol li blockquote pre code img],
+        attributes: %w[href src alt title]),
+      content_text: post.meta_description.presence || "#{post.title} by #{@author.name}",
+      date_published: post.published_at.iso8601,
+      date_modified: post.updated_at.iso8601,
+      author: {
+        name: @author.name
+      }
+    }
+  end
+}
+
+json.to_json
