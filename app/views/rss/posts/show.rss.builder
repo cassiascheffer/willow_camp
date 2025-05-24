@@ -10,7 +10,7 @@ xml.rss version: "2.0", "xmlns:atom": "http://www.w3.org/2005/Atom" do
     @posts.each do |post|
       xml.item do
         xml.title post.title
-        xml.description sanitize_html_for_feed(post.body_html)
+        xml.description sanitize_html_for_feed(post.body_html, request)
         xml.pubDate post.published_at.to_fs(:rfc822)
         xml.link post_url(post.slug, subdomain: @author.subdomain)
         xml.guid post_url(post.slug, subdomain: @author.subdomain)

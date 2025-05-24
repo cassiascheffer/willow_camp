@@ -8,7 +8,7 @@ json.items @posts do |post|
   json.id post_url(post.slug, subdomain: @author.subdomain)
   json.url post_url(post.slug, subdomain: @author.subdomain)
   json.title post.title
-  json.content_html sanitize_html_for_feed(post.body_html)
+  json.content_html sanitize_html_for_feed(post.body_html, request)
   json.content_text post.meta_description.presence || "#{post.title} by #{@author.name}"
   json.date_published post.published_at.iso8601
   json.date_modified post.updated_at.iso8601

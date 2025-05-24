@@ -21,7 +21,7 @@ xml.feed xmlns: "http://www.w3.org/2005/Atom" do
       xml.updated post.published_at.iso8601
       xml.summary post.meta_description.presence || "#{post.title} by #{@author.name}", type: "text"
 
-      xml.content sanitize_html_for_feed(post.body_html), type: "html"
+      xml.content sanitize_html_for_feed(post.body_html, request), type: "html"
     end
   end
 end
