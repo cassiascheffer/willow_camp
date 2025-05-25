@@ -10,7 +10,7 @@
   <ol class="post-content">
     <% @tags.each do |tag| %>
       <li class="mb-2 text-[var(--light-text)] dark:text-[var(--dark-text)]">
-        <%= link_to tag.name, tag_path(tag.name), class: "text-accent" %>
+        <%= link_to tag.name, tag_path(tag.slug), class: "text-accent" %>
       </li>
     <% end %>
   </ol>

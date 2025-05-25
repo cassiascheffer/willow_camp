@@ -14,7 +14,7 @@
   <article class="prose-custom">
     <p class="text-sm text-gray-500">
       <% @post.tags.each do |tag| %>
-        <%= link_to tag.name, tag_path(tag.name) %>
+        <%= link_to tag.name, tag_path(tag.slug) %>
         <% unless tag == @post.tags.last %>
           ,
         <% end %>
