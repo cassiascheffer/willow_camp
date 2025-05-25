@@ -1,5 +1,11 @@
 <% content_for :title, "Blog Posts" %>
 
+<% content_for :head do %>
+  <% if @author&.site_meta_description.present? %>
+    <meta name="description" content="<%= @author.site_meta_description %>">
+  <% end %>
+<% end %>
+
 <div class="container-standard">
   <% if notice.present? %>
     <p class="notice" id="notice"><%= notice %></p>

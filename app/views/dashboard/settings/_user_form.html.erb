@@ -47,6 +47,12 @@
   </div>
 
   <div class="my-5">
+    <%= form.label :site_meta_description, "Site Meta Description", class: "text-muted" %>
+    <div class="text-xs text-gray-500 mb-2">Used for SEO on index pages of your blog</div>
+    <%= form.text_area :site_meta_description, required: false, class: "willow-input h-24", maxlength: 255 %>
+  </div>
+
+  <div class="my-5">
     <div class="flex items-center">
       <%= form.submit "Update account", class: "willow-button" %>
 
