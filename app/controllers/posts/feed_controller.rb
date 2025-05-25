@@ -4,7 +4,7 @@ module Posts
     before_action :set_author, only: %i[show]
 
     def show
-      @posts = @author.posts.where(published: true)
+      @posts = @author.posts.published
         .order(published_at: :desc, created_at: :desc)
         .limit(20)
 

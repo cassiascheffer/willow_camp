@@ -6,7 +6,7 @@ class PostsController < ApplicationController
 
   def index
     @pagy, @posts = pagy(
-      @author.posts.where(published: true).order(published_at: :desc, created_at: :desc)
+      @author.posts.published.order(published_at: :desc, created_at: :desc)
     )
   end
 
@@ -23,7 +23,7 @@ class PostsController < ApplicationController
   end
 
   def set_post
-    @post = Post.find_by(slug: params[:slug], author: @author, published: true)
+    @post = Post.published.find_by(slug: params[:slug], author: @author)
     if @post.nil?
       redirect_to posts_path, alert: "Post not found."
     end
