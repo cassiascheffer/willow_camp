@@ -1,0 +1,31 @@
+<div class="container-standard">
+  <% if notice.present? %>
+    <p class="alert" id="alert"><%= notice %></p>
+  <% end %>
+  <% if alert.present? %>
+    <p class="alert" id="alert"><%= alert %></p>
+  <% end %>
+
+  <div class="flex justify-between items-center mb-10">
+    <h1>Posts tagged with <%= @tag %></h1>
+  </div>
+
+  <div id="posts" class="space-y-2">
+    <% if @posts.any? %>
+      <% @posts.each do |post| %>
+        <div class="post-card">
+          <%= link_to post_path(post.slug), class: "post-card-link" do %>
+            <h2 class="text-lg font-medium">
+              <%= post.title %>
+            </h2>
+          <% end %>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="empty-state">
+        <p class="text-xl">No posts found</p>
+      </div>
+    <% end %>
+    <%= pagy_nav(@pagy) %>
+  </div>
+</div>
