@@ -132,6 +132,7 @@ GEM
       i18n (>= 1.8.11, < 2)
     friendly_id (5.5.1)
       activerecord (>= 4.0.0)
+    front_matter_parser (1.0.1)
     fugit (1.11.1)
       et-orbi (~> 1, >= 1.2.11)
       raabro (~> 1.4)
@@ -433,6 +434,7 @@ DEPENDENCIES
   debug
   faker
   friendly_id
+  front_matter_parser (~> 1.0)
   honeybadger
   importmap-rails
   jbuilder

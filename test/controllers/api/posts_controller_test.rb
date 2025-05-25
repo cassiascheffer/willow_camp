@@ -13,9 +13,7 @@ class Api::PostsControllerTest < ActionDispatch::IntegrationTest
   test "should not create post without authentication" do
     assert_no_difference("Post.count") do
       post api_posts_url, params: {post: {
-        title: "New Post",
-        body_markdown: "# Hello World",
-        published: true
+        markdown: "---\ntitle: New Post\npublished: true\n---\n# Hello World"
       }}, as: :json
     end
     assert_response :unauthorized
@@ -24,9 +22,7 @@ class Api::PostsControllerTest < ActionDispatch::IntegrationTest
   test "should create post with valid authentication and data" do
     assert_difference("Post.count") do
       post api_posts_url, params: {post: {
-        title: "New Post",
-        body_markdown: "# Hello World",
-        published: true
+        markdown: "---\ntitle: New Post\npublished: true\n---\n# Hello World"
       }}, headers: @headers, as: :json
     end
     assert_response :created
@@ -42,9 +38,7 @@ class Api::PostsControllerTest < ActionDispatch::IntegrationTest
   test "should not create post with invalid data" do
     assert_no_difference("Post.count") do
       post api_posts_url, params: {post: {
-        title: "",
-        body_markdown: "# Hello World",
-        published: true
+        markdown: "---\ntitle: \n---\n# Hello World"
       }}, headers: @headers, as: :json
     end
     assert_response :unprocessable_entity
@@ -88,7 +82,7 @@ class Api::PostsControllerTest < ActionDispatch::IntegrationTest
 
   test "should update post" do
     patch api_post_url(slug: @post.slug),
-      params: {post: {title: "Updated Title"}},
+      params: {post: {markdown: "---\ntitle: Updated Title\n---\n# Content"}},
       headers: @headers,
       as: :json
     assert_response :success
@@ -99,7 +93,7 @@ class Api::PostsControllerTest < ActionDispatch::IntegrationTest
 
   test "should not update post without authentication" do
     patch api_post_url(slug: @post.slug),
-      params: {post: {title: "Updated Title"}},
+      params: {post: {markdown: "---\ntitle: Updated Title\n---\n# Content"}},
       as: :json
     assert_response :unauthorized
 

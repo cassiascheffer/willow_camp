@@ -7,7 +7,7 @@ Willow Camp is a minimalist blogging platform built with Ruby on Rails and style
 - Clean, responsive blog post interface
 - Multi-theme system with Tokyo Night and Solarized themes
 - Dark/light mode support
-- Markdown post content
+- Markdown post content with YAML frontmatter support
 - Pagination
 - SEO-friendly URLs
 
@@ -59,6 +59,45 @@ Run the test suite with:
 
 ```bash
 rails test
+```
+
+## Markdown and Frontmatter
+
+Willow Camp supports Markdown with YAML frontmatter for post content. The frontmatter allows you to specify post metadata like title, description, tags, and publication status.
+
+### Frontmatter Format
+
+```yaml
+---
+title: My Awesome Post
+description: This is a great post about Ruby on Rails
+published: true
+date: 2023-05-25
+tags:
+  - rails
+  - ruby
+  - web
+---
+
+# Post content starts here
+
+Regular markdown content...
+```
+
+### Creating Posts from Markdown Files
+
+You can programmatically create posts from markdown files using the `BuildPostFromMd` service:
+
+```ruby
+# Read markdown file
+markdown_content = File.read("path/to/post.md")
+
+# Create post for a specific author
+author = User.find_by(email: "author@example.com")
+post = Post.from_markdown(markdown_content, author)
+
+# Save the post
+post.save
 ```
 
 ## Deployment

@@ -12,8 +12,8 @@ class Api::PostsController < Api::BaseController
   end
 
   def create
-    @post = Post.new(post_params)
-    @post.author = @current_user
+    @post = @current_user.posts.build
+    @post = UpdatePostFromMd.new(post_params[:markdown], @post).call
 
     if @post.save
       render json: {post: @post}, status: :created
@@ -23,7 +23,8 @@ class Api::PostsController < Api::BaseController
   end
 
   def update
-    if @post.update(post_params)
+    @post = UpdatePostFromMd.new(post_params[:markdown], @post).call
+    if @post.save
       render json: {post: @post}
     else
       render json: {errors: @post.errors.full_messages}, status: :unprocessable_entity
@@ -51,14 +52,6 @@ class Api::PostsController < Api::BaseController
   end
 
   def post_params
-    params.require(:post).permit(
-      :title,
-      :slug,
-      :tag_list,
-      :body_markdown,
-      :published,
-      :published_at,
-      :meta_description
-    )
+    params.require(:post).permit(:markdown)
   end
 end
