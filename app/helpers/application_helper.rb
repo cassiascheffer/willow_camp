@@ -1,6 +1,10 @@
 module ApplicationHelper
   include Pagy::Frontend
 
+  def render_markdown_with_frontmatter(post)
+    PostToMarkdown.new(post).call
+  end
+
   def sanitize_html_for_feed(html_content, request = nil)
     host = request&.host || Rails.application.config.action_controller.default_url_options[:host]
     port = request&.port

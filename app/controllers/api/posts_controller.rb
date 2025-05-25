@@ -4,11 +4,11 @@ class Api::PostsController < Api::BaseController
 
   def index
     @posts = Post.where(author: @current_user)
-    render json: {posts: @posts}
+    # Render with index.json.jbuilder
   end
 
   def show
-    render json: {post: @post}
+    # Render with show.json.jbuilder
   end
 
   def create
@@ -16,7 +16,7 @@ class Api::PostsController < Api::BaseController
     @post = UpdatePostFromMd.new(post_params[:markdown], @post).call
 
     if @post.save
-      render json: {post: @post}, status: :created
+      render :create, status: :created
     else
       render json: {errors: @post.errors.full_messages}, status: :unprocessable_entity
     end
@@ -25,7 +25,7 @@ class Api::PostsController < Api::BaseController
   def update
     @post = UpdatePostFromMd.new(post_params[:markdown], @post).call
     if @post.save
-      render json: {post: @post}
+      render :update
     else
       render json: {errors: @post.errors.full_messages}, status: :unprocessable_entity
     end
