@@ -11,17 +11,16 @@ class TagsController < ApplicationController
 
   def show
     @pagy, @posts = pagy(
-      Post.where(author: @author).tagged_with(@tag.name).order(created_at: :desc)
+      Post.published.where(author: @author).tagged_with(@tag.name).order(created_at: :desc)
     )
   end
 
   private
 
   def set_tag
-    @tag = ActsAsTaggableOn::Tag.for_tenant(@author.id).find_by(name: params[:tag])
-    if @tag.nil?
-      redirect_to root_url
-    end
+    @tag = ActsAsTaggableOn::Tag.for_tenant(@author.id).friendly.find(params[:tag])
+  rescue ActiveRecord::RecordNotFound
+    redirect_to root_url
   end
 
   def set_author

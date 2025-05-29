@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_20_010611) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_26_201054) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -35,7 +35,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_20_010611) do
     t.text "body_markdown"
     t.text "body_html"
     t.string "slug"
-    t.string "meta_description", limit: 160
+    t.string "meta_description"
     t.index ["slug", "author_id"], name: "index_posts_on_slug_and_author", unique: true
   end
 
@@ -76,7 +76,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_20_010611) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "taggings_count", default: 0
+    t.string "slug"
     t.index ["name"], name: "index_tags_on_name", unique: true
+    t.index ["slug"], name: "index_tags_on_slug", unique: true
   end
 
   create_table "user_tokens", force: :cascade do |t|
@@ -102,6 +104,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_20_010611) do
     t.string "token"
     t.datetime "token_expires_at", precision: nil
     t.string "slug"
+    t.text "site_meta_description"
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
     t.index ["slug"], name: "index_users_on_slug", unique: true
     t.index ["subdomain"], name: "index_users_on_subdomain", unique: true

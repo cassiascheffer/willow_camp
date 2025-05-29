@@ -4,27 +4,28 @@ class Api::PostsController < Api::BaseController
 
   def index
     @posts = Post.where(author: @current_user)
-    render json: {posts: @posts}
+    # Render with index.json.jbuilder
   end
 
   def show
-    render json: {post: @post}
+    # Render with show.json.jbuilder
   end
 
   def create
-    @post = Post.new(post_params)
-    @post.author = @current_user
+    @post = @current_user.posts.build
+    @post = UpdatePostFromMd.new(post_params[:markdown], @post).call
 
     if @post.save
-      render json: {post: @post}, status: :created
+      render :create, status: :created
     else
       render json: {errors: @post.errors.full_messages}, status: :unprocessable_entity
     end
   end
 
   def update
-    if @post.update(post_params)
-      render json: {post: @post}
+    @post = UpdatePostFromMd.new(post_params[:markdown], @post).call
+    if @post.save
+      render :update
     else
       render json: {errors: @post.errors.full_messages}, status: :unprocessable_entity
     end
@@ -51,14 +52,6 @@ class Api::PostsController < Api::BaseController
   end
 
   def post_params
-    params.require(:post).permit(
-      :title,
-      :slug,
-      :tag_list,
-      :body_markdown,
-      :published,
-      :published_at,
-      :meta_description
-    )
+    params.require(:post).permit(:markdown)
   end
 end

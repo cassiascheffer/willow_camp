@@ -23,7 +23,7 @@
 
   <div class="my-5">
     <%= form.label :tag_list%>
-    <%= form.text_field :tag_list, class: ["willow-input mt-2", {"focus:ring-[#006A93] dark:focus:ring-[#7AA2F7]": post.errors[:tag_list].none?, "border-[#EF4444] dark:border-[#F87171] focus:ring-[#EF4444] dark:focus:ring-[#F87171]": post.errors[:tag_list].any?}] %>
+    <%= form.text_field :tag_list, value: post.tag_list.join(', '), class: ["willow-input mt-2", {"focus:ring-[#006A93] dark:focus:ring-[#7AA2F7]": post.errors[:tag_list].none?, "border-[#EF4444] dark:border-[#F87171] focus:ring-[#EF4444] dark:focus:ring-[#F87171]": post.errors[:tag_list].any?}] %>
   </div>
 
   <div class="my-5">

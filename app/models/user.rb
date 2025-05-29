@@ -25,6 +25,7 @@ class User < ApplicationRecord
   validates :password, presence: true, length: {minimum: 6}, allow_nil: true
   validates :name, presence: true, length: {maximum: 255}, allow_blank: true
   validates :blog_title, length: {maximum: 255}, allow_blank: true
+  validates :site_meta_description, length: {maximum: 255}, allow_blank: true
 
   def to_key
     [subdomain]

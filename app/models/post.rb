@@ -20,7 +20,27 @@ class Post < ApplicationRecord
   validates :published, inclusion: {in: [true, false]}, allow_nil: true
   validates :body_markdown, length: {maximum: 100000}, allow_blank: true
   validates :published_at, presence: true, if: :published
-  validates :meta_description, length: {maximum: 160}
+  validates :meta_description, length: {maximum: 255}, allow_blank: true
+
+  # Frontmatter
+  attr_accessor :frontmatter
+
+  # Scopes
+  scope :published, -> { where(published: true) }
+
+  # Class methods
+  # Build a new Post from markdown content with frontmatter
+  # @param markdown_content [String] Content of markdown file with frontmatter
+  # @param author [User] Author of the post
+  # @return [Post] A new Post instance with attributes set from frontmatter
+  def self.from_markdown(markdown_content, author)
+    return nil unless markdown_content.present? && author.present?
+
+    # Use the service to build the post
+    # The service will handle parsing the frontmatter and creating the post
+    service = BuildPostFromMd.new(markdown_content, author)
+    service.call
+  end
 
   # Determines when friendly_id should generate a new slug
   def should_generate_new_friendly_id?
@@ -29,6 +49,11 @@ class Post < ApplicationRecord
 
   def to_key
     [slug]
+  end
+
+  # Retrieves a specific frontmatter attribute
+  def frontmatter_attribute(key)
+    frontmatter&.dig(key.to_s)
   end
 
   private

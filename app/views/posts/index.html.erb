@@ -1,4 +1,10 @@
-<% content_for :title, "Blog Posts" %>
+<% content_for :title, "Posts" %>
+
+<% content_for :head do %>
+  <% if @author&.site_meta_description.present? %>
+    <meta name="description" content="<%= @author.site_meta_description %>">
+  <% end %>
+<% end %>
 
 <div class="container-standard">
   <% if notice.present? %>
@@ -9,7 +15,7 @@
   <% end %>
 
   <div class="flex justify-between items-center mb-10">
-    <h1 class="post-title">Blog Posts</h1>
+    <h1 class="post-title">Posts</h1>
   </div>
 
   <div id="posts" class="space-y-2">
@@ -30,6 +36,6 @@
       </div>
     <% end %>
 
-    <%== pagy_nav(@pagy) %>
+    <%== pagy_nav(@pagy) if @pagy.pages > 1 %>
   </div>
 </div>

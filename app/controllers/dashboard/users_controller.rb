@@ -26,6 +26,6 @@ class Dashboard::UsersController < Dashboard::BaseController
   end
 
   def user_params
-    params.require(:user).permit(:name, :email_address, :password, :password_confirmation, :subdomain, :blog_title, :theme)
+    params.require(:user).permit(:name, :email_address, :password, :password_confirmation, :subdomain, :blog_title, :theme, :site_meta_description)
   end
 end

@@ -1,4 +1,10 @@
-<% content_for :title, "Showing post" %>
+<% content_for :title, @post.title %>
+
+<% content_for :head do %>
+  <% if @post.meta_description.present? %>
+    <meta name="description" content="<%= @post.meta_description %>">
+  <% end %>
+<% end %>
 
 <div class="post-article">
   <% if notice.present? %>
@@ -7,7 +13,12 @@
 
   <article class="prose-custom">
     <p class="text-sm text-gray-500">
-      <%= @post.tags.map(&:name).join(', ') %>
+      <% @post.tags.each do |tag| %>
+        <%= link_to tag.name, tag_path(tag.slug) %>
+        <% unless tag == @post.tags.last %>
+          ,
+        <% end %>
+      <% end %>
     </p>
 
     <h1 class="post-title"><%= @post.title %></h1>
@@ -23,5 +34,6 @@
 
   <div class="section-divider">
     <%= link_to "Back to posts", posts_path, class: "btn-secondary" %>
+    <%= link_to "RSS Feed", posts_rss_path(format: :rss), class: "btn-secondary" %>
   </div>
 </div>

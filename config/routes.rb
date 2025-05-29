@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   resource :session
-  resources :passwords, param: :token
+  # resources :passwords, param: :token
 
   get "dashboard" => "dashboard#show", :as => :dashboard
   namespace :dashboard do
@@ -17,6 +17,13 @@ Rails.application.routes.draw do
     # Posts
     get "/", to: "posts#index", as: :posts
     get "/:slug", to: "posts#show", as: :post
+
+    # Feed formats
+    namespace :posts do
+      get "/rss", to: "feed#show", defaults: {format: "rss"}, as: :rss
+      get "/atom", to: "feed#show", defaults: {format: "atom"}, as: :atom
+      get "/json", to: "feed#show", defaults: {format: "json"}, as: :json
+    end
   end
 
   namespace :api do

@@ -1,0 +1,17 @@
+<% content_for :title, "Tags" %>
+
+<% content_for :head do %>
+  <% if @author&.site_meta_description.present? %>
+    <meta name="description" content="<%= @author.site_meta_description %>">
+  <% end %>
+<% end %>
+
+<div class="container-standard">
+  <ol class="post-content">
+    <% @tags.each do |tag| %>
+      <li class="mb-2 text-[var(--light-text)] dark:text-[var(--dark-text)]">
+        <%= link_to tag.name, tag_path(tag.slug), class: "text-accent" %>
+      </li>
+    <% end %>
+  </ol>
+</div>
