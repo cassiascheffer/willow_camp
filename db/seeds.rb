@@ -28,7 +28,7 @@ users.each do |user|
       post.title = Faker::Books::Lovecraft.tome
       post.body_markdown = Faker::Markdown.sandwich(sentences: 6, repeat: 3)
       post.published = Faker::Boolean.boolean
-      post.published_at = Faker::Date.between(from: 2.days.ago, to: Date.today)
+      post.published_at = Faker::Date.between(from: 2.days.ago, to: Time.zone.today)
       post.tag_list = ["dogs", "cats", "fun!"]
     end
     print "."
