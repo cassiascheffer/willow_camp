@@ -44,6 +44,7 @@ gem "acts-as-taggable-on"
 gem "better_html"
 gem "commonmarker"
 gem "friendly_id"
+gem "front_matter_parser"
 gem "honeybadger"
 gem "pagy"
 gem "tailwindcss-rails"
@@ -74,5 +75,3 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
-
-gem "front_matter_parser", "~> 1.0"
