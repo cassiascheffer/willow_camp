@@ -15,7 +15,7 @@ class UpdatePostFromMd
   # @return [Post] A new Post instance with attributes set from frontmatter
   def call
     return nil if @post.nil?
-    unless @markdown_content.present?
+    if @markdown_content.blank?
       @post.errors.add(:base, "No content provided")
       return @post
     end

@@ -5,7 +5,7 @@ class AddSlugToTags < ActiveRecord::Migration[8.0]
 
     # Generate slugs for existing tags
     if defined?(ActsAsTaggableOn::Tag)
-      ActsAsTaggableOn::Tag.all.each do |tag|
+      ActsAsTaggableOn::Tag.all.find_each do |tag|
         tag.slug = nil # Force friendly_id to regenerate the slug
         tag.save
       end
