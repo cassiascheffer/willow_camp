@@ -20,7 +20,7 @@ class Post < ApplicationRecord
   validates :published, inclusion: {in: [true, false]}, allow_nil: true
   validates :body_markdown, length: {maximum: 100000}, allow_blank: true
   validates :published_at, presence: true, if: :published
-  validates :meta_description, length: {maximum: 160}
+  validates :meta_description, length: {maximum: 255}, allow_blank: true
 
   # Frontmatter
   attr_accessor :frontmatter

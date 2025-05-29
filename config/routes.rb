@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   resource :session
-  resources :passwords, param: :token
+  # resources :passwords, param: :token
 
   get "dashboard" => "dashboard#show", :as => :dashboard
   namespace :dashboard do

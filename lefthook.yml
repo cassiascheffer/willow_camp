@@ -9,7 +9,7 @@ pre-push:
       tags:
         - backend
         - testing
-      run: bin/rake test
+      run: bin/rails test
 
     - name: gems audit
       tags:
