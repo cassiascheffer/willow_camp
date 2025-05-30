@@ -18,24 +18,32 @@
     <h1 class="post-title">Posts</h1>
   </div>
 
-  <div id="posts" class="space-y-2">
-    <% if @posts.any? %>
-      <% @posts.each do |post| %>
-      <div class="post-card">
-        <%= link_to post_path(post.slug), class: "post-card-link" do %>
-          <h2 class="text-lg font-medium">
-            <span class="text-date"><%= post.published_at.strftime("%b %d") %></span> - <%= post.title %>
-          </h2>
-        <% end %>
+  <div id="posts" class="space-y-8">
+    <div class="calendar-navigation mb-6">
+      <%== pagy_calendar_year_nav(@pagy) %>
+    </div>
+    
+    <% if @posts_by_year.any? %>
+      <div class="year-section">
+        <h2 class="text-2xl font-bold mb-4"><%= @pagy.year.label %></h2>
+        <div class="posts-list space-y-2">
+          <% @posts_by_year.each do |post| %>
+          <div class="post-card">
+            <%= link_to post_path(post.slug), class: "post-card-link" do %>
+              <h3 class="text-lg font-medium flex">
+                <span class="text-date min-w-[4rem] shrink-0"><%= post.published_at.strftime("%b %d") %></span>
+                <span class="pl-1">- <%= post.title %></span>
+              </h3>
+            <% end %>
+          </div>
+          <% end %>
+        </div>
       </div>
-      <% end %>
     <% else %>
       <div class="empty-state">
-        <p class="text-xl">No posts yet</p>
-        <p class="mt-2">Create your first blog post to get started</p>
+        <p class="text-xl">No posts for <%= @pagy.year.label %></p>
+        <p class="mt-2">Try selecting a different year</p>
       </div>
     <% end %>
-
-    <%== pagy_nav(@pagy) if @pagy.pages > 1 %>
   </div>
 </div>

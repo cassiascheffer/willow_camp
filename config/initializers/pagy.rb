@@ -37,7 +37,7 @@ Pagy::DEFAULT[:max_pages] = 3000
 
 # Calendar extra: Add pagination filtering by calendar time unit (year, quarter, month, week, day)
 # See https://ddnexus.github.io/pagy/docs/extras/calendar
-# require 'pagy/extras/calendar'
+require "pagy/extras/calendar"
 # Default for each calendar unit class in IRB:
 # >> Pagy::Calendar::Year::DEFAULT
 # >> Pagy::Calendar::Quarter::DEFAULT

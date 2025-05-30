@@ -5,8 +5,18 @@ class PostsController < ApplicationController
   before_action :set_post, only: %i[show]
 
   def index
-    @pagy, @posts = pagy(
-      @author.posts.published.order(published_at: :desc, created_at: :desc)
+    # Use Pagy::Calendar for efficient year-based pagination
+    @pagy, @posts_by_year = pagy_calendar(
+      :year,
+      @author.posts.published,
+      year: {
+        field: :published_at,
+        format: "%Y",
+        order: :desc
+      },
+      # Default sorting within a year
+      page_param: :page,
+      order: {published_at: :desc, created_at: :desc}
     )
   end
 
