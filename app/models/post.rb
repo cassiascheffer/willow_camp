@@ -28,6 +28,7 @@ class Post < ApplicationRecord
 
   # Scopes
   scope :published, -> { where(published: true) }
+  scope :not_page, -> { where(type: nil) }
 
   # Class methods
   # Build a new Post from markdown content with frontmatter

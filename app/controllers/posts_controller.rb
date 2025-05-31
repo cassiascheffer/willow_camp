@@ -4,7 +4,12 @@ class PostsController < ApplicationController
   before_action :set_post, only: %i[show]
 
   def index
-    @pagy, @posts = pagy(@author.posts.published.order(published_at: :desc).where(type: nil))
+    @pagy, @posts = pagy(
+      @author.posts
+        .published
+        .not_page
+        .order(published_at: :desc)
+    )
   end
 
   def show
@@ -22,7 +27,7 @@ class PostsController < ApplicationController
   def set_post
     @post = Post.published.find_by(slug: params[:slug], author_id: @author.id)
     if @post.nil?
-      redirect_to posts_path, alert: "Post not found."
+      redirect_to posts_path, alert: "Not found."
     end
   end
 end
