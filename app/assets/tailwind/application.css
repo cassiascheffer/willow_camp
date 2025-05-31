@@ -258,12 +258,21 @@
 
     /* Typography */
     .prose-custom {
+        @apply text-lg leading-relaxed [&>p]:mb-6 [&>h1]:text-3xl [&>h1]:mb-4 [&>h2]:text-2xl [&>h2]:mb-3 [&>h3]:text-xl [&>h3]:mb-2 [&>ul]:mb-6 [&>ol]:mb-6;
+    }
 
-        @apply text-lg leading-relaxed [&>p]:mb-6 [&>h1]:text-3xl [&>h1]:mb-4 [&>h2]:text-2xl [&>h2]:mb-3 [&>h3]:text-xl [&>h3]:mb-2 [&>ul]:mb-6 [&>ol]:mb-6 [&>ul>li],
-        [&>ol>li] {
-            @apply pl-6;
-            text-indent: -1.25rem;
-        }
+    .prose-custom>ul,
+    .prose-custom>ol {
+        @apply pl-6;
+        list-style-position: outside;
+    }
+
+    .prose-custom>ul>li,
+    .prose-custom>ol>li {
+        @apply mb-2;
+        position: relative;
+        padding-left: 0.5em;
+        text-indent: -0.5em;
     }
 
     /* Notifications */
