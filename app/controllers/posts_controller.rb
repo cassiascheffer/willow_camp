@@ -4,7 +4,7 @@ class PostsController < ApplicationController
   before_action :set_post, only: %i[show]
 
   def index
-    @pagy, @posts = pagy(@author.posts.published.order(published_at: :desc))
+    @pagy, @posts = pagy(@author.posts.published.order(published_at: :desc).where.not(type: "Page"))
   end
 
   def show
