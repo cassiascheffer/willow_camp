@@ -28,7 +28,9 @@
     </div>
 
     <div class="post-content">
-      <%= render @post %>
+        <%# Ensure that even if @post is a Page, we render posts/_post %>
+        <% post_partial = "posts/post" %>
+        <%= render partial: post_partial, object: @post %>
     </div>
   </article>
 

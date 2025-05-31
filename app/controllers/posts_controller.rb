@@ -1,5 +1,4 @@
 class PostsController < ApplicationController
-  include Pagy::Backend
   allow_unauthenticated_access only: %i[index show]
   before_action :set_author, only: %i[index show]
   before_action :set_post, only: %i[show]

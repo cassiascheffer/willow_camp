@@ -1,0 +1,13 @@
+<% content_for :title, "New page" %>
+
+<div class="container-narrow">
+  <div class="willow-card">
+    <h1 class="font-bold text-2xl mb-6">New page</h1>
+
+    <%= render "form", page: @page %>
+
+    <div class="mt-4">
+      <%= link_to "Back to pages", dashboard_pages_path, class: "willow-button-secondary" %>
+    </div>
+  </div>
+</div>

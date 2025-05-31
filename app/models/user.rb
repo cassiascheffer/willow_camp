@@ -6,7 +6,8 @@ class User < ApplicationRecord
 
   # Associations
   has_many :sessions, dependent: :destroy
-  has_many :posts, foreign_key: "author_id", dependent: :destroy
+  has_many :posts, foreign_key: "author_id", dependent: :destroy, inverse_of: :author
+  has_many :pages, foreign_key: "author_id", dependent: :destroy, inverse_of: :author
   has_many :tokens, class_name: "UserToken", dependent: :destroy
 
   # Normalizations

@@ -17,3 +17,25 @@ two:
   published: false
   published_at: 2025-04-27 13:32:14
   slug: "my-post-2"
+
+page_one:
+  id: "cccccccc-cccc-cccc-cccc-cccccccccccc"
+  type: "Page"
+  title: "About Us"
+  body_markdown: "# About Us\n\nThis is the about page."
+  body_html: "<h1>About Us</h1>\n<p>This is the about page.</p>"
+  author_id: "11111111-1111-1111-1111-111111111111"
+  published: true
+  published_at: 2025-04-27 13:32:14
+  slug: "about-us"
+
+page_two:
+  id: "dddddddd-dddd-dddd-dddd-dddddddddddd"
+  type: "Page"
+  title: "Contact"
+  body_markdown: "# Contact\n\nThis is the contact page."
+  body_html: "<h1>Contact</h1>\n<p>This is the contact page.</p>"
+  author_id: "22222222-2222-2222-2222-222222222222"
+  published: false
+  published_at: 2025-04-27 13:32:14
+  slug: "contact"

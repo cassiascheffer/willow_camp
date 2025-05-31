@@ -31,13 +31,17 @@
   <body>
     <% unless controller_name == 'home' && action_name == 'show' || controller_name == 'sessions' && action_name == 'new' %>
       <header class="border-b border-[#E5E7EB] dark:border-[#3A3D4D] py-4 px-5">
-      <div class="container mx-auto flex justify-between items-center">
-      <a href="/" class="text-xl font-bold text-accent"><%= blog_title_for(@author) %></a>
-      <nav class="space-x-4">
-        <a href="/" class="bg-hover">Home</a>
-        <a href="<%= posts_rss_path(format: :rss) %>" class="bg-hover" title="RSS Feed">RSS</a>
-      </nav>
-      </div>
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="/" class="text-xl font-bold text-accent"><%= blog_title_for(@author) %></a>
+            <nav class="space-x-4">
+                <% if @author.pages.present? %>
+                    <% @author.pages.each do |page| %>
+                        <a href="<%= post_path(page) %>" class="bg-hover"><%= page.title %></a>
+                    <% end %>
+                <% end %>
+                <a href="<%= posts_rss_path(format: :rss) %>" class="bg-hover" title="RSS Feed">RSS</a>
+            </nav>
+        </div>
       </header>
     <% end %>
 

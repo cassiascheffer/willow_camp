@@ -1,0 +1,49 @@
+<%= form_with(model: page, url: page.new_record? ? dashboard_pages_path : dashboard_page_path(page), class: "contents", id: page.new_record? ? "new_page_form" : "edit_page_form", data: { turbo: true, controller: "form-status" }) do |form| %>
+  <% if page.errors.any? %>
+    <div id="error_explanation" class="willow-alert font-medium mt-3">
+      <h2><%= pluralize(page.errors.count, "error") %> prohibited this page from being saved:</h2>
+
+      <ul class="list-disc ml-6">
+        <% page.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="my-5">
+    <%= form.label :title %>
+    <%= form.text_field :title, class: ["willow-input mt-2", {"focus:ring-[#006A93] dark:focus:ring-[#7AA2F7]": page.errors[:title].none?, "border-[#EF4444] dark:border-[#F87171] focus:ring-[#EF4444] dark:focus:ring-[#F87171]": page.errors[:title].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :slug%>
+    <%= form.text_field :slug, class: ["willow-input mt-2", {"focus:ring-[#006A93] dark:focus:ring-[#7AA2F7]": page.errors[:slug].none?, "border-[#EF4444] dark:border-[#F87171] focus:ring-[#EF4444] dark:focus:ring-[#F87171]": page.errors[:slug].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :body %>
+    <%= form.text_area :body_markdown, rows: 4, class: ["willow-input mt-2 h-[400px]", {"focus:ring-[#006A93] dark:focus:ring-[#7AA2F7]": page.errors[:body_markdown].none?, "border-[#EF4444] dark:border-[#F87171] focus:ring-[#EF4444] dark:focus:ring-[#F87171]": page.errors[:body_markdown].any?}] %>
+  </div>
+
+  <div class="my-5 flex items-center gap-2">
+    <%= form.label :published %>
+    <%= form.check_box :published, class: ["order-first h-5 w-5 rounded border-[#E5E7EB] dark:border-[#3A3D4D] text-[#006A93] dark:text-[#7AA2F7]", {"focus:ring-[#006A93] dark:focus:ring-[#7AA2F7]": page.errors[:published].none?, "border-[#EF4444] dark:border-[#F87171] focus:ring-[#EF4444] dark:focus:ring-[#F87171]": page.errors[:published].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :published_at %>
+    <%= form.datetime_field :published_at, class: ["willow-input mt-2", {"focus:ring-[#006A93] dark:focus:ring-[#7AA2F7]": page.errors[:published_at].none?, "border-[#EF4444] dark:border-[#F87171] focus:ring-[#EF4444] dark:focus:ring-[#F87171]": page.errors[:published_at].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <div class="flex items-center">
+      <%= form.submit class: "willow-button" %>
+      <% if flash[:form_status] %>
+        <div class="ml-4">
+          <%= render "shared/form_status", status: flash[:form_status][:type], message: flash[:form_status][:message] %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>

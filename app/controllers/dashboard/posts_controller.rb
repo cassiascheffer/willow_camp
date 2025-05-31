@@ -1,6 +1,4 @@
 class Dashboard::PostsController < Dashboard::BaseController
-  include Pagy::Backend
-
   before_action :set_post, only: %i[edit update destroy]
   before_action :authorize_user!, only: %i[edit update destroy]
 

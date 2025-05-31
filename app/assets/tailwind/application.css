@@ -214,6 +214,22 @@
         @apply w-full max-w-3xl mx-auto p-6;
     }
 
+    .willow-radio {
+        @apply appearance-none rounded-full border-2 border-[var(--light-border)] dark:border-[var(--dark-border)] w-4 h-4 focus:outline-none focus:ring-2 focus:ring-[var(--light-primary)] dark:focus:ring-[var(--dark-primary)];
+    }
+
+    .willow-radio:checked {
+        @apply bg-[var(--light-primary)] dark:bg-[var(--dark-primary)];
+    }
+
+    .willow-checkbox {
+        @apply appearance-none rounded border-2 border-[var(--light-border)] dark:border-[var(--dark-border)] w-4 h-4 focus:outline-none focus:ring-2 focus:ring-[var(--light-primary)] dark:focus:ring-[var(--dark-primary)];
+    }
+
+    .willow-checkbox:checked {
+        @apply bg-[var(--light-primary)] dark:bg-[var(--dark-primary)];
+    }
+
     /* Table components */
     .willow-table-container {
         @apply w-full overflow-x-auto;

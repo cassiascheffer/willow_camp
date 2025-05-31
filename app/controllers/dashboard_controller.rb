@@ -1,6 +1,4 @@
 class DashboardController < ApplicationController
-  include Pagy::Backend
-
   layout "dashboard"
   before_action :set_user
 

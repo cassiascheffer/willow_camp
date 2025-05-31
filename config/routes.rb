@@ -1,9 +1,9 @@
 Rails.application.routes.draw do
   resource :session
-  # resources :passwords, param: :token
 
   get "dashboard" => "dashboard#show", :as => :dashboard
   namespace :dashboard do
+    resources :pages, param: :slug
     resource :settings, only: %i[show]
     resources :posts, except: %i[index show], param: :slug
     resources :users, only: %i[edit update], param: :slug

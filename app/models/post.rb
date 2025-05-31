@@ -1,3 +1,4 @@
+# Single Table Inheritance: Post and Page share the same table, differentiated by the 'type' column.
 class Post < ApplicationRecord
   # Utilities
   extend FriendlyId
