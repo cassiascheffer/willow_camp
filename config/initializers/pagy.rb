@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# require "pagy/extras/calendar"
+
 # Pagy initializer file (9.3.3)
 # Customize only what you really need and notice that the core Pagy works also without any of the following lines.
 # Should you just cherry pick part of this file, please maintain the require-order of the extras
@@ -16,42 +18,12 @@ Pagy::DEFAULT[:page_param] = :page
 Pagy::DEFAULT[:count_args] = []
 Pagy::DEFAULT[:max_pages] = 3000
 
-# Extras
-# See https://ddnexus.github.io/pagy/categories/extra
-
-# Legacy Compatibility Extras
-
-# Size extra: Enable the Array type for the `:size` variable (e.g. `size: [1,4,4,1]`)
-# See https://ddnexus.github.io/pagy/docs/extras/size
-# require 'pagy/extras/size'   # must be required before the other extras
-
-# Backend Extras
-
-# Arel extra: For better performance utilizing grouped ActiveRecord collections:
-# See: https://ddnexus.github.io/pagy/docs/extras/arel
-# require 'pagy/extras/arel'
-
-# Array extra: Paginate arrays efficiently, avoiding expensive array-wrapping and without overriding
-# See https://ddnexus.github.io/pagy/docs/extras/array
-# require 'pagy/extras/array'
-
-# Calendar extra: Add pagination filtering by calendar time unit (year, quarter, month, week, day)
-# See https://ddnexus.github.io/pagy/docs/extras/calendar
-require "pagy/extras/calendar"
 # Default for each calendar unit class in IRB:
 # >> Pagy::Calendar::Year::DEFAULT
 # >> Pagy::Calendar::Quarter::DEFAULT
 # >> Pagy::Calendar::Month::DEFAULT
 # >> Pagy::Calendar::Week::DEFAULT
 # >> Pagy::Calendar::Day::DEFAULT
-#
-# Uncomment the following lines, if you need calendar localization without using the I18n extra
-# module LocalizePagyCalendar
-#   def localize(time, opts)
-#     ::I18n.l(time, **opts)
-#   end
-# end
-# Pagy::Calendar.prepend LocalizePagyCalendar
 
 # Countless extra: Paginate without any count, saving one query per rendering
 # See https://ddnexus.github.io/pagy/docs/extras/countless
