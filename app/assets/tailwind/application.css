@@ -1,30 +1,9 @@
 @import "tailwindcss";
 
-/* Willow Camp Theme System
+/* willow.camp Theme System
  * ========================
  * Multi-theme system supporting Tokyo Night and Solarized color schemes
  */
-
-/* Feed buttons styling */
-.feed-links {
-    display: flex;
-    gap: 0.5rem;
-}
-
-.btn-sm {
-    display: inline-block;
-    padding: 0.25rem 0.75rem;
-    font-size: 0.875rem;
-    border-radius: 0.25rem;
-    background-color: var(--btn-secondary-bg);
-    color: var(--btn-secondary-text);
-    text-decoration: none;
-    transition: background-color 0.2s ease;
-}
-
-.btn-sm:hover {
-    background-color: var(--btn-secondary-hover);
-}
 
 @layer base {
     :root {
@@ -148,43 +127,42 @@
 @layer components {
     /* Container layouts */
     .container-narrow {
-        @apply max-w-3xl mx-auto px-4 py-8;
+        @apply max-w-3xl mx-auto px-4 py-8 sm:px-2 sm:py-8;
     }
 
     .container-standard {
-        @apply max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10;
+        @apply max-w-4xl mx-auto lg:px-8;
     }
 
-    /* Willow custom components (renamed from tokyo-*) */
-    .willow-shadow {
+    .wc-shadow {
         @apply shadow-md;
     }
 
-    .willow-card {
+    .wc-card {
         @apply bg-[var(--light-card)] dark:bg-[var(--dark-card)] border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md p-5 transition-all duration-200;
     }
 
-    .willow-button {
+    .wc-button {
         @apply inline-block px-4 py-2 font-medium rounded-md transition-all duration-200 bg-[var(--light-accent)] hover:bg-[var(--light-accent-hover)] dark:bg-[var(--dark-accent)] dark:hover:bg-[var(--dark-accent-hover)] text-white;
     }
 
-    .willow-button-secondary {
+    .wc-button-secondary {
         @apply inline-block px-4 py-2 font-medium rounded-md transition-all duration-200 bg-transparent border border-[var(--light-border)] dark:border-[var(--dark-border)] text-[var(--light-text)] dark:text-[var(--dark-text)] hover:bg-[var(--light-card-hover)] dark:hover:bg-[var(--dark-card-hover)];
     }
 
-    .willow-input {
+    .wc-input {
         @apply w-full px-3 py-2 border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md bg-[var(--light-bg)] dark:bg-[var(--dark-bg)] text-[var(--light-text)] dark:text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)] focus:ring-offset-1;
     }
 
-    .willow-container {
+    .wc-container {
         @apply w-full max-w-prose mx-auto px-4;
     }
 
-    .willow-notice {
+    .wc-notice {
         @apply bg-green-50 dark:bg-green-900/10 text-[var(--light-success)] dark:text-[var(--dark-success)] border-l-4 border-l-[var(--light-success)] dark:border-l-[var(--dark-success)] px-4 py-3 mb-4 rounded-r;
     }
 
-    .willow-alert {
+    .wc-alert {
         @apply bg-red-50 dark:bg-red-900/10 text-[var(--light-error)] dark:text-[var(--dark-error)] border-l-4 border-l-[var(--light-error)] dark:border-l-[var(--dark-error)] px-4 py-3 mb-4 rounded-r;
     }
 
@@ -211,63 +189,63 @@
     }
 
     .post-article {
-        @apply w-full max-w-3xl mx-auto p-6;
+        @apply w-full max-w-3xl mx-auto;
     }
 
-    .willow-radio {
+    .wc-radio {
         @apply appearance-none rounded-full border-2 border-[var(--light-border)] dark:border-[var(--dark-border)] w-4 h-4 focus:outline-none focus:ring-2 focus:ring-[var(--light-primary)] dark:focus:ring-[var(--dark-primary)];
     }
 
-    .willow-radio:checked {
+    .wc-radio:checked {
         @apply bg-[var(--light-primary)] dark:bg-[var(--dark-primary)];
     }
 
-    .willow-checkbox {
+    .wc-checkbox {
         @apply appearance-none rounded border-2 border-[var(--light-border)] dark:border-[var(--dark-border)] w-4 h-4 focus:outline-none focus:ring-2 focus:ring-[var(--light-primary)] dark:focus:ring-[var(--dark-primary)];
     }
 
-    .willow-checkbox:checked {
+    .wc-checkbox:checked {
         @apply bg-[var(--light-primary)] dark:bg-[var(--dark-primary)];
     }
 
     /* Table components */
-    .willow-table-container {
+    .wc-table-container {
         @apply w-full overflow-x-auto;
     }
 
-    .willow-table-wrapper {
+    .wc-table-wrapper {
         @apply overflow-scroll shadow ring-1 ring-black md:rounded-lg;
     }
 
-    .willow-table {
+    .wc-table {
         @apply min-w-full divide-y divide-[var(--light-border)] dark:divide-[var(--dark-border)];
     }
 
-    .willow-table-header {
+    .wc-table-header {
         @apply bg-[var(--light-card-hover)] dark:bg-[var(--dark-card-hover)];
     }
 
-    .willow-table-header-cell {
+    .wc-table-header-cell {
         @apply px-6 py-3 text-left text-xs font-medium text-[var(--light-muted)] dark:text-[var(--dark-muted)] uppercase tracking-wider;
     }
 
-    .willow-table-body {
+    .wc-table-body {
         @apply bg-[var(--light-card)] dark:bg-[var(--dark-card)] divide-y divide-[var(--light-border)] dark:divide-[var(--dark-border)];
     }
 
-    .willow-table-row {
+    .wc-table-row {
         @apply hover:bg-[var(--light-card-hover)] dark:hover:bg-[var(--dark-card-hover)] transition-colors duration-200;
     }
 
-    .willow-table-cell {
+    .wc-table-cell {
         @apply px-6 py-4 whitespace-nowrap text-sm text-[var(--light-text)] dark:text-[var(--dark-text)];
     }
 
-    .willow-table-cell-truncate {
+    .wc-table-cell-truncate {
         @apply px-6 py-4 whitespace-nowrap text-sm text-[var(--light-text)] dark:text-[var(--dark-text)] overflow-hidden text-ellipsis max-w-xs;
     }
 
-    .willow-table-empty {
+    .wc-table-empty {
         @apply text-center text-[var(--light-muted)] dark:text-[var(--dark-muted)] py-4;
     }
 
@@ -299,6 +277,21 @@
     }
 
     /* Buttons and actions */
+    .btn-sm {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        font-size: 0.875rem;
+        border-radius: 0.25rem;
+        background-color: var(--btn-secondary-bg);
+        color: var(--btn-secondary-text);
+        text-decoration: none;
+        transition: background-color 0.2s ease;
+    }
+
+    .btn-sm:hover {
+        background-color: var(--btn-secondary-hover);
+    }
+
     .btn-secondary {
         @apply text-xs rounded px-2.5 py-1 bg-[var(--light-card-hover)] dark:bg-[var(--dark-card)] text-[var(--light-muted)] dark:text-[var(--dark-muted)] hover:bg-[var(--light-border)] dark:hover:bg-[var(--dark-card-hover)] font-medium transition-colors;
     }
