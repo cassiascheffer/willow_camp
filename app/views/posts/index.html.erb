@@ -26,8 +26,8 @@
           <div class="post-card">
             <%= link_to post_path(post.slug), class: "post-card-link" do %>
               <h3 class="text-lg font-medium flex">
-                <span class="text-date min-w-[4rem] shrink-0"><%= post.published_at.strftime("%b %d, %Y") %></span>
-                <span class="pl-1">- <%= post.title %></span>
+                <span class="text-date min-w-[4rem] shrink-0"><%= post.published_at.strftime("%b %d, %Y") %> — </span>
+                <span class="pl-1"><%= post.title %></span>
               </h3>
             <% end %>
           </div>
