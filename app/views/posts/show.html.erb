@@ -24,15 +24,15 @@
         <%= render partial: post_partial, object: @post %>
     </div>
   </article>
-  <p class="text-sm text-gray-500 py-8">Tags:
-    <% @post.tags.each do |tag| %>
-      <%= link_to tag.name, tag_path(tag.slug) %>
-      <% unless tag == @post.tags.last %>
-        ,
-      <% end %>
-    <% end %>
-  </p>
 
+  <% if @post.tags.any? %>
+    <p class="text-sm text-gray-500 py-8">Tags:
+        <% @post.tags.each do |tag| %>
+            <%= link_to tag.name, tag_path(tag.slug) %>
+            <% unless tag == @post.tags.last %> , <% end %>
+        <% end %>
+    </p>
+    <% end %>
 
   <div class="section-divider">
     <%= link_to "Back to posts", posts_path, class: "wc-button-secondary" %>
