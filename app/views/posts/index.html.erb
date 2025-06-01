@@ -6,7 +6,7 @@
   <% end %>
 <% end %>
 
-<div class="container-standard">
+<div class="max-w-4xl mx-auto lg:px-8">
   <% if notice.present? %>
     <p class="notice" id="notice"><%= notice %></p>
   <% end %>
@@ -23,10 +23,10 @@
       <div class="year-section">
         <div class="posts-list space-y-2">
           <% @posts.each do |post| %>
-            <div class="post-card">
-                <%= link_to post_path(post.slug), class: "post-card-link" do %>
+            <div class="border-b border-[var(--light-border)] dark:border-[var(--dark-border)] last:border-0">
+                <%= link_to post_path(post.slug), class: "block px-3 py-4 hover:bg-[var(--light-card-hover)] dark:hover:bg-[var(--dark-card-hover)] rounded transition duration-200" do %>
                    <h3 class="text-lg font-medium flex flex-col sm:flex-row">
-                       <span class="text-date text-xs sm:text-base sm:after:ml-2 min-w-[4rem] shrink-0 md:after:content-['—'] md:after:ml-2"><%= post.published_at.strftime("%b %d, %Y") %></span>
+                       <span class="text-date text-xs sm:text-base sm:after:ml-2 min-w-[4rem] shrink-0 md:after:content-['\u2014'] md:after:ml-2"><%= post.published_at.strftime("%b %d, %Y") %></span>
                        <span class="pl-0 sm:pl-3"><%= post.title %></span>
                    </h3>
                <% end %>
@@ -40,7 +40,7 @@
       </div>
     <% end %>
     <div class="calendar-navigation mb-6">
-      <%== pagy_nav(@pagy) %>
+      <%== pagy_nav(@pagy, nav_tag: :nav, nav_class: "flex space-x-1 font-semibold text-sm text-[var(--light-muted)] dark:text-[var(--dark-muted)]") %>
     </div>
   </div>
 </div>

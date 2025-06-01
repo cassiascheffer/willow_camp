@@ -2,16 +2,6 @@
 
 /* Import modular component CSS files */
 @import "../stylesheets/components/_base.css";
-@import "../stylesheets/components/_alert.css";
-@import "../stylesheets/components/_button.css";
-@import "../stylesheets/components/_card.css";
-@import "../stylesheets/components/_checkbox.css";
-@import "../stylesheets/components/_container.css";
-@import "../stylesheets/components/_input.css";
-@import "../stylesheets/components/_notice.css";
-@import "../stylesheets/components/_radio.css";
 @import "../stylesheets/components/_table.css";
 @import "../stylesheets/components/_utilities.css";
 @import "../stylesheets/components/_pagy.css";
-@import "../stylesheets/components/_post.css";
-@import "../stylesheets/components/_prose.css";

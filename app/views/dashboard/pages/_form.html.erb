@@ -1,8 +1,7 @@
 <%= form_with(model: page, url: page.new_record? ? dashboard_pages_path : dashboard_page_path(page), class: "contents", id: page.new_record? ? "new_page_form" : "edit_page_form", data: { turbo: true, controller: "form-status" }) do |form| %>
   <% if page.errors.any? %>
-    <div id="error_explanation" class="wc-alert font-medium mt-3">
+    <div id="error_explanation" class="bg-red-50 dark:bg-red-900/10 text-[var(--light-error)] dark:text-[var(--dark-error)] border-l-4 border-l-[var(--light-error)] dark:border-l-[var(--dark-error)] px-4 py-3 mb-4 rounded-r font-medium mt-3">
       <h2><%= pluralize(page.errors.count, "error") %> prohibited this page from being saved:</h2>
-
       <ul class="list-disc ml-6">
         <% page.errors.each do |error| %>
           <li><%= error.full_message %></li>
@@ -13,17 +12,17 @@
 
   <div class="my-5">
     <%= form.label :title %>
-    <%= form.text_field :title, class: ["wc-input mt-2", {"focus:ring-[#006A93] dark:focus:ring-[#7AA2F7]": page.errors[:title].none?, "border-[#EF4444] dark:border-[#F87171] focus:ring-[#EF4444] dark:focus:ring-[#F87171]": page.errors[:title].any?}] %>
+    <%= form.text_field :title, class: ["w-full px-3 py-2 border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md bg-[var(--light-bg)] dark:bg-[var(--dark-bg)] text-[var(--light-text)] dark:text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)] focus:ring-offset-1 mt-2", {"focus:ring-[#006A93] dark:focus:ring-[#7AA2F7]": page.errors[:title].none?, "border-[#EF4444] dark:border-[#F87171] focus:ring-[#EF4444] dark:focus:ring-[#F87171]": page.errors[:title].any?}] %>
   </div>
 
   <div class="my-5">
     <%= form.label :slug%>
-    <%= form.text_field :slug, class: ["wc-input mt-2", {"focus:ring-[#006A93] dark:focus:ring-[#7AA2F7]": page.errors[:slug].none?, "border-[#EF4444] dark:border-[#F87171] focus:ring-[#EF4444] dark:focus:ring-[#F87171]": page.errors[:slug].any?}] %>
+    <%= form.text_field :slug, class: ["w-full px-3 py-2 border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md bg-[var(--light-bg)] dark:bg-[var(--dark-bg)] text-[var(--light-text)] dark:text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)] focus:ring-offset-1 mt-2", {"focus:ring-[#006A93] dark:focus:ring-[#7AA2F7]": page.errors[:slug].none?, "border-[#EF4444] dark:border-[#F87171] focus:ring-[#EF4444] dark:focus:ring-[#F87171]": page.errors[:slug].any?}] %>
   </div>
 
   <div class="my-5">
     <%= form.label :body %>
-    <%= form.text_area :body_markdown, rows: 4, class: ["wc-input mt-2 h-[400px]", {"focus:ring-[#006A93] dark:focus:ring-[#7AA2F7]": page.errors[:body_markdown].none?, "border-[#EF4444] dark:border-[#F87171] focus:ring-[#EF4444] dark:focus:ring-[#F87171]": page.errors[:body_markdown].any?}] %>
+    <%= form.text_area :body_markdown, rows: 4, class: ["w-full px-3 py-2 border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md bg-[var(--light-bg)] dark:bg-[var(--dark-bg)] text-[var(--light-text)] dark:text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)] focus:ring-offset-1 mt-2 h-[400px]", {"focus:ring-[#006A93] dark:focus:ring-[#7AA2F7]": page.errors[:body_markdown].none?, "border-[#EF4444] dark:border-[#F87171] focus:ring-[#EF4444] dark:focus:ring-[#F87171]": page.errors[:body_markdown].any?}] %>
   </div>
 
   <div class="my-5 flex items-center gap-2">
@@ -33,12 +32,12 @@
 
   <div class="my-5">
     <%= form.label :published_at %>
-    <%= form.datetime_field :published_at, class: ["wc-input mt-2", {"focus:ring-[#006A93] dark:focus:ring-[#7AA2F7]": page.errors[:published_at].none?, "border-[#EF4444] dark:border-[#F87171] focus:ring-[#EF4444] dark:focus:ring-[#F87171]": page.errors[:published_at].any?}] %>
+    <%= form.datetime_field :published_at, class: ["w-full px-3 py-2 border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md bg-[var(--light-bg)] dark:bg-[var(--dark-bg)] text-[var(--light-text)] dark:text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)] focus:ring-offset-1 mt-2", {"focus:ring-[#006A93] dark:focus:ring-[#7AA2F7]": page.errors[:published_at].none?, "border-[#EF4444] dark:border-[#F87171] focus:ring-[#EF4444] dark:focus:ring-[#F87171]": page.errors[:published_at].any?}] %>
   </div>
 
   <div class="my-5">
     <div class="flex items-center">
-      <%= form.submit class: "wc-button" %>
+      <%= form.submit class: "inline-block px-4 py-2 font-medium rounded-md transition-all duration-200 bg-[var(--light-accent)] hover:bg-[var(--light-accent-hover)] dark:bg-[var(--dark-accent)] dark:hover:bg-[var(--dark-accent-hover)] text-white" %>
       <% if flash[:form_status] %>
         <div class="ml-4">
           <%= render "shared/form_status", status: flash[:form_status][:type], message: flash[:form_status][:message] %>

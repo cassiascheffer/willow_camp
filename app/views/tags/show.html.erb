@@ -1,4 +1,4 @@
-<div class="container-standard">
+<div class="max-w-4xl mx-auto lg:px-8">
   <% if notice.present? %>
     <p class="alert" id="alert"><%= notice %></p>
   <% end %>
@@ -13,8 +13,8 @@
   <div id="posts" class="space-y-2">
     <% if @posts.any? %>
       <% @posts.each do |post| %>
-        <div class="post-card">
-          <%= link_to post_path(post.slug), class: "post-card-link" do %>
+        <div class="border-b border-[var(--light-border)] dark:border-[var(--dark-border)] last:border-0">
+          <%= link_to post_path(post.slug), class: "block px-3 py-4 hover:bg-[var(--light-card-hover)] dark:hover:bg-[var(--dark-card-hover)] rounded transition duration-200" do %>
             <h2 class="text-lg font-medium">
               <%= post.title %>
             </h2>
@@ -26,6 +26,6 @@
         <p class="text-xl">No posts found</p>
       </div>
     <% end %>
-    <%== pagy_nav(@pagy) if @pagy.pages > 1 %>
+    <%== pagy_nav(@pagy, nav_class: "flex space-x-1 font-semibold text-sm text-[var(--light-muted)] dark:text-[var(--dark-muted)]") if @pagy.pages > 1 %>
   </div>
 </div>

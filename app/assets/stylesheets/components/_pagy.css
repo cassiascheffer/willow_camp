@@ -1,28 +1,17 @@
-.pagy {
-    @apply flex space-x-1 font-semibold text-sm text-[var(--light-muted)] dark:text-[var(--dark-muted)];
+.pagy-nav {
+  @apply flex space-x-1 font-semibold text-sm text-[var(--light-muted)] dark:text-[var(--dark-muted)];
 }
 
-.pagy a:not(.gap) {
-    @apply block rounded-lg px-3 py-1 bg-[var(--light-card-hover)] dark:bg-[var(--dark-card-hover)];
+.pagy-nav .page,
+.pagy-nav .prev,
+.pagy-nav .next {
+  @apply px-2 py-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors cursor-pointer;
 }
 
-.pagy a:not(.gap):hover {
-    @apply bg-[var(--light-border)] dark:bg-[var(--dark-border)];
+.pagy-nav .active {
+  @apply bg-accent text-white;
 }
 
-.pagy a:not(.gap):not([href]) {
-    /* disabled links */
-    @apply text-[var(--light-muted)] dark:text-[var(--dark-muted)] bg-[var(--light-card)] dark:bg-[var(--dark-card)] cursor-default;
-}
-
-.pagy a:not(.gap).current {
-    @apply text-white bg-[var(--light-accent)] dark:bg-[var(--dark-accent)];
-}
-
-.pagy label {
-    @apply inline-block whitespace-nowrap bg-[var(--light-card-hover)] dark:bg-[var(--dark-card-hover)] rounded-lg px-3 py-0.5;
-}
-
-.pagy label input {
-    @apply bg-[var(--light-card)] dark:bg-[var(--dark-card)] border-none rounded-md;
+.pagy-nav .disabled {
+  @apply opacity-50 cursor-not-allowed;
 }

@@ -1,13 +1,13 @@
 <% content_for :title, "New post" %>
 
-<div class="container-narrow">
-  <div class="wc-card">
+<div class="max-w-3xl mx-auto px-4 py-8 sm:px-2 sm:py-8">
+  <div class="bg-[var(--light-card)] dark:bg-[var(--dark-card)] border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md p-5 transition-all duration-200">
     <h1 class="font-bold text-2xl mb-6">New post</h1>
 
     <%= render "form", post: @post %>
 
     <div class="mt-4">
-      <%= link_to "Back to posts", posts_path, class: "wc-button-secondary" %>
+      <%= link_to "Back to posts", posts_path, class: "inline-block px-4 py-2 font-medium rounded-md transition-all duration-200 bg-transparent border border-[var(--light-border)] dark:border-[var(--dark-border)] text-[var(--light-text)] dark:text-[var(--dark-text)] hover:bg-[var(--light-card-hover)] dark:hover:bg-[var(--dark-card-hover)]" %>
     </div>
   </div>
 </div>
