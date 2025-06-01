@@ -115,7 +115,7 @@ class Api::PostsControllerTest < ActionDispatch::IntegrationTest
 
     json_response = JSON.parse(response.body)
     assert_includes json_response, "error"
-    assert_equal "You don't have permission to access this post", json_response["error"]
+    assert_equal "Post not found", json_response["error"]
   end
 
   test "should update post" do
