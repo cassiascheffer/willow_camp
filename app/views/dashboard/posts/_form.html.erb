@@ -13,38 +13,38 @@
 
   <div class="my-5">
     <%= form.label :title %>
-    <%= form.text_field :title, class: ["w-full px-3 py-2 border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md bg-[var(--light-bg)] dark:bg-[var(--dark-bg)] text-[var(--light-text)] dark:text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)] focus:ring-offset-1 mt-2", {"focus:ring-[#006A93] dark:focus:ring-[#7AA2F7]": post.errors[:title].none?, "border-[#EF4444] dark:border-[#F87171] focus:ring-[#EF4444] dark:focus:ring-[#F87171]": post.errors[:title].any?}] %>
+    <%= form.text_field :title, class: ["w-full px-3 py-2 border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md bg-[var(--light-bg)] dark:bg-[var(--dark-bg)] text-[var(--light-text)] dark:text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)] focus:ring-offset-1 mt-2", {"focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)]": post.errors[:title].none?, "border-[var(--light-error)] dark:border-[var(--dark-error)] focus:ring-[var(--light-error)] dark:focus:ring-[var(--dark-error)]": post.errors[:title].any?}] %>
   </div>
 
   <div class="my-5">
     <%= form.label :slug%>
-    <%= form.text_field :slug, class: ["w-full px-3 py-2 border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md bg-[var(--light-bg)] dark:bg-[var(--dark-bg)] text-[var(--light-text)] dark:text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)] focus:ring-offset-1 mt-2", {"focus:ring-[#006A93] dark:focus:ring-[#7AA2F7]": post.errors[:slug].none?, "border-[#EF4444] dark:border-[#F87171] focus:ring-[#EF4444] dark:focus:ring-[#F87171]": post.errors[:slug].any?}] %>
+    <%= form.text_field :slug, class: ["w-full px-3 py-2 border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md bg-[var(--light-bg)] dark:bg-[var(--dark-bg)] text-[var(--light-text)] dark:text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)] focus:ring-offset-1 mt-2", {"focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)]": post.errors[:slug].none?, "border-[var(--light-error)] dark:border-[var(--dark-error)] focus:ring-[var(--light-error)] dark:focus:ring-[var(--dark-error)]": post.errors[:slug].any?}] %>
   </div>
 
   <div class="my-5">
     <%= form.label :tag_list%>
-    <%= form.text_field :tag_list, value: post.tag_list.join(', '), class: ["w-full px-3 py-2 border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md bg-[var(--light-bg)] dark:bg-[var(--dark-bg)] text-[var(--light-text)] dark:text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)] focus:ring-offset-1 mt-2", {"focus:ring-[#006A93] dark:focus:ring-[#7AA2F7]": post.errors[:tag_list].none?, "border-[#EF4444] dark:border-[#F87171] focus:ring-[#EF4444] dark:focus:ring-[#F87171]": post.errors[:tag_list].any?}] %>
+    <%= form.text_field :tag_list, value: post.tag_list.join(', '), class: ["w-full px-3 py-2 border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md bg-[var(--light-bg)] dark:bg-[var(--dark-bg)] text-[var(--light-text)] dark:text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)] focus:ring-offset-1 mt-2", {"focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)]": post.errors[:tag_list].none?, "border-[var(--light-error)] dark:border-[var(--dark-error)] focus:ring-[var(--light-error)] dark:focus:ring-[var(--dark-error)]": post.errors[:tag_list].any?}] %>
   </div>
 
   <div class="my-5">
-    <%= form.label :meta_description, "Meta Description", class: "text-muted" %>
+    <%= form.label :meta_description, "Meta Description", class: "text-[var(--light-muted)] dark:text-[var(--dark-muted)]" %>
     <div class="text-xs text-gray-500 mb-2">Used for social shares</div>
     <%= form.text_area :meta_description, required: false, class: "w-full px-3 py-2 border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md bg-[var(--light-bg)] dark:bg-[var(--dark-bg)] text-[var(--light-text)] dark:text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)] focus:ring-offset-1 h-24", maxlength: 255 %>
   </div>
 
   <div class="my-5">
     <%= form.label :body %>
-    <%= form.text_area :body_markdown, rows: 4, class: ["w-full px-3 py-2 border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md bg-[var(--light-bg)] dark:bg-[var(--dark-bg)] text-[var(--light-text)] dark:text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)] focus:ring-offset-1 mt-2 h-[400px]", {"focus:ring-[#006A93] dark:focus:ring-[#7AA2F7]": post.errors[:body_markdown].none?, "border-[#EF4444] dark:border-[#F87171] focus:ring-[#EF4444] dark:focus:ring-[#F87171]": post.errors[:body_markdown].any?}] %>
+    <%= form.text_area :body_markdown, rows: 4, class: ["w-full px-3 py-2 border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md bg-[var(--light-bg)] dark:bg-[var(--dark-bg)] text-[var(--light-text)] dark:text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)] focus:ring-offset-1 mt-2 h-[400px]", {"focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)]": post.errors[:body_markdown].none?, "border-[var(--light-error)] dark:border-[var(--dark-error)] focus:ring-[var(--light-error)] dark:focus:ring-[var(--dark-error)]": post.errors[:body_markdown].any?}] %>
   </div>
 
   <div class="my-5 flex items-center gap-2">
     <%= form.label :published %>
-    <%= form.check_box :published, class: ["order-first h-5 w-5 rounded border-[#E5E7EB] dark:border-[#3A3D4D] text-[#006A93] dark:text-[#7AA2F7]", {"focus:ring-[#006A93] dark:focus:ring-[#7AA2F7]": post.errors[:published].none?, "border-[#EF4444] dark:border-[#F87171] focus:ring-[#EF4444] dark:focus:ring-[#F87171]": post.errors[:published].any?}] %>
+    <%= form.check_box :published, class: ["order-first h-5 w-5 rounded border-[var(--light-border)] dark:border-[var(--dark-border)] text-[var(--light-accent)] dark:text-[var(--dark-accent)]", {"focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)]": post.errors[:published].none?, "border-[var(--light-error)] dark:border-[var(--dark-error)] focus:ring-[var(--light-error)] dark:focus:ring-[var(--dark-error)]": post.errors[:published].any?}] %>
   </div>
 
   <div class="my-5">
     <%= form.label :published_at %>
-    <%= form.datetime_field :published_at, class: ["w-full px-3 py-2 border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md bg-[var(--light-bg)] dark:bg-[var(--dark-bg)] text-[var(--light-text)] dark:text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)] focus:ring-offset-1 mt-2", {"focus:ring-[#006A93] dark:focus:ring-[#7AA2F7]": post.errors[:published_at].none?, "border-[#EF4444] dark:border-[#F87171] focus:ring-[#EF4444] dark:focus:ring-[#F87171]": post.errors[:published_at].any?}] %>
+    <%= form.datetime_field :published_at, class: ["w-full px-3 py-2 border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md bg-[var(--light-bg)] dark:bg-[var(--dark-bg)] text-[var(--light-text)] dark:text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)] focus:ring-offset-1 mt-2", {"focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)]": post.errors[:published_at].none?, "border-[var(--light-error)] dark:border-[var(--dark-error)] focus:ring-[var(--light-error)] dark:focus:ring-[var(--dark-error)]": post.errors[:published_at].any?}] %>
   </div>
 
   <div class="my-5">

@@ -1,17 +1,17 @@
-<div id="tokens" class="wc-table-container overflow-x-auto">
+<div id="tokens" class="w-full overflow-x-auto">
   <% if tokens.any? %>
-    <div class="wc-table-wrapper">
-      <table class="wc-table w-full table-fixed">
-        <thead class="wc-table-header">
+    <div class="overflow-scroll shadow ring-1 ring-black md:rounded-lg">
+      <table class="min-w-full divide-y divide-[var(--light-border)] dark:divide-[var(--dark-border)] w-full table-fixed">
+        <thead class="bg-[var(--light-card-hover)] dark:bg-[var(--dark-card-hover)]">
           <tr>
-            <th scope="col" class="wc-table-header-cell w-1/5">Name</th>
-            <th scope="col" class="wc-table-header-cell w-2/5">Token</th>
-            <th scope="col" class="wc-table-header-cell w-1/6">Created</th>
-            <th scope="col" class="wc-table-header-cell w-1/6">Expires</th>
-            <th scope="col" class="wc-table-header-cell w-1/10 text-right">Actions</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-[var(--light-muted)] dark:text-[var(--dark-muted)] uppercase tracking-wider w-1/5">Name</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-[var(--light-muted)] dark:text-[var(--dark-muted)] uppercase tracking-wider w-2/5">Token</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-[var(--light-muted)] dark:text-[var(--dark-muted)] uppercase tracking-wider w-1/6">Created</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-[var(--light-muted)] dark:text-[var(--dark-muted)] uppercase tracking-wider w-1/6">Expires</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-[var(--light-muted)] dark:text-[var(--dark-muted)] uppercase tracking-wider w-1/10 text-right">Actions</th>
           </tr>
         </thead>
-        <tbody class="wc-table-body">
+        <tbody class="bg-[var(--light-card)] dark:bg-[var(--dark-card)] divide-y divide-[var(--light-border)] dark:divide-[var(--dark-border)]">
           <% tokens.each do |token| %>
             <%= render "dashboard/settings/token", token: token %>
           <% end %>
@@ -19,6 +19,6 @@
       </table>
     </div>
   <% else %>
-    <p class="wc-table-empty">No tokens created yet.</p>
+    <p class="text-center text-[var(--light-muted)] dark:text-[var(--dark-muted)] py-4">No tokens created yet.</p>
   <% end %>
 </div>

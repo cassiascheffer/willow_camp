@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-theme="<%= @user&.theme || "tokyo" %>">
+<html data-theme="<%= @user&.theme || "tokyo" %>" class="font-mono">
   <head>
     <title><%= content_for(:title) || "willow.camp" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -36,13 +36,13 @@
       <% end %>
     </div>
 
-    <nav class="bg-card shadow-md">
+    <nav class="bg-[var(--light-card)] dark:bg-[var(--dark-card)] shadow-md">
       <div class="container mx-auto px-5 md:px-8 py-3 flex items-center justify-between">
-      <div class="text-lg font-bold text-accent">
-        <%= link_to(blog_title_for(@user), dashboard_path, class: "text-accent") %>
+      <div class="text-lg font-bold text-[var(--light-accent)] dark:text-[var(--dark-accent)]">
+        <%= link_to(blog_title_for(@user), dashboard_path, class: "text-[var(--light-accent)] dark:text-[var(--dark-accent)]") %>
       </div>
       <div>
-        <%= link_to "Settings", dashboard_settings_path, class: "text-accent hover:text-[#005273] dark:hover:text-[#5D7FE3]" %>
+        <%= link_to "Settings", dashboard_settings_path, class: "text-[var(--light-accent)] dark:text-[var(--dark-accent)] hover:text-[var(--light-accent-hover)] dark:hover:text-[var(--dark-accent-hover)]" %>
       </div>
       </div>
     </nav>
@@ -51,8 +51,8 @@
       <%= yield %>
     </main>
 
-    <footer class="border-t border-[#E5E7EB] dark:border-[#3A3D4D] py-4 px-5 mt-12">
-      <div class="container mx-auto text-sm text-muted">
+    <footer class="border-t border-[var(--light-border)] dark:border-[var(--dark-border)] py-4 px-5 mt-12">
+      <div class="container mx-auto text-sm text-[var(--light-muted)] dark:text-[var(--dark-muted)]">
           willow.camp
       </div>
     </footer>

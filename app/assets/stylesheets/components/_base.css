@@ -97,21 +97,4 @@
         --dark-success: var(--solarized-dark-success);
         --dark-error: var(--solarized-dark-error);
     }
-
-    body {
-        @apply bg-[var(--light-bg)] dark:bg-[var(--dark-bg)] text-[var(--light-text)] dark:text-[var(--dark-text)] font-mono transition-colors duration-300;
-    }
-
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-        @apply font-bold text-[var(--light-text)] dark:text-[var(--dark-text)];
-    }
-
-    a {
-        @apply transition-colors duration-200;
-    }
 }
