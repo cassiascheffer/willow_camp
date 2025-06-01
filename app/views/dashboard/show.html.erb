@@ -19,8 +19,8 @@
             <% @posts.each do |post| %>
               <tr onclick="window.location=<%= edit_dashboard_post_path(post).to_json %>;" class="border-b border-[var(--light-border)] dark:border-[var(--dark-border)] hover:bg-[var(--light-card-hover)] dark:hover:bg-[var(--dark-card-hover)] transition-colors duration-200 cursor-pointer">
                 <td class="py-2"><%= post.title %></td>
-                <td class="py-2"><%= post.published? ? 'Published' : 'Draft' %></td>
-                <td class="py-2"><%= post.published_at&.strftime('%B %d, %Y') || 'Not published' %></td>
+                <td class="py-2"><%= post.published? ? '✔︎' : '📝' %></td>
+                <td class="py-2"><%= post.published_at&.strftime('%b %d, %y') || '' %></td>
                 <td class="py-2">
                   <% if post.published? %>
                     <%= link_to post_url(post.slug, subdomain: @user.subdomain), class: "text-[var(--light-accent)] dark:text-[var(--dark-accent)] hover:text-[var(--light-accent-hover)] dark:hover:text-[var(--dark-accent-hover)] inline-flex items-center", target: "_blank", onclick: "event.stopPropagation();" do %>
