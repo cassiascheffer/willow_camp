@@ -2,19 +2,15 @@
   <% if alert = flash[:alert] %>
     <p class="alert" id="alert"><%= alert %></p>
   <% end %>
-
   <% if notice = flash[:notice] %>
     <p class="notice" id="notice"><%= notice %></p>
   <% end %>
-
   <div class="bg-[var(--light-card)] dark:bg-[var(--dark-card)] border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md p-5 transition-all duration-200">
     <h1 class="font-bold text-2xl mb-6">Sign up</h1>
-
     <%= form_with(model: @user, url: users_path, local: true, class: "contents") do |form| %>
       <% if @user.errors.any? %>
         <div id="error_explanation" class="wc-alert">
           <h2><%= pluralize(@user.errors.count, "error") %> prohibited this user from being saved:</h2>
-
           <ul class="list-disc list-inside">
             <% @user.errors.full_messages.each do |message| %>
               <li><%= message %></li>
@@ -22,39 +18,32 @@
           </ul>
         </div>
       <% end %>
-
       <div class="my-5">
         <%= form.label :name, class: "text-muted" %>
         <%= form.text_field :name, required: true, class: "w-full px-3 py-2 border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md bg-[var(--light-bg)] dark:bg-[var(--dark-bg)] text-[var(--light-text)] dark:text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)] focus:ring-offset-1" %>
       </div>
-
       <div class="my-5">
         <%= form.label :email, class: "text-muted" %>
         <%= form.email_field :email_address, required: true, autocomplete: "username", class: "w-full px-3 py-2 border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md bg-[var(--light-bg)] dark:bg-[var(--dark-bg)] text-[var(--light-text)] dark:text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)] focus:ring-offset-1" %>
       </div>
-
       <div class="my-5">
         <%= form.label :password, class: "text-muted" %>
         <%= form.password_field :password, required: true, autocomplete: "new-password", maxlength: 72, class: "w-full px-3 py-2 border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md bg-[var(--light-bg)] dark:bg-[var(--dark-bg)] text-[var(--light-text)] dark:text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)] focus:ring-offset-1" %>
       </div>
-
       <div class="my-5">
         <%= form.label :password_confirmation, "Password confirmation", class: "text-muted" %>
         <%= form.password_field :password_confirmation, required: true, autocomplete: "new-password", maxlength: 72, class: "w-full px-3 py-2 border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md bg-[var(--light-bg)] dark:bg-[var(--dark-bg)] text-[var(--light-text)] dark:text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)] focus:ring-offset-1" %>
       </div>
-
       <div class="my-5">
         <%= form.label :blog_title, class: "text-muted" %>
         <%= form.text_field :blog_title, required: true, class: "w-full px-3 py-2 border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md bg-[var(--light-bg)] dark:bg-[var(--dark-bg)] text-[var(--light-text)] dark:text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)] focus:ring-offset-1" %>
       </div>
-
       <div class="my-5">
         <%= form.label :subdomain, class: "text-muted" %>
         <%= form.text_field :subdomain, required: true, class: "w-full px-3 py-2 border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md bg-[var(--light-bg)] dark:bg-[var(--dark-bg)] text-[var(--light-text)] dark:text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)] focus:ring-offset-1" %>
       </div>
-
       <div class="my-5">
-        <%= form.submit "Create account", class: "wc-button" %>
+        <%= form.submit "Create account", class: "" %>
       </div>
     <% end %>
   </div>
