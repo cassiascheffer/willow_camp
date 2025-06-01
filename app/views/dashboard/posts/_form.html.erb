@@ -27,6 +27,12 @@
   </div>
 
   <div class="my-5">
+    <%= form.label :meta_description, "Meta Description", class: "text-muted" %>
+    <div class="text-xs text-gray-500 mb-2">Used for social shares</div>
+    <%= form.text_area :meta_description, required: false, class: "wc-input h-24", maxlength: 255 %>
+  </div>
+
+  <div class="my-5">
     <%= form.label :body %>
     <%= form.text_area :body_markdown, rows: 4, class: ["wc-input mt-2 h-[400px]", {"focus:ring-[#006A93] dark:focus:ring-[#7AA2F7]": post.errors[:body_markdown].none?, "border-[#EF4444] dark:border-[#F87171] focus:ring-[#EF4444] dark:focus:ring-[#F87171]": post.errors[:body_markdown].any?}] %>
   </div>

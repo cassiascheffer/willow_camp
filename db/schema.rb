@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_27_180000) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_01_011930) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -36,7 +36,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_27_180000) do
     t.text "body_markdown"
     t.text "body_html"
     t.string "slug"
-    t.string "meta_description", limit: 160
+    t.string "meta_description"
     t.uuid "author_id", null: false
     t.string "type"
     t.index ["author_id"], name: "index_posts_on_author_uuid"
