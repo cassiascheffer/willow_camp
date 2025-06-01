@@ -39,8 +39,6 @@
         <p class="text-xl">No posts yet!</p>
       </div>
     <% end %>
-    <div class="calendar-navigation mb-6">
-      <%== pagy_nav(@pagy, nav_tag: :nav, nav_class: "flex space-x-1 font-semibold text-sm text-[var(--light-muted)] dark:text-[var(--dark-muted)]") %>
-    </div>
+    <%== pagy_nav(@pagy) if @pagy.pages > 1 %>
   </div>
 </div>

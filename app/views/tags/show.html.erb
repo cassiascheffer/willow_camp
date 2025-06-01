@@ -26,6 +26,6 @@
         <p class="text-xl">No posts found</p>
       </div>
     <% end %>
-    <%== pagy_nav(@pagy, nav_class: "flex space-x-1 font-semibold text-sm text-[var(--light-muted)] dark:text-[var(--dark-muted)]") if @pagy.pages > 1 %>
+    <%== pagy_nav(@pagy) if @pagy.pages > 1 %>
   </div>
 </div>

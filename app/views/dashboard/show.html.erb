@@ -45,7 +45,6 @@
         <p class="mt-2">Create your first blog post to get started</p>
       </div>
     <% end %>
-
-    <%== pagy_nav(@pagy, nav_tag: :nav, nav_class: "flex space-x-1 font-semibold text-sm text-[var(--light-muted)] dark:text-[var(--dark-muted)]") if @pagy.pages > 1 %>
+    <%== pagy_nav(@pagy) if @pagy.pages > 1 %>
   </div>
 </div>
