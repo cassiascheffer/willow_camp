@@ -1,29 +1,34 @@
-<tr id="<%= dom_id(token) %>" class="hover:bg-[var(--light-card-hover)] dark:hover:bg-[var(--dark-card-hover)] transition-colors duration-200">
-  <td class="px-6 py-4 whitespace-nowrap text-sm text-[var(--light-text)] dark:text-[var(--dark-text)]">
-    <div class="truncate" title="<%= token.name %>"><%= token.name %></div>
-  </td>
-  <td class="px-6 py-4 whitespace-nowrap text-sm text-[var(--light-text)] dark:text-[var(--dark-text)]">
-    <div class="flex items-center" data-controller="clipboard">
-      <span class="font-mono text-xs truncate max-w-[180px]" data-clipboard-target="source" title="<%= token.token %>"><%= token.token %></span>
-      <button type="button" class="ml-2 shrink-0 text-[var(--light-accent)] hover:text-[var(--light-accent-hover)] dark:text-[var(--dark-accent)] dark:hover:text-[var(--dark-accent-hover)]" data-action="clipboard#copy">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-        </svg>
-      </button>
-      <span class="ml-2 text-[var(--light-success)] dark:text-[var(--dark-success)] hidden" data-clipboard-target="success">Copied!</span>
+<div id="<%= dom_id(token) %>" class="mb-4 bg-[var(--light-card)] dark:bg-[var(--dark-card)] border border-[var(--light-border)] dark:border-[var(--dark-border)] p-4 shadow-sm transition-all duration-200 flex flex-col gap-2">
+  <div class="flex items-center mb-2">
+    <div class="text-lg font-semibold flex-1 truncate" title="<%= token.name %>"><%= token.name %></div>
+    <div>
+      <%= button_to dashboard_token_path(token), method: :delete, form: { data: { turbo_confirm: "Are you sure you want to revoke this token?", turbo_frame: "_top" } }, class: "text-[var(--light-error)] hover:text-[var(--light-error)]/75 dark:text-[var(--dark-error)] dark:hover:text-[var(--dark-error)]/75 text-sm font-medium ml-2" do %>
+        Revoke
+      <% end %>
     </div>
-  </td>
-  <td class="px-6 py-4 whitespace-nowrap text-sm text-[var(--light-text)] dark:text-[var(--dark-text)] text-muted whitespace-nowrap"><%= token.created_at.strftime("%b %d, %Y") %></td>
-  <td class="px-6 py-4 whitespace-nowrap text-sm text-[var(--light-text)] dark:text-[var(--dark-text)] text-muted whitespace-nowrap">
-    <% if token.expires_at.present? %>
-      <%= token.expires_at.strftime("%b %d, %Y") %>
-    <% else %>
-      <span class="text-[var(--light-muted)] dark:text-[var(--dark-muted)]">Never</span>
-    <% end %>
-  </td>
-  <td class="px-6 py-4 whitespace-nowrap text-sm text-[var(--light-text)] dark:text-[var(--dark-text)] text-right font-medium whitespace-nowrap">
-    <%= button_to dashboard_token_path(token), method: :delete, form: { data: { turbo_confirm: "Are you sure you want to revoke this token?", turbo_frame: "_top" } }, class: "text-[var(--light-error)] hover:text-[var(--light-error)]/75 dark:text-[var(--dark-error)] dark:hover:text-[var(--dark-error)]/75" do %>
-      Revoke
-    <% end %>
-  </td>
-</tr>
+  </div>
+  <div class="flex items-center" data-controller="clipboard">
+    <span class="block text-xs font-medium text-[var(--light-muted)] dark:text-[var(--dark-muted)] uppercase mr-2">Token</span>
+    <span class="font-mono text-xs truncate max-w-[180px]" data-clipboard-target="source" title="<%= token.token %>"><%= token.token %></span>
+    <button type="button" class="ml-2 shrink-0 text-[var(--light-accent)] hover:text-[var(--light-accent-hover)] dark:text-[var(--dark-accent)] dark:hover:text-[var(--dark-accent-hover)]" data-action="clipboard#copy">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+      </svg>
+    </button>
+    <span class="ml-2 text-[var(--light-success)] dark:text-[var(--dark-success)] hidden" data-clipboard-target="success">Copied!</span>
+  </div>
+  <div class="flex justify-between text-sm text-gray-500 dark:text-gray-400 mt-2">
+    <div>
+      <span class="block text-xs font-medium text-[var(--light-muted)] dark:text-[var(--dark-muted)] uppercase">Created</span>
+      <span><%= token.created_at.strftime("%b %d, %Y") %></span>
+    </div>
+    <div>
+      <span class="block text-xs font-medium text-[var(--light-muted)] dark:text-[var(--dark-muted)] uppercase">Expires</span>
+      <% if token.expires_at.present? %>
+        <span><%= token.expires_at.strftime("%b %d, %Y") %></span>
+      <% else %>
+        <span class="text-[var(--light-muted)] dark:text-[var(--dark-muted)]">Never</span>
+      <% end %>
+    </div>
+  </div>
+</div>
