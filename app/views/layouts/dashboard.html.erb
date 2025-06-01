@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-theme="<%= @user&.theme || "tokyo" %>" class="font-mono">
+<html data-theme="<%= @user&.theme || "tokyo" %>">
   <head>
     <title><%= content_for(:title) || "willow.camp" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -7,54 +7,46 @@
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-
     <%= yield :head %>
-
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⛺</text></svg>">
-    <!-- <link rel="icon" href="/icon.png" type="image/png">
+  <!-- <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png"> -->
-
-    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
-    <%= javascript_importmap_tags %>
-  </head>
-
-  <body>
-    <div id="flash-messages" class="fixed top-0 left-0 right-0 z-50 transform transition-transform duration-300">
-      <% if notice %>
-        <div data-controller="flash" class="flash flash-notice p-4 bg-green-100 border-l-4 border-green-500 text-green-700 mb-2 flex justify-between items-center">
-          <div><%= notice %></div>
-          <button class="flash-close ml-4" data-action="click->flash#dismiss">&times;</button>
-        </div>
-      <% end %>
-
-      <% if alert %>
-        <div data-controller="flash" class="flash flash-alert p-4 bg-red-100 border-l-4 border-red-500 text-red-700 mb-2 flex justify-between items-center">
-          <div><%= alert %></div>
-          <button class="flash-close ml-4" data-action="click->flash#dismiss">&times;</button>
-        </div>
-      <% end %>
-    </div>
-
-    <nav class="bg-[var(--light-card)] dark:bg-[var(--dark-card)] shadow-md">
-      <div class="container mx-auto px-5 md:px-8 py-3 flex items-center justify-between">
+  <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+  <%= javascript_importmap_tags %>
+</head>
+<body class="font-mono text-base">
+  <div id="flash-messages" class="fixed top-0 left-0 right-0 z-50 transform transition-transform duration-300">
+    <% if notice %>
+      <div data-controller="flash" class="flash flash-notice p-4 bg-green-100 border-l-4 border-green-500 text-green-700 mb-2 flex justify-between items-center" role="alert" aria-live="polite">
+        <div><%= notice %></div>
+        <button class="flash-close ml-4" data-action="click->flash#dismiss" aria-label="Dismiss notice">&times;</button>
+      </div>
+    <% end %>
+    <% if alert %>
+      <div data-controller="flash" class="flash flash-alert p-4 bg-red-100 border-l-4 border-red-500 text-red-700 mb-2 flex justify-between items-center" role="alert" aria-live="assertive">
+        <div><%= alert %></div>
+        <button class="flash-close ml-4" data-action="click->flash#dismiss" aria-label="Dismiss alert">&times;</button>
+      </div>
+    <% end %>
+  </div>
+  <nav class="bg-[var(--light-card)] dark:bg-[var(--dark-card)] shadow-md" aria-label="Main Navigation">
+    <div class="container mx-auto px-5 md:px-8 py-3 flex items-center justify-between">
       <div class="text-lg font-bold text-[var(--light-accent)] dark:text-[var(--dark-accent)]">
         <%= link_to(blog_title_for(@user), dashboard_path, class: "text-[var(--light-accent)] dark:text-[var(--dark-accent)]") %>
       </div>
       <div>
         <%= link_to "Settings", dashboard_settings_path, class: "text-[var(--light-accent)] dark:text-[var(--dark-accent)] hover:text-[var(--light-accent-hover)] dark:hover:text-[var(--dark-accent-hover)]" %>
       </div>
-      </div>
-    </nav>
-
-    <main class="max-w-4xl mx-auto lg:px-8">
-      <%= yield %>
-    </main>
-
-    <footer class="border-t border-[var(--light-border)] dark:border-[var(--dark-border)] py-4 px-5 mt-12">
-      <div class="container mx-auto text-sm text-[var(--light-muted)] dark:text-[var(--dark-muted)]">
-          willow.camp
-      </div>
-    </footer>
-  </body>
+    </div>
+  </nav>
+  <main class="max-w-6xl mx-auto lg:px-8" aria-label="Dashboard Content">
+    <%= yield %>
+  </main>
+  <footer class="border-t border-[var(--light-border)] dark:border-[var(--dark-border)] py-4 px-5 mt-12" aria-label="Footer">
+    <div class="container mx-auto text-sm text-[var(--light-muted)] dark:text-[var(--dark-muted)]">
+      willow.camp
+    </div>
+  </footer>
+</body>
 </html>

@@ -1,8 +1,7 @@
 <%= form_with model: token, url: dashboard_tokens_path, class: "contents max-w-full", id: "new_token_form", data: { turbo: false } do |form| %>
   <% if token.errors.any? %>
-    <div id="error_explanation" class="wc-alert">
-      <h2><%= pluralize(token.errors.count, "error") %> prohibited this token from being saved:</h2>
-
+    <div id="error_explanation" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4" role="alert" aria-labelledby="error_explanation_title">
+      <h2 id="error_explanation_title" class="font-bold mb-2"><%= pluralize(token.errors.count, "error") %> prohibited this token from being saved:</h2>
       <ul class="list-disc list-inside">
         <% token.errors.full_messages.each do |message| %>
           <li class="truncate"><%= message %></li>
@@ -10,20 +9,17 @@
       </ul>
     </div>
   <% end %>
-
   <div class="my-5">
     <%= form.label :name, "Token name", class: "block mb-1 text-[var(--light-muted)] dark:text-[var(--dark-muted)]" %>
     <%= form.text_field :name, required: true, class: "w-full px-3 py-2 border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md bg-[var(--light-bg)] dark:bg-[var(--dark-bg)] text-[var(--light-text)] dark:text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)] focus:ring-offset-1 w-full", placeholder: "API Key #1" %>
   </div>
-
   <div class="my-5">
     <%= form.label :expires_at, "Expiration date (optional)", class: "block mb-1 text-[var(--light-muted)] dark:text-[var(--dark-muted)]" %>
     <%= form.date_field :expires_at, class: "w-full px-3 py-2 border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md bg-[var(--light-bg)] dark:bg-[var(--dark-bg)] text-[var(--light-text)] dark:text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)] focus:ring-offset-1 w-full" %>
   </div>
-
   <div class="my-5">
     <div class="flex items-center">
-      <%= form.submit "Generate token", class: "wc-button" %>
+      <%= form.submit "Generate token", class: "" %>
     </div>
   </div>
 <% end %>
