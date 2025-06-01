@@ -1,0 +1,7 @@
+.wc-checkbox {
+  @apply appearance-none rounded border-2 border-[var(--light-border)] dark:border-[var(--dark-border)] w-4 h-4 focus:outline-none focus:ring-2 focus:ring-[var(--light-primary)] dark:focus:ring-[var(--dark-primary)];
+}
+
+.wc-checkbox:checked {
+  @apply bg-[var(--light-primary)] dark:bg-[var(--dark-primary)];
+}

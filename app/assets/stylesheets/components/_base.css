@@ -1,0 +1,117 @@
+@layer base {
+    :root {
+        /* Theme Selection - Change to 'solarized' to switch themes */
+        --theme: "tokyo";
+
+        /* Tokyo Night Theme Colors */
+        --tokyo-light-bg: #fafafa;
+        --tokyo-light-text: #16161e;
+        --tokyo-light-muted: #6b7280;
+        --tokyo-light-accent: #006a93;
+        --tokyo-light-accent-hover: #005273;
+        --tokyo-light-border: #e5e7eb;
+        --tokyo-light-card: #ffffff;
+        --tokyo-light-card-hover: #f3f4f6;
+        --tokyo-light-success: #10b981;
+        --tokyo-light-error: #ef4444;
+
+        --tokyo-dark-bg: #1a1b26;
+        --tokyo-dark-text: #a9b1d6;
+        --tokyo-dark-muted: #9ca3af;
+        --tokyo-dark-accent: #7aa2f7;
+        --tokyo-dark-accent-hover: #5d7fe3;
+        --tokyo-dark-border: #3a3d4d;
+        --tokyo-dark-card: #24283b;
+        --tokyo-dark-card-hover: #2c3042;
+        --tokyo-dark-success: #34d399;
+        --tokyo-dark-error: #f87171;
+
+        /* Solarized Theme Colors */
+        --solarized-light-bg: #fdf6e3;
+        --solarized-light-text: #073642;
+        --solarized-light-muted: #657b83;
+        --solarized-light-accent: #268bd2;
+        --solarized-light-accent-hover: #1e6ea7;
+        --solarized-light-border: #eee8d5;
+        --solarized-light-card: #fefbf3;
+        --solarized-light-card-hover: #eee8d5;
+        --solarized-light-success: #859900;
+        --solarized-light-error: #dc322f;
+
+        --solarized-dark-bg: #002b36;
+        --solarized-dark-text: #839496;
+        --solarized-dark-muted: #586e75;
+        --solarized-dark-accent: #268bd2;
+        --solarized-dark-accent-hover: #1e6ea7;
+        --solarized-dark-border: #073642;
+        --solarized-dark-card: #073642;
+        --solarized-dark-card-hover: #0f4555;
+        --solarized-dark-success: #859900;
+        --solarized-dark-error: #dc322f;
+
+        /* Active theme colors - dynamically set based on --theme variable */
+        --light-bg: var(--tokyo-light-bg);
+        --light-text: var(--tokyo-light-text);
+        --light-muted: var(--tokyo-light-muted);
+        --light-accent: var(--tokyo-light-accent);
+        --light-accent-hover: var(--tokyo-light-accent-hover);
+        --light-border: var(--tokyo-light-border);
+        --light-card: var(--tokyo-light-card);
+        --light-card-hover: var(--tokyo-light-card-hover);
+        --light-success: var(--tokyo-light-success);
+        --light-error: var(--tokyo-light-error);
+
+        --dark-bg: var(--tokyo-dark-bg);
+        --dark-text: var(--tokyo-dark-text);
+        --dark-muted: var(--tokyo-dark-muted);
+        --dark-accent: var(--tokyo-dark-accent);
+        --dark-accent-hover: var(--tokyo-dark-accent-hover);
+        --dark-border: var(--tokyo-dark-border);
+        --dark-card: var(--tokyo-dark-card);
+        --dark-card-hover: var(--tokyo-dark-card-hover);
+        --dark-success: var(--tokyo-dark-success);
+        --dark-error: var(--tokyo-dark-error);
+    }
+
+    /* Solarized Theme Selector */
+    :root[data-theme="solarized"] {
+        --light-bg: var(--solarized-light-bg);
+        --light-text: var(--solarized-light-text);
+        --light-muted: var(--solarized-light-muted);
+        --light-accent: var(--solarized-light-accent);
+        --light-accent-hover: var(--solarized-light-accent-hover);
+        --light-border: var(--solarized-light-border);
+        --light-card: var(--solarized-light-card);
+        --light-card-hover: var(--solarized-light-card-hover);
+        --light-success: var(--solarized-light-success);
+        --light-error: var(--solarized-light-error);
+
+        --dark-bg: var(--solarized-dark-bg);
+        --dark-text: var(--solarized-dark-text);
+        --dark-muted: var(--solarized-dark-muted);
+        --dark-accent: var(--solarized-dark-accent);
+        --dark-accent-hover: var(--solarized-dark-accent-hover);
+        --dark-border: var(--solarized-dark-border);
+        --dark-card: var(--solarized-dark-card);
+        --dark-card-hover: var(--solarized-dark-card-hover);
+        --dark-success: var(--solarized-dark-success);
+        --dark-error: var(--solarized-dark-error);
+    }
+
+    body {
+        @apply bg-[var(--light-bg)] dark:bg-[var(--dark-bg)] text-[var(--light-text)] dark:text-[var(--dark-text)] font-mono transition-colors duration-300;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        @apply font-bold text-[var(--light-text)] dark:text-[var(--dark-text)];
+    }
+
+    a {
+        @apply transition-colors duration-200;
+    }
+}

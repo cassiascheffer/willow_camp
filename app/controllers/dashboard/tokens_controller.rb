@@ -27,7 +27,7 @@ class Dashboard::TokensController < Dashboard::BaseController
   private
 
   def set_token
-    @token = Current.user.tokens.find_by(id: params[:id])
+    @token = @user.tokens.find_by(id: params[:id])
     head :not_found unless @token
   end
 

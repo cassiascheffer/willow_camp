@@ -1,0 +1,7 @@
+.wc-button {
+    @apply inline-block px-4 py-2 font-medium rounded-md transition-all duration-200 bg-[var(--light-accent)] hover:bg-[var(--light-accent-hover)] dark:bg-[var(--dark-accent)] dark:hover:bg-[var(--dark-accent-hover)] text-white;
+}
+
+.wc-button-secondary {
+    @apply inline-block px-4 py-2 font-medium rounded-md transition-all duration-200 bg-transparent border border-[var(--light-border)] dark:border-[var(--dark-border)] text-[var(--light-text)] dark:text-[var(--dark-text)] hover:bg-[var(--light-card-hover)] dark:hover:bg-[var(--dark-card-hover)];
+}

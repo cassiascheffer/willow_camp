@@ -40,7 +40,7 @@ class Dashboard::PagesController < Dashboard::BaseController
   private
 
   def set_page
-    @page = Page.find_by!(slug: params[:slug], author_id: @user.id)
+    @page = @user.pages.find_by!(slug: params[:slug], author_id: @user.id)
   end
 
   def page_params

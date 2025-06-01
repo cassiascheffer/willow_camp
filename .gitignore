@@ -38,3 +38,6 @@
 
 /node_modules
 .envrc
+
+# don't ignore app/views/tags/
+!app/views/tags/

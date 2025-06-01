@@ -1,17 +1,17 @@
 <% content_for :title, "Editing page" %>
 
 <div class="container-narrow">
-  <div class="willow-card">
+  <div class="wc-card">
     <h1 class="font-bold text-2xl mb-6">Editing page</h1>
 
     <%= render "form", page: @page %>
 
     <div class="flex flex-wrap gap-2 mt-4">
-      <%= button_to "Delete", dashboard_page_path(@page), method: :delete, data: { confirm: 'Are you sure?' }, class: "willow-button-secondary text-[#EF4444] dark:text-[#F87171] hover:bg-red-50 dark:hover:bg-red-900/10" %>
+      <%= button_to "Delete", dashboard_page_path(@page), method: :delete, data: { confirm: 'Are you sure?' }, class: "wc-button-secondary text-[#EF4444] dark:text-[#F87171] hover:bg-red-50 dark:hover:bg-red-900/10" %>
       <% if @page.published? %>
-        <%= link_to "View page", post_url(@page.slug, subdomain: @page.author.subdomain), class: "willow-button-secondary", target: "_blank" %>
+        <%= link_to "View page", post_url(@page.slug, subdomain: @page.author.subdomain), class: "wc-button-secondary", target: "_blank" %>
       <% end %>
-      <%= link_to "Back to Dashboard", dashboard_path, class: "willow-button-secondary" %>
+      <%= link_to "Back to Dashboard", dashboard_path, class: "wc-button-secondary" %>
     </div>
   </div>
 </div>

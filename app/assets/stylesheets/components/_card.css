@@ -1,0 +1,3 @@
+.wc-card {
+  @apply bg-[var(--light-card)] dark:bg-[var(--dark-card)] border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md p-5 transition-all duration-200;
+}

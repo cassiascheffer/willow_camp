@@ -3,7 +3,9 @@ class DashboardController < ApplicationController
   before_action :set_user
 
   def show
-    @pagy, @posts = pagy(Post.where(author: Current.user).order(published_at: :desc, created_at: :desc))
+    @pagy, @posts = pagy(
+      @user.posts.not_page.order(published_at: :desc, created_at: :desc)
+    )
   end
 
   private

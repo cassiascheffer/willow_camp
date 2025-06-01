@@ -1,6 +1,6 @@
 <%= form_with model: token, url: dashboard_tokens_path, class: "contents max-w-full", id: "new_token_form", data: { turbo: false } do |form| %>
   <% if token.errors.any? %>
-    <div id="error_explanation" class="willow-alert">
+    <div id="error_explanation" class="wc-alert">
       <h2><%= pluralize(token.errors.count, "error") %> prohibited this token from being saved:</h2>
 
       <ul class="list-disc list-inside">
@@ -13,17 +13,17 @@
 
   <div class="my-5">
     <%= form.label :name, "Token name", class: "text-muted block mb-1" %>
-    <%= form.text_field :name, required: true, class: "willow-input w-full", placeholder: "API Key #1" %>
+    <%= form.text_field :name, required: true, class: "wc-input w-full", placeholder: "API Key #1" %>
   </div>
 
   <div class="my-5">
     <%= form.label :expires_at, "Expiration date (optional)", class: "text-muted block mb-1" %>
-    <%= form.date_field :expires_at, class: "willow-input w-full" %>
+    <%= form.date_field :expires_at, class: "wc-input w-full" %>
   </div>
 
   <div class="my-5">
     <div class="flex items-center">
-      <%= form.submit "Generate token", class: "willow-button" %>
+      <%= form.submit "Generate token", class: "wc-button" %>
     </div>
   </div>
 <% end %>

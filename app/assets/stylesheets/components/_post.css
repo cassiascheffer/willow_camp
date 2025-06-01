@@ -1,0 +1,23 @@
+.post-content {
+  @apply text-lg/7 leading-7 [&_p]:mb-7 [&_ul]:list-disc [&_ul]:list-inside [&_ul]:mb-7 [&_ol]:list-decimal [&_ol]:list-inside [&_ol]:mb-7 [&_ul_ul]:list-inside [&_ol_ul]:list-inside [&_ul_ol]:list-inside [&_ol_ol]:list-inside [&_table]:w-full [&_table]:border-collapse [&_table]:mb-7 [&_table_th]:bg-[var(--light-card-hover)] [&_table_th]:dark:bg-[var(--dark-card-hover)] [&_table_th]:text-left [&_table_th]:p-2 [&_table_td]:border [&_table_td]:border-[var(--light-border)] [&_table_td]:dark:border-[var(--dark-border)] [&_table_td]:p-2 [&_pre]:m-4 [&_pre]:rounded-md [&_pre]:overflow-x-auto [&_pre]:mb-7 [&_code]:font-mono [&_code]:p-1 [&_code]:m-2 [&_code]:inline-block [&_code]:rounded [&_pre_code]:whitespace-pre [&_pre_code]:block [&>h1]:text-3xl [&>h1]:mb-7 [&>h2]:text-2xl [&>h2]:mb-7 [&>h3]:text-xl [&>h3]:mb-7 [&>h4]:text-lg [&>h4]:italic [&>h4]:mb-7 [&>h5]:text-base [&>h5]:italic [&>h5]:mb-7 [&>h6]:text-sm [&>h6]:italic [&>h6]:mb-7 [&_a]:text-[var(--light-text)] [&_a]:dark:text-[var(--dark-text)] [&_a]:underline [&_a]:drop-shadow-[0_0_2px_var(--light-bg)] [&_a]:dark:drop-shadow-[0_0_2px_var(--dark-bg)];
+}
+
+.post-article {
+  @apply w-full max-w-3xl mx-auto;
+}
+
+.post-card {
+  @apply border-b border-[var(--light-border)] dark:border-[var(--dark-border)] last:border-0;
+}
+
+.post-card-link {
+  @apply block px-3 py-4 hover:bg-[var(--light-card-hover)] dark:hover:bg-[var(--dark-card-hover)] rounded transition duration-200;
+}
+
+.post-title {
+  @apply font-bold text-4xl mb-6;
+}
+
+.post-metadata {
+  @apply text-sm text-[var(--light-muted)] dark:text-[var(--dark-muted)] mb-4;
+}

@@ -39,7 +39,7 @@ class Api::PostsController < Api::BaseController
   private
 
   def set_post
-    @post = Post.find_by(slug: params[:slug])
+    @post = @current_user.posts.find_by(slug: params[:slug])
     unless @post
       render json: {error: "Post not found"}, status: :not_found
     end

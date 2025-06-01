@@ -7,8 +7,7 @@ class Dashboard::PostsController < Dashboard::BaseController
   end
 
   def create
-    @post = Post.new(post_params)
-    @post.author = @user
+    @post = @user.posts.new(post_params)
 
     respond_to do |format|
       if @post.save
@@ -76,10 +75,13 @@ class Dashboard::PostsController < Dashboard::BaseController
   private
 
   def set_post
-    @post = Post.find_by(slug: params[:slug])
+    @post = @user.posts.find_by(slug: params[:slug])
   end
 
   def authorize_user!
+    Rails.logger.debug("Authorizing user for post #{@post.id}")
+    Rails.logger.debug("User ID: #{@user.id}")
+    Rails.logger.debug("Post author ID: #{@post.author.id}")
     unless @post.author == @user
       redirect_to dashboard_path, alert: "You are not authorized to perform this action."
     end

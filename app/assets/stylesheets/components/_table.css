@@ -1,0 +1,39 @@
+.wc-table-container {
+    @apply w-full overflow-x-auto;
+}
+
+.wc-table-wrapper {
+    @apply overflow-scroll shadow ring-1 ring-black md:rounded-lg;
+}
+
+.wc-table {
+    @apply min-w-full divide-y divide-[var(--light-border)] dark:divide-[var(--dark-border)];
+}
+
+.wc-table-header {
+    @apply bg-[var(--light-card-hover)] dark:bg-[var(--dark-card-hover)];
+}
+
+.wc-table-header-cell {
+    @apply px-6 py-3 text-left text-xs font-medium text-[var(--light-muted)] dark:text-[var(--dark-muted)] uppercase tracking-wider;
+}
+
+.wc-table-body {
+    @apply bg-[var(--light-card)] dark:bg-[var(--dark-card)] divide-y divide-[var(--light-border)] dark:divide-[var(--dark-border)];
+}
+
+.wc-table-row {
+    @apply hover:bg-[var(--light-card-hover)] dark:hover:bg-[var(--dark-card-hover)] transition-colors duration-200;
+}
+
+.wc-table-cell {
+    @apply px-6 py-4 whitespace-nowrap text-sm text-[var(--light-text)] dark:text-[var(--dark-text)];
+}
+
+.wc-table-cell-truncate {
+    @apply px-6 py-4 whitespace-nowrap text-sm text-[var(--light-text)] dark:text-[var(--dark-text)] overflow-hidden text-ellipsis max-w-xs;
+}
+
+.wc-table-empty {
+    @apply text-center text-[var(--light-muted)] dark:text-[var(--dark-muted)] py-4;
+}

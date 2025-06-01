@@ -1,0 +1,3 @@
+.wc-notice {
+  @apply bg-green-50 dark:bg-green-900/10 text-[var(--light-success)] dark:text-[var(--dark-success)] border-l-4 border-l-[var(--light-success)] dark:border-l-[var(--dark-success)] px-4 py-3 mb-4 rounded-r;
+}

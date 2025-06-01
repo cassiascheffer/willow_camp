@@ -1,8 +1,8 @@
-<tr id="<%= dom_id(token) %>" class="willow-table-row">
-  <td class="willow-table-cell">
+<tr id="<%= dom_id(token) %>" class="wc-table-row">
+  <td class="wc-table-cell">
     <div class="truncate" title="<%= token.name %>"><%= token.name %></div>
   </td>
-  <td class="willow-table-cell">
+  <td class="wc-table-cell">
     <div class="flex items-center" data-controller="clipboard">
       <span class="font-mono text-xs truncate max-w-[180px]" data-clipboard-target="source" title="<%= token.token %>"><%= token.token %></span>
       <button type="button" class="ml-2 shrink-0 text-[var(--light-accent)] hover:text-[var(--light-accent-hover)] dark:text-[var(--dark-accent)] dark:hover:text-[var(--dark-accent-hover)]" data-action="clipboard#copy">
@@ -13,15 +13,15 @@
       <span class="ml-2 text-[var(--light-success)] dark:text-[var(--dark-success)] hidden" data-clipboard-target="success">Copied!</span>
     </div>
   </td>
-  <td class="willow-table-cell text-muted whitespace-nowrap"><%= token.created_at.strftime("%b %d, %Y") %></td>
-  <td class="willow-table-cell text-muted whitespace-nowrap">
+  <td class="wc-table-cell text-muted whitespace-nowrap"><%= token.created_at.strftime("%b %d, %Y") %></td>
+  <td class="wc-table-cell text-muted whitespace-nowrap">
     <% if token.expires_at.present? %>
       <%= token.expires_at.strftime("%b %d, %Y") %>
     <% else %>
       <span class="text-[var(--light-muted)] dark:text-[var(--dark-muted)]">Never</span>
     <% end %>
   </td>
-  <td class="willow-table-cell text-right font-medium whitespace-nowrap">
+  <td class="wc-table-cell text-right font-medium whitespace-nowrap">
     <%= button_to dashboard_token_path(token), method: :delete, form: { data: { turbo_confirm: "Are you sure you want to revoke this token?", turbo_frame: "_top" } }, class: "text-[var(--light-error)] hover:text-[var(--light-error)]/75 dark:text-[var(--dark-error)] dark:hover:text-[var(--dark-error)]/75" do %>
       Revoke
     <% end %>
