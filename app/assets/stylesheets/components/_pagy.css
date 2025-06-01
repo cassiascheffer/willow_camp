@@ -1,61 +1,62 @@
 .pagy {
   @apply flex space-x-1 font-semibold text-sm text-gray-500;
-  color: var(--light-muted);
+  color: var(--light-storm-blue);
   a:not(.gap) {
     @apply block rounded-lg px-3 py-1 bg-gray-200;
-    background-color: var(--light-card);
-    color: var(--light-muted);
+    background-color: var(--light-crystal-blue);
+    color: var(--light-storm-blue);
     &:hover {
       @apply bg-gray-300;
-      background-color: var(--light-card-hover);
+      background-color: var(--light-crystal-blue-hover);
     }
     &:not([href]) { /* disabled links */
       @apply text-gray-300 bg-gray-100 cursor-default;
-      color: var(--light-border);
-      background-color: var(--light-bg);
+      color: var(--tokyo-light-wave-blue);
+      background-color: var(--tokyo-light-moon-gray);
       cursor: default;
     }
     &.current {
       @apply text-white bg-gray-400;
-      color: var(--light-card);
-      background-color: var(--light-muted);
+      color: var(--light-crystal-blue);
+      background-color: var(--light-storm-blue);
     }
   }
   label {
     @apply inline-block whitespace-nowrap bg-gray-200 rounded-lg px-3 py-0.5;
-    background-color: var(--light-card);
-    color: var(--light-muted);
+    background-color: var(--light-crystal-blue);
+    color: var(--light-storm-blue);
     input {
       @apply bg-gray-100 border-none rounded-md;
-      background-color: var(--light-bg);
-      color: var(--light-text);
+      background-color: var(--light-moon-gray);
+      color: var(--light-night-blue);
     }
   }
 
   /* Dark mode styles */
   @media (prefers-color-scheme: dark) {
-    color: var(--dark-muted);
+    color: var(--dark-storm-blue);
     a:not(.gap) {
-      background-color: var(--dark-card);
-      color: var(--dark-muted);
+      background-color: var(--dark-storm-blue);
+      color: var(--dark-storm-blue);
       &:hover {
-        background-color: var(--dark-card-hover);
+        background-color: var(--dark-storm-blue-hover);
       }
       &:not([href]) {
-        color: var(--dark-border);
-        background-color: var(--dark-bg);
+        color: var(--dark-wave-blue);
+        background-color: var(--dark-night-blue);
       }
       &.current {
-        color: var(--dark-card);
-        background-color: var(--dark-muted);
+        @apply text-white bg-gray-400;
+        color: var(--tokyo-light-crystal-blue);
+        background-color: var(--tokyo-light-storm-blue);
       }
     }
     label {
-      background-color: var(--dark-card);
-      color: var(--dark-muted);
+      background-color: var(--dark-storm-blue);
+      color: var(--dark-storm-blue);
       input {
-        background-color: var(--dark-bg);
-        color: var(--dark-text);
+        background-color: var(--dark-night-blue);
+        color: var(--dark-moon-gray);
       }
     }
   }

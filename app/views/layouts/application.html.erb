@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-theme="<%= @author&.theme || "tokyo" %>" class="font-mono">
+<html data-theme="<%= @author&.theme || "tokyo" %>">
   <head>
     <title>
       <%= content_for(:title) || blog_title_for(@author) %>
@@ -25,7 +25,7 @@
   <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
   <%= javascript_importmap_tags %>
 </head>
-<body>
+<body class="font-mono text-base bg-[var(--light-bg)] dark:bg-[var(--dark-bg)] text-[var(--light-text)] dark:text-[var(--dark-text)]">
   <% unless controller_name == 'home' && action_name == 'show' || controller_name == 'sessions' && action_name == 'new' %>
     <header class="border-b border-[var(--light-border)] dark:border-[var(--dark-border)] py-4 px-5">
       <div class="container mx-auto flex justify-between items-center">

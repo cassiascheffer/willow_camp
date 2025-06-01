@@ -21,12 +21,12 @@
   <% if @post.tags.any? %>
     <p class="text-sm text-gray-500 py-8">Tags:
       <% @post.tags.each do |tag| %>
-        <%= link_to tag.name, tag_path(tag.slug), class: "inline-block px-2 py-1 mx-1 mb-1 rounded bg-[var(--light-card)] dark:bg-[var(--dark-card)] border border-[var(--light-border)] dark:border-[var(--dark-border)] text-xs font-medium text-[var(--light-text)] dark:text-[var(--dark-text)] hover:bg-[var(--light-card-hover)] dark:hover:bg-[var(--dark-card-hover)] transition" %>
+        <%= link_to tag.name, tag_path(tag.slug), class: "inline-block px-2 py-1 mx-1 mb-1 rounded bg-[var(--light-muted)] dark:bg-[var(--dark-muted)] border border-[var(--light-border)] dark:border-[var(--dark-border)] text-xs font-medium text-[var(--light-text)] dark:text-[var(--dark-text)] hover:bg-[var(--light-card-hover)] dark:hover:bg-[var(--dark-card-hover)] transition" %>
       <% end %>
     </p>
   <% end %>
   <div class="section-divider">
-    <%= link_to "Back to posts", posts_path, class: "inline-block px-4 py-2 font-medium rounded-md transition-all duration-200 bg-transparent border border-[var(--light-border)] dark:border-[var(--dark-border)] text-[var(--light-text)] dark:text-[var(--dark-text)] hover:bg-[var(--light-card-hover)] dark:hover:bg-[var(--dark-card-hover)]" %>
-    <%= link_to "RSS Feed", posts_rss_path(format: :rss), class: "inline-block px-4 py-2 font-medium rounded-md transition-all duration-200 bg-transparent border border-[var(--light-border)] dark:border-[var(--dark-border)] text-[var(--light-text)] dark:text-[var(--dark-text)] hover:bg-[var(--light-card-hover)] dark:hover:bg-[var(--dark-card-hover)]" %>
+    <%= link_to "Back to posts", posts_path, class: "inline-block px-4 py-2 font-medium rounded-md transition-all duration-200 bg-[var(--light-accent)] dark:bg-[var(--dark-accent)] border border-[var(--light-border)] dark:border-[var(--dark-border)] text-[var(--light-bg)] dark:text-[var(--dark-bg)] hover:bg-[var(--light-accent-hover)] dark:hover:bg-[var(--dark-accent-hover)]" %>
+    <%= link_to "RSS Feed", posts_rss_path(format: :rss), class: "inline-block px-4 py-2 font-medium rounded-md transition-all duration-200 bg-[var(--light-accent)] dark:bg-[var(--dark-accent)] border border-[var(--light-border)] dark:border-[var(--dark-border)] text-[var(--light-bg)] dark:text-[var(--dark-bg)] hover:bg-[var(--light-accent-hover)] dark:hover:bg-[var(--dark-accent-hover)]" %>
   </div>
 </div>

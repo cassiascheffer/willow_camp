@@ -1,100 +1,237 @@
 @layer base {
     :root {
-        /* Theme Selection - Change to 'solarized' to switch themes */
-        --theme: "tokyo";
+        /* Tokyo Night Theme Variables*/
 
-        /* Tokyo Night Theme Colors */
-        --tokyo-light-bg: #fafafa;
-        --tokyo-light-text: #16161e;
-        --tokyo-light-muted: #6b7280;
-        --tokyo-light-accent: #006a93;
-        --tokyo-light-accent-hover: #005273;
-        --tokyo-light-border: #e5e7eb;
-        --tokyo-light-card: #ffffff;
-        --tokyo-light-card-hover: #f3f4f6;
-        --tokyo-light-success: #10b981;
-        --tokyo-light-error: #ef4444;
+        /* Light Theme */
+        --tokyo-light-night-blue: #16161e;
+        --tokyo-light-storm-blue: #6b7280;
+        --tokyo-light-wave-blue: #e5e7eb;
+        --tokyo-light-moon-gray: #fafafa;
+        --tokyo-light-crystal-blue: #ffffff;
+        --tokyo-light-crystal-blue-hover: #f3f4f6;
+        --tokyo-light-dragon-blue: #006a93;
+        --tokyo-light-dragon-blue-hover: #005273;
+        --tokyo-light-oni-violet: #bb9af7;
+        --tokyo-light-sakura-pink: #f7768e;
+        --tokyo-light-spring-green: #9ece6a;
+        --tokyo-light-sun-yellow: #e0af68;
+        --tokyo-light-boat-yellow: #ff9e64;
+        --tokyo-light-lotus-red: #db4b4b;
+        --tokyo-light-peach-red: #ff7a93;
+        --tokyo-light-coral-orange: #ff9e64;
+        --tokyo-light-mist-blue: #7dcfff;
+        --tokyo-light-autumn-green: #41a6b5;
+        --tokyo-light-fuji-white: #d5d6db;
+        --tokyo-light-fuji-gray: #a9b1d6;
 
-        --tokyo-dark-bg: #1a1b26;
-        --tokyo-dark-text: #a9b1d6;
-        --tokyo-dark-muted: #9ca3af;
-        --tokyo-dark-accent: #7aa2f7;
-        --tokyo-dark-accent-hover: #5d7fe3;
-        --tokyo-dark-border: #3a3d4d;
-        --tokyo-dark-card: #24283b;
-        --tokyo-dark-card-hover: #2c3042;
-        --tokyo-dark-success: #34d399;
-        --tokyo-dark-error: #f87171;
+        /* Dark Theme */
+        --tokyo-dark-night-blue: #1a1b26;
+        --tokyo-dark-storm-blue: #24283b;
+        --tokyo-dark-storm-blue-alt: #24283b;
+        --tokyo-dark-storm-blue-hover: #273747;
+        --tokyo-dark-wave-blue: #273747;
+        --tokyo-dark-moon-gray: #a9b1d6;
+        --tokyo-dark-crystal-blue: #7dcfff;
+        --tokyo-dark-dragon-blue: #7aa2f7;
+        --tokyo-dark-dragon-blue-hover: #5d7fe3;
+        --tokyo-dark-oni-violet: #bb9af7;
+        --tokyo-dark-sakura-pink: #f7768e;
+        --tokyo-dark-spring-green: #9ece6a;
+        --tokyo-dark-sun-yellow: #e0af68;
+        --tokyo-dark-boat-yellow: #ff9e64;
+        --tokyo-dark-lotus-red: #db4b4b;
+        --tokyo-dark-peach-red: #ff7a93;
+        --tokyo-dark-coral-orange: #ff9e64;
+        --tokyo-dark-mist-blue: #7dcfff;
+        --tokyo-dark-autumn-green: #41a6b5;
+        --tokyo-dark-fuji-white: #d5d6db;
+        --tokyo-dark-fuji-gray: #a9b1d6;
 
-        /* Solarized Theme Colors */
-        --solarized-light-bg: #fdf6e3;
-        --solarized-light-text: #073642;
-        --solarized-light-muted: #657b83;
-        --solarized-light-accent: #268bd2;
-        --solarized-light-accent-hover: #1e6ea7;
-        --solarized-light-border: #eee8d5;
-        --solarized-light-card: #fefbf3;
-        --solarized-light-card-hover: #eee8d5;
-        --solarized-light-success: #859900;
-        --solarized-light-error: #dc322f;
+        /* Utility Color Variables mapped to Tokyo theme */
+        --light-bg: var(--tokyo-light-moon-gray);
+        --light-text: var(--tokyo-light-night-blue);
+        --light-muted: var(--tokyo-light-storm-blue);
+        --light-border: var(--tokyo-light-wave-blue);
+        --light-card: var(--tokyo-light-crystal-blue);
+        --light-card-hover: var(--tokyo-light-crystal-blue-hover);
+        --light-accent: var(--tokyo-light-dragon-blue);
+        --light-accent-hover: var(--tokyo-light-dragon-blue-hover);
+        --light-success: var(--tokyo-light-spring-green);
+        --light-error: var(--tokyo-light-sakura-pink);
 
-        --solarized-dark-bg: #002b36;
-        --solarized-dark-text: #839496;
-        --solarized-dark-muted: #586e75;
-        --solarized-dark-accent: #268bd2;
-        --solarized-dark-accent-hover: #1e6ea7;
-        --solarized-dark-border: #073642;
-        --solarized-dark-card: #073642;
-        --solarized-dark-card-hover: #0f4555;
-        --solarized-dark-success: #859900;
-        --solarized-dark-error: #dc322f;
-
-        /* Active theme colors - dynamically set based on --theme variable */
-        --light-bg: var(--tokyo-light-bg);
-        --light-text: var(--tokyo-light-text);
-        --light-muted: var(--tokyo-light-muted);
-        --light-accent: var(--tokyo-light-accent);
-        --light-accent-hover: var(--tokyo-light-accent-hover);
-        --light-border: var(--tokyo-light-border);
-        --light-card: var(--tokyo-light-card);
-        --light-card-hover: var(--tokyo-light-card-hover);
-        --light-success: var(--tokyo-light-success);
-        --light-error: var(--tokyo-light-error);
-
-        --dark-bg: var(--tokyo-dark-bg);
-        --dark-text: var(--tokyo-dark-text);
-        --dark-muted: var(--tokyo-dark-muted);
-        --dark-accent: var(--tokyo-dark-accent);
-        --dark-accent-hover: var(--tokyo-dark-accent-hover);
-        --dark-border: var(--tokyo-dark-border);
-        --dark-card: var(--tokyo-dark-card);
-        --dark-card-hover: var(--tokyo-dark-card-hover);
-        --dark-success: var(--tokyo-dark-success);
-        --dark-error: var(--tokyo-dark-error);
+        --dark-bg: var(--tokyo-dark-night-blue);
+        --dark-text: var(--tokyo-dark-moon-gray);
+        --dark-muted: var(--tokyo-dark-storm-blue);
+        --dark-border: var(--tokyo-dark-wave-blue);
+        --dark-card: var(--tokyo-dark-storm-blue-alt);
+        --dark-card-hover: var(--tokyo-dark-storm-blue-hover);
+        --dark-accent: var(--tokyo-dark-dragon-blue);
+        --dark-accent-hover: var(--tokyo-dark-dragon-blue-hover);
+        --dark-success: var(--tokyo-dark-spring-green);
+        --dark-error: var(--tokyo-dark-sakura-pink);
     }
 
-    /* Solarized Theme Selector */
-    :root[data-theme="solarized"] {
-        --light-bg: var(--solarized-light-bg);
-        --light-text: var(--solarized-light-text);
-        --light-muted: var(--solarized-light-muted);
-        --light-accent: var(--solarized-light-accent);
-        --light-accent-hover: var(--solarized-light-accent-hover);
-        --light-border: var(--solarized-light-border);
-        --light-card: var(--solarized-light-card);
-        --light-card-hover: var(--solarized-light-card-hover);
-        --light-success: var(--solarized-light-success);
-        --light-error: var(--solarized-light-error);
+    /* Solarized Theme */
+    [data-theme="solarized"] {
+        --solarized-base03: #002b36;
+        --solarized-base02: #073642;
+        --solarized-base01: #586e75;
+        --solarized-base00: #657b83;
+        --solarized-base0:  #839496;
+        --solarized-base1:  #93a1a1;
+        --solarized-base2:  #eee8d5;
+        --solarized-base3:  #fdf6e3;
+        --solarized-yellow: #b58900;
+        --solarized-orange: #cb4b16;
+        --solarized-red:    #dc322f;
+        --solarized-magenta:#d33682;
+        --solarized-violet: #6c71c4;
+        --solarized-blue:   #268bd2;
+        --solarized-cyan:   #2aa198;
+        --solarized-green:  #859900;
 
-        --dark-bg: var(--solarized-dark-bg);
-        --dark-text: var(--solarized-dark-text);
-        --dark-muted: var(--solarized-dark-muted);
-        --dark-accent: var(--solarized-dark-accent);
-        --dark-accent-hover: var(--solarized-dark-accent-hover);
-        --dark-border: var(--solarized-dark-border);
-        --dark-card: var(--solarized-dark-card);
-        --dark-card-hover: var(--solarized-dark-card-hover);
-        --dark-success: var(--solarized-dark-success);
-        --dark-error: var(--solarized-dark-error);
+        /* Utility Color Variables mapped to Solarized Light */
+        --light-bg: var(--solarized-base3);
+        --light-text: var(--solarized-base00);
+        --light-muted: var(--solarized-base1);
+        --light-border: var(--solarized-base2);
+        --light-card: var(--solarized-base2);
+        --light-card-hover: var(--solarized-base1);
+        --light-accent: var(--solarized-blue);
+        --light-accent-hover: var(--solarized-cyan);
+        --light-success: var(--solarized-green);
+        --light-error: var(--solarized-red);
+
+        /* Utility Color Variables mapped to Solarized Dark */
+        --dark-bg: var(--solarized-base03);
+        --dark-text: var(--solarized-base0);
+        --dark-muted: var(--solarized-base01);
+        --dark-border: var(--solarized-base02);
+        --dark-card: var(--solarized-base02);
+        --dark-card-hover: var(--solarized-base01);
+        --dark-accent: var(--solarized-blue);
+        --dark-accent-hover: var(--solarized-cyan);
+        --dark-success: var(--solarized-green);
+        --dark-error: var(--solarized-red);
+    }
+    /* Catppuccin Theme */
+    [data-theme="catppuccin"] {
+        /* Catppuccin Latte (Light) */
+        --catppuccin-latte-rosewater: #dc8a78;
+        --catppuccin-latte-flamingo: #dd7878;
+        --catppuccin-latte-pink: #ea76cb;
+        --catppuccin-latte-mauve: #8839ef;
+        --catppuccin-latte-red: #d20f39;
+        --catppuccin-latte-maroon: #e64553;
+        --catppuccin-latte-peach: #fe640b;
+        --catppuccin-latte-yellow: #df8e1d;
+        --catppuccin-latte-green: #40a02b;
+        --catppuccin-latte-teal: #179299;
+        --catppuccin-latte-sky: #04a5e5;
+        --catppuccin-latte-sapphire: #209fb5;
+        --catppuccin-latte-blue: #1e66f5;
+        --catppuccin-latte-lavender: #7287fd;
+        --catppuccin-latte-text: #4c4f69;
+        --catppuccin-latte-subtext1: #5c5f77;
+        --catppuccin-latte-subtext0: #6c6f85;
+        --catppuccin-latte-overlay2: #7c7f93;
+        --catppuccin-latte-overlay1: #8c8fa1;
+        --catppuccin-latte-overlay0: #9ca0b0;
+        --catppuccin-latte-surface2: #acb0be;
+        --catppuccin-latte-surface1: #bcc0cc;
+        --catppuccin-latte-surface0: #ccd0da;
+        --catppuccin-latte-base: #eff1f5;
+        --catppuccin-latte-mantle: #e6e9ef;
+        --catppuccin-latte-crust: #dce0e8;
+
+        /* Utility Color Variables mapped to Catppuccin Latte */
+        --light-bg: var(--catppuccin-latte-base);
+        --light-text: var(--catppuccin-latte-text);
+        --light-muted: var(--catppuccin-latte-subtext0);
+        --light-border: var(--catppuccin-latte-surface1);
+        --light-card: var(--catppuccin-latte-surface0);
+        --light-card-hover: var(--catppuccin-latte-surface1);
+        --light-accent: var(--catppuccin-latte-blue);
+        --light-accent-hover: var(--catppuccin-latte-sapphire);
+        --light-success: var(--catppuccin-latte-green);
+        --light-error: var(--catppuccin-latte-red);
+
+        /* Catppuccin Mocha (Dark) */
+        --catppuccin-mocha-rosewater: #f5e0dc;
+        --catppuccin-mocha-flamingo: #f2cdcd;
+        --catppuccin-mocha-pink: #f5c2e7;
+        --catppuccin-mocha-mauve: #cba6f7;
+        --catppuccin-mocha-red: #f38ba8;
+        --catppuccin-mocha-maroon: #eba0ac;
+        --catppuccin-mocha-peach: #fab387;
+        --catppuccin-mocha-yellow: #f9e2af;
+        --catppuccin-mocha-green: #a6e3a1;
+        --catppuccin-mocha-teal: #94e2d5;
+        --catppuccin-mocha-sky: #89dceb;
+        --catppuccin-mocha-sapphire: #74c7ec;
+        --catppuccin-mocha-blue: #89b4fa;
+        --catppuccin-mocha-lavender: #b4befe;
+        --catppuccin-mocha-text: #cdd6f4;
+        --catppuccin-mocha-subtext1: #bac2de;
+        --catppuccin-mocha-subtext0: #a6adc8;
+        --catppuccin-mocha-overlay2: #9399b2;
+        --catppuccin-mocha-overlay1: #7f849c;
+        --catppuccin-mocha-overlay0: #6c7086;
+        --catppuccin-mocha-surface2: #585b70;
+        --catppuccin-mocha-surface1: #45475a;
+        --catppuccin-mocha-surface0: #313244;
+        --catppuccin-mocha-base: #1e1e2e;
+        --catppuccin-mocha-mantle: #181825;
+        --catppuccin-mocha-crust: #11111b;
+
+        /* Utility Color Variables mapped to Catppuccin Mocha */
+        --dark-bg: var(--catppuccin-mocha-base);
+        --dark-text: var(--catppuccin-mocha-text);
+        --dark-muted: var(--catppuccin-mocha-subtext0);
+        --dark-border: var(--catppuccin-mocha-surface1);
+        --dark-card: var(--catppuccin-mocha-surface0);
+        --dark-card-hover: var(--catppuccin-mocha-surface1);
+        --dark-accent: var(--catppuccin-mocha-blue);
+        --dark-accent-hover: var(--catppuccin-mocha-sapphire);
+        --dark-success: var(--catppuccin-mocha-green);
+        --dark-error: var(--catppuccin-mocha-red);
+    }
+    /* Dracula Theme */
+    [data-theme="dracula"] {
+        --dracula-background: #282a36;
+        --dracula-current-line: #44475a;
+        --dracula-foreground: #f8f8f2;
+        --dracula-comment: #6272a4;
+        --dracula-cyan: #8be9fd;
+        --dracula-green: #50fa7b;
+        --dracula-orange: #ffb86c;
+        --dracula-pink: #ff79c6;
+        --dracula-purple: #bd93f9;
+        --dracula-red: #ff5555;
+        --dracula-yellow: #f1fa8c;
+
+        /* Utility Color Variables mapped to Dracula */
+        --dark-bg: var(--dracula-background);
+        --dark-text: var(--dracula-foreground);
+        --dark-muted: var(--dracula-comment);
+        --dark-border: var(--dracula-current-line);
+        --dark-card: var(--dracula-current-line);
+        --dark-card-hover: var(--dracula-background);
+        --dark-accent: var(--dracula-purple);
+        --dark-accent-hover: var(--dracula-pink);
+        --dark-success: var(--dracula-green);
+        --dark-error: var(--dracula-red);
+
+        /* Dracula does not have a light mode; use dark variables for light as well */
+        --light-bg: var(--dark-bg);
+        --light-text: var(--dark-text);
+        --light-muted: var(--dark-muted);
+        --light-border: var(--dark-border);
+        --light-card: var(--dark-card);
+        --light-card-hover: var(--dark-card-hover);
+        --light-accent: var(--dark-accent);
+        --light-accent-hover: var(--dark-accent-hover);
+        --light-success: var(--dark-success);
+        --light-error: var(--dark-error);
     }
 }

@@ -2,7 +2,6 @@
   <% if post.errors.any? %>
     <div id="error_explanation" class="bg-red-50 dark:bg-red-900/10 text-[var(--light-error)] dark:text-[var(--dark-error)] border-l-4 border-l-[var(--light-error)] dark:border-l-[var(--dark-error)] px-4 py-3 mb-4 rounded-r font-medium mt-3">
       <h2><%= pluralize(post.errors.count, "error") %> prohibited this post from being saved:</h2>
-
       <ul class="list-disc ml-6">
         <% post.errors.each do |error| %>
           <li><%= error.full_message %></li>
@@ -10,43 +9,60 @@
       </ul>
     </div>
   <% end %>
-
   <div class="my-5">
     <%= form.label :title %>
     <%= form.text_field :title, class: ["w-full px-3 py-2 border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md bg-[var(--light-bg)] dark:bg-[var(--dark-bg)] text-[var(--light-text)] dark:text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)] focus:ring-offset-1 mt-2", {"focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)]": post.errors[:title].none?, "border-[var(--light-error)] dark:border-[var(--dark-error)] focus:ring-[var(--light-error)] dark:focus:ring-[var(--dark-error)]": post.errors[:title].any?}] %>
   </div>
-
   <div class="my-5">
-    <%= form.label :slug%>
+    <%= form.label :slug %>
     <%= form.text_field :slug, class: ["w-full px-3 py-2 border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md bg-[var(--light-bg)] dark:bg-[var(--dark-bg)] text-[var(--light-text)] dark:text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)] focus:ring-offset-1 mt-2", {"focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)]": post.errors[:slug].none?, "border-[var(--light-error)] dark:border-[var(--dark-error)] focus:ring-[var(--light-error)] dark:focus:ring-[var(--dark-error)]": post.errors[:slug].any?}] %>
   </div>
-
   <div class="my-5">
-    <%= form.label :tag_list%>
+    <%= form.label :tag_list %>
     <%= form.text_field :tag_list, value: post.tag_list.join(', '), class: ["w-full px-3 py-2 border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md bg-[var(--light-bg)] dark:bg-[var(--dark-bg)] text-[var(--light-text)] dark:text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)] focus:ring-offset-1 mt-2", {"focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)]": post.errors[:tag_list].none?, "border-[var(--light-error)] dark:border-[var(--dark-error)] focus:ring-[var(--light-error)] dark:focus:ring-[var(--dark-error)]": post.errors[:tag_list].any?}] %>
   </div>
-
   <div class="my-5">
     <%= form.label :meta_description, "Meta Description", class: "text-[var(--light-muted)] dark:text-[var(--dark-muted)]" %>
     <div class="text-xs text-gray-500 mb-2">Used for social shares</div>
     <%= form.text_area :meta_description, required: false, class: "w-full px-3 py-2 border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md bg-[var(--light-bg)] dark:bg-[var(--dark-bg)] text-[var(--light-text)] dark:text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)] focus:ring-offset-1 h-24", maxlength: 255 %>
   </div>
-
   <div class="my-5">
     <%= form.label :body %>
+    <div class="text-xs text-gray-500 dark:text-gray-400 mb-2">
+      <strong>Markdown supported.</strong> <br>
+      <span class="block mt-1">
+        <span class="font-medium">Headings:</span>
+        <br>
+        <code># Heading 1</code>
+        <br>
+        <code>## Heading 2</code>
+        <br>
+        <span class="font-medium">Bold:</span> <code>**bold**</code>
+        <br>
+        <span class="font-medium">Italic:</span> <code>*italic*</code>
+        <br>
+        <span class="font-medium">Links:</span> <code>[text](url)</code>
+        <br>
+        <span class="font-medium">Lists:</span>
+        <pre class=""><code>- Item 1
+- Item 2
+</code></pre>
+        <span class="font-medium">Numbered Lists:</span>
+        <pre class=""><code>1. First
+2. Second
+</code></pre>
+      </span>
+    </div>
     <%= form.text_area :body_markdown, rows: 4, class: ["w-full px-3 py-2 border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md bg-[var(--light-bg)] dark:bg-[var(--dark-bg)] text-[var(--light-text)] dark:text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)] focus:ring-offset-1 mt-2 h-[400px]", {"focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)]": post.errors[:body_markdown].none?, "border-[var(--light-error)] dark:border-[var(--dark-error)] focus:ring-[var(--light-error)] dark:focus:ring-[var(--dark-error)]": post.errors[:body_markdown].any?}] %>
   </div>
-
   <div class="my-5 flex items-center gap-2">
     <%= form.label :published %>
     <%= form.check_box :published, class: ["order-first h-5 w-5 rounded border-[var(--light-border)] dark:border-[var(--dark-border)] text-[var(--light-accent)] dark:text-[var(--dark-accent)]", {"focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)]": post.errors[:published].none?, "border-[var(--light-error)] dark:border-[var(--dark-error)] focus:ring-[var(--light-error)] dark:focus:ring-[var(--dark-error)]": post.errors[:published].any?}] %>
   </div>
-
   <div class="my-5">
     <%= form.label :published_at %>
     <%= form.datetime_field :published_at, class: ["w-full px-3 py-2 border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md bg-[var(--light-bg)] dark:bg-[var(--dark-bg)] text-[var(--light-text)] dark:text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)] focus:ring-offset-1 mt-2", {"focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)]": post.errors[:published_at].none?, "border-[var(--light-error)] dark:border-[var(--dark-error)] focus:ring-[var(--light-error)] dark:focus:ring-[var(--dark-error)]": post.errors[:published_at].any?}] %>
   </div>
-
   <div class="my-5">
     <div class="flex items-center">
       <%= form.submit class: "inline-block px-4 py-2 font-medium rounded-md transition-all duration-200 bg-[var(--light-accent)] hover:bg-[var(--light-accent-hover)] dark:bg-[var(--dark-accent)] dark:hover:bg-[var(--dark-accent-hover)] text-white" %>
