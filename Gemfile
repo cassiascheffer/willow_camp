@@ -64,10 +64,11 @@ end
 
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
-  gem "web-console"
-  gem "standardrb"
+  gem "htmlbeautifier"
   gem "lefthook"
   gem "rails_best_practices"
+  gem "standardrb"
+  gem "web-console"
 end
 
 group :test do

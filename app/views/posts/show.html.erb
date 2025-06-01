@@ -1,39 +1,30 @@
 <% content_for :title, @post.title %>
-
 <% content_for :head do %>
   <% if @post.meta_description.present? %>
     <meta name="description" content="<%= @post.meta_description %>">
   <% end %>
 <% end %>
-
 <div class="">
   <% if notice.present? %>
     <p class="notice" id="notice"><%= notice %></p>
   <% end %>
-
-  <article class="">
-    <h1 class="post-title"><%= @post.title %></h1>
-    <div class="">
+  <article>
+    <h1 class="text-2xl font-bold mb-4"><%= @post.title %></h1>
+    <div class="mb-4">
       <p><%= @post.author_name %></p>
-      <p>Published on <%= @post.published_at.strftime("%B %d, %Y") %></p>
+      <p class="text-sm text-gray-500">Published on <%= @post.published_at.strftime("%B %d, %Y") %></p>
     </div>
-
-    <div class="text-lg/7 leading-7 [&_p]:mb-7 [&_ul]:list-disc [&_ul]:list-inside [&_ul]:mb-7 [&_ol]:list-decimal [&_ol]:list-inside [&_ol]:mb-7 [&_ul_ul]:list-inside [&_ol_ul]:list-inside [&_ul_ol]:list-inside [&_ol_ol]:list-inside [&_table]:w-full [&_table]:border-collapse [&_table]:mb-7 [&_table_th]:bg-[var(--light-card-hover)] [&_table_th]:dark:bg-[var(--dark-card-hover)] [&_table_th]:text-left [&_table_th]:p-2 [&_table_td]:border [&_table_td]:border-[var(--light-border)] [&_table_td]:dark:border-[var(--dark-border)] [&_table_td]:p-2 [&_pre]:m-4 [&_pre]:rounded-md [&_pre]:overflow-x-auto [&_pre]:mb-7 [&_code]:font-mono [&_code]:p-1 [&_code]:m-2 [&_code]:inline-block [&_code]:rounded [&_pre_code]:whitespace-pre [&_pre_code]:block [&>h1]:text-3xl [&>h1]:mb-7 [&>h2]:text-2xl [&>h2]:mb-7 [&>h3]:text-xl [&>h3]:mb-7 [&>h4]:text-lg [&>h4]:italic [&>h4]:mb-7 [&>h5]:text-base [&>h5]:italic [&>h5]:mb-7 [&>h6]:text-sm [&>h6]:italic [&>h6]:mb-7 [&_a]:text-[var(--light-text)] [&_a]:dark:text-[var(--dark-text)] [&_a]:underline [&_a]:drop-shadow-[0_0_2px_var(--light-bg)] [&_a]:dark:drop-shadow-[0_0_2px_var(--dark-bg)]">
-        <%# Ensure that even if @post is a Page, we render posts/_post %>
-        <% post_partial = "posts/post" %>
-        <%= render partial: post_partial, object: @post %>
-    </div>
+    <%# Ensure that even if @post is a Page, we render posts/_post %>
+    <% post_partial = "posts/post" %>
+    <%= render partial: post_partial, object: @post %>
   </article>
-
   <% if @post.tags.any? %>
     <p class="text-sm text-gray-500 py-8">Tags:
-        <% @post.tags.each do |tag| %>
-            <%= link_to tag.name, tag_path(tag.slug) %>
-            <% unless tag == @post.tags.last %> , <% end %>
-        <% end %>
+      <% @post.tags.each do |tag| %>
+        <%= link_to tag.name, tag_path(tag.slug), class: "inline-block px-2 py-1 mx-1 mb-1 rounded bg-[var(--light-card)] dark:bg-[var(--dark-card)] border border-[var(--light-border)] dark:border-[var(--dark-border)] text-xs font-medium text-[var(--light-text)] dark:text-[var(--dark-text)] hover:bg-[var(--light-card-hover)] dark:hover:bg-[var(--dark-card-hover)] transition" %>
+      <% end %>
     </p>
-    <% end %>
-
+  <% end %>
   <div class="section-divider">
     <%= link_to "Back to posts", posts_path, class: "inline-block px-4 py-2 font-medium rounded-md transition-all duration-200 bg-transparent border border-[var(--light-border)] dark:border-[var(--dark-border)] text-[var(--light-text)] dark:text-[var(--dark-text)] hover:bg-[var(--light-card-hover)] dark:hover:bg-[var(--dark-card-hover)]" %>
     <%= link_to "RSS Feed", posts_rss_path(format: :rss), class: "inline-block px-4 py-2 font-medium rounded-md transition-all duration-200 bg-transparent border border-[var(--light-border)] dark:border-[var(--dark-border)] text-[var(--light-text)] dark:text-[var(--dark-text)] hover:bg-[var(--light-card-hover)] dark:hover:bg-[var(--dark-card-hover)]" %>

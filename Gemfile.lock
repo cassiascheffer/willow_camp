@@ -142,6 +142,7 @@ GEM
     honeybadger (5.28.0)
       logger
       ostruct
+    htmlbeautifier (1.4.3)
     i18n (1.14.7)
       concurrent-ruby (~> 1.0)
     importmap-rails (2.1.0)
@@ -438,6 +439,7 @@ DEPENDENCIES
   friendly_id
   front_matter_parser
   honeybadger
+  htmlbeautifier
   importmap-rails
   jbuilder
   kamal
