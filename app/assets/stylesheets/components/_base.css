@@ -215,8 +215,8 @@
         --dark-text: var(--dracula-foreground);
         --dark-muted: var(--dracula-comment);
         --dark-border: var(--dracula-current-line);
-        --dark-card: var(--dracula-current-line);
-        --dark-card-hover: var(--dracula-background);
+        --dark-card: var(--dracula-background);
+        --dark-card-hover: var(--dracula-current-line);
         --dark-accent: var(--dracula-purple);
         --dark-accent-hover: var(--dracula-pink);
         --dark-success: var(--dracula-green);
