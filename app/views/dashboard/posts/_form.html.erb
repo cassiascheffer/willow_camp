@@ -22,7 +22,7 @@
     <%= form.text_field :tag_list, value: post.tag_list.join(', '), class: ["w-full px-3 py-2 border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md bg-[var(--light-bg)] dark:bg-[var(--dark-bg)] text-[var(--light-text)] dark:text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)] focus:ring-offset-1 mt-2", {"focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)]": post.errors[:tag_list].none?, "border-[var(--light-error)] dark:border-[var(--dark-error)] focus:ring-[var(--light-error)] dark:focus:ring-[var(--dark-error)]": post.errors[:tag_list].any?}] %>
   </div>
   <div class="my-5">
-    <%= form.label :meta_description, "Meta Description", class: "text-[var(--light-muted)] dark:text-[var(--dark-muted)]" %>
+    <%= form.label :meta_description, "Meta Description" %>
     <div class="text-xs text-gray-500 mb-2">Used for social shares</div>
     <%= form.text_area :meta_description, required: false, class: "w-full px-3 py-2 border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md bg-[var(--light-bg)] dark:bg-[var(--dark-bg)] text-[var(--light-text)] dark:text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)] focus:ring-offset-1 h-24", maxlength: 255 %>
   </div>
@@ -47,7 +47,7 @@
         <pre class=""><code>- Item 1
 - Item 2
 </code></pre>
-        <span class="font-medium">Numbered Lists:</span>
+        <span class="font-medium">Numbered :</span>
         <pre class=""><code>1. First
 2. Second
 </code></pre>
