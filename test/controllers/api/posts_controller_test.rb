@@ -111,7 +111,7 @@ class Api::PostsControllerTest < ActionDispatch::IntegrationTest
 
   test "should not get post by slug if not owned by current user" do
     get api_post_url(slug: @post_two.slug), headers: @headers, as: :json
-    assert_response :forbidden
+    assert_response :not_found
 
     json_response = JSON.parse(response.body)
     assert_includes json_response, "error"
@@ -216,12 +216,12 @@ class Api::PostsControllerTest < ActionDispatch::IntegrationTest
       params: {post: {markdown: "---\ntitle: Updated Title\n---\n# Content"}},
       headers: @headers,
       as: :json
-    assert_response :forbidden
+    assert_response :not_found
 
     # Verify error response format
     json_response = JSON.parse(response.body)
     assert_includes json_response, "error"
-    assert_equal "You don't have permission to access this post", json_response["error"]
+    assert_equal "Post not found", json_response["error"]
 
     # Verify post was not updated
     @post_two.reload
@@ -232,11 +232,11 @@ class Api::PostsControllerTest < ActionDispatch::IntegrationTest
     assert_no_difference("Post.count") do
       delete api_post_url(slug: @post_two.slug), headers: @headers, as: :json
     end
-    assert_response :forbidden
+    assert_response :not_found
 
     # Verify error response format
     json_response = JSON.parse(response.body)
     assert_includes json_response, "error"
-    assert_equal "You don't have permission to access this post", json_response["error"]
+    assert_equal "Post not found", json_response["error"]
   end
 end
