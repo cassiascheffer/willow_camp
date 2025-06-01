@@ -12,15 +12,6 @@
   <% end %>
 
   <article class="prose-custom">
-    <p class="text-sm text-gray-500">
-      <% @post.tags.each do |tag| %>
-        <%= link_to tag.name, tag_path(tag.slug) %>
-        <% unless tag == @post.tags.last %>
-          ,
-        <% end %>
-      <% end %>
-    </p>
-
     <h1 class="post-title"><%= @post.title %></h1>
     <div class="post-metadata">
       <p><%= @post.author_name %></p>
@@ -33,9 +24,18 @@
         <%= render partial: post_partial, object: @post %>
     </div>
   </article>
+  <p class="text-sm text-gray-500 py-8">Tags:
+    <% @post.tags.each do |tag| %>
+      <%= link_to tag.name, tag_path(tag.slug) %>
+      <% unless tag == @post.tags.last %>
+        ,
+      <% end %>
+    <% end %>
+  </p>
+
 
   <div class="section-divider">
-    <%= link_to "Back to posts", posts_path, class: "btn-secondary" %>
-    <%= link_to "RSS Feed", posts_rss_path(format: :rss), class: "btn-secondary" %>
+    <%= link_to "Back to posts", posts_path, class: "wc-button-secondary" %>
+    <%= link_to "RSS Feed", posts_rss_path(format: :rss), class: "wc-button-secondary" %>
   </div>
 </div>

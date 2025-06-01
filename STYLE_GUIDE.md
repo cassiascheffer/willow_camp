@@ -78,7 +78,7 @@ This style guide defines the approach for writing, organizing, and overriding CS
 | `.wc-post-content`     | Main content of a post/page          | `<div class="wc-post-content">...</div>`           |
 | `.wc-post-metadata`    | Author, date, tags, etc.             | `<div class="wc-post-metadata">By Jane</div>`      |
 | `.wc-section-divider`  | Section breaks/dividers              | `<div class="wc-section-divider"></div>`           |
-| `.wc-btn-secondary`    | Secondary action buttons/links       | `<a class="wc-btn-secondary">Cancel</a>`           |
+| `.wc-button-secondary` | Secondary action buttons/links       | `<a class="wc-button-secondary">Cancel</a>`        |
 | `.wc-notice`           | Inline notice messages               | `<p class="wc-notice">Notice text</p>`             |
 | `.wc-alert`            | Inline alert messages                | `<p class="wc-alert">Alert text</p>`               |
 
