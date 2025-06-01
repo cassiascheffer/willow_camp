@@ -6,14 +6,14 @@
   <% end %>
 <% end %>
 
-<div class="w-full max-w-3xl mx-auto">
+<div class="">
   <% if notice.present? %>
     <p class="notice" id="notice"><%= notice %></p>
   <% end %>
 
-  <article class="prose prose-lg dark:prose-invert max-w-none">
+  <article class="">
     <h1 class="post-title"><%= @post.title %></h1>
-    <div class="post-metadata">
+    <div class="">
       <p><%= @post.author_name %></p>
       <p>Published on <%= @post.published_at.strftime("%B %d, %Y") %></p>
     </div>

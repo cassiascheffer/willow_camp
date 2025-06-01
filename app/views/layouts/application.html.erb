@@ -1,10 +1,14 @@
 <!DOCTYPE html>
 <html data-theme="<%= @author&.theme || "tokyo" %>" class="font-mono">
   <head>
-    <title><%= content_for(:title) || (@author ? blog_title_for(@author) : "willow.camp") %></title>
+    <title>
+        <%= content_for(:title) || blog_title_for(@author) %>
+    </title>
+
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
+
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
@@ -19,7 +23,7 @@
       <link type="application/feed+json" rel="alternate" href="<%= posts_json_url(format: :json, subdomain: @author.subdomain) %>" title="<%= blog_title_for(@author) %> JSON Feed">
     <% end %>
 
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>\u26fa</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⛺</text></svg>">
     <!-- <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml"> -->
     <!-- <link rel="apple-touch-icon" href="/icon.png"> -->
@@ -32,14 +36,20 @@
     <% unless controller_name == 'home' && action_name == 'show' || controller_name == 'sessions' && action_name == 'new' %>
       <header class="border-b border-[var(--light-border)] dark:border-[var(--dark-border)] py-4 px-5">
         <div class="container mx-auto flex justify-between items-center">
-            <a href="/" class="text-xl font-bold text-[var(--light-accent)] dark:text-[var(--dark-accent)]"><%= blog_title_for(@author) %></a>
+            <a href="/" class="text-xl font-bold text-[var(--light-accent)] dark:text-[var(--dark-accent)]" aria-label="Home">
+                <%= blog_title_for(@author) %>
+            </a>
             <nav class="space-x-4">
                 <% if @author.pages.present? %>
-                    <% author.pages.each do |page| %>
-                        <a href="<%= post_path(page) %>" class="hover:bg-[var(--light-card-hover)] dark:hover:bg-[var(--dark-card-hover)]"><%= page.title %></a>
+                    <% @author.pages.each do |page| %>
+                        <a href="<%= post_path(page) %>" class="hover:bg-[var(--light-card-hover)] dark:hover:bg-[var(--dark-card-hover)]" aria-label="<%= page.title %>">
+                            <%= page.title %>
+                        </a>
                     <% end %>
                 <% end %>
-                <a href="<%= posts_rss_path(format: :rss) %>" class="hover:bg-[var(--light-card-hover)] dark:hover:bg-[var(--dark-card-hover)]" title="RSS Feed">RSS</a>
+                <a href="<%= posts_rss_path(format: :rss) %>" class="hover:bg-[var(--light-card-hover)] dark:hover:bg-[var(--dark-card-hover)]" title="RSS Feed" aria-label="RSS Feed">
+                    RSS
+                </a>
             </nav>
         </div>
       </header>
