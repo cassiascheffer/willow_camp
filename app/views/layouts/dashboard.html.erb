@@ -15,7 +15,7 @@
   <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
   <%= javascript_importmap_tags %>
 </head>
-<body class="font-mono text-base">
+<body class="font-mono text-base bg-[var(--light-bg)] dark:bg-[var(--dark-bg)] text-[var(--light-text)] dark:text-[var(--dark-text)]">
   <div id="flash-messages" class="fixed top-0 left-0 right-0 z-50 transform transition-transform duration-300">
     <% if notice %>
       <div data-controller="flash" class="flash flash-notice p-4 bg-green-100 border-l-4 border-green-500 text-green-700 mb-2 flex justify-between items-center" role="alert" aria-live="polite">

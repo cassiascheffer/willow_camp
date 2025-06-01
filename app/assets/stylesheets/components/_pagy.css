@@ -1,17 +1,62 @@
-.pagy-nav {
-  @apply flex space-x-1 font-semibold text-sm text-[var(--light-muted)] dark:text-[var(--dark-muted)];
-}
+.pagy {
+  @apply flex space-x-1 font-semibold text-sm text-gray-500;
+  color: var(--light-muted);
+  a:not(.gap) {
+    @apply block rounded-lg px-3 py-1 bg-gray-200;
+    background-color: var(--light-card);
+    color: var(--light-muted);
+    &:hover {
+      @apply bg-gray-300;
+      background-color: var(--light-card-hover);
+    }
+    &:not([href]) { /* disabled links */
+      @apply text-gray-300 bg-gray-100 cursor-default;
+      color: var(--light-border);
+      background-color: var(--light-bg);
+      cursor: default;
+    }
+    &.current {
+      @apply text-white bg-gray-400;
+      color: var(--light-card);
+      background-color: var(--light-muted);
+    }
+  }
+  label {
+    @apply inline-block whitespace-nowrap bg-gray-200 rounded-lg px-3 py-0.5;
+    background-color: var(--light-card);
+    color: var(--light-muted);
+    input {
+      @apply bg-gray-100 border-none rounded-md;
+      background-color: var(--light-bg);
+      color: var(--light-text);
+    }
+  }
 
-.pagy-nav .page,
-.pagy-nav .prev,
-.pagy-nav .next {
-  @apply px-2 py-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors cursor-pointer;
-}
-
-.pagy-nav .active {
-  @apply bg-accent text-white;
-}
-
-.pagy-nav .disabled {
-  @apply opacity-50 cursor-not-allowed;
+  /* Dark mode styles */
+  @media (prefers-color-scheme: dark) {
+    color: var(--dark-muted);
+    a:not(.gap) {
+      background-color: var(--dark-card);
+      color: var(--dark-muted);
+      &:hover {
+        background-color: var(--dark-card-hover);
+      }
+      &:not([href]) {
+        color: var(--dark-border);
+        background-color: var(--dark-bg);
+      }
+      &.current {
+        color: var(--dark-card);
+        background-color: var(--dark-muted);
+      }
+    }
+    label {
+      background-color: var(--dark-card);
+      color: var(--dark-muted);
+      input {
+        background-color: var(--dark-bg);
+        color: var(--dark-text);
+      }
+    }
+  }
 }

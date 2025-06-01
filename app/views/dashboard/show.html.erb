@@ -1,7 +1,7 @@
 <div class="py-8 lg:px-8">
   <header aria-label="Dashboard Header" class="flex justify-between items-center mb-8">
     <h1 class="text-2xl font-bold">Dashboard</h1>
-    <a href="<%= new_dashboard_post_path %>" class="">New Post</a>
+    <a href="<%= new_dashboard_post_path %>" class="bg-[var(--light-accent)] dark:bg-[var(--dark-accent)] text-white hover:bg-[var(--light-accent-hover)] dark:hover:bg-[var(--dark-accent-hover)] font-bold py-2 px-4 rounded">New Post</a>
   </header>
   <div class="w-full">
     <% if @posts.present? %>
