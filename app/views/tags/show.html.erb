@@ -5,22 +5,12 @@
   <% if alert.present? %>
     <p class="alert" id="alert"><%= alert %></p>
   <% end %>
-
   <div class="flex justify-between items-center mb-10">
     <h1>Posts tagged with <%= @tag %></h1>
   </div>
-
   <div id="posts" class="space-y-2">
     <% if @posts.any? %>
-      <% @posts.each do |post| %>
-        <div class="border-b border-[var(--light-border)] dark:border-[var(--dark-border)] last:border-0">
-          <%= link_to post_path(post.slug), class: "block px-3 py-4 hover:bg-[var(--light-card-hover)] dark:hover:bg-[var(--dark-card-hover)] rounded transition duration-200" do %>
-            <h2 class="text-lg font-medium">
-              <%= post.title %>
-            </h2>
-          <% end %>
-        </div>
-      <% end %>
+      <%= render partial: 'posts/post_row', collection: @posts %>
     <% else %>
       <div class="empty-state">
         <p class="text-xl">No posts found</p>
