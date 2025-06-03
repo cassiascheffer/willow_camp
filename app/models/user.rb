@@ -27,6 +27,7 @@ class User < ApplicationRecord
   validates :name, presence: true, length: {maximum: 255}, allow_blank: true
   validates :blog_title, length: {maximum: 255}, allow_blank: true
   validates :site_meta_description, length: {maximum: 255}, allow_blank: true
+  validates :favicon_emoji, presence: true, format: {with: /\A(?:\p{Emoji_Presentation}|\p{Emoji}\uFE0F)\z/u, message: "must be a single emoji"}
 
   def to_key
     [subdomain]

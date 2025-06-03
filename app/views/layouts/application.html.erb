@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-theme="<%= @author&.theme || "tokyo" %>">
+<html data-theme="<%= @author&.theme || "tokyo" %>" data-controller="favicon" data-favicon-emoji-value="<%= @author&.favicon_emoji || "⛺" %>">
   <head>
     <title>
       <%= content_for(:title) || blog_title_for(@author) %>
@@ -14,14 +14,11 @@
       <%# RSS feed discovery link %>
       <%= auto_discovery_link_tag(:rss, posts_rss_url(format: :rss, subdomain: @author.subdomain), title: "#{blog_title_for(@author)} RSS Feed") %>
       <%# Atom feed discovery link %>
-      <link type="application/atom+xml" rel="alternate" href="<%= posts_atom_url(format: :atom, subdomain: @author.subdomain) %>" title="<%= blog_title_for(@author) %> Atom Feed">
+      <%= auto_discovery_link_tag(:atom, posts_atom_url(format: :atom, subdomain: @author.subdomain), title: "#{blog_title_for(@author)} Atom Feed") %>
       <%# JSON feed discovery link %>
       <link type="application/feed+json" rel="alternate" href="<%= posts_json_url(format: :json, subdomain: @author.subdomain) %>" title="<%= blog_title_for(@author) %> JSON Feed">
     <% end %>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⛺</text></svg>">
-  <!-- <link rel="icon" href="/icon.png" type="image/png">
-    <link rel="icon" href="/icon.svg" type="image/svg+xml"> -->
-  <!-- <link rel="apple-touch-icon" href="/icon.png"> -->
+    <!-- Favicon will be set dynamically by JS -->
   <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
   <%= javascript_importmap_tags %>
 </head>
