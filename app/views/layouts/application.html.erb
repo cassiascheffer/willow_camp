@@ -35,12 +35,12 @@
         <nav class="space-x-4">
           <% if @author.pages.present? %>
             <% @author.pages.each do |page| %>
-              <a href="<%= post_path(page) %>" class="hover:bg-[var(--light-card-hover)] dark:hover:bg-[var(--dark-card-hover)]" aria-label="<%= page.title %>">
+              <a href="<%= post_path(page) %>" class="p-2 rounded hover:underline hover:decoration-2 hover:underline-offset-2" aria-label="<%= page.title %>">
                 <%= page.title %>
               </a>
             <% end %>
           <% end %>
-          <a href="<%= posts_rss_path(format: :rss) %>" class="hover:bg-[var(--light-card-hover)] dark:hover:bg-[var(--dark-card-hover)]" title="RSS Feed" aria-label="RSS Feed">
+          <a href="<%= posts_rss_path(format: :rss) %>" class="p-2 rounded hover:underline hover:decoration-2 hover:underline-offset-2" title="RSS Feed" aria-label="RSS Feed">
             RSS
           </a>
         </nav>
