@@ -5,10 +5,22 @@ export default class extends Controller {
   static values = { emoji: String }
 
   connect() {
-    this.setFavicon(this.emojiValue || "⛺")
+    this.setFavicon(this.emojiValue || this.inputTarget?.value || "⛺")
   }
 
-  setFavicon(emoji) {
+  static targets = ["input"]
+
+  setFavicon(eventOrEmoji) {
+    let emoji
+    if (typeof eventOrEmoji === "string") {
+      emoji = eventOrEmoji
+    } else if (eventOrEmoji && eventOrEmoji.target) {
+      emoji = eventOrEmoji.target.value
+    } else {
+      emoji = this.emojiValue || this.inputTarget?.value || "⛺"
+    }
+    if (!emoji) return;
+
     const sizes = [16, 32, 48, 64, 180]
     const fontSizes = {
       16: 14,

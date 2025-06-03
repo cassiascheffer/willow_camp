@@ -31,7 +31,7 @@
   </div>
   <div class="my-5">
     <%= form.label :favicon_emoji, class: "" %>
-    <%= form.text_field :favicon_emoji, required: false, class: "w-full px-3 py-2 border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md bg-[var(--light-bg)] dark:bg-[var(--dark-bg)] text-[var(--light-text)] dark:text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)] focus:ring-offset-1" %>
+    <%= form.text_field :favicon_emoji, required: false, class: "w-full px-3 py-2 border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md bg-[var(--light-bg)] dark:bg-[var(--dark-bg)] text-[var(--light-text)] dark:text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)] focus:ring-offset-1", data: { controller: "favicon", action: "input->favicon#setFavicon" } %>
   </div>
   <div class="my-5">
     <%= form.label :subdomain, class: "" %>
@@ -39,7 +39,7 @@
   </div>
   <div class="my-5">
     <%= form.label :theme, class: "" %>
-    <%= form.select :theme, options_for_select([["Tokyo", "tokyo"], ["Solarized", "solarized"], ["Catppuccin", "catppuccin"], ["Dracula", "dracula"]], user.theme), { include_blank: false }, class: "w-full px-3 py-2 border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md bg-[var(--light-bg)] dark:bg-[var(--dark-bg)] text-[var(--light-text)] dark:text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)] focus:ring-offset-1" %>
+    <%= form.select :theme, options_for_select([["Tokyo", "tokyo"], ["Solarized", "solarized"], ["Catppuccin", "catppuccin"], ["Dracula", "dracula"]], user.theme), { include_blank: false }, class: "w-full px-3 py-2 border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md bg-[var(--light-bg)] dark:bg-[var(--dark-bg)] text-[var(--light-text)] dark:text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)] focus:ring-offset-1", data: { controller: "theme-preview", action: "change->theme-preview#updateTheme" } %>
   </div>
   <div class="my-5">
     <%= form.label :site_meta_description, "Site Meta Description", class: "" %>
