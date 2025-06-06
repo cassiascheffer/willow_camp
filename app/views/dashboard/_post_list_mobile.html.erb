@@ -1,27 +1,29 @@
 <div class="block lg:hidden space-y-4">
   <% @posts.each do |post| %>
-    <div class="bg-[var(--light-card)] dark:bg-[var(--dark-card)] border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md p-4 shadow-sm transition-all duration-200 cursor-pointer hover:bg-[var(--light-card-hover)] dark:hover:bg-[var(--dark-card-hover)]"
-               onclick="window.location=<%= edit_dashboard_post_path(post).to_json %>;"
-               aria-label="Edit post <%= post.title %>">
-      <div class="flex items-center mb-2">
-        <% if post.published? %>
-          <span class="text-green-600 pr-2" aria-label="published">✔︎</span>
-        <% else %>
-          <span class="text-yellow-600 pr-2" aria-label="draft">📝</span>
-        <% end %>
-        <h2 class="text-lg font-semibold"><%= post.title %></h2>
-      </div>
-      <div class="flex justify-between items-center text-sm text-gray-500 dark:text-gray-400">
-        <span>
-          <%= post.published_at&.strftime('%b %d, %y') || 'Draft' %>
-        </span>
-        <% if post.published? %>
-          <%= link_to post_url(post.slug, subdomain: @user.subdomain), class: "text-[var(--light-accent)] dark:text-[var(--dark-accent)] hover:text-[var(--light-accent-hover)] dark:hover:text-[var(--dark-accent-hover)] inline-flex items-center min-h-[44px] min-w-[44px] justify-center rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--light-accent)] dark:focus-visible:ring-[var(--dark-accent)]", target: "_blank", onclick: "event.stopPropagation();", aria: { label: "View post" } do %>
-            <svg class="h-5 w-5 ml-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M10.0002 5H8.2002C7.08009 5 6.51962 5 6.0918 5.21799C5.71547 5.40973 5.40973 5.71547 5.21799 6.0918C5 6.51962 5 7.08009 5 8.2002V15.8002C5 16.9203 5 17.4801 5.21799 17.9079C5.40973 18.2842 5.71547 18.5905 6.0918 18.7822C6.5192 19 7.07899 19 8.19691 19H15.8031C16.921 19 17.48 19 17.9074 18.7822C18.2837 18.5905 18.5905 18.2839 18.7822 17.9076C19 17.4802 19 16.921 19 15.8031V14M20 9V4M20 4H15M20 4L13 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
+    <div class="card bg-base-100 shadow-md cursor-pointer"
+         onclick="window.location=<%= edit_dashboard_post_path(post).to_json %>;"
+         aria-label="Edit post <%= post.title %>">
+      <div class="card-body">
+        <div class="flex items-center mb-2">
+          <% if post.published? %>
+            <span class="text-success pr-2" aria-label="published">✔︎</span>
+          <% else %>
+            <span class="text-warning pr-2" aria-label="draft">📝</span>
           <% end %>
-        <% end %>
+          <h2 class="card-title"><%= post.title %></h2>
+        </div>
+        <div class="flex justify-between items-center text-sm text-gray-500">
+          <span>
+            <%= post.published_at&.strftime('%b %d, %y') || 'Draft' %>
+          </span>
+          <% if post.published? %>
+            <%= link_to post_url(post.slug, subdomain: @user.subdomain), class: "btn btn-sm btn-ghost", target: "_blank", onclick: "event.stopPropagation();", aria: { label: "View post" } do %>
+              <svg class="h-5 w-5 ml-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10.0002 5H8.2002C7.08009 5 6.51962 5 6.0918 5.21799C5.71547 5.40973 5.40973 5.71547 5.21799 6.0918C5 6.51962 5 7.08009 5 8.2002V15.8002C5 16.9203 5 17.4801 5.21799 17.9079C5.40973 18.2842 5.71547 18.5905 6.0918 18.7822C6.5192 19 7.07899 19 8.19691 19H15.8031C16.921 19 17.48 19 17.9074 18.7822C18.2837 18.5905 18.5905 18.2839 18.7822 17.9076C19 17.4802 19 16.921 19 15.8031V14M20 9V4M20 4H15M20 4L13 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            <% end %>
+          <% end %>
+        </div>
       </div>
     </div>
   <% end %>

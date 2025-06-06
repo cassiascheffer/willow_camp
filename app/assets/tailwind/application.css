@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
-@plugin "tailwind-dracula";
+@plugin "daisyui" {
+  themes: light --default, dark --prefersdark, cupcake;
+}
 /* Import modular component CSS files */
-@import "../stylesheets/components/_base.css";
 @import "../stylesheets/components/_pagy.css";

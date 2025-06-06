@@ -1,16 +1,16 @@
 <div class="py-8 px-4 lg:px-8">
   <header aria-label="Dashboard Header" class="flex justify-between items-center mb-8">
     <h1 class="text-2xl font-bold">Dashboard</h1>
-    <a href="<%= new_dashboard_post_path %>" class="bg-[var(--light-accent)] dark:bg-[var(--dark-accent)] text-white hover:bg-[var(--light-accent-hover)] dark:hover:bg-[var(--dark-accent-hover)] font-bold py-2 px-4 rounded">New Post</a>
+    <a href="<%= new_dashboard_post_path %>" class="btn btn-primary">New Post</a>
   </header>
   <div class="w-full">
     <% if @posts.present? %>
       <%= render partial: 'dashboard/post_list_mobile', collection: @posts %>
       <%= render partial: 'dashboard/post_list_desktop', collection: @posts %>
     <% else %>
-      <section class="empty-state" aria-label="No Posts">
-        <p class="text-xl">No posts yet</p>
-        <p class="mt-2">Create your first blog post to get started</p>
+      <section class="empty-state text-center" aria-label="No Posts">
+        <p class="text-xl font-bold">No posts yet</p>
+        <p class="mt-2 text-base-content">Create your first blog post to get started</p>
       </section>
     <% end %>
     <%== pagy_nav(@pagy) if @pagy.pages > 1 %>
