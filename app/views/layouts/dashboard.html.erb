@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-theme="" data-controller="">
+<html data-theme="<%= @author&.theme || "light" %>" data-controller="favicon" data-favicon-emoji-value="<%= @author&.favicon_emoji || "⛺" %>">
   <head>
     <title><%= content_for(:title) || "willow.camp" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
