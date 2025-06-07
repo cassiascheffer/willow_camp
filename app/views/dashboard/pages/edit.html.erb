@@ -1,14 +1,16 @@
-<% content_for :title, "Editing page" %>
-<div class="max-w-3xl mx-auto px-4 py-8 sm:px-2 sm:py-8">
-  <div class="bg-[var(--light-card)] dark:bg-[var(--dark-card)] border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md p-5 transition-all duration-200">
-    <h1 class="text-2xl mb-6 font-bold">Editing page</h1>
-    <%= render "form", page: @page %>
-    <div class="flex flex-wrap gap-2 mt-4">
-      <%= button_to "Delete", dashboard_page_path(@page), method: :delete, data: { confirm: 'Are you sure?' }, class: "inline-block px-4 py-2 font-medium rounded-md transition-all duration-200 bg-transparent border border-[var(--light-border)] dark:border-[var(--dark-border)] text-[var(--light-error)] dark:text-[var(--dark-error)] hover:bg-[var(--light-error)]/10 dark:hover:bg-[var(--dark-error)]/10" %>
-      <% if @page.published? %>
-        <%= link_to "View page", post_url(@page.slug, subdomain: @page.author.subdomain), class: "inline-block px-4 py-2 font-medium rounded-md transition-all duration-200 bg-transparent border border-[var(--light-border)] dark:border-[var(--dark-border)] text-[var(--light-text)] dark:text-[var(--dark-text)] hover:bg-[var(--light-card-hover)] dark:hover:bg-[var(--dark-card-hover)]", target: "_blank" %>
-      <% end %>
-      <%= link_to "Back to Dashboard", dashboard_path, class: "inline-block px-4 py-2 font-medium rounded-md transition-all duration-200 bg-transparent border border-[var(--light-border)] dark:border-[var(--dark-border)] text-[var(--light-text)] dark:text-[var(--dark-text)] hover:bg-[var(--light-card-hover)] dark:hover:bg-[var(--dark-card-hover)]" %>
+<div class="flex flex-col items-center justify-center min-h-screen">
+  <% content_for :title, "Editing page" %>
+  <div class="card w-full lg:w-3/4">
+    <div class="card-body">
+      <h1 class="card-title text-2xl font-bold">Editing page</h1>
+      <%= render "form", page: @page %>
+      <div class="card-actions justify-end mt-4">
+        <%= button_to "Delete", dashboard_page_path(@page), method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-error" %>
+        <% if @page.published? %>
+          <%= link_to "View page", post_url(@page.slug, subdomain: @page.author.subdomain), target: "_blank", class: "btn btn-primary" %>
+        <% end %>
+        <%= link_to "Back to Dashboard", dashboard_path, class: "btn btn-secondary" %>
+      </div>
     </div>
   </div>
 </div>

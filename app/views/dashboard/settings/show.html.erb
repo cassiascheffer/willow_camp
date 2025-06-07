@@ -1,21 +1,19 @@
-<div class="container lg:w-3/4 mx-auto">
-  <main aria-label="Account Settings" class="p-6 bg-base-200">
-    <section aria-label="Account Details" class="mb-8">
-      <h1 class="text-3xl font-bold mb-4">Account Settings</h1>
-      <div class="card bg-base-100 shadow-md p-4">
-        <%= render "user_form", user: @user %>
-      </div>
-    </section>
-    <section aria-label="API Tokens" class="space-y-6">
-      <h2 class="text-2xl font-semibold">API Tokens</h2>
-      <div class="card bg-base-100 shadow-md p-4">
-        <h3 class="text-xl font-medium mb-2">Create New Token</h3>
-        <%= render "token_form", token: @token %>
-      </div>
-      <div class="card bg-base-100 shadow-md p-4">
-        <h3 class="text-xl font-medium mb-2">Your Tokens</h3>
-        <%= render "token_list", tokens: @tokens %>
-      </div>
-    </section>
-  </main>
-</div>
+  <main aria-label="Account Settings" class="container lg:w-3/4 mx-auto">
+  <section aria-label="Account Details" class="mb-8">
+    <h1 class="text-3xl font-bold mb-4">Account Settings</h1>
+    <div class="card p-4">
+      <%= render "user_form", user: @user %>
+    </div>
+  </section>
+  <section aria-label="API Tokens" class="space-y-6">
+    <h2 class="text-2xl font-semibold">API Tokens</h2>
+    <div class="card p-4">
+      <h3 class="text-xl font-medium mb-2">Create New Token</h3>
+      <%= render "token_form", token: @token %>
+    </div>
+    <div class="card p-4">
+      <h3 class="text-xl font-medium mb-2">Your Tokens</h3>
+      <%= render "token_list", tokens: @tokens %>
+    </div>
+  </section>
+</main>

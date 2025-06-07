@@ -37,12 +37,12 @@
       </div>
     <% end %>
   </div>
-  <nav class="navbar bg-base-100 shadow-md" aria-label="Main Navigation">
-    <div class="flex-1">
-      <a class="btn btn-ghost normal-case text-xl" href="<%= dashboard_path %>"><%= blog_title_for(@user) %></a>
+  <nav class="navbar bg-base-100 shadow-md w-full px-8" aria-label="Main Navigation">
+    <div class="navbar-start">
+      <a class="text-xl font-bold hover:text-primary transition-colors" href="<%= dashboard_path %>"><%= blog_title_for(@user) %></a>
     </div>
-    <div class="flex-none">
-      <a class="btn btn-primary" href="<%= dashboard_settings_path %>">Settings</a>
+    <div class="navbar-end">
+      <a class="link link-hover font-medium" href="<%= dashboard_settings_path %>" role="button" tabindex="0">Settings</a>
     </div>
   </nav>
   <main class="max-w-6xl mx-auto p-4" aria-label="Dashboard Content">

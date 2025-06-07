@@ -1,10 +1,12 @@
-<% content_for :title, "New post" %>
-<div class="card w-full lg:w-3xl">
-  <div class="card-body">
-    <h1 class="card-title">New post</h1>
-    <%= render "form", post: @post %>
-    <div class="card-actions">
-      <%= link_to "Back to posts", posts_path, class: "btn btn-outline" %>
+<div class="flex flex-col items-center justify-center min-h-screen">
+  <% content_for :title, "Editing post" %>
+  <div class="card w-full lg:w-3/4">
+    <div class="card-body">
+      <h1 class="card-title text-2xl font-bold">New post</h1>
+      <%= render "form", post: @post %>
+      <div class="card-actions justify-end mt-4">
+        <%= link_to "Back to Dashboard", dashboard_path, class: "btn btn-secondary" %>
+      </div>
     </div>
   </div>
 </div>

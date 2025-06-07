@@ -1,4 +1,4 @@
-<div id="<%= dom_id(token) %>" class="card bg-base-100 shadow-xl mb-4">
+<div id="<%= dom_id(token) %>" class="card border-base-200 border-2 shadow-xl mb-4">
   <div class="card-body">
     <div class="flex items-center justify-between mb-4">
       <h2 class="card-title truncate" title="<%= token.name %>"><%= token.name %></h2>
@@ -6,11 +6,10 @@
         Revoke
       <% end %>
     </div>
-    
     <div class="mb-4" data-controller="clipboard">
       <div class="flex items-center gap-2">
         <div class="flex-1 relative" data-controller="password-toggle">
-          <input type="password" class="input input-bordered w-full font-mono text-sm pr-10" value="<%= token.token %>" disabled data-password-toggle-target="input" />
+          <input type="password" class="input input-bordered w-full font-mono text-sm pr-10" value="<%= token.token %>" disabled data-password-toggle-target="input">
           <button type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-base-content/60 hover:text-base-content" data-action="password-toggle#toggle">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-password-toggle-target="eyeIcon">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -28,15 +27,14 @@
           </svg>
         </button>
       </div>
-      <span class="text-success text-sm hidden mt-2 block" data-clipboard-target="success">Copied!</span>
+      <span class="text-success text-sm hidden mt-2 " data-clipboard-target="success">Copied!</span>
     </div>
-    
     <div class="flex flex-col sm:flex-row sm:justify-between gap-2 text-sm text-base-content/70">
       <div>
         <span class="font-medium">Created:</span> <%= token.created_at.strftime("%b %d, %Y") %>
       </div>
       <div>
-        <span class="font-medium">Expires:</span> 
+        <span class="font-medium">Expires:</span>
         <% if token.expires_at.present? %>
           <%= token.expires_at.strftime("%b %d, %Y") %>
         <% else %>
