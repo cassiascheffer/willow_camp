@@ -1,11 +1,9 @@
 <% content_for :title, "Tags" %>
-
 <% content_for :head do %>
   <% if @author&.site_meta_description.present? %>
     <meta name="description" content="<%= @author.site_meta_description %>">
   <% end %>
 <% end %>
-
 <div class="max-w-3xl mx-auto">
   <div class="flex justify-between items-center mb-10">
     <h1 class="text-3xl font-bold">Tags</h1>
