@@ -5,8 +5,8 @@
   </header>
   <div class="w-full">
     <% if @posts.present? %>
-      <%= render partial: 'dashboard/post_list_mobile', collection: @posts %>
-      <%= render partial: 'dashboard/post_list_desktop', collection: @posts %>
+      <%= render partial: 'dashboard/post_list_mobile' %>
+      <%= render partial: 'dashboard/post_list_desktop' %>
     <% else %>
       <section class="empty-state text-center" aria-label="No Posts">
         <p class="text-xl font-bold">No posts yet</p>

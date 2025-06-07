@@ -6,12 +6,23 @@
   <% end %>
 <% end %>
 
-<div class="max-w-4xl mx-auto lg:px-8">
-  <ol class="text-lg/[1.7] leading-7 [&_p]:mb-7 [&_ul]:list-disc [&_ul]:list-inside [&_ul]:mb-7 [&_ol]:list-decimal [&_ol]:list-inside [&_ol]:mb-7 [&_ul_ul]:list-inside [&_ol_ul]:list-inside [&_ul_ol]:list-inside [&_ol_ol]:list-inside [&_table]:w-full [&_table]:border-collapse [&_table]:mb-7 [&_table_th]:bg-[var(--light-card-hover)] [&_table_th]:dark:bg-[var(--dark-card-hover)] [&_table_th]:text-left [&_table_th]:p-2 [&_table_td]:border [&_table_td]:border-[var(--light-border)] [&_table_td]:dark:border-[var(--dark-border)] [&_table_td]:p-2 [&_pre]:m-4 [&_pre]:rounded-md [&_pre]:overflow-x-auto [&_pre]:mb-7 [&_code]:font-mono [&_code]:p-1 [&_code]:m-2 [&_code]:inline-block [&_code]:rounded [&_pre_code]:whitespace-pre [&_pre_code]:block [&>h1]:text-3xl [&>h1]:mb-7 [&>h2]:text-2xl [&>h2]:mb-7 [&>h3]:text-xl [&>h3]:mb-7 [&>h4]:text-lg [&>h4]:italic [&>h4]:mb-7 [&>h5]:text-base [&>h5]:italic [&>h5]:mb-7 [&>h6]:text-sm [&>h6]:italic [&>h6]:mb-7 [&_a]:text-[var(--light-text)] [&_a]:dark:text-[var(--dark-text)] [&_a]:underline [&_a]:drop-shadow-[0_0_2px_var(--light-bg)] [&_a]:dark:drop-shadow-[0_0_2px_var(--dark-bg)]">
-    <% @tags.each do |tag| %>
-      <li class="mb-2 text-[var(--light-text)] dark:text-[var(--dark-text)]">
-        <%= link_to tag.name, tag_path(tag.slug), class: "text-accent" %>
-      </li>
+<div class="max-w-3xl mx-auto">
+  <div class="flex justify-between items-center mb-10">
+    <h1 class="text-3xl font-bold">Tags</h1>
+  </div>
+  <div id="tags" class="space-y-8">
+    <% if @tags.any? %>
+      <div class="tags-list space-y-2">
+        <% @tags.each do |tag| %>
+          <div class="mb-2">
+            <%= link_to tag.name, tag_path(tag.slug), class: "link link-primary" %>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="text-center py-8">
+        <p class="text-xl text-base-content/60">No tags yet!</p>
+      </div>
     <% end %>
-  </ol>
+  </div>
 </div>

@@ -9,32 +9,26 @@
       </ul>
     </div>
   <% end %>
-
   <div class="form-control w-full mb-4">
     <%= form.label :title, class: "label" %>
     <%= form.text_field :title, class: "input input-bordered w-full" %>
   </div>
-
   <div class="form-control w-full mb-4">
     <%= form.label :slug, class: "label" %>
     <%= form.text_field :slug, class: "input input-bordered w-full" %>
   </div>
-
   <div class="form-control w-full mb-4">
     <%= form.label :body, class: "label" %>
     <%= form.text_area :body_markdown, rows: 4, style: "min-height: 300px;", class: "textarea textarea-bordered w-full" %>
   </div>
-
   <div class="form-control w-full mb-4">
     <%= form.label :published, class: "label" %>
     <%= form.check_box :published, class: "checkbox checkbox-primary" %>
   </div>
-
   <div class="form-control w-full mb-4">
     <%= form.label :published_at, class: "label" %>
     <%= form.datetime_field :published_at, class: "input input-bordered w-full" %>
   </div>
-
   <div class="form-control w-full mt-6">
     <%= form.submit class: "btn btn-primary w-full" %>
     <% if flash[:form_status] %>

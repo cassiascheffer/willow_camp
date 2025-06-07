@@ -22,35 +22,37 @@
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
-  <body class="font-mono text-base bg-[var(--light-bg)] dark:bg-[var(--dark-bg)] text-[var(--light-text)] dark:text-[var(--dark-text)]">
+  <body class="font-mono">
     <% unless controller_name == 'home' && action_name == 'show' || controller_name == 'sessions' && action_name == 'new' %>
-      <header class="border-b border-[var(--light-border)] dark:border-[var(--dark-border)] py-4 px-5">
-        <div class="container mx-auto flex justify-between items-center">
-          <a href="/" class="text-xl font-bold text-[var(--light-accent)] dark:text-[var(--dark-accent)]" aria-label="Home">
+      <header class="navbar bg-base-100 shadow-md w-full px-8">
+        <div class="navbar-start">
+          <a href="/" class="text-xl font-bold hover:text-primary transition-colors" aria-label="Home">
             <%= blog_title_for(@author) %>
           </a>
+        </div>
+        <div class="navbar-end">
           <nav class="space-x-4">
             <% if @author.pages.present? %>
               <% @author.pages.each do |page| %>
-                <a href="<%= post_path(page) %>" class="p-2 rounded hover:underline hover:decoration-2 hover:underline-offset-2" aria-label="<%= page.title %>">
+                <a href="<%= post_path(page) %>" class="link link-hover font-medium" aria-label="<%= page.title %>">
                   <%= page.title %>
                 </a>
               <% end %>
             <% end %>
-            <a href="<%= posts_rss_path(format: :rss) %>" class="p-2 rounded hover:underline hover:decoration-2 hover:underline-offset-2" title="RSS Feed" aria-label="RSS Feed">
+            <a href="<%= posts_rss_path(format: :rss) %>" class="link link-hover font-medium" title="RSS Feed" aria-label="RSS Feed">
               RSS
             </a>
           </nav>
         </div>
       </header>
     <% end %>
-    <main class="max-w-3xl mx-auto px-4 py-8 sm:px-2 sm:py-8">
+    <main class="max-w-3xl mx-auto p-4">
       <%= yield %>
     </main>
-    <footer class="border-t border-[var(--light-border)] dark:border-[var(--dark-border)] py-4 px-5 mt-12">
+    <footer class="footer p-4 bg-base-200 text-base-content">
       <% if @author.present? %>
-        <div class="container mx-auto text-sm text-[var(--light-muted)] dark:text-[var(--dark-muted)]">
-          Made with <%= link_to "willow.camp", root_url(subdomain: false, allow_other_subdomains: true) %>
+        <div class="container mx-auto text-center">
+          <p>Made with <%= link_to "willow.camp", root_url(subdomain: false, allow_other_subdomains: true) %></p>
         </div>
       <% end %>
     </footer>

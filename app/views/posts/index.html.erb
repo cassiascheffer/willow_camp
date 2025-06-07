@@ -5,13 +5,13 @@
   <% end %>
 <% end %>
 <% if notice.present? %>
-  <div role="alert" class="notice" id="notice"><%= notice %></div>
+  <div role="alert" class="alert alert-success" id="notice"><%= notice %></div>
 <% end %>
 <% if alert.present? %>
-  <div role="alert" class="alert" id="alert"><%= alert %></div>
+  <div role="alert" class="alert alert-error" id="alert"><%= alert %></div>
 <% end %>
 <div class="flex justify-between items-center mb-10">
-  <h1>Posts</h1>
+  <h1 class="text-3xl font-bold">Posts</h1>
 </div>
 <div id="posts" class="space-y-8">
   <% if @posts.any? %>
@@ -19,8 +19,8 @@
       <%= render partial: 'posts/post_row', collection: @posts %>
     </div>
   <% else %>
-    <div class="empty-state">
-      <p class="text-xl">No posts yet!</p>
+    <div class="text-center py-8">
+      <p class="text-xl text-base-content/60">No posts yet!</p>
     </div>
   <% end %>
   <%== pagy_nav(@pagy) if @pagy.pages > 1 %>

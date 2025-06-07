@@ -13,13 +13,15 @@
     <%= form.label :title, class: "label" %>
     <%= form.text_field :title, class: "input input-bordered w-full" %>
   </div>
-  <div class="form-control w-full mb-4">
-    <%= form.label :slug, class: "label" %>
-    <%= form.text_field :slug, class: "input input-bordered w-full" %>
-  </div>
-  <div class="form-control w-full mb-4">
-    <%= form.label :tag_list, class: "label" %>
-    <%= form.text_field :tag_list, value: post.tag_list.join(', '), class: "input input-bordered w-full" %>
+  <div class="flex flex-col lg:flex-row lg:gap-4 mb-4">
+    <div class="form-control w-full lg:w-1/2 mb-4 lg:mb-0">
+      <%= form.label :slug, class: "label" %>
+      <%= form.text_field :slug, class: "input input-bordered w-full" %>
+    </div>
+    <div class="form-control w-full lg:w-1/2">
+      <%= form.label :tag_list, class: "label" %>
+      <%= form.text_field :tag_list, value: post.tag_list.join(', '), class: "input input-bordered w-full" %>
+    </div>
   </div>
   <div class="form-control w-full mb-4">
     <%= form.label :meta_description, "Meta Description", class: "label" %>
@@ -29,13 +31,17 @@
     <%= form.label :body, class: "label" %>
     <%= form.text_area :body_markdown, rows: 4, style: "min-height: 300px;", class: "textarea textarea-bordered w-full" %>
   </div>
-  <div class="form-control w-full mb-4">
-    <%= form.label :published, class: "label" %>
-    <%= form.check_box :published, class: "checkbox checkbox-primary" %>
-  </div>
-  <div class="form-control w-full mb-4">
-    <%= form.label :published_at, class: "label" %>
-    <%= form.datetime_field :published_at, class: "input input-bordered w-full" %>
+  <div class="flex flex-col lg:flex-row lg:gap-4 lg:items-end mb-4">
+    <div class="form-control w-full lg:w-auto mb-4 lg:mb-0">
+      <%= form.label :published, class: "label" %>
+      <div class="flex items-center h-12">
+        <%= form.check_box :published, class: "checkbox checkbox-primary" %>
+      </div>
+    </div>
+    <div class="form-control w-full lg:flex-1">
+      <%= form.label :published_at, class: "label" %>
+      <%= form.datetime_field :published_at, class: "input input-bordered w-full" %>
+    </div>
   </div>
   <div class="form-control w-full mt-6">
     <%= form.submit class: "btn btn-primary w-full" %>

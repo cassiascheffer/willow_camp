@@ -20,7 +20,7 @@ class PostsController < ApplicationController
   def set_author
     @author = User.find_by(subdomain: request.subdomain)
     if @author.nil?
-      redirect_to root_url(subdomain: false)
+      redirect_to root_url(subdomain: false, allow_other_subdomains: true)
     end
   end
 

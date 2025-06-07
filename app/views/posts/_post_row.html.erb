@@ -1,8 +1,8 @@
-<div class="border-b border-[var(--light-border)] dark:border-[var(--dark-border)] last:border-0">
-  <%= link_to post_path(post_row.slug), class: "block px-3 py-4 rounded transition duration-200" do %>
+<div class="">
+  <%= link_to post_path(post_row.slug), class: "block p-4" do %>
     <h3 class="text-lg font-medium flex flex-col">
-      <span class="text-date text-xs text-[var(--light-muted)] dark:text-[var(--dark-muted)] after:ml-2 min-w-[4rem] shrink-0 pb-1"><%= post_row.published_at.strftime("%b %d, %Y") %></span>
-      <span class="pl-0 sm:pl-3"><%= post_row.title %></span>
+      <span class="text-xs text-base-content/60 pb-1"><%= post_row.published_at.strftime("%b %d, %Y") %></span>
+      <span class="sm:pl-3"><%= post_row.title %></span>
     </h3>
   <% end %>
 </div>

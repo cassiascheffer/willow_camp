@@ -1,19 +1,21 @@
-<div class="max-w-4xl mx-auto lg:px-8">
+<div class="max-w-3xl mx-auto">
   <% if notice.present? %>
-    <p class="alert" id="alert"><%= notice %></p>
+    <div role="alert" class="alert alert-success" id="notice"><%= notice %></div>
   <% end %>
   <% if alert.present? %>
-    <p class="alert" id="alert"><%= alert %></p>
+    <div role="alert" class="alert alert-error" id="alert"><%= alert %></div>
   <% end %>
   <div class="flex justify-between items-center mb-10">
-    <h1>Posts tagged with <%= @tag %></h1>
+    <h1 class="text-3xl font-bold">Posts tagged with <%= @tag %></h1>
   </div>
-  <div id="posts" class="space-y-2">
+  <div id="posts" class="space-y-8">
     <% if @posts.any? %>
-      <%= render partial: 'posts/post_row', collection: @posts %>
+      <div class="posts-list space-y-2">
+        <%= render partial: 'posts/post_row', collection: @posts %>
+      </div>
     <% else %>
-      <div class="empty-state">
-        <p class="text-xl">No posts found</p>
+      <div class="text-center py-8">
+        <p class="text-xl text-base-content/60">No posts found</p>
       </div>
     <% end %>
     <%== pagy_nav(@pagy) if @pagy.pages > 1 %>

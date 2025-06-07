@@ -92,7 +92,7 @@ Pagy::DEFAULT[:max_pages] = 3000
 # Pagy extra: Add the pagy styled versions of the javascript-powered navs
 # and a few other components to the Pagy::Frontend module.
 # See https://ddnexus.github.io/pagy/docs/extras/pagy
-# require 'pagy/extras/pagy'
+require "pagy/extras/pagy"
 
 # Multi size var used by the *_nav_js helpers
 # See https://ddnexus.github.io/pagy/docs/extras/pagy#steps

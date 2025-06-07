@@ -1,63 +1,65 @@
 .pagy {
-  @apply flex space-x-1 font-semibold text-sm text-gray-500;
-  color: var(--light-storm-blue);
+  @apply join font-semibold text-sm;
+  
   a:not(.gap) {
-    @apply block rounded-lg px-3 py-1 bg-gray-200;
-    background-color: var(--light-crystal-blue);
-    color: var(--light-storm-blue);
-    &:hover {
-      @apply bg-gray-300;
-      background-color: var(--light-crystal-blue-hover);
-    }
+    @apply join-item btn btn-sm;
+    
     &:not([href]) { /* disabled links */
-      @apply text-gray-300 bg-gray-100 cursor-default;
-      color: var(--tokyo-light-wave-blue);
-      background-color: var(--tokyo-light-moon-gray);
-      cursor: default;
+      @apply opacity-50 cursor-not-allowed;
     }
+    
     &.current {
-      @apply text-white bg-gray-400;
-      color: var(--light-crystal-blue);
-      background-color: var(--light-storm-blue);
+      @apply btn-primary;
     }
   }
+  
+  .gap {
+    @apply join-item btn btn-sm opacity-50 cursor-not-allowed;
+  }
+  
   label {
-    @apply inline-block whitespace-nowrap bg-gray-200 rounded-lg px-3 py-0.5;
-    background-color: var(--light-crystal-blue);
-    color: var(--light-storm-blue);
+    @apply inline-flex items-center gap-2 btn btn-sm btn-ghost;
+    
     input {
-      @apply bg-gray-100 border-none rounded-md;
-      background-color: var(--light-moon-gray);
-      color: var(--light-night-blue);
+      @apply input input-xs border w-16 text-center;
     }
   }
+}
 
-  /* Dark mode styles */
-  @media (prefers-color-scheme: dark) {
-    color: var(--dark-storm-blue);
-    a:not(.gap) {
-      background-color: var(--dark-storm-blue);
-      color: var(--dark-storm-blue);
-      &:hover {
-        background-color: var(--dark-storm-blue-hover);
-      }
-      &:not([href]) {
-        color: var(--dark-wave-blue);
-        background-color: var(--dark-night-blue);
-      }
-      &.current {
-        @apply text-white bg-gray-400;
-        color: var(--tokyo-light-crystal-blue);
-        background-color: var(--tokyo-light-storm-blue);
-      }
+/* Alternative compact layout using pagination component */
+.pagy-compact {
+  @apply flex items-center justify-center gap-2;
+  
+  .btn-group {
+    @apply join;
+    
+    .btn {
+      @apply join-item btn-sm;
     }
-    label {
-      background-color: var(--dark-storm-blue);
-      color: var(--dark-storm-blue);
-      input {
-        background-color: var(--dark-night-blue);
-        color: var(--dark-moon-gray);
-      }
+  }
+  
+  .pagy-info {
+    @apply text-sm opacity-70;
+  }
+}
+
+/* Navigation specific styles */
+.pagy-nav {
+  @apply flex items-center justify-between;
+  
+  .pagy-prev, .pagy-next {
+    @apply btn btn-sm btn-outline;
+    
+    &:disabled {
+      @apply opacity-50 cursor-not-allowed;
+    }
+  }
+  
+  .pagy-pages {
+    @apply join;
+    
+    .btn {
+      @apply join-item btn-sm;
     }
   }
 }
