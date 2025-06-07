@@ -1,8 +1,10 @@
-<div class="flex flex-col items-center justify-center min-h-screen px-4 bg-[var(--light-bg)] dark:bg-[var(--dark-bg)]">
-  <main class="text-center max-w-full mx-auto">
-    <h1 class="text-4xl md:text-6xl font-bold mb-4 text-[var(--light-accent)] dark:text-[var(--dark-accent)]">willow.camp</h1>
-    <h2 class="text-xl font-light mb-12 text-[var(--light-muted)] dark:text-[var(--dark-text)]">A place to stash your things</h2>
-    <p class="font-light mb-12 text-[var(--light-muted)] dark:text-[var(--dark-text)]">Writing, Reading, & Bookmarking</p>
-    <%= link_to "Sign In", new_session_path, class: "bg-[var(--light-accent)] dark:bg-[var(--dark-accent)] text-white hover:bg-[var(--light-accent-hover)] dark:hover:bg-[var(--dark-accent-hover)] font-bold py-2 px-4 rounded" %>
-  </main>
+<div class="hero min-h-screen bg-base-100">
+  <div class="hero-content text-center">
+    <div class="max-w-md">
+      <h1 class="text-5xl font-bold text-primary">willow.camp</h1>
+      <h2 class="text-xl font-light py-6 text-base-content/70">A place to stash your things</h2>
+      <p class="mb-8 text-base-content/60">Writing, Reading, & Bookmarking</p>
+      <%= link_to "Sign In", new_session_path, class: "btn btn-primary btn-lg" %>
+    </div>
+  </div>
 </div>
