@@ -19,8 +19,9 @@
       <%= form.text_field :slug, class: "input input-bordered w-full" %>
     </div>
     <div class="form-control w-full lg:w-1/2">
-      <%= form.label :tag_list, class: "label" %>
-      <div class="text-sm text-gray-600 mb-2">Enter tags as a comma separated list (e.g., "tag1, tag2")</div>
+      <div class="tooltip tooltip-right" data-tip="Enter tags as a comma separated list (e.g., 'tag1, tag2')">
+        <%= form.label :tag_list, class: "label" %>
+      </div>
       <%= form.text_field :tag_list, value: post.tag_list.join(', '), class: "input input-bordered w-full" %>
     </div>
   </div>
@@ -31,7 +32,7 @@
   <div class="form-control w-full mb-4">
     <%= form.label :body, class: "label" %>
     <div class="text-sm text-gray-600 mb-2">
-      Basic Markdown: **bold**, *italic*, `code`, [link](url), # heading, - list item
+      Basic Markdown: **bold**, *italic*, `code`, [link-text](url), # heading, - list item
     </div>
     <%= form.text_area :body_markdown, rows: 4, style: "min-height: 300px;", class: "textarea textarea-bordered w-full" %>
   </div>
