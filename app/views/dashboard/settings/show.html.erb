@@ -1,17 +1,21 @@
-<main aria-label="Account Settings" class="w-full max-w-prose mx-auto py-8">
-  <section aria-label="Account Details" class="bg-[var(--light-card)] dark:bg-[var(--dark-card)] border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md p-5 transition-all duration-200 mb-8">
-    <h1 class="font-bold text-2xl mb-6">Account Settings</h1>
-    <%= render "user_form", user: @user %>
-  </section>
-  <section aria-label="API Tokens" class="bg-[var(--light-card)] dark:bg-[var(--dark-card)] border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md p-5 transition-all duration-200">
-    <h2 class="font-bold text-2xl mb-6">API Tokens</h2>
-    <div class="mb-8">
-      <h3 class="text-lg font-medium mb-4">Create New Token</h3>
-      <%= render "token_form", token: @token %>
-    </div>
-    <div>
-      <h3 class="text-lg font-medium mb-4">Your Tokens</h3>
-      <%= render "token_list", tokens: @tokens %>
-    </div>
-  </section>
-</main>
+<div class="container lg:w-3/4 mx-auto">
+  <main aria-label="Account Settings" class="p-6 bg-base-200">
+    <section aria-label="Account Details" class="mb-8">
+      <h1 class="text-3xl font-bold mb-4">Account Settings</h1>
+      <div class="card bg-base-100 shadow-md p-4">
+        <%= render "user_form", user: @user %>
+      </div>
+    </section>
+    <section aria-label="API Tokens" class="space-y-6">
+      <h2 class="text-2xl font-semibold">API Tokens</h2>
+      <div class="card bg-base-100 shadow-md p-4">
+        <h3 class="text-xl font-medium mb-2">Create New Token</h3>
+        <%= render "token_form", token: @token %>
+      </div>
+      <div class="card bg-base-100 shadow-md p-4">
+        <h3 class="text-xl font-medium mb-2">Your Tokens</h3>
+        <%= render "token_list", tokens: @tokens %>
+      </div>
+    </section>
+  </main>
+</div>

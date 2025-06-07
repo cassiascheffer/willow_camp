@@ -1,54 +1,52 @@
-<%= form_with(model: user, url: dashboard_user_path(user), method: :patch, id: dom_id(user), class: "contents") do |form| %>
+<%= form_with(model: user, url: dashboard_user_path(user), method: :patch, id: dom_id(user), class: "form-control") do |form| %>
   <% if user.errors.any? %>
-    <div id="error_explanation" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4" role="alert" aria-labelledby="error_explanation_title">
-      <h2 id="error_explanation_title" class="font-bold mb-2"><%= pluralize(user.errors.count, "error") %> prohibited this user from being saved:</h2>
-      <ul class="list-disc list-inside">
+    <div id="error_explanation" class="alert alert-error">
+      <h2><%= pluralize(user.errors.count, "error") %> prohibited this user from being saved:</h2>
+      <ul>
         <% user.errors.full_messages.each do |message| %>
           <li><%= message %></li>
         <% end %>
       </ul>
     </div>
   <% end %>
-  <div class="my-5">
-    <%= form.label :name, class: "" %>
-    <%= form.text_field :name, required: false, class: "w-full px-3 py-2 border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md bg-[var(--light-bg)] dark:bg-[var(--dark-bg)] text-[var(--light-text)] dark:text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)] focus:ring-offset-1" %>
+  <div class="form-control w-full mb-4">
+    <%= form.label :name, class: "label" %>
+    <%= form.text_field :name, required: false, class: "input input-bordered w-full" %>
   </div>
-  <div class="my-5">
-    <%= form.label :email, class: "" %>
-    <%= form.email_field :email_address, required: true, autocomplete: "username", class: "w-full px-3 py-2 border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md bg-[var(--light-bg)] dark:bg-[var(--dark-bg)] text-[var(--light-text)] dark:text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)] focus:ring-offset-1" %>
+  <div class="form-control w-full mb-4">
+    <%= form.label :email, class: "label" %>
+    <%= form.email_field :email_address, required: true, autocomplete: "username", class: "input input-bordered w-full" %>
   </div>
-  <div class="my-5">
-    <%= form.label :password, class: "" %>
-    <%= form.password_field :password, required: false, autocomplete: "new-password", maxlength: 72, class: "w-full px-3 py-2 border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md bg-[var(--light-bg)] dark:bg-[var(--dark-bg)] text-[var(--light-text)] dark:text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)] focus:ring-offset-1" %>
+  <div class="form-control w-full mb-4">
+    <%= form.label :password, class: "label" %>
+    <%= form.password_field :password, required: false, autocomplete: "new-password", maxlength: 72, class: "input input-bordered w-full" %>
   </div>
-  <div class="my-5">
-    <%= form.label :password_confirmation, "Password confirmation", class: "" %>
-    <%= form.password_field :password_confirmation, required: false, autocomplete: "new-password", maxlength: 72, class: "w-full px-3 py-2 border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md bg-[var(--light-bg)] dark:bg-[var(--dark-bg)] text-[var(--light-text)] dark:text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)] focus:ring-offset-1" %>
+  <div class="form-control w-full mb-4">
+    <%= form.label :password_confirmation, "Password confirmation", class: "label" %>
+    <%= form.password_field :password_confirmation, required: false, autocomplete: "new-password", maxlength: 72, class: "input input-bordered w-full" %>
   </div>
-  <div class="my-5">
-    <%= form.label :blog_name, class: "" %>
-    <%= form.text_field :blog_title, required: false, class: "w-full px-3 py-2 border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md bg-[var(--light-bg)] dark:bg-[var(--dark-bg)] text-[var(--light-text)] dark:text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)] focus:ring-offset-1" %>
+  <div class="form-control w-full mb-4">
+    <%= form.label :blog_name, class: "label" %>
+    <%= form.text_field :blog_title, required: false, class: "input input-bordered w-full" %>
   </div>
-  <div class="my-5">
-    <%= form.label :favicon_emoji, class: "" %>
-    <%= form.text_field :favicon_emoji, required: false, class: "w-full px-3 py-2 border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md bg-[var(--light-bg)] dark:bg-[var(--dark-bg)] text-[var(--light-text)] dark:text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)] focus:ring-offset-1", data: { controller: "favicon", action: "input->favicon#setFavicon" } %>
+  <div class="form-control w-full mb-4">
+    <%= form.label :favicon_emoji, class: "label" %>
+    <%= form.text_field :favicon_emoji, required: false, class: "input input-bordered w-full", data: { controller: "favicon", action: "input->favicon#setFavicon" } %>
   </div>
-  <div class="my-5">
-    <%= form.label :subdomain, class: "" %>
-    <%= form.text_field :subdomain, required: true, class: "w-full px-3 py-2 border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md bg-[var(--light-bg)] dark:bg-[var(--dark-bg)] text-[var(--light-text)] dark:text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)] focus:ring-offset-1" %>
+  <div class="form-control w-full mb-4">
+    <%= form.label :subdomain, class: "label" %>
+    <%= form.text_field :subdomain, required: true, class: "input input-bordered w-full" %>
   </div>
-  <div class="my-5">
-    <%= form.label :theme, class: "" %>
-    <%= form.select :theme, options_for_select([["Tokyo", "tokyo"], ["Solarized", "solarized"], ["Catppuccin", "catppuccin"], ["Dracula", "dracula"]], user.theme), { include_blank: false }, class: "w-full px-3 py-2 border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md bg-[var(--light-bg)] dark:bg-[var(--dark-bg)] text-[var(--light-text)] dark:text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)] focus:ring-offset-1", data: { controller: "theme-preview", action: "change->theme-preview#updateTheme" } %>
+  <div class="form-control w-full mb-4">
+    <%= form.label :theme, class: "label" %>
+    <%= form.select :theme, options_for_select([["Tokyo", "tokyo"], ["Solarized", "solarized"], ["Catppuccin", "catppuccin"], ["Dracula", "dracula"]], user.theme), { include_blank: false }, class: "select select-bordered w-full", data: { controller: "theme-preview", action: "change->theme-preview#updateTheme" } %>
   </div>
-  <div class="my-5">
-    <%= form.label :site_meta_description, "Site Meta Description", class: "" %>
-    <div id="site_meta_description_help" class="text-xs text-gray-500 dark:text-[var(--dark-muted)] mb-2">Used for SEO on index pages of your blog</div>
-    <%= form.text_area :site_meta_description, required: false, 'aria-describedby': "site_meta_description_help", class: "w-full px-3 py-2 border border-[var(--light-border)] dark:border-[var(--dark-border)] rounded-md bg-[var(--light-bg)] dark:bg-[var(--dark-bg)] text-[var(--light-text)] dark:text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)] focus:ring-offset-1 h-24", maxlength: 255 %>
+  <div class="form-control w-full mb-4">
+    <%= form.label :site_meta_description, "Site Meta Description", class: "label" %>
+    <%= form.text_area :site_meta_description, required: false, 'aria-describedby': "site_meta_description_help", maxlength: 255, class: "textarea textarea-bordered w-full" %>
+    <div id="site_meta_description_help" class="text-xs text-gray-500 mt-2">Used for SEO on index pages of your blog</div>
   </div>
-  <div class="my-5">
-    <div class="flex items-center">
-      <%= form.submit "Update account", class: "bg-[var(--light-accent)] dark:bg-[var(--dark-accent)] text-white hover:bg-[var(--light-accent-hover)] dark:hover:bg-[var(--dark-accent-hover)] font-bold py-2 px-4 rounded" %>
-    </div>
+  <div class="form-control w-full mt-6">
+    <%= form.submit "Update account", class: "btn btn-primary w-full" %>
   </div>
 <% end %>

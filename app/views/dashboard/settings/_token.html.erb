@@ -1,34 +1,48 @@
-<div id="<%= dom_id(token) %>" class="mb-4 bg-[var(--light-card)] dark:bg-[var(--dark-card)] border border-[var(--light-border)] dark:border-[var(--dark-border)] p-4 shadow-sm transition-all duration-200 flex flex-col gap-2">
-  <div class="flex items-center mb-2">
-    <div class="text-lg font-semibold flex-1 truncate" title="<%= token.name %>"><%= token.name %></div>
-    <div>
-      <%= button_to dashboard_token_path(token), method: :delete, form: { data: { turbo_confirm: "Are you sure you want to revoke this token?", turbo_frame: "_top" } }, class: "text-[var(--light-error)] hover:text-[var(--light-error)]/75 dark:text-[var(--dark-error)] dark:hover:text-[var(--dark-error)]/75 text-sm font-medium ml-2" do %>
+<div id="<%= dom_id(token) %>" class="card bg-base-100 shadow-xl mb-4">
+  <div class="card-body">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="card-title truncate" title="<%= token.name %>"><%= token.name %></h2>
+      <%= button_to dashboard_token_path(token), method: :delete, form: { data: { turbo_confirm: "Are you sure you want to revoke this token?", turbo_frame: "_top" } }, class: "btn btn-error btn-sm" do %>
         Revoke
       <% end %>
     </div>
-  </div>
-  <div class="flex items-center" data-controller="clipboard">
-    <span class="block text-xs font-medium text-[var(--light-muted)] dark:text-[var(--dark-muted)] uppercase mr-2">Token</span>
-    <span class="font-mono text-xs truncate max-w-[180px]" data-clipboard-target="source" title="<%= token.token %>"><%= token.token %></span>
-    <button type="button" class="ml-2 shrink-0 text-[var(--light-accent)] hover:text-[var(--light-accent-hover)] dark:text-[var(--dark-accent)] dark:hover:text-[var(--dark-accent-hover)]" data-action="clipboard#copy">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-      </svg>
-    </button>
-    <span class="ml-2 text-[var(--light-success)] dark:text-[var(--dark-success)] hidden" data-clipboard-target="success">Copied!</span>
-  </div>
-  <div class="flex justify-between text-sm text-gray-500 dark:text-gray-400 mt-2">
-    <div>
-      <span class="block text-xs font-medium text-[var(--light-muted)] dark:text-[var(--dark-muted)] uppercase">Created</span>
-      <span><%= token.created_at.strftime("%b %d, %Y") %></span>
+    
+    <div class="mb-4" data-controller="clipboard">
+      <div class="flex items-center gap-2">
+        <div class="flex-1 relative" data-controller="password-toggle">
+          <input type="password" class="input input-bordered w-full font-mono text-sm pr-10" value="<%= token.token %>" disabled data-password-toggle-target="input" />
+          <button type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-base-content/60 hover:text-base-content" data-action="password-toggle#toggle">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-password-toggle-target="eyeIcon">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-password-toggle-target="eyeOffIcon">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L8.464 8.464M14.12 14.12l1.414 1.414M9.878 9.878l-4.415-4.414m4.415 4.414L14.12 14.12m-4.242 0L8.464 15.536m5.656-5.656l1.414-1.414" />
+            </svg>
+          </button>
+          <div class="hidden" data-clipboard-target="source"><%= token.token %></div>
+        </div>
+        <button type="button" class="btn btn-ghost btn-sm btn-square" data-action="clipboard#copy">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+          </svg>
+        </button>
+      </div>
+      <span class="text-success text-sm hidden mt-2 block" data-clipboard-target="success">Copied!</span>
     </div>
-    <div>
-      <span class="block text-xs font-medium text-[var(--light-muted)] dark:text-[var(--dark-muted)] uppercase">Expires</span>
-      <% if token.expires_at.present? %>
-        <span><%= token.expires_at.strftime("%b %d, %Y") %></span>
-      <% else %>
-        <span class="text-[var(--light-muted)] dark:text-[var(--dark-muted)]">Never</span>
-      <% end %>
+    
+    <div class="flex flex-col sm:flex-row sm:justify-between gap-2 text-sm text-base-content/70">
+      <div>
+        <span class="font-medium">Created:</span> <%= token.created_at.strftime("%b %d, %Y") %>
+      </div>
+      <div>
+        <span class="font-medium">Expires:</span> 
+        <% if token.expires_at.present? %>
+          <%= token.expires_at.strftime("%b %d, %Y") %>
+        <% else %>
+          Never
+        <% end %>
+      </div>
     </div>
   </div>
 </div>

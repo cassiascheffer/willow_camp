@@ -1,25 +1,23 @@
-<%= form_with model: token, url: dashboard_tokens_path, class: "contents max-w-full", id: "new_token_form", data: { turbo: false } do |form| %>
+<%= form_with model: token, url: dashboard_tokens_path, id: "new_token_form", class: "form-control", data: { turbo: false } do |form| %>
   <% if token.errors.any? %>
-    <div id="error_explanation" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4" role="alert" aria-labelledby="error_explanation_title">
-      <h2 id="error_explanation_title" class="font-bold mb-2"><%= pluralize(token.errors.count, "error") %> prohibited this token from being saved:</h2>
-      <ul class="list-disc list-inside">
+    <div id="error_explanation" class="alert alert-error">
+      <h2><%= pluralize(token.errors.count, "error") %> prohibited this token from being saved:</h2>
+      <ul>
         <% token.errors.full_messages.each do |message| %>
-          <li class="truncate"><%= message %></li>
+          <li><%= message %></li>
         <% end %>
       </ul>
     </div>
   <% end %>
-  <div class="my-5">
-    <%= form.label :name, "Token name", class: "block mb-1 text-[var(--light-muted)] dark:text-[var(--dark-muted)]" %>
-    <%= form.text_field :name, required: true, class: "px-3 py-2 border border-[var(--light-border)] dark:border-[var(--dark-border)] bg-[var(--light-bg)] dark:bg-[var(--dark-bg)] text-[var(--light-text)] dark:text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)] focus:ring-offset-1 w-full", placeholder: "API Key #1" %>
+  <div class="form-control w-full mb-4">
+    <%= form.label :name, "Token name", class: "label" %>
+    <%= form.text_field :name, required: true, placeholder: "API Key #1", class: "input input-bordered w-full" %>
   </div>
-  <div class="my-5">
-    <%= form.label :expires_at, "Expiration date (optional)", class: "block mb-1 text-[var(--light-muted)] dark:text-[var(--dark-muted)]" %>
-    <%= form.date_field :expires_at, class: "px-3 py-2 border border-[var(--light-border)] dark:border-[var(--dark-border)] bg-[var(--light-bg)] dark:bg-[var(--dark-bg)] text-[var(--light-text)] dark:text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--light-accent)] dark:focus:ring-[var(--dark-accent)] focus:ring-offset-1 w-full" %>
+  <div class="form-control w-full mb-4">
+    <%= form.label :expires_at, "Expiration date (optional)", class: "label" %>
+    <%= form.date_field :expires_at, class: "input input-bordered w-full" %>
   </div>
-  <div class="my-5">
-    <div class="flex items-center">
-      <%= form.submit "Generate token", class: "bg-[var(--light-accent)] dark:bg-[var(--dark-accent)] text-white hover:bg-[var(--light-accent-hover)] dark:hover:bg-[var(--dark-accent-hover)] font-bold py-2 px-4" %>
-    </div>
+  <div class="form-control w-full mt-6">
+    <%= form.submit "Generate token", class: "btn btn-primary w-full" %>
   </div>
 <% end %>
