@@ -3,7 +3,13 @@
   <div class="card w-full lg:w-3/4">
     <div class="card-body">
       <h1 class="card-title text-2xl font-bold">New post</h1>
-      <%= render "form", post: @post %>
+      <%= form_with(model: @post, url: dashboard_posts_path, id: "new_post_form", class: "form-control", local: true, data: { turbo: "false" }) do |form| %>
+        <%= render "form_fields", form: form, post: @post %>
+        
+        <div class="form-control w-full mt-6">
+          <%= form.submit class: "btn btn-primary w-full" %>
+        </div>
+      <% end %>
       <div class="card-actions justify-end mt-4">
         <%= link_to "Back to Dashboard", dashboard_path, class: "btn btn-secondary" %>
       </div>
