@@ -8,12 +8,10 @@
     </ul>
   </div>
 <% end %>
-
 <div class="form-control w-full mb-4">
   <%= form.label :title, class: "label" %>
   <%= form.text_field :title, class: "input input-bordered w-full" %>
 </div>
-
 <div class="flex flex-col lg:flex-row lg:gap-4 mb-4">
   <div class="form-control w-full lg:w-1/2 mb-4 lg:mb-0">
     <%= form.label :slug, class: "label" %>
@@ -26,12 +24,10 @@
     <%= form.text_field :tag_list, value: post.tag_list.join(', '), class: "input input-bordered w-full" %>
   </div>
 </div>
-
 <div class="form-control w-full mb-4">
   <%= form.label :meta_description, "Meta Description", class: "label" %>
   <%= form.text_area :meta_description, required: false, maxlength: 255, class: "textarea textarea-bordered w-full" %>
 </div>
-
 <div class="form-control w-full mb-4">
   <%= form.label :body, class: "label" %>
   <div class="text-sm text-gray-600 mb-2">
@@ -39,7 +35,6 @@
   </div>
   <%= form.text_area :body_markdown, rows: 4, style: "min-height: 300px;", class: "textarea textarea-bordered w-full" %>
 </div>
-
 <div class="flex flex-col lg:flex-row lg:gap-4 lg:items-end mb-4">
   <div class="form-control w-full lg:w-auto mb-4 lg:mb-0">
     <%= form.label :published, class: "label" %>

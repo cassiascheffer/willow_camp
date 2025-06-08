@@ -5,7 +5,6 @@
       <h1 class="card-title text-2xl font-bold">Editing post</h1>
       <%= form_with(model: @post, url: dashboard_post_path(@post), id: "edit_post_form", class: "form-control") do |form| %>
         <%= render "form_fields", form: form, post: @post %>
-        
         <div class="form-control w-full mt-6">
           <%= form.submit class: "btn btn-primary w-full" %>
           <% if flash[:form_status] %>
