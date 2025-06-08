@@ -3,7 +3,9 @@ Rails.application.routes.draw do
 
   get "dashboard" => "dashboard#show", :as => :dashboard
   namespace :dashboard do
-    resources :pages, param: :slug
+    namespace :settings do
+      resources :about_pages, param: :slug, path: :pages
+    end
     resource :settings, only: %i[show]
     resources :posts, except: %i[index show], param: :slug
     resources :users, only: %i[edit update], param: :slug

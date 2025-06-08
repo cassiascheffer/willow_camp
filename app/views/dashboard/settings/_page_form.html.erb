@@ -1,0 +1,38 @@
+<%= turbo_frame_tag "about-page-form" do %>
+  <%= form_with(model: page, url: page.persisted? ? dashboard_settings_about_page_path(page) : dashboard_settings_about_pages_path, local: false, class: "space-y-4", data: { turbo_frame: "about-page-form" }) do |form| %>
+    <% if page.errors.any? %>
+      <div id="error_explanation" class="alert alert-error">
+        <h2><%= pluralize(page.errors.count, "error") %> prohibited this page from being saved:</h2>
+        <ul>
+          <% page.errors.each do |error| %>
+            <li><%= error.full_message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+    <div class="form-control w-full mb-4">
+      <%= form.label :body, class: "label" %>
+      <div class="text-sm text-gray-600 mb-2">
+        Basic Markdown: **bold**, *italic*, `code`, [link-text](url), # heading, - list item
+      </div>
+      <%= form.text_area :body_markdown, rows: 4, style: "min-height: 300px;", class: "textarea textarea-bordered w-full" %>
+    </div>
+    <div class="flex flex-col lg:flex-row lg:gap-4 lg:items-end mb-4">
+      <div class="form-control w-full lg:w-auto mb-4 lg:mb-0">
+        <%= form.label :published, class: "label" %>
+        <div class="flex items-center h-12">
+          <%= form.check_box :published, class: "checkbox checkbox-primary" %>
+        </div>
+      </div>
+    </div>
+    <div class="form-control w-full mb-4">
+      <%= form.hidden_field :title, value: "About" %>
+    </div>
+    <div class="form-control w-full mb-4">
+      <%= form.hidden_field :slug %>
+    </div>
+    <div class="form-control mt-6">
+      <%= form.submit "Save", class: "btn btn-primary w-full lg:w-auto", data: { disable_with: "Saving..." } %>
+    </div>
+  <% end %>
+<% end %>
