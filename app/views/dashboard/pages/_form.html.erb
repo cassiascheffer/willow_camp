@@ -19,7 +19,9 @@
   </div>
   <div class="form-control w-full mb-4">
     <%= form.label :body, class: "label" %>
-    <%= form.text_area :body_markdown, rows: 4, style: "min-height: 300px;", class: "textarea textarea-bordered w-full" %>
+    <%= form.marksmith :body_markdown,
+        enable_file_uploads: false,
+        class: "textarea textarea-bordered w-full" %>
   </div>
   <div class="form-control w-full mb-4">
     <%= form.label :published, class: "label" %>

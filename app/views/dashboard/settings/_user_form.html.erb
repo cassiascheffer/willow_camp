@@ -36,7 +36,7 @@
     </div>
     <div class="form-control w-full">
       <%= form.label :favicon_emoji, class: "label" %>
-      <%= form.text_field :favicon_emoji, required: false, class: "input input-bordered w-full", data: { controller: "favicon", action: "input->favicon#setFavicon" } %>
+      <%= form.text_field :favicon_emoji, required: false, class: "input input-bordered w-full", data: { controller: "favicon", action: "input->favicon#setFavicon", favicon_target: "input" } %>
     </div>
   </div>
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">

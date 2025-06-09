@@ -12,10 +12,9 @@
     <% end %>
     <div class="form-control w-full mb-4">
       <%= form.label :body, class: "label" %>
-      <div class="text-sm text-gray-600 mb-2">
-        Basic Markdown: **bold**, *italic*, `code`, [link-text](url), # heading, - list item
-      </div>
-      <%= form.text_area :body_markdown, rows: 4, style: "min-height: 300px;", class: "textarea textarea-bordered w-full" %>
+      <%= form.marksmith :body_markdown,
+          enable_file_uploads: false,
+          class: "textarea textarea-bordered w-full" %>
     </div>
     <div class="flex flex-col lg:flex-row lg:gap-4 lg:items-end mb-4">
       <div class="form-control w-full lg:w-auto mb-4 lg:mb-0">

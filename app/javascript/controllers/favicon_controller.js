@@ -3,12 +3,12 @@ import { Controller } from "@hotwired/stimulus"
 // Usage: <html data-controller="favicon" data-favicon-emoji-value="⛺">
 export default class extends Controller {
   static values = { emoji: String }
+  static targets = ["input"]
 
   connect() {
     this.setFavicon(this.emojiValue || this.inputTarget?.value || "⛺")
   }
 
-  static targets = ["input"]
 
   setFavicon(eventOrEmoji) {
     let emoji
