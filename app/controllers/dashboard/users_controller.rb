@@ -16,8 +16,8 @@ class Dashboard::UsersController < Dashboard::BaseController
   private
 
   def set_user
-    if params[:slug].present?
-      @user = User.find(params[:slug])
+    if params[:id].present?
+      @user = User.find(params[:id])
     end
 
     if @user != current_user

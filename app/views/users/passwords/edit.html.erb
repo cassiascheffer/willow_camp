@@ -2,11 +2,9 @@
   <div class="card w-full max-w-md bg-base-100 shadow-xl">
     <div class="card-body">
       <h2 class="card-title text-2xl font-bold text-center mb-6">Change your password</h2>
-      
       <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f| %>
         <%= render "users/shared/error_messages", resource: resource %>
         <%= f.hidden_field :reset_password_token %>
-
         <div class="form-control w-full">
           <%= f.label :password, class: "label" do %>
             <span class="label-text">
@@ -21,7 +19,6 @@
               autocomplete: "new-password",
               class: "input input-bordered w-full" %>
         </div>
-
         <div class="form-control w-full">
           <%= f.label :password_confirmation, class: "label" do %>
             <span class="label-text">Confirm new password</span>
@@ -30,12 +27,10 @@
               autocomplete: "new-password",
               class: "input input-bordered w-full" %>
         </div>
-
         <div class="form-control mt-6">
           <%= f.submit "Change my password", class: "btn btn-primary w-full" %>
         </div>
       <% end %>
-
       <%= render "users/shared/links" %>
     </div>
   </div>

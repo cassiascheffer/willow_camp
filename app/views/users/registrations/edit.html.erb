@@ -2,10 +2,8 @@
   <div class="card w-full max-w-md bg-base-100 shadow-xl">
     <div class="card-body">
       <h2 class="card-title text-2xl font-bold text-center mb-6">Edit <%= resource_name.to_s.humanize %></h2>
-      
       <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
         <%= render "users/shared/error_messages", resource: resource %>
-
         <div class="form-control w-full">
           <%= f.label :email, class: "label" do %>
             <span class="label-text">Email</span>
@@ -15,7 +13,6 @@
               autocomplete: "email",
               class: "input input-bordered w-full" %>
         </div>
-
         <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
           <div class="alert alert-info mt-4">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6">
@@ -24,7 +21,6 @@
             <span>Currently waiting confirmation for: <%= resource.unconfirmed_email %></span>
           </div>
         <% end %>
-
         <div class="form-control w-full">
           <%= f.label :password, class: "label" do %>
             <span class="label-text">
@@ -41,7 +37,6 @@
             </div>
           <% end %>
         </div>
-
         <div class="form-control w-full">
           <%= f.label :password_confirmation, class: "label" do %>
             <span class="label-text">Confirm password</span>
@@ -50,7 +45,6 @@
               autocomplete: "new-password",
               class: "input input-bordered w-full" %>
         </div>
-
         <div class="form-control w-full">
           <%= f.label :current_password, class: "label" do %>
             <span class="label-text">
@@ -62,14 +56,11 @@
               autocomplete: "current-password",
               class: "input input-bordered w-full" %>
         </div>
-
         <div class="form-control mt-6">
           <%= f.submit "Update", class: "btn btn-primary w-full" %>
         </div>
       <% end %>
-
       <div class="divider"></div>
-
       <div class="text-center">
         <h3 class="text-lg font-semibold mb-4">Cancel my account</h3>
         <p class="text-sm text-base-content/70 mb-4">Unhappy with our service?</p>
@@ -79,7 +70,6 @@
             method: :delete,
             class: "btn btn-error btn-outline w-full" %>
       </div>
-
       <div class="text-center mt-6">
         <%= link_to "Back", :back, class: "link link-secondary" %>
       </div>

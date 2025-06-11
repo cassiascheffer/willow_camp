@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   devise_for :users,
+    skip: %i[unlocks passwords confirmations registrations],
     path_names: {
       sign_in: "login",
       sign_out: "logout",
@@ -24,7 +25,7 @@ Rails.application.routes.draw do
     end
     resource :settings, only: %i[show]
     resources :posts, except: %i[index show], param: :slug
-    resources :users, only: %i[edit update], param: :slug
+    resources :users, only: %i[edit update]
     resources :tokens, only: %i[create destroy]
   end
 

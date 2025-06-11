@@ -19,11 +19,29 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   # DELETE /resource/sign_out
-  # def destroy
-  #   super
-  # end
+  def destroy
+    signed_out = (Devise.sign_out_all_scopes ? sign_out : sign_out(resource_name))
+    set_flash_message! :notice, :signed_out if signed_out
 
-  # protected
+    respond_to do |format|
+      format.any { redirect_to root_path }
+      format.json { head :no_content }
+    end
+  end
+
+  protected
+
+  def after_sign_out_path_for(resource_or_scope)
+    root_path
+  end
+
+  def after_sign_in_path_for(resource_or_scope)
+    dashboard_path
+  end
+
+  def after_sign_up_path_for(resource_or_scope)
+    dashboard_path
+  end
 
   # If you have extra params to permit, append them to the sanitizer.
   # def configure_sign_in_params
