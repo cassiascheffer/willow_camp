@@ -22,6 +22,6 @@ export default class extends Controller {
       theme = this.defaultValue || "light"
     }
     if (!theme) return
-    this.element.setAttribute("data-theme", theme)
+    document.documentElement.setAttribute("data-theme", theme)
   }
 }

@@ -9,7 +9,7 @@ export default class extends Controller {
   updateTheme(event) {
     const theme = event.target.value
     if (theme) {
-      document.body.setAttribute("data-theme", theme)
+      document.documentElement.setAttribute("data-theme", theme)
     }
   }
 }
