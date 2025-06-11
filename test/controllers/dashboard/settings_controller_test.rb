@@ -9,7 +9,7 @@ class Dashboard::SettingsControllerTest < ActionDispatch::IntegrationTest
 
   test "should redirect to session/new when not logged in" do
     get dashboard_settings_path
-    assert_redirected_to new_session_path
+    assert_redirected_to new_user_session_path
   end
 
   test "should get show when logged in" do

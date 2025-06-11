@@ -29,12 +29,13 @@ FriendlyId.defaults do |config|
     billing
     blog
     com
+    confirmation
     dashboard
     demo
     dev
     development
-    dns
     dmarc
+    dns
     edit
     edu
     ftp
@@ -66,6 +67,8 @@ FriendlyId.defaults do |config|
     portal
     post
     posts
+    register
+    registration
     root
     secure
     server
@@ -81,8 +84,10 @@ FriendlyId.defaults do |config|
     sysadmin
     system
     test
+    unlock
     user
     users
+    verify
     webmail
     www
   ]

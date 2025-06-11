@@ -1,6 +1,5 @@
 module Posts
   class FeedController < ApplicationController
-    allow_unauthenticated_access only: %i[show]
     before_action :set_author, only: %i[show]
 
     def show

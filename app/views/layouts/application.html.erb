@@ -23,7 +23,7 @@
     <%= javascript_importmap_tags %>
   </head>
   <body class="font-mono">
-    <% unless controller_name == 'home' && action_name == 'show' || controller_name == 'sessions' && action_name == 'new' %>
+    <% unless controller_name == 'home' && action_name == 'show' || %w[passwords sessions registrations].include?(controller_name) %>
       <header class="navbar bg-base-100 shadow-md w-full px-8">
         <div class="navbar-start">
           <a href="/" class="text-xl font-bold hover:text-primary transition-colors" aria-label="Home">
@@ -52,7 +52,7 @@
     <footer class="footer p-4 bg-base-200 text-base-content">
       <% if @author.present? %>
         <div class="container mx-auto text-center">
-          <p>Made with <%= link_to "willow.camp", root_url(subdomain: false, allow_other_subdomains: true) %></p>
+          <p>Made with <%= link_to "willow.camp", root_url(subdomain: false, allow_other_host: true) %></p>
         </div>
       <% end %>
     </footer>

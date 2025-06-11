@@ -20,7 +20,7 @@ class Dashboard::UsersController < Dashboard::BaseController
       @user = User.find(params[:slug])
     end
 
-    if @user != Current.user
+    if @user != current_user
       head :not_found
     end
   end

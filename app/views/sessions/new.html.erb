@@ -12,7 +12,7 @@
   <div class="card bg-base-100 shadow-xl">
     <div class="card-body">
       <h1 class="card-title text-2xl mb-6">Sign in</h1>
-      <%= form_with url: session_url, class: "form-control" do |form| %>
+      <%= form_with url: login_url, class: "form-control" do |form| %>
         <div class="form-control w-full mb-4">
           <%= form.label :email_address, "Email Address", class: "label" %>
           <%= form.email_field :email_address,

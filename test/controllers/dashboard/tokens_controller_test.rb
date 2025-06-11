@@ -74,11 +74,11 @@ class Dashboard::TokensControllerTest < ActionDispatch::IntegrationTest
     sign_out @user
 
     post dashboard_tokens_path, params: @token_params
-    assert_redirected_to new_session_path
+    assert_redirected_to new_user_session_path
 
     token = user_tokens(:active)
     delete dashboard_token_path(token)
-    assert_redirected_to new_session_path
+    assert_redirected_to new_user_session_path
   end
 
   test "should handle token with past expiration date" do

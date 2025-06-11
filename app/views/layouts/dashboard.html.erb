@@ -23,7 +23,8 @@
       <a class="text-xl font-bold hover:text-primary transition-colors" href="<%= dashboard_path %>"><%= blog_title_for(@user) %></a>
     </div>
     <div class="navbar-end">
-      <a class="link link-hover font-medium" href="<%= dashboard_settings_path %>" role="button" tabindex="0">Settings</a>
+      <%= link_to 'Settings', dashboard_settings_path, class: 'link link-hover font-medium pr-5', role: 'button', tabindex: '0' %>
+      <%= link_to 'Logout', destroy_user_session_path(@user), data: { turbo_method: :delete }, class: 'link link-hover font-medium', role: 'button', tabindex: '0' %>
     </div>
   </nav>
   <div id="flash-messages" class="w-full flex justify-center py-2">

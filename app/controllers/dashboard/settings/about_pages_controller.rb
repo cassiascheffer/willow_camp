@@ -2,7 +2,7 @@ class Dashboard::Settings::AboutPagesController < Dashboard::BaseController
   before_action :set_page, only: [:update, :destroy]
 
   def create
-    @page = @user.pages.new(page_params)
+    @page = current_user.pages.new(page_params)
     if @page.save
       respond_to do |format|
         format.html { redirect_to dashboard_settings_path, notice: "Created!" }
@@ -48,7 +48,7 @@ class Dashboard::Settings::AboutPagesController < Dashboard::BaseController
   private
 
   def set_page
-    @page = @user.pages.find_by!(slug: params[:slug], author_id: @user.id)
+    @page = current_user.pages.find_by!(slug: params[:slug], author_id: current_user.id)
   end
 
   def page_params

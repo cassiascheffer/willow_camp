@@ -7,7 +7,7 @@ class Dashboard::PostsController < Dashboard::BaseController
   end
 
   def create
-    @post = @user.posts.new(post_params)
+    @post = current_user.posts.new(post_params)
 
     if @post.save
       flash[:notice] = "Created!"
@@ -57,11 +57,11 @@ class Dashboard::PostsController < Dashboard::BaseController
   private
 
   def set_post
-    @post = @user.posts.find_by(slug: params[:slug])
+    @post = current_user.posts.find_by(slug: params[:slug])
   end
 
   def authorize_user!
-    unless @post.author == @user
+    unless @post.author == current_user
       redirect_to dashboard_path, alert: "You are not authorized to perform this action."
     end
   end

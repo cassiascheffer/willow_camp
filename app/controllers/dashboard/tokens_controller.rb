@@ -2,7 +2,7 @@ class Dashboard::TokensController < Dashboard::BaseController
   before_action :set_token, only: [:destroy]
 
   def create
-    @token = Current.user.tokens.new(token_params)
+    @token = current_user.tokens.new(token_params)
     if @token.save
       flash[:notice] = "Token created successfully"
     else
@@ -27,7 +27,7 @@ class Dashboard::TokensController < Dashboard::BaseController
   private
 
   def set_token
-    @token = @user.tokens.find_by(id: params[:id])
+    @token = current_user.tokens.find_by(id: params[:id])
     head :not_found unless @token
   end
 

@@ -5,7 +5,7 @@ class Dashboard::PostsControllerTest < ActionDispatch::IntegrationTest
     @user = users(:one)
     @post = posts(:one)
     # Login the user
-    post session_url, params: {email_address: @user.email_address, password: "password"}
+    post login_url, params: {email_address: @user.email_address, password: "password"}
   end
 
   test "should get new" do

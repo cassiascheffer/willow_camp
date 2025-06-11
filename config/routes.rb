@@ -1,5 +1,21 @@
 Rails.application.routes.draw do
-  resource :session
+  devise_for :users,
+    path_names: {
+      sign_in: "login",
+      sign_out: "logout",
+      password: "secret",
+      confirmation: "verification",
+      unlock: "unblock",
+      registration: "register",
+      sign_up: "signup"
+    },
+    controllers: {
+      sessions: "users/sessions",
+      registrations: "users/registrations",
+      confirmations: "users/confirmations",
+      passwords: "users/passwords",
+      unlocks: "users/unlocks"
+    }
 
   get "dashboard" => "dashboard#show", :as => :dashboard
   namespace :dashboard do
@@ -33,5 +49,6 @@ Rails.application.routes.draw do
   end
 
   get "up" => "rails/health#show", :as => :rails_health_check
+
   root "home#show"
 end

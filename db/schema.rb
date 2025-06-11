@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_03_010345) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_11_010300) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -42,15 +42,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_03_010345) do
     t.index ["author_id"], name: "index_posts_on_author_uuid"
     t.index ["slug", "author_id"], name: "index_posts_on_slug_and_author_uuid", unique: true
     t.index ["type"], name: "index_posts_on_type"
-  end
-
-  create_table "sessions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "ip_address"
-    t.string "user_agent"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.uuid "user_id", null: false
-    t.index ["user_id"], name: "index_sessions_on_user_uuid"
   end
 
   create_table "taggings", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -92,11 +83,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_03_010345) do
   end
 
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "email_address", null: false
-    t.string "password_digest", null: false
+    t.string "email", null: false
+    t.string "encrypted_password", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "subdomain", null: false
+    t.string "subdomain"
     t.string "name"
     t.string "blog_title"
     t.string "theme"
@@ -105,13 +96,21 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_03_010345) do
     t.string "slug"
     t.text "site_meta_description"
     t.string "favicon_emoji"
-    t.index ["email_address"], name: "index_users_on_email_address", unique: true
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.integer "sign_in_count", default: 0, null: false
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.string "current_sign_in_ip"
+    t.string "last_sign_in_ip"
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["slug"], name: "index_users_on_slug", unique: true
     t.index ["subdomain"], name: "index_users_on_subdomain", unique: true
   end
 
   add_foreign_key "posts", "users", column: "author_id"
-  add_foreign_key "sessions", "users"
   add_foreign_key "taggings", "tags"
   add_foreign_key "user_tokens", "users"
 end
