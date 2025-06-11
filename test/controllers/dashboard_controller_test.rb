@@ -1,10 +1,11 @@
 require "test_helper"
 
 class DashboardControllerTest < ActionDispatch::IntegrationTest
+  include Devise::Test::IntegrationHelpers
+
   setup do
     @user = users(:one)
-    # Login the user
-    post session_url, params: {email_address: @user.email_address, password: "password"}
+    sign_in @user
   end
 
   test "should get show" do

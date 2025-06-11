@@ -1,0 +1,14 @@
+<%= turbo_stream.replace "flash-messages" do %>
+  <div class="w-full flex justify-center py-2">
+    <% if flash[:notice] %>
+      <%= render 'shared/flash', type: 'notice', message: flash[:notice] %>
+    <% end %>
+    <% if flash[:alert] %>
+      <%= render 'shared/flash', type: 'alert', message: flash[:alert] %>
+    <% end %>
+  </div>
+<% end %>
+
+<%= turbo_stream.replace "user_form" do %>
+  <%= render "dashboard/settings/user_form", user: @user %>
+<% end %>

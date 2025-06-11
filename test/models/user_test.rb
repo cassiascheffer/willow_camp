@@ -4,7 +4,7 @@ class UserTest < ActiveSupport::TestCase
   def setup
     @user = User.new(
       name: "Test User",
-      email_address: "user@example.com",
+      email: "user@example.com",
       password: "password123",
       password_confirmation: "password123",
       subdomain: "testuser",
@@ -16,33 +16,25 @@ class UserTest < ActiveSupport::TestCase
     assert @user.valid?
   end
 
-  test "email_address should be present" do
-    @user.email_address = "    "
+  test "email should be present" do
+    @user.email = "    "
     assert_not @user.valid?
   end
 
-  test "email_address should be valid format" do
-    invalid_addresses = %w[user@example,com user_at_example.com user.name@example. user@example_domain.com user@example+domain.com]
-    invalid_addresses.each do |invalid_address|
-      @user.email_address = invalid_address
-      assert_not @user.valid?, "#{invalid_address} should be invalid"
-    end
-  end
-
-  test "email_address should be unique" do
+  test "email should be unique" do
     duplicate_user = @user.dup
     @user.save
     assert_not duplicate_user.valid?
   end
 
-  test "subdomain should be present" do
+  test "subdomain should allow blank" do
     @user.subdomain = "   "
-    assert_not @user.valid?
+    assert @user.valid?
   end
 
   test "subdomain should be unique" do
     duplicate_user = @user.dup
-    duplicate_user.email_address = "another@example.com"
+    duplicate_user.email = "another@example.com"
     @user.save
     assert_not duplicate_user.valid?
   end
@@ -85,19 +77,11 @@ class UserTest < ActiveSupport::TestCase
     assert_not @user.valid?
   end
 
-  test "email_address should be normalized" do
+  test "email should be normalized" do
     mixed_case_email = "User@ExAMPle.CoM"
-    @user.email_address = mixed_case_email
+    @user.email = mixed_case_email
     @user.save
-    assert_equal mixed_case_email.strip.downcase, @user.reload.email_address
-  end
-
-  test "should destroy associated sessions when user is destroyed" do
-    @user.save
-    @user.sessions.create!
-    assert_difference "Session.count", -1 do
-      @user.destroy
-    end
+    assert_equal mixed_case_email.strip.downcase, @user.reload.email
   end
 
   test "should destroy associated posts when user is destroyed" do

@@ -11,13 +11,22 @@ module ActiveSupport
     fixtures :all
 
     # Add more helper methods to be used by all tests here...
+  end
+end
 
-    def sign_in(user)
-      post session_path, params: {email_address: user.email_address, password: "password"}
-    end
+class ActionDispatch::IntegrationTest
+  include Devise::Test::IntegrationHelpers
 
-    def sign_out(user)
-      delete session_path
-    end
+  def sign_in(user)
+    post user_session_path, params: {
+      user: {
+        email: user.email,
+        password: "password"
+      }
+    }
+  end
+
+  def sign_out(user = nil)
+    delete destroy_user_session_path
   end
 end

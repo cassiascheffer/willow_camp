@@ -8,7 +8,7 @@ export default class extends Controller {
 
   connect() {
     // Set initial theme from value or data-theme attribute
-    const theme = this.defaultValue || document.documentElement.dataset.theme || "light"
+    const theme = this.defaultValue || this.element.dataset.theme || "light"
     this.setTheme(theme)
   }
 
@@ -22,6 +22,6 @@ export default class extends Controller {
       theme = this.defaultValue || "light"
     }
     if (!theme) return
-    document.documentElement.setAttribute("data-theme", theme)
+    this.element.setAttribute("data-theme", theme)
   }
 }

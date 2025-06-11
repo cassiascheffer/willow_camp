@@ -5,12 +5,19 @@ class Dashboard::UsersController < Dashboard::BaseController
   end
 
   def update
-    if @user.update(user_params)
+    params_to_update = user_params
+    if params_to_update[:password].blank?
+      params_to_update = params_to_update.except(:password, :password_confirmation)
+    end
+    if @user.update(params_to_update)
       flash[:notice] = "User profile successfully updated"
     else
       flash[:alert] = "There were errors updating your profile"
     end
-    redirect_to dashboard_settings_path
+    respond_to do |format|
+      format.turbo_stream { render :update }
+      format.html { redirect_to dashboard_settings_path }
+    end
   end
 
   private
@@ -26,6 +33,6 @@ class Dashboard::UsersController < Dashboard::BaseController
   end
 
   def user_params
-    params.require(:user).permit(:name, :email_address, :password, :password_confirmation, :subdomain, :blog_title, :theme, :site_meta_description, :favicon_emoji)
+    params.require(:user).permit(:name, :email, :password, :password_confirmation, :subdomain, :blog_title, :theme, :site_meta_description, :favicon_emoji)
   end
 end

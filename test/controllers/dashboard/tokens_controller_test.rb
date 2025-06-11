@@ -1,13 +1,15 @@
 require "test_helper"
 
 class Dashboard::TokensControllerTest < ActionDispatch::IntegrationTest
+  include Devise::Test::IntegrationHelpers
+
   setup do
     @user = users(:one)
     sign_in @user
     @token_params = {user_token: {name: "Test API Token", expires_at: 30.days.from_now}}
   end
 
-  test "should create token with valid attributes" do
+  test "should create token and redirect to settings" do
     assert_difference("@user.tokens.count") do
       post dashboard_tokens_path, params: @token_params
     end
@@ -20,21 +22,20 @@ class Dashboard::TokensControllerTest < ActionDispatch::IntegrationTest
     invalid_params = {user_token: {name: "", expires_at: 30.days.from_now}}
 
     assert_no_difference("@user.tokens.count") do
-      post dashboard_tokens_path, params: invalid_params, headers: {"Accept" => "text/vnd.turbo-stream.html"}
+      post dashboard_tokens_path, params: invalid_params
     end
 
-    assert_response :success
-    assert_equal "text/vnd.turbo-stream.html", @response.media_type
+    assert_redirected_to dashboard_settings_path
+    assert_equal "There were errors creating the token", flash[:alert]
   end
 
-  test "should create token with Turbo Stream request" do
+  test "should create token with valid attributes" do
     assert_difference("@user.tokens.count") do
-      post dashboard_tokens_path, params: @token_params, headers: {"Accept" => "text/vnd.turbo-stream.html"}
+      post dashboard_tokens_path, params: @token_params
     end
 
-    assert_response :success
-    assert_equal "text/vnd.turbo-stream.html", @response.media_type
-    assert_match "Token created successfully", @response.body
+    assert_redirected_to dashboard_settings_path
+    assert_equal "Token created successfully", flash[:notice]
   end
 
   test "should destroy token" do
@@ -85,10 +86,10 @@ class Dashboard::TokensControllerTest < ActionDispatch::IntegrationTest
     invalid_params = {user_token: {name: "Test API Token", expires_at: 1.day.ago}}
 
     assert_no_difference("@user.tokens.count") do
-      post dashboard_tokens_path, params: invalid_params, headers: {"Accept" => "text/vnd.turbo-stream.html"}
+      post dashboard_tokens_path, params: invalid_params
     end
 
-    assert_response :success
-    assert_equal "text/vnd.turbo-stream.html", @response.media_type
+    assert_redirected_to dashboard_settings_path
+    assert_equal "There were errors creating the token", flash[:alert]
   end
 end

@@ -1,11 +1,12 @@
 require "test_helper"
 
 class Dashboard::PostsControllerTest < ActionDispatch::IntegrationTest
+  include Devise::Test::IntegrationHelpers
+
   setup do
     @user = users(:one)
     @post = posts(:one)
-    # Login the user
-    post login_url, params: {email_address: @user.email_address, password: "password"}
+    sign_in @user
   end
 
   test "should get new" do
