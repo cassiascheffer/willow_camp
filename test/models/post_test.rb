@@ -100,9 +100,9 @@ class PostTest < ActiveSupport::TestCase
     @post.save!
 
     assert_not_nil @post.body_html
-    assert_includes @post.body_html, 'lang="mermaid"'
-    assert_includes @post.body_html, 'data-controller="mermaid"'
-    assert_includes @post.body_html, 'class="mermaid"'
+    assert_match(/<pre[^>]*lang="mermaid"/, @post.body_html)
+    assert_match(/<pre[^>]*data-controller="mermaid"/, @post.body_html)
+    assert_match(/<pre[^>]*class="mermaid"/, @post.body_html)
     assert_not_includes @post.body_html, '<pre lang="ruby" data-controller="mermaid"'
   end
 
