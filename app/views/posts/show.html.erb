@@ -1,6 +1,6 @@
 <% content_for :title, @post.title %>
 <% content_for :og_title, @post.title %>
-<% content_for :og_description, @post.meta_description || truncate(strip_tags(@post.content), length: 160) %>
+<% content_for :og_description, @post.meta_description || truncate(strip_tags(@post.body_html), length: 160) %>
 <% content_for :og_type, "article" %>
 <% content_for :head do %>
   <% if @post.meta_description.present? %>
