@@ -31,7 +31,7 @@ class PostMarkdown
   def process_mermaid_blocks(html)
     # Add mermaid controller to pre elements with mermaid lang
     html.gsub('<pre lang="mermaid"') do |match|
-      '<pre lang="mermaid" data-controller="mermaid"'
+      '<pre lang="mermaid" data-controller="mermaid" class="mermaid"'
     end
   end
 end
