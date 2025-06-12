@@ -44,7 +44,9 @@ class PostMarkdownTest < ActiveSupport::TestCase
     html = post_markdown.to_html
 
     assert_not_nil html
-    assert_includes html, '<pre lang="mermaid" data-controller="mermaid"'
+    assert_includes html, 'lang="mermaid"'
+    assert_includes html, 'data-controller="mermaid"'
+    assert_includes html, 'class="mermaid"'
     assert_not_includes html, '<pre lang="ruby" data-controller="mermaid"'
   end
 
@@ -95,7 +97,7 @@ class PostMarkdownTest < ActiveSupport::TestCase
 
     assert_not_nil html
     # Should have two mermaid blocks with data-controller
-    mermaid_blocks = html.scan('<pre lang="mermaid" data-controller="mermaid"')
+    mermaid_blocks = html.scan(/data-controller="mermaid"/)
     assert_equal 2, mermaid_blocks.length
   end
 
