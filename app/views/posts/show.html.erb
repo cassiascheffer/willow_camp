@@ -4,6 +4,8 @@
     <meta name="description" content="<%= @post.meta_description %>">
   <% end %>
 <% end %>
+<!-- Social share image generator -->
+<%= social_share_image_for(@post) %>
 <div class="">
   <% if notice.present? %>
     <div role="alert" class="alert alert-success" id="notice"><%= notice %></div>

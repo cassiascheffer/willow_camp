@@ -38,4 +38,58 @@ module ApplicationHelper
     return "willow.camp" if author.nil? || author.subdomain.blank?
     author.blog_title.presence || "#{author.subdomain}.willow.camp"
   end
+
+  # Generate social share image HTML for a post
+  def social_share_image_for(post, options = {})
+    return "" unless post&.author
+
+    data_attributes = {
+      controller: "social-share-image",
+      "social-share-image-title-value": post.title,
+      "social-share-image-author-value": post.author_name,
+      "social-share-image-favicon-value": post.author.favicon_emoji || "⛺",
+      "social-share-image-blog-title-value": blog_title_for(post.author)
+    }.merge(options.fetch(:data, {}))
+
+    css_classes = ["social-share-generator"]
+    css_classes += Array(options[:class]) if options[:class]
+
+    content_tag :div, "",
+      data: data_attributes,
+      class: css_classes.join(" "),
+      style: options.fetch(:style, "display: none;")
+  end
+
+  # Generate social share image preview with controls
+  def social_share_image_preview_for(post, options = {})
+    return "" unless post&.author
+
+    data_attributes = {
+      controller: "social-share-image",
+      "social-share-image-title-value": post.title,
+      "social-share-image-author-value": post.author_name,
+      "social-share-image-favicon-value": post.author.favicon_emoji || "⛺",
+      "social-share-image-blog-title-value": blog_title_for(post.author)
+    }
+
+    content_tag :div, data: data_attributes, class: "social-share-preview" do
+      content_tag(:div, class: "mb-4") do
+        content_tag(:p, "This is how your post will appear when shared on social media:",
+          class: "text-sm text-base-content/70 mb-4") +
+          content_tag(:div, "",
+            data: {"social-share-image-target": "canvas"},
+            class: "social-share-canvas-container")
+      end +
+        content_tag(:div, class: "flex gap-2") do
+          content_tag(:button, "Regenerate Image",
+            data: {action: "click->social-share-image#regenerate"},
+            class: "btn btn-outline btn-sm") +
+            content_tag(:a, "Download Image",
+              href: "#",
+              download: "#{post.slug}-social-share.png",
+              data: {"social-share-image-target": "downloadLink"},
+              class: "btn btn-primary btn-sm")
+        end
+    end
+  end
 end
