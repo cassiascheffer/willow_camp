@@ -1,4 +1,7 @@
 <% content_for :title, "#{blog_title_for(@author)} | Posts" %>
+<% content_for :og_title, "#{blog_title_for(@author)} | Posts" %>
+<% content_for :og_description, @author&.site_meta_description || "Latest posts from #{blog_title_for(@author)}" %>
+<% content_for :og_type, "website" %>
 <% content_for :head do %>
   <% if @author&.site_meta_description.present? %>
     <meta name="description" content="<%= @author.site_meta_description %>">

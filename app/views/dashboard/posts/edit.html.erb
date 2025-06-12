@@ -14,7 +14,6 @@
           <% end %>
         </div>
       <% end %>
-
       <div class="card-actions justify-end mt-4">
         <%= button_to "Delete", dashboard_post_path(@post), method: :delete, data: { confirm: 'Are you sure?', turbo: false }, class: "btn btn-error" %>
         <% if @post.published? %>

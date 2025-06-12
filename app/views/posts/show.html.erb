@@ -1,7 +1,16 @@
 <% content_for :title, @post.title %>
+<% content_for :og_title, @post.title %>
+<% content_for :og_description, @post.meta_description || truncate(strip_tags(@post.content), length: 160) %>
+<% content_for :og_type, "article" %>
 <% content_for :head do %>
   <% if @post.meta_description.present? %>
     <meta name="description" content="<%= @post.meta_description %>">
+  <% end %>
+  <!-- Article-specific Open Graph meta tags -->
+  <meta property="article:published_time" content="<%= @post.published_at.iso8601 %>">
+  <meta property="article:author" content="<%= @post.author_name %>">
+  <% @post.tags.each do |tag| %>
+    <meta property="article:tag" content="<%= tag.name %>">
   <% end %>
 <% end %>
 <div class="">

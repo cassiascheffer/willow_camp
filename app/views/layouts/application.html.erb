@@ -9,6 +9,17 @@
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
+    <!-- Open Graph meta tags for social media sharing -->
+    <meta property="og:title" content="<%= content_for(:og_title) || content_for(:title) || blog_title_for(@author) %>">
+    <meta property="og:description" content="<%= content_for(:og_description) || content_for(:description) || "A blog powered by willow.camp" %>">
+    <meta property="og:type" content="<%= content_for(:og_type) || "website" %>">
+    <meta property="og:url" content="<%= request.original_url %>">
+    <meta property="og:site_name" content="<%= blog_title_for(@author) %>">
+    <meta property="og:locale" content="en_CA">
+    <!-- Twitter Card meta tags -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="<%= content_for(:og_title) || content_for(:title) || blog_title_for(@author) %>">
+    <meta name="twitter:description" content="<%= content_for(:og_description) || content_for(:description) || "A blog powered by willow.camp" %>">
     <%= yield :head %>
     <% if @author %>
       <%# RSS feed discovery link %>

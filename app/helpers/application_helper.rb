@@ -38,6 +38,4 @@ module ApplicationHelper
     return "willow.camp" if author.nil? || author.subdomain.blank?
     author.blog_title.presence || "#{author.subdomain}.willow.camp"
   end
-
-
 end
