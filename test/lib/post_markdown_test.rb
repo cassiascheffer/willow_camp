@@ -97,7 +97,7 @@ class PostMarkdownTest < ActiveSupport::TestCase
 
     assert_not_nil html
     # Should have two mermaid blocks with data-controller
-    mermaid_blocks = html.scan(/data-controller="mermaid"/)
+    mermaid_blocks = html.scan('data-controller="mermaid"')
     assert_equal 2, mermaid_blocks.length
   end
 
