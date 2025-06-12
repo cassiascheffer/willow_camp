@@ -67,16 +67,6 @@ class Post < ApplicationRecord
   end
 
   def set_html
-    if body_markdown.present?
-      html = Commonmarker.parse(body_markdown, options: {
-        extension: {footnotes: true},
-        parse: {smart: true}
-      }).to_html
-      
-      # Add mermaid controller to pre elements with mermaid lang
-      self.body_html = html.gsub(/<pre lang="mermaid"/) do |match|
-        '<pre lang="mermaid" data-controller="mermaid"'
-      end
-    end
+    self.body_html = PostMarkdown.new(body_markdown).to_html
   end
 end

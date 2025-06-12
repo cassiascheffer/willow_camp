@@ -69,4 +69,71 @@ class PostTest < ActiveSupport::TestCase
     post = Post.create(author: user, title: "Test Post")
     assert_equal user.id, post.author_id, "Post's author_id should match the author's id"
   end
+
+  test "should generate HTML from markdown" do
+    @post.body_markdown = "# Hello World\n\nThis is a test."
+    @post.save!
+
+    assert_not_nil @post.body_html
+    assert_includes @post.body_html, "Hello World"
+    assert_includes @post.body_html, "<p>This is a test.</p>"
+  end
+
+  test "should add mermaid data-controller to mermaid code blocks" do
+    @post.body_markdown = <<~MARKDOWN
+      # Test Post
+
+      Here's a mermaid diagram:
+
+      ```mermaid
+      graph TD
+        A --> B
+      ```
+
+      And here's regular code:
+
+      ```ruby
+      puts "Hello World"
+      ```
+    MARKDOWN
+
+    @post.save!
+
+    assert_not_nil @post.body_html
+    assert_includes @post.body_html, '<pre lang="mermaid" data-controller="mermaid"'
+    assert_not_includes @post.body_html, '<pre lang="ruby" data-controller="mermaid"'
+  end
+
+  test "should not modify non-mermaid code blocks" do
+    @post.body_markdown = <<~MARKDOWN
+      ```ruby
+      puts "Hello World"
+      ```
+
+      ```javascript
+      console.log("Hello World");
+      ```
+    MARKDOWN
+
+    @post.save!
+
+    assert_not_nil @post.body_html
+    assert_includes @post.body_html, '<pre lang="ruby"'
+    assert_includes @post.body_html, '<pre lang="javascript"'
+    assert_not_includes @post.body_html, 'data-controller="mermaid"'
+  end
+
+  test "should handle empty markdown" do
+    @post.body_markdown = ""
+    @post.save!
+
+    assert_nil @post.body_html
+  end
+
+  test "should handle nil markdown" do
+    @post.body_markdown = nil
+    @post.save!
+
+    assert_nil @post.body_html
+  end
 end
