@@ -8,3 +8,30 @@
  *
  * Consider organizing styles into separate files for maintainability.
  */
+
+/* Mermaid diagram styles */
+.mermaid-diagram {
+  display: flex;
+  justify-content: center;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+}
+
+.mermaid-diagram svg {
+  max-width: 100%;
+  height: auto;
+}
+
+pre[lang="mermaid"].mermaid-error {
+  background-color: #fee;
+  border: 1px solid #fcc;
+  border-radius: 4px;
+  padding: 1rem;
+  color: #c33;
+  font-family: monospace;
+}
+
+pre[lang="mermaid"].mermaid-error::before {
+  content: "⚠️ Diagram rendering failed: ";
+  font-weight: bold;
+}
