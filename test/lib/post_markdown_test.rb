@@ -22,7 +22,7 @@ class PostMarkdownTest < ActiveSupport::TestCase
     assert_includes html, "<p>This is a test.</p>"
   end
 
-  test "should add mermaid data-controller to mermaid code blocks" do
+  test "should add mermaid class to mermaid code blocks" do
     markdown = <<~MARKDOWN
       # Test Post
 
@@ -45,9 +45,8 @@ class PostMarkdownTest < ActiveSupport::TestCase
 
     assert_not_nil html
     assert_includes html, 'lang="mermaid"'
-    assert_includes html, 'data-controller="mermaid"'
     assert_includes html, 'class="mermaid"'
-    assert_not_includes html, '<pre lang="ruby" data-controller="mermaid"'
+    assert_not_includes html, '<pre lang="ruby" class="mermaid"'
   end
 
   test "should not modify non-mermaid code blocks" do
@@ -72,7 +71,7 @@ class PostMarkdownTest < ActiveSupport::TestCase
     assert_includes html, '<pre lang="ruby"'
     assert_includes html, '<pre lang="javascript"'
     assert_includes html, '<pre lang="python"'
-    assert_not_includes html, 'data-controller="mermaid"'
+    assert_not_includes html, 'class="mermaid"'
   end
 
   test "should handle multiple mermaid blocks" do
@@ -96,8 +95,8 @@ class PostMarkdownTest < ActiveSupport::TestCase
     html = post_markdown.to_html
 
     assert_not_nil html
-    # Should have two mermaid blocks with data-controller
-    mermaid_blocks = html.scan('data-controller="mermaid"')
+    # Should have two mermaid blocks with class="mermaid"
+    mermaid_blocks = html.scan('class="mermaid"')
     assert_equal 2, mermaid_blocks.length
   end
 

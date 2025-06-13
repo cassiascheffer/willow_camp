@@ -79,7 +79,7 @@ class PostTest < ActiveSupport::TestCase
     assert_includes @post.body_html, "<p>This is a test.</p>"
   end
 
-  test "should add mermaid data-controller to mermaid code blocks" do
+  test "should detect mermaid diagrams and set has_mermaid_diagrams flag" do
     @post.body_markdown = <<~MARKDOWN
       # Test Post
 
@@ -99,14 +99,12 @@ class PostTest < ActiveSupport::TestCase
 
     @post.save!
 
+    assert @post.has_mermaid_diagrams, "Post should detect mermaid diagrams"
     assert_not_nil @post.body_html
     assert_match(/<pre[^>]*lang="mermaid"/, @post.body_html)
-    assert_match(/<pre[^>]*data-controller="mermaid"/, @post.body_html)
-    assert_match(/<pre[^>]*class="mermaid"/, @post.body_html)
-    assert_not_includes @post.body_html, '<pre lang="ruby" data-controller="mermaid"'
   end
 
-  test "should not modify non-mermaid code blocks" do
+  test "should not detect mermaid when only regular code blocks present" do
     @post.body_markdown = <<~MARKDOWN
       ```ruby
       puts "Hello World"
@@ -119,10 +117,10 @@ class PostTest < ActiveSupport::TestCase
 
     @post.save!
 
+    assert_not @post.has_mermaid_diagrams, "Post should not detect mermaid diagrams"
     assert_not_nil @post.body_html
     assert_includes @post.body_html, '<pre lang="ruby"'
     assert_includes @post.body_html, '<pre lang="javascript"'
-    assert_not_includes @post.body_html, 'data-controller="mermaid"'
   end
 
   test "should handle empty markdown" do
@@ -130,6 +128,7 @@ class PostTest < ActiveSupport::TestCase
     @post.save!
 
     assert_nil @post.body_html
+    assert_not @post.has_mermaid_diagrams
   end
 
   test "should handle nil markdown" do
@@ -137,5 +136,6 @@ class PostTest < ActiveSupport::TestCase
     @post.save!
 
     assert_nil @post.body_html
+    assert_not @post.has_mermaid_diagrams
   end
 end

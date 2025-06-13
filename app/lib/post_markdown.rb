@@ -29,10 +29,10 @@ class PostMarkdown
   end
 
   def process_mermaid_blocks(html)
-    # Add mermaid controller to pre elements with mermaid lang
+    # Add mermaid class to pre elements with mermaid lang for JavaScript processing
     html.gsub(/<pre lang="mermaid"([^>]*)>/) do |match|
       attributes = $1
-      %(<pre lang="mermaid"#{attributes} data-controller="mermaid" class="mermaid">)
+      %(<pre lang="mermaid"#{attributes} class="mermaid">)
     end
   end
 end
