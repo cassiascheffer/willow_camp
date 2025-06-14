@@ -1,4 +1,6 @@
 class PostsController < ApplicationController
+  include SecureDomainRedirect
+
   before_action :set_author, only: %i[index show]
   before_action :set_post, only: %i[show]
 
@@ -17,10 +19,7 @@ class PostsController < ApplicationController
   private
 
   def set_author
-    @author = User.find_by(subdomain: request.subdomain)
-    if @author.nil?
-      redirect_to root_url(subdomain: false, allow_other_host: true)
-    end
+    set_author_with_secure_redirect
   end
 
   def set_post

@@ -80,10 +80,15 @@ Rails.application.configure do
   config.active_record.attributes_for_inspect = [:id]
 
   # Enable DNS rebinding protection and other `Host` header attacks.
-  config.hosts = [
-    "willow.camp",     # Allow requests from example.com
-    /.*\.willow\.camp/ # Allow requests from subdomains like `www.example.com`
-  ]
+  # Use a proc to dynamically validate hosts based on database
+  config.hosts = proc do |host|
+    # Always allow main domain and subdomains
+    return true if host == "willow.camp"
+    return true if host.ends_with?(".willow.camp")
+
+    # Allow custom domains that exist in database
+    User.exists?(custom_domain: host)
+  end
   #
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }

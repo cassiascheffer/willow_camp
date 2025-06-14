@@ -39,3 +39,13 @@ page_two:
   published: false
   published_at: 2025-04-27 13:32:14
   slug: "contact"
+
+custom_domain_post:
+  id: "eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"
+  title: "Custom Domain Post"
+  body_markdown: "# Custom Content\n\nThis is custom content."
+  body_html: "<h1>Custom Content</h1>\n<p>This is custom content.</p>"
+  author_id: "33333333-3333-3333-3333-333333333333"
+  published: true
+  published_at: 2025-04-27 13:32:14
+  slug: "custom-domain-post"

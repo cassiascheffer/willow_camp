@@ -1,3 +1,14 @@
+# Constraint class for custom domains and subdomains
+class DomainConstraint
+  def matches?(request)
+    # Allow if it's a subdomain of willow.camp
+    return true if request.host.ends_with?(".willow.camp") && request.subdomain.present?
+    # Allow if it's a custom domain (not willow.camp and has a user)
+    return true if !request.host.ends_with?(".willow.camp") && User.exists?(custom_domain: request.host)
+    false
+  end
+end
+
 Rails.application.routes.draw do
   devise_for :users,
     skip: %i[unlocks passwords confirmations registrations],
@@ -29,7 +40,7 @@ Rails.application.routes.draw do
     resources :tokens, only: %i[create destroy]
   end
 
-  constraints(subdomain: /.+/) do
+  constraints(DomainConstraint.new) do
     # Tags
     get "/tags", to: "tags#index", as: :tags
     get "/t/:tag", to: "tags#show", as: :tag
@@ -47,6 +58,7 @@ Rails.application.routes.draw do
 
   namespace :api do
     resources :posts, only: %i[index show create update destroy], param: :slug
+    get "domain-validation", to: "domain_validation#validate"
   end
 
   get "up" => "rails/health#show", :as => :rails_health_check

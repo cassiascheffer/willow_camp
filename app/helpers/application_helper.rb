@@ -35,7 +35,7 @@ module ApplicationHelper
   end
 
   def blog_title_for(author)
-    return "willow.camp" if author.nil? || author.subdomain.blank?
-    author.blog_title.presence || "#{author.subdomain}.willow.camp"
+    return "willow.camp" if author.nil? || (author.subdomain.blank? && author.custom_domain.blank?)
+    author.blog_title.presence || author.domain || "willow.camp"
   end
 end

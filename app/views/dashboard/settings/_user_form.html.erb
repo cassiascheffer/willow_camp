@@ -44,7 +44,19 @@
       <div class="form-control w-full">
         <%= form.label :subdomain, class: "label" %>
         <%= form.text_field :subdomain, required: true, class: "input input-bordered w-full" %>
+        <div class="text-xs text-gray-500 mt-1">Your blog will be available at <%= user.subdomain %>.willow.camp</div>
       </div>
+      <div class="form-control w-full">
+        <%= form.label :custom_domain, "Custom Domain (optional)", class: "label" %>
+        <%= form.text_field :custom_domain, required: false, placeholder: "myblog.com", class: "input input-bordered w-full" %>
+        <div class="text-xs text-gray-500 mt-1">
+          Use your own domain instead of a subdomain. After saving, add a CNAME record in your DNS settings:<br>
+          <strong>Name:</strong> @ (or your domain) → <strong>Value:</strong> willow.camp<br>
+          SSL certificates will be automatically provisioned!
+        </div>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 gap-4 mb-4">
       <div class="form-control w-full">
         <%= form.label :theme, class: "label" %>
         <%= form.select :theme, options_for_select([["Light", "light"], ["Dark", "dark"], ["Cupcake", "cupcake"], ["Bumblebee", "bumblebee"], ["Emerald", "emerald"], ["Corporate", "corporate"], ["Synthwave", "synthwave"], ["Retro", "retro"], ["Cyberpunk", "cyberpunk"], ["Valentine", "valentine"], ["Halloween", "halloween"], ["Garden", "garden"], ["Forest", "forest"], ["Aqua", "aqua"], ["Lofi", "lofi"], ["Pastel", "pastel"], ["Fantasy", "fantasy"], ["Wireframe", "wireframe"], ["Black", "black"], ["Luxury", "luxury"], ["Dracula", "dracula"], ["CMYK", "cmyk"], ["Autumn", "autumn"], ["Business", "business"], ["Acid", "acid"], ["Lemonade", "lemonade"], ["Night", "night"], ["Coffee", "coffee"], ["Winter", "winter"], ["Dim", "dim"], ["Nord", "nord"], ["Sunset", "sunset"], ["Caramellatte", "caramellatte"], ["Abyss", "abyss"], ["Silk", "silk"]], user.theme), { include_blank: false }, class: "select select-bordered w-full", data: { controller: "theme-preview", action: "change->theme-preview#updateTheme" } %>

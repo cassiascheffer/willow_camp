@@ -21,3 +21,39 @@ two:
   slug: "user-two"
   created_at: <%= 1.week.ago %>
   updated_at: <%= 1.day.ago %>
+
+custom_domain_user:
+  id: "33333333-3333-3333-3333-333333333333"
+  email: custom@example.com
+  encrypted_password: <%= BCrypt::Password.create("password") %>
+  subdomain: customuser
+  custom_domain: myblog.com
+  name: "Custom Domain User"
+  blog_title: "My Custom Blog"
+  theme: "default"
+  slug: "custom-domain-user"
+  created_at: <%= 1.week.ago %>
+  updated_at: <%= 1.day.ago %>
+
+no_blog_title:
+  id: "44444444-4444-4444-4444-444444444444"
+  email: notitle@example.com
+  encrypted_password: <%= BCrypt::Password.create("password") %>
+  subdomain: notitle
+  name: "No Blog Title User"
+  theme: "default"
+  slug: "no-blog-title-user"
+  created_at: <%= 1.week.ago %>
+  updated_at: <%= 1.day.ago %>
+
+custom_domain_no_title:
+  id: "55555555-5555-5555-5555-555555555555"
+  email: customnotitle@example.com
+  encrypted_password: <%= BCrypt::Password.create("password") %>
+  subdomain: customnotitle
+  custom_domain: example.org
+  name: "Custom No Title User"
+  theme: "default"
+  slug: "custom-no-title-user"
+  created_at: <%= 1.week.ago %>
+  updated_at: <%= 1.day.ago %>

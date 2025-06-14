@@ -7,6 +7,8 @@ module Posts
       @user_two = users(:two)
       @post_one = posts(:one) # Published post by user_one
       @post_two = posts(:two) # Unpublished post by user_two
+      @custom_domain_user = users(:custom_domain_user)
+      @custom_domain_post = posts(:custom_domain_post)
 
       # Create another published post for user_two to test author filtering
       @published_post_by_user_two = Post.create!(
@@ -20,9 +22,10 @@ module Posts
       )
 
       # Set up host headers for subdomain-based testing
-      @user_one_host = {host: "#{@user_one.subdomain}.example.com"}
-      @user_two_host = {host: "#{@user_two.subdomain}.example.com"}
-      @nonexistent_host = {host: "nonexistent.example.com"}
+      @user_one_host = {host: "#{@user_one.subdomain}.willow.camp"}
+      @user_two_host = {host: "#{@user_two.subdomain}.willow.camp"}
+      @nonexistent_host = {host: "nonexistent.willow.camp"}
+      @custom_domain_host = {host: @custom_domain_user.custom_domain}
     end
 
     test "should get atom feed for user one" do
@@ -135,6 +138,74 @@ module Posts
       post_titles = json_response["items"].map { |item| item["title"] }
       assert_includes post_titles, @published_post_by_user_two.title
       assert_not_includes post_titles, @post_two.title # This post is unpublished
+    end
+
+    test "should get atom feed with custom domain" do
+      get "/posts/atom", headers: @custom_domain_host
+      assert_response :success
+      assert_equal "application/atom+xml", @response.media_type
+
+      # Check that feed contains only custom domain user's post
+      assert_includes @response.body, @custom_domain_post.title
+      assert_not_includes @response.body, @post_one.title
+    end
+
+    test "should get rss feed with custom domain" do
+      get "/posts/rss", headers: @custom_domain_host
+      assert_response :success
+      assert_equal "application/rss+xml", @response.media_type
+
+      # Check that feed contains only custom domain user's post
+      assert_includes @response.body, @custom_domain_post.title
+      assert_not_includes @response.body, @post_one.title
+    end
+
+    test "should get json feed with custom domain" do
+      get "/posts/json", headers: @custom_domain_host
+      assert_response :success
+      assert_equal "application/json", @response.media_type
+
+      # Parse the JSON response
+      json_response = JSON.parse(@response.body)
+
+      # Check that feed contains only custom domain user's post
+      post_titles = json_response["items"].map { |item| item["title"] }
+      assert_includes post_titles, @custom_domain_post.title
+      assert_not_includes post_titles, @post_one.title
+    end
+
+    test "should redirect atom feed from subdomain to custom domain" do
+      get "/posts/atom", headers: {host: "#{@custom_domain_user.subdomain}.willow.camp"}
+      assert_redirected_to "https://#{@custom_domain_user.custom_domain}/posts/atom"
+    end
+
+    test "should redirect rss feed from subdomain to custom domain" do
+      get "/posts/rss", headers: {host: "#{@custom_domain_user.subdomain}.willow.camp"}
+      assert_redirected_to "https://#{@custom_domain_user.custom_domain}/posts/rss"
+    end
+
+    test "should redirect json feed from subdomain to custom domain" do
+      get "/posts/json", headers: {host: "#{@custom_domain_user.subdomain}.willow.camp"}
+      assert_redirected_to "https://#{@custom_domain_user.custom_domain}/posts/json"
+    end
+
+    test "should not redirect when already on custom domain" do
+      get "/posts/atom", headers: @custom_domain_host
+      assert_response :success
+      # Should not be a redirect
+      assert_not response.redirect?
+    end
+
+    test "should handle case insensitive custom domain" do
+      get "/posts/atom", headers: {host: @custom_domain_user.custom_domain}
+      assert_response :success
+      assert_includes @response.body, @custom_domain_post.title
+    end
+
+    test "should handle subdomain with willow.camp domain" do
+      get "/posts/atom", headers: {host: "#{@user_one.subdomain}.willow.camp"}
+      assert_response :success
+      assert_includes @response.body, @post_one.title
     end
   end
 end
