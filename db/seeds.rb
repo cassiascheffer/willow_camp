@@ -12,16 +12,16 @@
 User.destroy_all
 
 users = [
-  {email_address: "winter@acorn.ca", password: "winter", subdomain: "winter", name: "Winter Solstice"},
-  {email_address: "willow@acorn.ca", password: "willow", subdomain: "willow", name: "Will-o-the-Whisp"}
+  {email: "winter@acorn.ca", password: "winter", subdomain: "winter", name: "Winter Solstice"},
+  {email: "willow@acorn.ca", password: "willow", subdomain: "willow", name: "Will-o-the-Whisp"}
 ]
 
 users.each do |user|
-  user = User.find_or_create_by!(email_address: user[:email_address]) do |u|
+  user = User.find_or_create_by!(email: user[:email]) do |u|
     u.password = user[:password]
     u.subdomain = user[:subdomain]
   end
-  puts "Created user: #{user.email_address} with subdomain: #{user.subdomain}"
+  puts "Created user: #{user.email} with subdomain: #{user.subdomain}"
 
   100.times do
     user.posts.create! do |post|
@@ -34,7 +34,7 @@ users.each do |user|
     print "."
   end
   puts ""
-  puts "Created 100 posts for user: #{user.email_address}"
+  puts "Created 100 posts for user: #{user.email}"
 end
 
 # rubocop:enable Rails/Output
