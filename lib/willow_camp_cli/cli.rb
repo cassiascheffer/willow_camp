@@ -163,23 +163,23 @@ module WillowCampCLI
       return puts "Error: Ghost export file not found: #{ghost_export_file}".red unless File.exist?(ghost_export_file)
 
       puts "🔍 Processing Ghost export file: #{ghost_export_file}...".blue
-      
+
       begin
         # Create output directory if it doesn't exist
         FileUtils.mkdir_p(output_dir) unless Dir.exist?(output_dir)
-        
+
         # Parse JSON export file
         ghost_data = JSON.parse(File.read(ghost_export_file))
-        
+
         posts = ghost_data["db"][0]["data"]["posts"].select { |post| post["status"] == "published" }
-        
+
         if posts.empty?
           puts "❌ No published posts found in the Ghost export".red
           return
         end
-        
+
         puts "Found #{posts.size} published posts".green
-        
+
         # Process each post
         processed_count = 0
         posts.each do |post|
@@ -187,17 +187,19 @@ module WillowCampCLI
           slug = post["slug"]
           published = post["status"] == "published" ? !post["published_at"].nil? : nil
           published_at = post["published_at"]&.split("T")&.first
-          
+
           puts "\n[#{processed_count + 1}/#{posts.size}] Processing '#{title}' (#{slug})".cyan
-          
+
           # Get content from the most appropriate source
           # First try html, then markdown (for test compatibility), then lexical, then plaintext
           content = nil
-          
+
           if post["html"] && !post["html"].empty?
             # Convert HTML to Markdown
             html_content = post["html"]
             content = ReverseMarkdown.convert(html_content)
+            # Clean up malformed links from Ghost cards
+            content = clean_malformed_links(content)
             source = "html converted to markdown"
             puts "  Note: Converting HTML content to markdown".yellow if @verbose
           elsif post["plaintext"] && !post["plaintext"].empty?
@@ -208,40 +210,40 @@ module WillowCampCLI
             puts "  Warning: No content found for post '#{title}'".yellow
             next
           end
-          
+
           # Replace Ghost URL placeholders if present
           content = content.gsub(/__GHOST_URL__/, "")
-          
+
           # Get tags for this post
           tags = []
           if ghost_data["db"][0]["data"]["posts_tags"]
             post_tags = ghost_data["db"][0]["data"]["posts_tags"].select { |pt| pt["post_id"] == post["id"] }
-            
+
             post_tags.each do |pt|
               tag = ghost_data["db"][0]["data"]["tags"].find { |t| t["id"] == pt["tag_id"] }
               tags << tag["name"] if tag
             end
           end
-          
+
           # Get feature image
           feature_image = post["feature_image"]
           feature_image&.gsub!(/__GHOST_URL__/, "")
-          
+
           # Create markdown file with proper frontmatter
           filename = File.join(output_dir, "#{slug}.md")
-          
+
           File.open(filename, "w") do |file|
             file.puts "---"
             file.puts "title: \"#{title}\""
             file.puts "published_at: #{published_at}" if published_at
             file.puts "slug: #{slug}"
             file.puts "published: #{published}" if published
-            
+
             # Add meta description if available
             if post["custom_excerpt"] && !post["custom_excerpt"].empty?
               file.puts "meta_description: \"#{post['custom_excerpt']}\""
             end
-            
+
             # Add tags if available
             unless tags.empty?
               file.puts "tags:"
@@ -249,15 +251,15 @@ module WillowCampCLI
                 file.puts "  - #{tag}"
               end
             end
-            
+
             file.puts "---"
             file.puts
             file.puts content
           end
-          
+
           puts "  ✅ Created: #{filename} (from #{source})".green
           processed_count += 1
-          
+
           # Upload the post if requested
           if @token && !@dry_run
             upload_file(filename)
@@ -265,9 +267,9 @@ module WillowCampCLI
             puts "  DRY RUN: Would upload #{filename}".yellow
           end
         end
-        
+
         puts "\n✅ Conversion complete! #{processed_count} markdown files created in #{output_dir}/".green
-        
+
       rescue JSON::ParserError => e
         puts "❌ Error parsing Ghost export JSON: #{e.message}".red
       rescue => e
@@ -315,6 +317,7 @@ module WillowCampCLI
         opts.separator "  help                Show this help message"
         opts.separator ""
         opts.separator "Options:"
+
 
 
 
@@ -435,6 +438,22 @@ module WillowCampCLI
     end
 
     private
+
+    def clean_malformed_links(content)
+      # Fix malformed links that span multiple lines with extra content
+      # Pattern: [\n\nTITLE\n\nExtra content\n\n ![](image) more text](URL)
+      # Should become: [TITLE](URL)
+      content.gsub(/\[\s*\n\s*\n\s*([^\n]+).*?\]\((https?:\/\/[^\)]+)\)/m) do |match|
+        title = $1.strip
+        url = $2
+
+        if title && !title.empty?
+          "[#{title}](#{url})"
+        else
+          match # Keep original if we can't extract a clean title
+        end
+      end
+    end
 
     def find_markdown_files
       Dir.glob(File.join(@directory, "**", "*.md"))
