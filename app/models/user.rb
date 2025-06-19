@@ -8,24 +8,44 @@ class User < ApplicationRecord
   has_many :tokens, class_name: "UserToken", dependent: :destroy
 
   # Normalizations
-  normalizes :subdomain, with: ->(s) { s.strip.downcase.encode("UTF-8", invalid: :replace, undef: :replace, replace: "") }
-  normalizes :custom_domain, with: ->(s) { s.strip.downcase.encode("UTF-8", invalid: :replace, undef: :replace, replace: "") }
+  normalizes :subdomain, with: ->(s) { s.strip.downcase }
+  normalizes :custom_domain, with: ->(s) { s.strip.downcase }
 
   # Validations
   validates :subdomain,
     uniqueness: true,
-    format: {with: /\A[a-z0-9\-_]+\z/, message: "may only contain letters, numbers, hyphens and underscores"},
+    format: {with: /\A[a-z0-9]+\z/, message: "may only contain letters and numbers"},
     length: {minimum: 3, maximum: 63},
     exclusion: {in: ::ReservedWords::RESERVED_WORDS},
     allow_blank: true
   validates :name, presence: true, length: {maximum: 255}, allow_blank: true
   validates :blog_title, length: {maximum: 255}, allow_blank: true
   validates :site_meta_description, length: {maximum: 255}, allow_blank: true
-  validates :favicon_emoji, presence: true, format: {with: /\A(?:\p{Emoji_Presentation}|\p{Emoji}\uFE0F)\z/u, message: "must be a single emoji"}, allow_blank: true
+  validates :favicon_emoji,
+    presence: true,
+    format: {
+      with: /\A(?:\p{Emoji_Presentation}|\p{Emoji}\uFE0F)\z/u,
+      message: "must be a single emoji"
+    },
+    allow_blank: true
   validates :custom_domain,
     uniqueness: true,
-    format: {with: /\A[a-z0-9\-]+(\.[a-z0-9\-]+)*\.[a-z]{2,}\z/, message: "must be a valid domain name"},
     allow_blank: true
+  validate :custom_domain_format
+
+  # Scopes
+  scope :by_domain, ->(domain) do
+    return none if domain.blank?
+
+    normalized_domain = domain.split(":").first.downcase
+
+    if normalized_domain.ends_with?(".willow.camp")
+      subdomain = normalized_domain.sub(".willow.camp", "")
+      where(subdomain: subdomain) if subdomain.present?
+    else
+      where(custom_domain: normalized_domain)
+    end
+  end
 
   # Domain helper methods
   def domain
@@ -38,25 +58,22 @@ class User < ApplicationRecord
     custom_domain.present?
   end
 
+  # TODO: not a model concern
   def should_redirect_to_custom_domain?(current_host)
     return false unless uses_custom_domain?
     current_host != custom_domain
   end
 
-  def self.find_by_domain(domain)
-    return nil if domain.blank?
+  private
 
-    # Normalize domain (remove port, convert to lowercase)
-    normalized_domain = domain.split(":").first.downcase
+  def custom_domain_format
+    return if custom_domain.blank?
 
-    # First try to find by custom domain
-    user = find_by(custom_domain: normalized_domain)
-    return user if user.present?
-
-    # Then try subdomain if it's a willow.camp domain
-    if normalized_domain.ends_with?(".willow.camp")
-      subdomain = normalized_domain.sub(".willow.camp", "")
-      find_by(subdomain: subdomain) if subdomain.present?
+    domain_to_check = custom_domain.to_s.downcase.strip.chomp(".")
+    double_dots = domain_to_check.include?("..")
+    control_chars = domain_to_check.match?(/[[:cntrl:]]/)
+    if double_dots || control_chars || !PublicSuffix.valid?(domain_to_check)
+      errors.add(:custom_domain, "must be a valid domain name")
     end
   end
 end

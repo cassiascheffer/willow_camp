@@ -36,13 +36,13 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "subdomain should be valid format" do
-    valid_subdomains = %w[myuser test-blog my_blog 123 a-b-c]
+    valid_subdomains = %w[myuser testblog myblog 123 abc]
     valid_subdomains.each do |valid_subdomain|
       @user.subdomain = valid_subdomain
       assert @user.valid?, "#{valid_subdomain} should be valid"
     end
 
-    invalid_subdomains = %w[user! test@blog my.blog space\ here <script>]
+    invalid_subdomains = %w[user! test@blog my.blog space\ here <script> test-blog my_blog a-b-c]
     invalid_subdomains.each do |invalid_subdomain|
       @user.subdomain = invalid_subdomain
       assert_not @user.valid?, "#{invalid_subdomain} should be invalid"
@@ -135,7 +135,7 @@ class UserTest < ActiveSupport::TestCase
       assert @user.valid?, "#{valid_domain} should be valid"
     end
 
-    invalid_domains = %w[invalid localhost example .com example. example..com example.c]
+    invalid_domains = %w[invalid localhost example .com example. example..com]
     invalid_domains.each do |invalid_domain|
       @user.custom_domain = invalid_domain
       assert_not @user.valid?, "#{invalid_domain} should be invalid"
@@ -182,29 +182,29 @@ class UserTest < ActiveSupport::TestCase
     assert_not @user.should_redirect_to_custom_domain?("one.willow.camp")
   end
 
-  test "find_by_domain finds user by custom domain" do
-    found_user = User.find_by_domain("myblog.com")
+  test "by_domain finds user by custom domain" do
+    found_user = User.by_domain("myblog.com").first
     assert_equal @custom_domain_user, found_user
   end
 
-  test "find_by_domain finds user by subdomain" do
-    found_user = User.find_by_domain("one.willow.camp")
+  test "by_domain finds user by subdomain" do
+    found_user = User.by_domain("one.willow.camp").first
     assert_equal @user, found_user
   end
 
-  test "find_by_domain returns nil for non-existent domain" do
-    found_user = User.find_by_domain("nonexistent.com")
+  test "by_domain returns nil for non-existent domain" do
+    found_user = User.by_domain("nonexistent.com").first
     assert_nil found_user
   end
 
-  test "find_by_domain returns nil for non-willow.camp domain without custom domain" do
-    found_user = User.find_by_domain("random.com")
+  test "by_domain returns nil for non-willow.camp domain without custom domain" do
+    found_user = User.by_domain("random.com").first
     assert_nil found_user
   end
 
-  test "find_by_domain prioritizes custom domain over subdomain" do
+  test "by_domain prioritizes custom domain over subdomain" do
     # When searching for custom domain, should find the user with custom domain
-    found_user = User.find_by_domain("myblog.com")
+    found_user = User.by_domain("myblog.com").first
     assert_equal @custom_domain_user, found_user
   end
 end

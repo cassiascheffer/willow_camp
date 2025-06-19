@@ -64,7 +64,7 @@ module SecureDomainRedirect
   end
 
   def set_author_with_secure_redirect
-    @author = User.find_by_domain(request.host)
+    @author = User.by_domain(request.host).first
 
     if @author.nil?
       redirect_to root_url(subdomain: false), allow_other_host: true

@@ -48,6 +48,7 @@ gem "friendly_id"
 gem "front_matter_parser"
 gem "honeybadger"
 gem "pagy"
+gem "public_suffix"
 gem "tailwindcss-rails"
 gem "tailwindcss-ruby"
 

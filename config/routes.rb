@@ -1,10 +1,17 @@
 # Constraint class for custom domains and subdomains
+
 class DomainConstraint
   def matches?(request)
+    host = request.host.split(":").first.downcase
+
     # Allow if it's a subdomain of willow.camp
-    return true if request.host.ends_with?(".willow.camp") && request.subdomain.present?
+    return true if host.ends_with?(".willow.camp") && request.subdomain.present?
+
     # Allow if it's a custom domain (not willow.camp and has a user)
-    return true if !request.host.ends_with?(".willow.camp") && User.exists?(custom_domain: request.host)
+    if !host.ends_with?(".willow.camp")
+      return User.by_domain(host).exists?
+    end
+
     false
   end
 end

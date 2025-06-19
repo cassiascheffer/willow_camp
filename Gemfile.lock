@@ -476,6 +476,7 @@ DEPENDENCIES
   pagy
   pg (~> 1.1)
   propshaft
+  public_suffix
   puma (>= 5.0)
   rails (~> 8.0.2)
   rails-controller-testing
