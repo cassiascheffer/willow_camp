@@ -83,8 +83,8 @@ Rails.application.configure do
   # Use a proc to dynamically validate hosts based on database
   config.hosts = proc do |host|
     # Always allow main domain and subdomains
-    return true if host == "willow.camp"
-    return true if host.ends_with?(".willow.camp")
+    next true if host == "willow.camp"
+    next true if host.ends_with?(".willow.camp")
 
     # Allow custom domains that exist in database
     User.exists?(custom_domain: host)
