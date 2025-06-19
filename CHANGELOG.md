@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.1.14] - 2025-06-19
+
+- better handling of code fences in ghost
+
 ## [0.1.13] - 2025-06-18
 
 - handle code fences in ghost

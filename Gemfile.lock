@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    willow_camp_cli (0.1.13)
+    willow_camp_cli (0.1.14)
       colorize (~> 0.8.1)
       fileutils (~> 1.0)
       json (~> 2.0)
