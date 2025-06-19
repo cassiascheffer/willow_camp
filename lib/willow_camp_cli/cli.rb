@@ -197,7 +197,9 @@ module WillowCampCLI
           if post["html"] && !post["html"].empty?
             # Convert HTML to Markdown
             html_content = post["html"]
-            content = ReverseMarkdown.convert(html_content)
+            content = ReverseMarkdown.convert(html_content, github_flavored: true, code_block_style: :fenced)
+            # Preserve language attributes from code blocks
+            content = preserve_code_fence_languages(html_content, content)
             # Clean up malformed links from Ghost cards
             content = clean_malformed_links(content)
             source = "html converted to markdown"
@@ -438,6 +440,51 @@ module WillowCampCLI
     end
 
     private
+
+    def preserve_code_fence_languages(html_content, markdown_content)
+      # Extract language information from HTML code blocks
+      languages = []
+      html_content.scan(/<pre><code[^>]*class="language-([^"]+)"[^>]*>/i) do |match|
+        languages << match[0]
+      end
+
+      return markdown_content if languages.empty?
+
+      # Split content into lines and process
+      lines = markdown_content.lines
+      result_lines = []
+      code_block_index = 0
+      in_code_block = false
+
+      i = 0
+      while i < lines.length
+        line = lines[i]
+
+        # Check if this line is a code fence
+        if line.strip == '```'
+          if !in_code_block
+            # This is an opening code fence
+            if code_block_index < languages.length
+              result_lines << "```#{languages[code_block_index]}\n"
+              code_block_index += 1
+            else
+              result_lines << line
+            end
+            in_code_block = true
+          else
+            # This is a closing code fence
+            result_lines << line
+            in_code_block = false
+          end
+        else
+          result_lines << line
+        end
+
+        i += 1
+      end
+
+      result_lines.join
+    end
 
     def clean_malformed_links(content)
       # Fix malformed links that span multiple lines with extra content
