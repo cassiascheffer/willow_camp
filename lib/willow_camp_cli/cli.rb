@@ -200,6 +200,10 @@ module WillowCampCLI
             content = ReverseMarkdown.convert(html_content, github_flavored: true, code_block_style: :fenced)
             # Preserve language attributes from code blocks
             content = preserve_code_fence_languages(html_content, content)
+            # Decode HTML entities
+            content = decode_html_entities(content)
+            # Clean up code formatting issues
+            content = clean_code_formatting(content)
             # Clean up malformed links from Ghost cards
             content = clean_malformed_links(content)
             source = "html converted to markdown"
@@ -440,6 +444,24 @@ module WillowCampCLI
     end
 
     private
+
+    def decode_html_entities(content)
+      # Decode common HTML entities
+      content.gsub!(/&amp;/, '&')
+      content.gsub!(/&lt;/, '<')
+      content.gsub!(/&gt;/, '>')
+      content.gsub!(/&quot;/, '"')
+      content.gsub!(/&#39;/, "'")
+      content.gsub!(/&nbsp;/, ' ')
+      content
+    end
+
+    def clean_code_formatting(content)
+      # Fix common formatting issues in code blocks
+      # Remove extra spaces before parentheses in function definitions
+      content.gsub!(/def\s+(\w+)\s+\(/, 'def \1(')
+      content
+    end
 
     def preserve_code_fence_languages(html_content, markdown_content)
       # Extract language information from HTML code blocks
