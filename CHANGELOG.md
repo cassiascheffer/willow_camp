@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.1.13] - 2025-06-18
+
+- handle code fences in ghost
+- handle broken links from ghost
+
 ## [0.1.12] - 2025-05-26
 
 - debug gem publishing
