@@ -28,7 +28,7 @@
     <%= render partial: post_partial, object: @post %>
   </article>
   <% if @post.tags.any? %>
-    <nav class="text-sm text-base-content/70 mb-6" aria-label="Post tags">
+    <nav class="text-sm text-base-content/70 my-8" aria-label="Post tags">
       Tagged:
       <% @post.tags.each do |tag| %>
         <%= link_to tag.name, tag_path(tag.slug), class: "badge badge-ghost badge-sm hover:badge-primary ml-2", aria: { label: "Tag: #{tag.name}" } %>
