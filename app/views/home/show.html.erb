@@ -1,14 +1,14 @@
 <div class="hero min-h-screen bg-base-100">
-  <div class="hero-content text-center">
-    <div class="max-w-md">
+  <div class="hero-content text-center px-4">
+    <div class="max-w-md w-full">
       <h1 class="text-5xl font-bold text-primary">willow.camp</h1>
       <h2 class="text-xl font-light py-6 text-base-content/70">A place to stash your things</h2>
       <p class="mb-8 text-base-content/60">Writing, Reading, & Bookmarking</p>
       <p class="mb-8 text-base-content/60">Made by <a href="https://enumerator.dev">Cassia</a></p>
-      <div class="flex gap-4 justify-center">
-        <%= link_to "Sign In", new_user_session_path, class: "btn btn-primary btn-lg" %>
-        <div class="tooltip tooltip-bottom" data-tip="Coming soon">
-          <button class="btn btn-outline btn-lg cursor-not-allowed opacity-60" disabled>
+      <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center">
+        <%= link_to "Sign In", new_user_session_path, class: "btn btn-primary btn-lg w-full sm:w-auto" %>
+        <div class="tooltip tooltip-bottom w-full sm:w-auto" data-tip="Coming soon">
+          <button class="btn btn-outline btn-lg cursor-not-allowed opacity-60 w-full" disabled>
             Sign Up
           </button>
         </div>
