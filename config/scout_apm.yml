@@ -10,6 +10,9 @@ common: &defaults
   # - Default: 'info'
   # - Valid Options: debug, info, warn, error
   # log_level: debug
+  #
+  logs_monitor: true
+  logs_ingest_key: <%= ENV['SCOUT_LOGS_INGEST_KEY'] %>
 
   # use_prepend: Use the newer `prepend` instrumentation method. In some cases, gems
   #              that use `alias_method` can conflict with gems that use `prepend`.
@@ -39,10 +42,13 @@ production:
 development:
   <<: *defaults
   monitor: false
+  logs_monitor: false
 
 test:
   <<: *defaults
   monitor: false
+  logs_monitor: false
 
 staging:
   <<: *defaults
+  logs_monitor: false

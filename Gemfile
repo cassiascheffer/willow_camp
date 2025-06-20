@@ -52,6 +52,7 @@ gem "public_suffix"
 gem "tailwindcss-rails"
 gem "tailwindcss-ruby"
 gem "scout_apm"
+gem "scout_apm_logging"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
