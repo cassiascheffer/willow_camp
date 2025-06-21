@@ -4,6 +4,11 @@ class DomainConstraint
   def matches?(request)
     host = request.host.split(":").first.downcase
 
+    # In local environments (dev/test), be permissive - allow any subdomain if user exists
+    if Rails.env.local?
+      return true if request.subdomain.present? && User.exists?(subdomain: request.subdomain)
+    end
+
     # Allow if it's a subdomain of willow.camp
     return true if host.ends_with?(".willow.camp") && request.subdomain.present?
 
@@ -18,7 +23,6 @@ end
 
 Rails.application.routes.draw do
   devise_for :users,
-    skip: %i[unlocks passwords confirmations registrations],
     path_names: {
       sign_in: "login",
       sign_out: "logout",
@@ -45,6 +49,7 @@ Rails.application.routes.draw do
     resources :posts, except: %i[index show], param: :slug
     resources :users, only: %i[edit update]
     resources :tokens, only: %i[create destroy]
+    resource :subdomain, only: %i[update]
   end
 
   constraints(DomainConstraint.new) do

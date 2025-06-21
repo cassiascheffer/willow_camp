@@ -46,11 +46,13 @@ gem "better_html"
 gem "commonmarker"
 gem "friendly_id"
 gem "front_matter_parser"
-gem "honeybadger"
 gem "pagy"
 gem "public_suffix"
 gem "tailwindcss-rails"
 gem "tailwindcss-ruby"
+
+# APM and Logs
+gem "honeybadger"
 gem "scout_apm"
 gem "scout_apm_logging"
 

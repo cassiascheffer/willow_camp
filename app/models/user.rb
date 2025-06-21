@@ -42,6 +42,9 @@ class User < ApplicationRecord
     if normalized_domain.ends_with?(".willow.camp")
       subdomain = normalized_domain.sub(".willow.camp", "")
       where(subdomain: subdomain) if subdomain.present?
+    elsif Rails.env.local? && normalized_domain.ends_with?(".localhost")
+      subdomain = normalized_domain.sub(".localhost", "")
+      where(subdomain: subdomain) if subdomain.present?
     else
       where(custom_domain: normalized_domain)
     end
