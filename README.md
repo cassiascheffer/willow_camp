@@ -7,7 +7,6 @@ A blogging platform built with Ruby on Rails. Supports subdomains, custom domain
 - Blog post interface with pagination
 - DaisyUI theme picker
 - Markdown posts with YAML frontmatter
-- SEO-friendly URLs
 - API for post management
 - CLI for post management: [@cassiascheffer/willow_camp_cli](https://github.com/cassiascheffer/willow_camp_cli)
 
