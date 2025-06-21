@@ -7,7 +7,7 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     @custom_domain_user = users(:custom_domain_user)
     @custom_domain_post = posts(:custom_domain_post)
 
-    host = "#{@user.subdomain}.example.com"
+    host = "#{@user.subdomain}.willow.camp"
     @headers = {host: host}
   end
 
