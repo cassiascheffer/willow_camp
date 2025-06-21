@@ -1,4 +1,4 @@
-<div class="hero min-h-screen bg-base-100">
+<div class="hero min-h-[67vh] bg-base-100">
   <div class="hero-content text-center px-4">
     <div class="max-w-md w-full">
       <h1 class="text-5xl font-bold text-primary mb-6">⛺ willow.camp</h1>
@@ -9,6 +9,188 @@
         <%= link_to "Sign Up", new_user_registration_path, class: "btn btn-secondary btn-lg w-full sm:w-auto" %>
       </div>
       <p class="my-8 text-base-content/60">Made by <a href="https://enumerator.dev" class="link">Cassia</a> • <a href="mailto:hello@enumerator.dev" class="link">Get in touch</a></p>
+    </div>
+  </div>
+</div>
+<div class="py-16">
+  <div class="container mx-auto px-4 max-w-4xl">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-bold text-primary mb-4">API Documentation</h2>
+      <div class="flex justify-center">
+        <a href="https://rubygems.org/gems/willow_camp_cli" class="btn btn-outline btn-primary" target="_blank">
+          CLI Tool on RubyGems
+        </a>
+      </div>
+    </div>
+    <p class="my-8 text-base-content/60">willow.camp is designed around an API for syncing your markdown files. You can import and export your content using the CLI tool or API. Your posts belong to you after all.</p>
+    <!-- Table of Contents -->
+    <div class="mb-8">
+      <h3 class="text-xl font-semibold mb-4 text-primary">Contents</h3>
+      <ul class="space-y-2">
+        <li><a href="#authentication" class="link">Authentication</a></li>
+        <li><a href="#endpoints" class="link">API Endpoints</a></li>
+        <li><a href="#examples" class="link">Example Usage</a></li>
+        <li><a href="#error-handling" class="link">Error Handling</a></li>
+        <li><a href="#markdown-format" class="link">Markdown Format</a></li>
+      </ul>
+    </div>
+    <div class="prose prose-sm md:prose-base max-w-none">
+      <h3 id="authentication">Authentication</h3>
+      <p>All API endpoints require authentication using a bearer token. Get your API key from the Settings page after signing in.</p>
+      <pre><code>Authorization: Bearer your-api-token</code></pre>
+      <h3 id="endpoints">API Endpoints</h3>
+      <div class="space-y-6">
+        <div>
+          <h4>List Posts</h4>
+          <pre><code>GET /api/posts</code></pre>
+          <p>Returns all posts belonging to the authenticated user.</p>
+          <div class="collapse collapse-arrow">
+            <input type="checkbox">
+            <div class="collapse-title text-sm font-medium">cURL Example</div>
+            <div class="collapse-content">
+              <pre><code>curl -X GET https://yourblog.example.com/api/posts \
+  -H "Authorization: Bearer your-api-token"</code></pre>
+            </div>
+          </div>
+          <div class="collapse collapse-arrow">
+            <input type="checkbox">
+            <div class="collapse-title text-sm font-medium">Response Format</div>
+            <div class="collapse-content">
+              <pre><code>{
+    "posts": [
+      {
+        "id": 1,
+        "slug": "my-awesome-post",
+        "markdown": "---\ntitle: My Awesome Post\n---\n# Content"
+      }
+    ]
+  }</code></pre>
+            </div>
+          </div>
+        </div>
+        <div>
+          <h4>Get a Post</h4>
+          <pre><code>GET /api/posts/:slug</code></pre>
+          <p>Returns a specific post by its slug.</p>
+          <div class="collapse collapse-arrow">
+            <input type="checkbox">
+            <div class="collapse-title text-sm font-medium">cURL Example</div>
+            <div class="collapse-content">
+              <pre><code>curl -X GET https://yourblog.example.com/api/posts/my-awesome-post \
+  -H "Authorization: Bearer your-api-token"</code></pre>
+            </div>
+          </div>
+          <div class="collapse collapse-arrow">
+            <input type="checkbox">
+            <div class="collapse-title text-sm font-medium">Response Format</div>
+            <div class="collapse-content">
+              <pre><code>{
+    "post": {
+      "id": 1,
+      "slug": "my-awesome-post",
+      "markdown": "---\ntitle: My Awesome Post\n---\n# Content"
+    }
+  }</code></pre>
+            </div>
+          </div>
+        </div>
+        <div>
+          <h4>Create a Post</h4>
+          <pre><code>POST /api/posts</code></pre>
+          <p>Creates a new post with Markdown content and YAML frontmatter.</p>
+          <div class="collapse collapse-arrow">
+            <input type="checkbox">
+            <div class="collapse-title text-sm font-medium">cURL Example</div>
+            <div class="collapse-content">
+              <pre><code>curl -X POST https://yourblog.example.com/api/posts \
+  -H "Authorization: Bearer your-api-token" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "post": {
+      "markdown": "---\ntitle: My New Post\npublished: true\n---\n# Hello World"
+    }
+  }'</code></pre>
+            </div>
+          </div>
+          <div class="collapse collapse-arrow">
+            <input type="checkbox">
+            <div class="collapse-title text-sm font-medium">Request Format</div>
+            <div class="collapse-content">
+              <pre><code>{
+  "post": {
+    "markdown": "---\ntitle: My New Post\npublished: true\n---\n# Content here"
+  }
+}</code></pre>
+            </div>
+          </div>
+        </div>
+        <div>
+          <h4>Update a Post</h4>
+          <pre><code>PATCH /api/posts/:slug</code></pre>
+          <p>Updates an existing post.</p>
+          <div class="collapse collapse-arrow">
+            <input type="checkbox">
+            <div class="collapse-title text-sm font-medium">cURL Example</div>
+            <div class="collapse-content">
+              <pre><code>curl -X PATCH https://yourblog.example.com/api/posts/my-awesome-post \
+  -H "Authorization: Bearer your-api-token" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "post": {
+      "markdown": "---\ntitle: Updated Post Title\npublished: true\n---\n# Updated content"
+    }
+  }'</code></pre>
+            </div>
+          </div>
+        </div>
+        <div>
+          <h4>Delete a Post</h4>
+          <pre><code>DELETE /api/posts/:slug</code></pre>
+          <p>Deletes a post. Returns 204 on success.</p>
+          <div class="collapse collapse-arrow">
+            <input type="checkbox">
+            <div class="collapse-title text-sm font-medium">cURL Example</div>
+            <div class="collapse-content">
+              <pre><code>curl -X DELETE https://yourblog.example.com/api/posts/my-awesome-post \
+  -H "Authorization: Bearer your-api-token"</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+      <h3 id="examples">Example Usage</h3>
+      <h4>Creating a post with cURL</h4>
+      <pre><code>curl -X POST https://yourblog.example.com/api/posts \
+  -H "Authorization: Bearer your-api-token" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "post": {
+      "markdown": "---\ntitle: API Created Post\npublished: true\n---\n# Hello World"
+    }
+  }'</code></pre>
+      <h3 id="error-handling">Error Handling</h3>
+      <p><strong>401 Unauthorized:</strong> Missing or invalid authentication token</p>
+      <pre><code>{ "error": "Unauthorized" }</code></pre>
+      <p><strong>403 Forbidden:</strong> Attempting to access another user's post</p>
+      <pre><code>{ "error": "You don't have permission to access this post" }</code></pre>
+      <p><strong>404 Not Found:</strong> Post does not exist</p>
+      <pre><code>{ "error": "Post not found" }</code></pre>
+      <p><strong>422 Unprocessable Entity:</strong> Validation errors</p>
+      <pre><code>{ "errors": ["Title can't be blank"] }</code></pre>
+      <h3 id="markdown-format">Markdown Format</h3>
+      <p>Posts use Markdown with YAML frontmatter for metadata:</p>
+      <pre><code>---
+title: My Awesome Post
+description: This is a great post
+published: true
+date: 2023-05-25
+tags:
+  - rails
+  - ruby
+---
+
+# Post content starts here
+
+Regular markdown content goes here...</code></pre>
     </div>
   </div>
 </div>
