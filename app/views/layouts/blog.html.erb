@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html data-theme="<%= @author&.theme || "light" %>" data-controller="favicon" data-favicon-emoji-value="<%= @author&.favicon_emoji || "⛺" %>">
+  <head>
+    <title>
+      <%= content_for(:title) || blog_title_for(@author) %>
+    </title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <!-- Open Graph meta tags for social media sharing -->
+    <meta property="og:title" content="<%= content_for(:og_title) || content_for(:title) || blog_title_for(@author) %>">
+    <meta property="og:description" content="<%= content_for(:og_description) || content_for(:description) || "A blog powered by willow.camp" %>">
+    <meta property="og:type" content="<%= content_for(:og_type) || "website" %>">
+    <meta property="og:url" content="<%= request.original_url %>">
+    <meta property="og:site_name" content="<%= blog_title_for(@author) %>">
+    <meta property="og:locale" content="en_CA">
+    <!-- Twitter Card meta tags -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="<%= content_for(:og_title) || content_for(:title) || blog_title_for(@author) %>">
+    <meta name="twitter:description" content="<%= content_for(:og_description) || content_for(:description) || "A blog powered by willow.camp" %>">
+    <%= yield :head %>
+    <% if @author %>
+      <%# RSS feed discovery link %>
+      <%= auto_discovery_link_tag(:rss, posts_rss_url(format: :rss, subdomain: @author.subdomain), title: "#{blog_title_for(@author)} RSS Feed") %>
+      <%# Atom feed discovery link %>
+      <%= auto_discovery_link_tag(:atom, posts_atom_url(format: :atom, subdomain: @author.subdomain), title: "#{blog_title_for(@author)} Atom Feed") %>
+      <%# JSON feed discovery link %>
+      <link type="application/feed+json" rel="alternate" href="<%= posts_json_url(format: :json, subdomain: @author.subdomain) %>" title="<%= blog_title_for(@author) %> JSON Feed">
+    <% end %>
+    <!-- Favicon will be set dynamically by JS -->
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+  <body class="font-mono">
+    <header class="navbar bg-base-100 shadow-md w-full px-8">
+      <div class="navbar-start">
+        <a href="/" class="text-xl font-bold hover:text-primary transition-colors" aria-label="Home">
+          <%= blog_title_for(@author) %>
+        </a>
+      </div>
+      <div class="navbar-end">
+        <nav class="space-x-4">
+          <% if @author.pages.present? %>
+            <% @author.pages.each do |page| %>
+              <a href="<%= post_path(page) %>" class="link link-hover font-medium" aria-label="<%= page.title %>">
+                <%= page.title %>
+              </a>
+            <% end %>
+          <% end %>
+          <a href="<%= posts_rss_path(format: :rss) %>" class="link link-hover font-medium" title="RSS Feed" aria-label="RSS Feed">
+            RSS
+          </a>
+        </nav>
+      </div>
+    </header>
+    <main class="max-w-3xl mx-auto p-8">
+      <%= yield %>
+    </main>
+    <footer class="footer p-4 bg-base-200 text-base-content">
+      <% if @author.present? %>
+        <div class="container mx-auto text-center">
+          <p>Made with <a href="https://willow.camp">willow.camp</a></p>
+        </div>
+      <% end %>
+    </footer>
+  </body>
+</html>
