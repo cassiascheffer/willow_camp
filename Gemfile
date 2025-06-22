@@ -46,6 +46,8 @@ gem "better_html"
 gem "commonmarker"
 gem "friendly_id"
 gem "front_matter_parser"
+gem "loops_sdk", "~> 1.2"
+gem "marksmith", "~> 0.4.5"
 gem "pagy"
 gem "public_suffix"
 gem "tailwindcss-rails"
@@ -84,5 +86,3 @@ group :test do
   gem "selenium-webdriver"
   gem "rails-controller-testing"
 end
-
-gem "marksmith", "~> 0.4.5"
