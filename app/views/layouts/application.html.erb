@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-theme="light">
+<html data-theme="light" data-controller="favicon" data-favicon-emoji-value="⛺">
   <head>
     <title>
       "willow.camp | A blogging platform"
@@ -21,15 +21,15 @@
     <meta name="twitter:title" content="willow.camp | A blogging platform">
     <meta name="twitter:description" content="willow.camp is a small blogging platform for people who like to write.">
     <%= yield :head %>
-    <!-- Favicon will be set dynamically by JS -->
-    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
-    <%= javascript_importmap_tags %>
-  </head>
-  <body class="font-mono">
-    <main class="max-w-3xl mx-auto p-8">
-      <%= yield %>
-    </main>
-    <footer class="footer p-4 bg-base-200 text-base-content">
-    </footer>
-  </body>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⛺</text></svg>">
+  <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+  <%= javascript_importmap_tags %>
+</head>
+<body class="font-mono">
+  <main class="max-w-3xl mx-auto p-8">
+    <%= yield %>
+  </main>
+  <footer class="footer p-4 bg-base-200 text-base-content">
+  </footer>
+</body>
 </html>
