@@ -1,5 +1,6 @@
 class PostsController < ApplicationController
   include SecureDomainRedirect
+  layout "blog"
 
   before_action :set_author, only: %i[index show]
   before_action :set_post, only: %i[show]

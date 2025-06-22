@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_14_145329) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_21_231535) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -106,6 +106,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_14_145329) do
     t.string "current_sign_in_ip"
     t.string "last_sign_in_ip"
     t.string "custom_domain"
+    t.string "confirmation_token"
+    t.datetime "confirmed_at"
+    t.datetime "confirmation_sent_at"
+    t.string "unconfirmed_email"
     t.index ["custom_domain"], name: "index_users_on_custom_domain", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true

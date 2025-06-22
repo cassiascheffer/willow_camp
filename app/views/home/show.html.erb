@@ -1,14 +1,17 @@
-<div class="hero min-h-[67vh] bg-base-100">
+<div class="hero border-b-2 border-base-300">
   <div class="hero-content text-center px-4">
     <div class="max-w-md w-full">
-      <h1 class="text-3xl sm:text-5-xl font-bold text-primary mb-6">⛺ willow.camp</h1>
+      <h1 class="text-4xl sm:text-5-xl font-bold text-primary mb-6">⛺ willow.camp</h1>
       <h2 class="text-xl font-light mb-8 text-base-content/70">A blogging platform</h2>
+      <div class="mb-8 card prose">
+        <p>Custom Themes, favicons, and domains. Import & Export in Markdown.</p>
+      </div>
       <p class="mb-8 text-base-content/60">Coming soon: RSS feeds and bookmarks.</p>
       <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center">
         <%= link_to "Sign In", new_user_session_path, class: "btn btn-primary btn-lg w-full sm:w-auto" %>
         <%= link_to "Sign Up", new_user_registration_path, class: "btn btn-secondary btn-lg w-full sm:w-auto" %>
       </div>
-      <p class="my-8 text-base-content/60">Made by <a href="https://enumerator.dev" class="link">Cassia</a> • <a href="https://letterbird.co/cassia" class="link">Get in touch</a></p>
+      <p class="my-8 text-base-content/60 text-sm">Made by <a href="https://enumerator.dev" class="link">Cassia</a> • <a href="https://letterbird.co/cassia" class="link">Get in touch</a></p>
     </div>
   </div>
 </div>
