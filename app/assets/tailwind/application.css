@@ -5,3 +5,5 @@
 }
 /* Import modular component CSS files */
 @import "../stylesheets/components/_pagy.css";
+@import "https://cdn.jsdelivr.net/npm/choices.js@10.2.0/public/assets/styles/choices.min.css";
+@import "../stylesheets/components/_tag_selector.css";

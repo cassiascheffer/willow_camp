@@ -73,6 +73,16 @@ class User < ApplicationRecord
     current_host != custom_domain
   end
 
+  # Get all unique tags used by this user across all their posts
+  def existing_tags
+    ActsAsTaggableOn::Tag.joins(:taggings)
+      .where(taggings: {taggable_type: "Post", context: "tags"})
+      .where(taggings: {taggable_id: posts.select(:id)})
+      .distinct
+      .pluck(:name)
+      .sort
+  end
+
   private
 
   def custom_domain_format

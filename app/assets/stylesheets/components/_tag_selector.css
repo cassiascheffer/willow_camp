@@ -1,0 +1,299 @@
+/*
+Tag Selector - Choices.js with DaisyUI 5.x styling
+credit: https://github.com/saadeghi/daisyui/discussions/2817
+*/
+
+.choices {
+  position: relative;
+  margin-bottom: 24px;
+}
+
+.choices__inner {
+  display: flex;
+  vertical-align: top;
+  min-height: 3rem;
+  padding: 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  border-radius: var(--rounded-btn, 0.5rem);
+  border-width: 1px;
+  border-color: hsl(var(--bc) / 0.2);
+  background-color: hsl(var(--b1));
+  color: hsl(var(--bc));
+  width: 100%;
+  overflow: hidden;
+  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.choices.is-focused .choices__inner,
+.choices.is-open .choices__inner {
+  outline: 2px solid hsl(var(--p));
+  outline-offset: 2px;
+  border-color: hsl(var(--p));
+}
+
+.choices__list {
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+}
+
+.choices__list--multiple {
+  display: inline;
+}
+
+.choices__list--multiple .choices__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  vertical-align: middle;
+  border-radius: var(--rounded-badge, 1.9rem);
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  margin-right: 0.25rem;
+  margin-bottom: 0.25rem;
+  background-color: hsl(var(--p));
+  color: hsl(var(--pc));
+  border: 1px solid hsl(var(--p));
+  word-break: break-all;
+  box-sizing: border-box;
+  white-space: nowrap;
+}
+
+.choices__list--multiple .choices__item[data-deletable] {
+  padding-right: 0.25rem;
+}
+
+.choices__list--multiple .choices__item.is-highlighted {
+  background-color: hsl(var(--p) / 0.8);
+  border: 1px solid hsl(var(--p) / 0.8);
+}
+
+.choices__button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 0.25rem;
+  padding: 0;
+  border: 0;
+  background-color: transparent;
+  background-image: none;
+  width: 1rem;
+  height: 1rem;
+  text-indent: -9999px;
+  appearance: none;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+}
+
+.choices__button:hover,
+.choices__button:focus {
+  opacity: 1;
+  background-color: hsl(var(--er) / 0.2);
+}
+
+.choices__button:before {
+  content: "×";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.875rem;
+  color: hsl(var(--pc));
+  text-indent: 0;
+  line-height: 1;
+  font-weight: bold;
+}
+
+.choices__input {
+  display: inline-block;
+  vertical-align: baseline;
+  background-color: transparent;
+  border: 0;
+  border-radius: 0;
+  max-width: 100%;
+  padding: 0.25rem 0 0.25rem 0.125rem;
+  font-size: 0.875rem;
+  min-height: 1.25rem;
+  outline: 0;
+  color: hsl(var(--bc));
+}
+
+.choices__input:focus {
+  outline: 0;
+}
+
+.choices__input::placeholder {
+  color: hsl(var(--bc) / 0.5);
+}
+
+.choices[data-type*="select-multiple"] .choices__input {
+  background-color: transparent;
+  margin: 0;
+}
+
+.choices__placeholder.choices__item {
+  color: hsl(var(--bc) / 0.5);
+  opacity: 0.5;
+}
+
+/* Dropdown */
+.choices__list--dropdown {
+  position: absolute;
+  top: 100%;
+  z-index: 1000;
+  width: 100%;
+  background-color: hsl(var(--b1));
+  border: 1px solid hsl(var(--bc) / 0.2);
+  border-top: 0;
+  border-radius: 0 0 var(--rounded-btn, 0.5rem) var(--rounded-btn, 0.5rem);
+  word-break: break-all;
+  will-change: visibility;
+  max-height: 300px;
+  overflow-y: auto;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  display: none;
+}
+
+.choices__list--dropdown.is-active {
+  display: block;
+}
+
+.choices__item--choice {
+  position: relative;
+  padding: 0.75rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  color: hsl(var(--bc));
+  transition: background-color 0.2s ease;
+}
+
+.choices__item--choice:hover,
+.choices__item--choice.is-highlighted {
+  background-color: hsl(var(--b2));
+}
+
+.choices__item--choice.is-selected {
+  background-color: hsl(var(--p));
+  color: hsl(var(--pc));
+}
+
+.choices__item--choice.is-highlighted.is-selected {
+  background-color: hsl(var(--p) / 0.8);
+  color: hsl(var(--pc));
+}
+
+.choices__item--choice[data-choice-disabled] {
+  color: hsl(var(--bc) / 0.5);
+  cursor: not-allowed;
+  user-select: none;
+}
+
+.choices__heading {
+  font-weight: 600;
+  font-size: 0.75rem;
+  padding: 0.75rem;
+  border-bottom: 1px solid hsl(var(--bc) / 0.2);
+  color: hsl(var(--bc) / 0.7);
+  background-color: hsl(var(--b2));
+}
+
+.choices__button:focus,
+.choices__input:focus {
+  outline: none;
+}
+
+.choices.is-disabled .choices__inner,
+.choices.is-disabled .choices__input {
+  background-color: hsl(var(--b2));
+  cursor: not-allowed;
+  user-select: none;
+  opacity: 0.5;
+}
+
+.choices.is-disabled .choices__item {
+  cursor: not-allowed;
+}
+
+/* Custom animations */
+.choices__list--dropdown {
+  opacity: 0;
+  pointer-events: none;
+  will-change: opacity;
+  transition: opacity 0.15s ease;
+}
+
+.choices.is-open .choices__list--dropdown {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Loading state */
+.choices.is-loading:after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  margin-top: -0.5rem;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  border: 2px solid hsl(var(--bc) / 0.2);
+  border-right-color: transparent;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Error state */
+.choices.is-invalid .choices__inner {
+  border-color: hsl(var(--er));
+}
+
+/* Success state */
+.choices.is-valid .choices__inner {
+  border-color: hsl(var(--su));
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 640px) {
+  .choices__inner {
+    min-height: 2.75rem;
+    padding: 0.5rem;
+  }
+
+  .choices__item--choice {
+    padding: 0.875rem;
+  }
+
+  .choices__list--multiple .choices__item {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+  }
+}
+
+/* Dark theme adjustments */
+@media (prefers-color-scheme: dark) {
+  .choices__list--dropdown {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+  }
+}
+
+/* Focus visible for accessibility */
+.choices__button:focus-visible {
+  outline: 2px solid hsl(var(--p));
+  outline-offset: 2px;
+}
+
+.choices__item--choice:focus-visible {
+  outline: 2px solid hsl(var(--p));
+  outline-offset: -2px;
+}

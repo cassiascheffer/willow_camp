@@ -3,6 +3,7 @@ class Dashboard::PostsController < Dashboard::BaseController
   before_action :authorize_user!, only: %i[edit update destroy]
 
   def edit
+    @existing_tags = current_user.existing_tags || []
   end
 
   def update

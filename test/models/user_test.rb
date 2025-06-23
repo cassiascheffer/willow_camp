@@ -224,4 +224,95 @@ class UserTest < ActiveSupport::TestCase
     assert_equal "About", about_page.title
     assert_equal "about", about_page.slug
   end
+
+  test "existing_tags returns empty array when user has no posts" do
+    user = User.create!(
+      name: "Test User",
+      email: "test_no_posts@example.com",
+      password: "password123",
+      password_confirmation: "password123",
+      subdomain: "testposts"
+    )
+
+    assert_equal [], user.existing_tags
+  end
+
+  test "existing_tags returns empty array when user posts have no tags" do
+    user = User.create!(
+      name: "Test User",
+      email: "test_no_tags@example.com",
+      password: "password123",
+      password_confirmation: "password123",
+      subdomain: "testtags"
+    )
+
+    user.posts.create!(title: "Untagged Post", body_markdown: "Content")
+
+    assert_equal [], user.existing_tags
+  end
+
+  test "existing_tags returns sorted unique tags from user posts" do
+    # Create a post with tags for user one
+    post = @user.posts.first
+    post.tag_list = "ruby, rails, programming"
+    post.save!
+
+    tags = @user.existing_tags
+
+    # Should include tags from the post
+    assert_includes tags, "ruby"
+    assert_includes tags, "rails"
+    assert_includes tags, "programming"
+
+    # Should be sorted
+    assert_equal tags.sort, tags
+  end
+
+  test "existing_tags includes tags from multiple posts" do
+    # Create a user with multiple tagged posts
+    user = User.create!(
+      name: "Multi Tag User",
+      email: "multi@example.com",
+      password: "password123",
+      password_confirmation: "password123",
+      subdomain: "multitag"
+    )
+
+    post1 = user.posts.create!(title: "Post 1", body_markdown: "Content 1")
+    post1.tag_list = "ruby, rails"
+    post1.save!
+
+    post2 = user.posts.create!(title: "Post 2", body_markdown: "Content 2")
+    post2.tag_list = "javascript, rails, testing"
+    post2.save!
+
+    tags = user.existing_tags
+    expected_tags = ["javascript", "rails", "ruby", "testing"]
+
+    assert_equal expected_tags, tags
+  end
+
+  test "existing_tags excludes tags from other users posts" do
+    # Set up tags for user one
+    post_one = @user.posts.first
+    post_one.tag_list = "ruby, rails"
+    post_one.save!
+
+    # Set up tags for user two
+    user_two = users(:two)
+    post_two = user_two.posts.first
+    post_two.tag_list = "javascript, web"
+    post_two.save!
+
+    user_one_tags = @user.existing_tags
+    user_two_tags = user_two.existing_tags
+
+    # User one should not see tags from user two
+    assert_not_includes user_one_tags, "javascript"
+    assert_not_includes user_one_tags, "web"
+
+    # User two should not see tags from user one
+    assert_not_includes user_two_tags, "ruby"
+    assert_not_includes user_two_tags, "rails"
+  end
 end

@@ -19,10 +19,20 @@
     <% end %>
   </div>
   <div class="form-control w-full lg:w-1/2">
-    <div class="tooltip tooltip-right" data-tip="Enter tags as a comma separated list (e.g., 'tag1, tag2')">
+    <div class="tooltip tooltip-right" data-tip="Start typing to search existing tags or create new ones">
       <%= form.label :tag_list, class: "label" %>
     </div>
-    <%= form.text_field :tag_list, value: post.tag_list.join(', '), class: "input input-bordered w-full" %>
+    <div data-controller="tag-selector"
+         data-tag-selector-existing-tags-value="<%= (@existing_tags || []).to_json %>"
+         data-tag-selector-current-tags-value="<%= post.tag_list.join(', ') %>">
+      <select multiple
+              data-tag-selector-target="select"
+              style="display: none;">
+      </select>
+      <%= form.hidden_field :tag_list,
+          value: post.tag_list.join(', '),
+          data: { tag_selector_target: "hiddenInput" } %>
+    </div>
   </div>
 </div>
 <div class="form-control w-full mb-4">
