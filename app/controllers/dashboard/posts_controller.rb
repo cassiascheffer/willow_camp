@@ -2,80 +2,52 @@ class Dashboard::PostsController < Dashboard::BaseController
   before_action :set_post, only: %i[edit update destroy]
   before_action :authorize_user!, only: %i[edit update destroy]
 
-  def new
-    @post = Post.new
-  end
-
-  def create
-    @post = current_user.posts.new(post_params)
-
-    if @post.save
-      flash[:notice] = "Created!"
-      redirect_to dashboard_path
-    else
-      flash.now[:alert] = "Oops! There were errors."
-      render :new, status: :unprocessable_entity
-    end
-  end
-
   def edit
   end
 
   def update
-    respond_to do |format|
-      if @post.update(post_params)
-        format.turbo_stream do
-          flash.now[:form_status] = {type: "success", message: "Updated"}
-          render turbo_stream: [
-            turbo_stream.replace("edit_post_form", partial: "dashboard/posts/edit_form", locals: {post: @post})
-          ]
-        end
-        format.html do
-          flash[:form_status] = {type: "success", message: "Updated"}
-          redirect_to dashboard_path
-        end
-      else
-        format.turbo_stream do
-          flash.now[:form_status] = {type: "error", message: "There were errors"}
-          render turbo_stream: [
-            turbo_stream.replace("edit_post_form", partial: "dashboard/posts/edit_form", locals: {post: @post})
-          ]
-        end
-        format.html do
-          flash.now[:form_status] = {type: "error", message: "There were errors"}
+    if @post.update(post_params)
+      respond_to do |format|
+        format.html {
+          redirect_to edit_dashboard_post_path(@post.id), notice: "Post saved successfully!"
+        }
+        format.turbo_stream {
+          flash.now[:notice] = "Post updated successfully!"
+        }
+      end
+    else
+      respond_to do |format|
+        format.html {
+          flash.now[:alert] = "There were errors updating the post"
           render :edit, status: :unprocessable_entity
-        end
+        }
+        format.turbo_stream {
+          flash.now[:alert] = "There were errors updating the post"
+          render :update, status: :unprocessable_entity
+        }
       end
     end
   end
 
   def destroy
-    @post.destroy
-    redirect_to dashboard_path, notice: "Post was successfully destroyed"
+    @post.destroy!
+    redirect_to dashboard_path, notice: "Post deleted successfully"
   end
 
   private
 
   def set_post
-    @post = current_user.posts.find_by(slug: params[:slug])
+    @post = current_user.posts.find(params[:id])
   end
 
   def authorize_user!
-    unless @post.author == current_user
-      redirect_to dashboard_path, alert: "You are not authorized to perform this action."
-    end
+    redirect_to dashboard_path, alert: "Unauthorized" unless @post.author == current_user
   end
 
   def post_params
     params.require(:post).permit(
-      :title,
-      :tag_list,
-      :slug,
-      :body_markdown,
-      :published,
-      :published_at,
-      :updated_at,
-      :meta_description
+      :title, :tag_list, :slug, :body_markdown, :published,
+      :published_at, :meta_description
     )
   end
 end

@@ -9,31 +9,19 @@ class Dashboard::PostsControllerTest < ActionDispatch::IntegrationTest
     sign_in @user
   end
 
-  test "should get new" do
-    get new_dashboard_post_url
-    assert_response :success
-  end
-
-  test "should post create" do
-    assert_difference("Post.count") do
-      post dashboard_posts_url, params: {post: {title: "New Test Post"}}
-    end
-    assert_redirected_to dashboard_url
-  end
-
   test "should get edit" do
-    get edit_dashboard_post_url(slug: @post.slug)
+    get edit_dashboard_post_url(@post.id)
     assert_response :success
   end
 
   test "should patch update" do
-    patch dashboard_post_url(slug: @post.slug), params: {post: {title: "Updated Title"}}
-    assert_redirected_to dashboard_url
+    patch dashboard_post_url(@post.id), params: {post: {title: "Updated Title"}}
+    assert_redirected_to edit_dashboard_post_url(@post.id)
   end
 
   test "should delete destroy" do
     assert_difference("Post.count", -1) do
-      delete dashboard_post_url(slug: @post.slug)
+      delete dashboard_post_url(@post.id)
     end
     assert_redirected_to dashboard_url
   end

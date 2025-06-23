@@ -46,7 +46,8 @@ Rails.application.routes.draw do
       resources :about_pages, param: :slug, path: :pages
     end
     resource :settings, only: %i[show]
-    resources :posts, except: %i[index show], param: :slug
+    resources :posts, only: %i[edit update destroy]
+    resources :untitled_posts, only: %i[create]
     resources :users, only: %i[edit update]
     resources :tokens, only: %i[create destroy]
     resource :subdomain, only: %i[update]

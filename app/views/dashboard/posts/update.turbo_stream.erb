@@ -1,0 +1,27 @@
+<% if @post.persisted? && @post.errors.empty? %>
+  <%= turbo_stream.update "post_slug_frame" do %>
+    <div class="tooltip tooltip-top" data-tip="slugs are auto-generated">
+      <label class="label">Slug</label>
+      <input type="text" name="post[slug]" value="<%= @post.slug %>" class="input input-bordered w-full" disabled>
+    </div>
+  <% end %>
+<% end %>
+<%= turbo_stream.update "flash-messages" do %>
+  <%= render "shared/flash_messages" %>
+<% end %>
+<% if @post.errors.any? %>
+  <%= turbo_stream.update "error_explanation" do %>
+    <div class="alert alert-error">
+      <h2><%= pluralize(@post.errors.count, "error") %> prohibited this post from being saved:</h2>
+      <ul>
+        <% @post.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+<% else %>
+  <%= turbo_stream.update "error_explanation" do %>
+    <!-- Clear errors on successful save -->
+  <% end %>
+<% end %>

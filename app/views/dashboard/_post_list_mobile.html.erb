@@ -1,7 +1,7 @@
 <div class="block lg:hidden space-y-4">
   <% @posts.each do |post| %>
     <div class="card bg-base-100 shadow-md cursor-pointer"
-         onclick="window.location=<%= edit_dashboard_post_path(post).to_json %>;"
+         onclick="window.location=<%= edit_dashboard_post_path(post.id).to_json %>;"
          aria-label="Edit post <%= post.title %>">
       <div class="card-body">
         <div class="flex items-center mb-2">

@@ -14,8 +14,12 @@
 </div>
 <div class="flex flex-col lg:flex-row lg:gap-4 mb-4">
   <div class="form-control w-full lg:w-1/2 mb-4 lg:mb-0">
-    <%= form.label :slug, class: "label" %>
-    <%= form.text_field :slug, class: "input input-bordered w-full" %>
+    <%= turbo_frame_tag "post_slug_frame" do %>
+      <div class="tooltip tooltip-top" data-tip="slugs are auto-generated">
+        <%= form.label :slug, class: "label" %>
+        <%= form.text_field :slug, class: "input input-bordered w-full", disabled: true %>
+      </div>
+    <% end %>
   </div>
   <div class="form-control w-full lg:w-1/2">
     <div class="tooltip tooltip-right" data-tip="Enter tags as a comma separated list (e.g., 'tag1, tag2')">

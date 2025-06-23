@@ -1,0 +1,27 @@
+<% if notice %>
+  <div data-controller="flash" class="alert alert-success" role="alert" aria-live="polite">
+    <%= render 'shared/success_icon' %>
+    <span><%= notice %></span>
+    <button class="btn btn-sm btn-ghost" data-action="click->flash#dismiss" aria-label="Dismiss notice">
+      <%= render 'shared/close_icon' %>
+    </button>
+  </div>
+<% end %>
+<% if alert %>
+  <div data-controller="flash" class="alert alert-error" role="alert" aria-live="assertive">
+    <%= render 'shared/error_icon' %>
+    <span><%= alert %></span>
+    <button class="btn btn-sm btn-ghost" data-action="click->flash#dismiss" aria-label="Dismiss alert">
+      <%= render 'shared/close_icon' %>
+    </button>
+  </div>
+<% end %>
+<% flash.each do |type, message| %>
+  <% next if %w[notice alert].include?(type) %>
+  <div data-controller="flash" class="alert alert-<%= type == 'error' ? 'error' : 'info' %>" role="alert" aria-live="<%= type == 'error' ? 'assertive' : 'polite' %>">
+    <span><%= message %></span>
+    <button class="btn btn-sm btn-ghost" data-action="click->flash#dismiss" aria-label="Dismiss <%= type %>">
+      <%= render 'shared/close_icon' %>
+    </button>
+  </div>
+<% end %>

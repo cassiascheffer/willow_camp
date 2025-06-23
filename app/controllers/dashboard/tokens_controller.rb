@@ -3,12 +3,28 @@ class Dashboard::TokensController < Dashboard::BaseController
 
   def create
     @token = current_user.tokens.new(token_params)
+    @tokens = current_user.tokens.order(created_at: :desc)
     if @token.save
-      flash[:notice] = "Token created successfully"
+      respond_to do |format|
+        format.turbo_stream do
+          flash.now[:notice] = "Token created successfully"
+        end
+        format.html do
+          flash[:notice] = "Token created successfully"
+          redirect_to dashboard_settings_path
+        end
+      end
     else
-      flash[:alert] = "There were errors creating the token"
+      respond_to do |format|
+        format.turbo_stream do
+          flash.now[:alert] = "There were errors creating the token"
+        end
+        format.html do
+          flash[:alert] = "There were errors creating the token"
+          redirect_to dashboard_settings_path
+        end
+      end
     end
-    redirect_to dashboard_settings_path
   end
 
   def destroy

@@ -27,14 +27,6 @@
       <%= link_to 'Logout', destroy_user_session_path(@user), data: { turbo_method: :delete }, class: 'link link-hover font-medium', role: 'button', tabindex: '0' %>
     </div>
   </nav>
-  <div id="flash-messages" class="w-full flex justify-center py-2">
-    <% if notice %>
-      <%= render 'shared/flash', type: 'notice', message: notice %>
-    <% end %>
-    <% if alert %>
-      <%= render 'shared/flash', type: 'alert', message: alert %>
-    <% end %>
-  </div>
   <main class="max-w-6xl mx-auto p-4" aria-label="Dashboard Content">
     <%= yield %>
   </main>
@@ -43,5 +35,8 @@
       <p>willow.camp</p>
     </div>
   </footer>
+  <div id="flash-messages" class="toast toast-top toast-end z-50">
+    <%= render 'shared/flash_messages' %>
+  </div>
 </body>
 </html>

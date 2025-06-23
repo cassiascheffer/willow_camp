@@ -10,7 +10,7 @@
     </thead>
     <tbody>
       <% @posts.each do |post| %>
-        <tr onclick="window.location=<%= edit_dashboard_post_path(post).to_json %>;" class="hover:bg-base-200 cursor-pointer">
+        <tr onclick="window.location=<%= edit_dashboard_post_path(post.id).to_json %>;" class="hover:bg-base-200 cursor-pointer">
           <td class="py-2"><%= post.title %></td>
           <td class="py-2">
             <% if post.published? %>

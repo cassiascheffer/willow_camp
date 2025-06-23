@@ -1,5 +1,5 @@
-<div id="user_form">
-  <%= form_with(model: user, url: dashboard_user_path(user), method: :patch, id: dom_id(user), class: "form-control") do |form| %>
+<%= turbo_frame_tag "user_form" do %>
+  <%= form_with(model: user, url: dashboard_user_path(user), method: :patch, id: dom_id(user), class: "form-control", data: { turbo_frame: "user_form" }) do |form| %>
     <% if user.errors.any? %>
       <div id="error_explanation" class="alert alert-error">
         <h2><%= pluralize(user.errors.count, "error") %> prohibited this user from being saved:</h2>
@@ -73,4 +73,4 @@
       <%= form.submit "Update account", class: "btn btn-primary w-full" %>
     </div>
   <% end %>
-</div>
+<% end %>

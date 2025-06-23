@@ -1,0 +1,15 @@
+<%= turbo_stream.update "flash-messages" do %>
+  <%= render 'shared/flash_messages' %>
+<% end %>
+<% if @token.persisted? %>
+  <%= turbo_stream.replace "new_token_form" do %>
+    <%= render "dashboard/settings/token_form", token: UserToken.new %>
+  <% end %>
+  <%= turbo_stream.replace "tokens" do %>
+    <%= render "dashboard/settings/token_list", tokens: @tokens %>
+  <% end %>
+<% else %>
+  <%= turbo_stream.update "new_token_form" do %>
+    <%= render "dashboard/settings/token_form", token: @token %>
+  <% end %>
+<% end %>

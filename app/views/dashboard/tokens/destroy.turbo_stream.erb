@@ -1,2 +1,4 @@
 <%= turbo_stream.remove dom_id(@token) %>
-<%= turbo_stream.prepend "flash-messages", partial: "shared/flash", locals: {type: "notice", message: "Token deleted successfully"} %>
+<%= turbo_stream.update "flash-messages" do %>
+  <%= render 'shared/flash_messages' %>
+<% end %>

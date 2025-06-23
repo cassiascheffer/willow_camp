@@ -7,10 +7,7 @@ class Dashboard::Settings::AboutPagesController < Dashboard::BaseController
       respond_to do |format|
         format.html { redirect_to dashboard_settings_path, notice: "Created!" }
         format.turbo_stream {
-          render turbo_stream: [
-            turbo_stream.replace("about-page-form", partial: "dashboard/settings/page_form", locals: {page: @page}),
-            turbo_stream.prepend("flash-messages", partial: "shared/flash", locals: {type: "notice", message: "You now have an about page. Nice!"})
-          ]
+          flash.now[:notice] = "You now have an about page. Nice!"
         }
       end
     else
@@ -26,10 +23,7 @@ class Dashboard::Settings::AboutPagesController < Dashboard::BaseController
       respond_to do |format|
         format.html { redirect_to dashboard_settings_path, notice: "Updated!" }
         format.turbo_stream {
-          render turbo_stream: [
-            turbo_stream.replace("about-page-form", partial: "dashboard/settings/page_form", locals: {page: @page}),
-            turbo_stream.prepend("flash-messages", partial: "shared/flash", locals: {type: "notice", message: "Updated!"})
-          ]
+          flash.now[:notice] = "Updated!"
         }
       end
     else
@@ -42,7 +36,13 @@ class Dashboard::Settings::AboutPagesController < Dashboard::BaseController
 
   def destroy
     @page.destroy
-    redirect_to dashboard_settings_about_pages_path, notice: "Page was successfully deleted."
+    respond_to do |format|
+      format.html { redirect_to dashboard_settings_path, notice: "Page was successfully deleted." }
+      format.turbo_stream {
+        flash.now[:notice] = "Page was successfully deleted."
+        @about_page = current_user.pages.find_or_create_by(title: "About", slug: "about")
+      }
+    end
   end
 
   private

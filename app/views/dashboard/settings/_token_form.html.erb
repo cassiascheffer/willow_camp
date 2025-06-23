@@ -1,4 +1,4 @@
-<%= form_with model: token, url: dashboard_tokens_path, id: "new_token_form", class: "form-control", data: { turbo: false } do |form| %>
+<%= form_with model: token, url: dashboard_tokens_path, id: "new_token_form", class: "form-control" do |form| %>
   <% if token.errors.any? %>
     <div id="error_explanation" class="alert alert-error">
       <h2><%= pluralize(token.errors.count, "error") %> prohibited this token from being saved:</h2>

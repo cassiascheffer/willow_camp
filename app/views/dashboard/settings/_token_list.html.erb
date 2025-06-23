@@ -2,7 +2,7 @@
   <% if tokens.any? %>
     <div class="">
       <% tokens.each do |token| %>
-        <%= render "token", partial: 'dashboard/settings/token', token: token %>
+        <%= render 'dashboard/settings/token', token: token %>
       <% end %>
     </div>
   <% else %>

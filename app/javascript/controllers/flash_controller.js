@@ -9,7 +9,9 @@ export default class extends Controller {
   }
 
   dismiss() {
-    this.element.classList.add("-translate-y-full");
+    // Fade out the alert
+    this.element.style.transition = "opacity 0.3s ease-out";
+    this.element.style.opacity = "0";
 
     // Remove the element after transition completes
     setTimeout(() => {

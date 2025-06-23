@@ -11,6 +11,9 @@ class User < ApplicationRecord
   normalizes :subdomain, with: ->(s) { s.strip.downcase }
   normalizes :custom_domain, with: ->(s) { s.strip.downcase }
 
+  # Callbacks
+  before_save :normalize_custom_domain
+
   # Validations
   validates :subdomain,
     uniqueness: true,
@@ -50,6 +53,10 @@ class User < ApplicationRecord
     end
   end
 
+  after_create_commit do
+    pages.create!(title: "About", slug: "about")
+  end
+
   # Domain helper methods
   def domain
     return custom_domain if custom_domain.present?
@@ -68,6 +75,10 @@ class User < ApplicationRecord
   end
 
   private
+
+  def normalize_custom_domain
+    self.custom_domain = nil if custom_domain.blank?
+  end
 
   def custom_domain_format
     return if custom_domain.blank?

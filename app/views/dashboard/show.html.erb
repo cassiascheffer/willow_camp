@@ -1,7 +1,7 @@
 <div class="py-8 px-4 lg:px-8">
   <header aria-label="Dashboard Header" class="flex justify-between items-center mb-8">
     <% if @user.subdomain.present? %>
-      <a href="<%= new_dashboard_post_path %>" class="btn btn-primary ml-auto">New Post</a>
+      <%= button_to "New Post", dashboard_untitled_posts_path, method: :post, class: "btn btn-primary ml-auto" %>
       <a href="<%= posts_url(subdomain: @user.subdomain) %>" class="btn btn-outline ml-2" target="_blank">View Site</a>
     <% end %>
   </header>
@@ -37,7 +37,7 @@
         <% else %>
           <p class="text-xl font-bold mb-2">No posts yet</p>
           <p class="text-base-content mb-8">Create your first blog post to get started</p>
-          <a href="<%= new_dashboard_post_path %>" class="btn btn-primary">Create First Post</a>
+          <%= button_to "Create First Post", dashboard_untitled_posts_path, method: :post, class: "btn btn-primary" %>
         <% end %>
       </section>
     <% end %>
