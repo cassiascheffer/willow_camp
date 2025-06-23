@@ -10,6 +10,8 @@ export default class extends Controller {
     this.isSubmitting = false
     this.isAutoSaving = false
     this.abortAutoSave = false
+    this.formDirty = false
+    this.autoSaveRunning = false
     this.bindEventHandlers()
     this.attachEventListeners()
     this.startAutoSave()
@@ -27,11 +29,13 @@ export default class extends Controller {
     this.boundSubmitEnd = this.handleSubmitEnd.bind(this)
     this.boundKeydown = this.handleKeydown.bind(this)
     this.boundPublishedChange = this.handlePublishedChange.bind(this)
+    this.boundFormInput = this.handleFormInput.bind(this)
   }
 
   attachEventListeners() {
     this.formTarget.addEventListener("turbo:submit-start", this.boundSubmitStart)
     this.formTarget.addEventListener("turbo:submit-end", this.boundSubmitEnd)
+    this.formTarget.addEventListener("input", this.boundFormInput)
     document.addEventListener("keydown", this.boundKeydown)
 
     const publishedInput = this.publishedInput
@@ -43,6 +47,7 @@ export default class extends Controller {
   removeEventListeners() {
     this.formTarget.removeEventListener("turbo:submit-start", this.boundSubmitStart)
     this.formTarget.removeEventListener("turbo:submit-end", this.boundSubmitEnd)
+    this.formTarget.removeEventListener("input", this.boundFormInput)
     document.removeEventListener("keydown", this.boundKeydown)
 
     const publishedInput = this.publishedInput
@@ -53,19 +58,30 @@ export default class extends Controller {
 
   // Auto-save management
   startAutoSave() {
-    this.clearTimer('autoSaveTimer')
-    this.autoSaveTimer = setInterval(() => this.performAutoSave(), this.intervalValue)
+    if (!this.autoSaveRunning) {
+      this.autoSaveRunning = true;
+      this.clearTimer('autoSaveTimer')
+      this.autoSaveTimer = setInterval(() => this.performAutoSave(), this.intervalValue)
+    }
   }
 
   stopAutoSave() {
+    this.autoSaveRunning = false;
     this.clearTimer('autoSaveTimer')
   }
 
   performAutoSave() {
     if (this.isSubmitting) return
 
+
+    // Only auto-save if form has changes
+    if (!this.formDirty) {
+      return
+    }
+
     if (this.isPublished) {
-      this.setStatus("Auto-save disabled (published post)", "warning")
+      this.setStatus("Auto-save disabled (published post)", "warning");
+      this.stopAutoSave();
       return
     }
 
@@ -112,6 +128,9 @@ export default class extends Controller {
     }
 
     if (event.detail.success) {
+      // Reset form dirty state after successful save
+      this.formDirty = false
+
       if (this.isPublished) {
         this.stopAutoSave()
         this.setStatus("Saved - Auto-save disabled (published)", "success")
@@ -138,6 +157,11 @@ export default class extends Controller {
       this.startAutoSave()
       this.setStatus("Auto-save re-enabled", "info")
     }
+  }
+
+  handleFormInput() {
+    this.formDirty = true
+    this.startAutoSave()
   }
 
   // Helper methods
