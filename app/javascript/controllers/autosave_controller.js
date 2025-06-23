@@ -24,12 +24,24 @@ export default class extends Controller {
 
     // Listen for keyboard shortcuts
     document.addEventListener("keydown", this.handleKeydown.bind(this))
+
+    // Listen for published checkbox changes
+    const publishedInput = this.getPublishedInput()
+    if (publishedInput) {
+      publishedInput.addEventListener("change", this.handlePublishedChange.bind(this))
+    }
   }
 
   unbindEvents() {
     this.formTarget.removeEventListener("turbo:submit-start", this.handleSubmitStart.bind(this))
     this.formTarget.removeEventListener("turbo:submit-end", this.handleSubmitEnd.bind(this))
     document.removeEventListener("keydown", this.handleKeydown.bind(this))
+
+    // Remove published checkbox listener
+    const publishedInput = this.getPublishedInput()
+    if (publishedInput) {
+      publishedInput.removeEventListener("change", this.handlePublishedChange.bind(this))
+    }
   }
 
   startAutoSave() {
@@ -94,11 +106,31 @@ export default class extends Controller {
     this.isSubmitting = false
 
     if (event.detail.success) {
-      this.updateStatus("Saved", "success")
-      this.clearStatusAfterDelay(3000, "Auto-save enabled")
+      // Check if post was just published
+      if (this.isPostPublished()) {
+        this.stopAutoSave()
+        this.updateStatus("Saved - Auto-save disabled (published)", "success")
+      } else {
+        this.updateStatus("Saved", "success")
+        this.clearStatusAfterDelay(3000, "Auto-save enabled")
+      }
     } else {
       this.updateStatus("Save failed", "error")
       this.clearStatusAfterDelay(5000, "Auto-save enabled")
+    }
+  }
+
+  handlePublishedChange(event) {
+    if (event.target.checked) {
+      // User just checked the published checkbox - stop auto-save immediately
+      this.stopAutoSave()
+      this.updateStatus("Auto-save disabled (manual save only)")
+    } else {
+      // User unchecked the published checkbox - re-enable auto-save
+      if (!this.autoSaveTimer) {
+        this.startAutoSave()
+        this.updateStatus("Auto-save re-enabled")
+      }
     }
   }
 

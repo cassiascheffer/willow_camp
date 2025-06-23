@@ -15,10 +15,7 @@
 <div class="flex flex-col lg:flex-row lg:gap-4 mb-4">
   <div class="form-control w-full lg:w-1/2 mb-4 lg:mb-0">
     <%= turbo_frame_tag "post_slug_frame" do %>
-      <div class="tooltip tooltip-top" data-tip="slugs are auto-generated">
-        <%= form.label :slug, class: "label" %>
-        <%= form.text_field :slug, class: "input input-bordered w-full", disabled: true %>
-      </div>
+      <%= render "slug_field", post: post %>
     <% end %>
   </div>
   <div class="form-control w-full lg:w-1/2">
@@ -47,7 +44,8 @@
     </div>
   </div>
   <div class="form-control w-full lg:flex-1">
-    <%= form.label :published_at, class: "label" %>
-    <%= form.datetime_field :published_at, class: "input input-bordered w-full" %>
+    <%= turbo_frame_tag "post_published_at_frame" do %>
+      <%= render "published_at_field", post: post %>
+    <% end %>
   </div>
 </div>

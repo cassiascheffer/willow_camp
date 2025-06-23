@@ -1,13 +1,10 @@
 <% if @post.persisted? && @post.errors.empty? %>
   <%= turbo_stream.update "post_slug_frame" do %>
-    <div class="tooltip tooltip-top" data-tip="slugs are auto-generated">
-      <label class="label">Slug</label>
-      <input type="text" name="post[slug]" value="<%= @post.slug %>" class="input input-bordered w-full" disabled>
-    </div>
+    <%= render "slug_field", post: @post %>
   <% end %>
-<% end %>
-<%= turbo_stream.update "flash-messages" do %>
-  <%= render "shared/flash_messages" %>
+  <%= turbo_stream.update "post_published_at_frame" do %>
+    <%= render "published_at_field", post: @post %>
+  <% end %>
 <% end %>
 <% if @post.errors.any? %>
   <%= turbo_stream.update "error_explanation" do %>

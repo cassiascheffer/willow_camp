@@ -9,10 +9,10 @@ class Dashboard::PostsController < Dashboard::BaseController
     if @post.update(post_params)
       respond_to do |format|
         format.html {
-          redirect_to edit_dashboard_post_path(@post.id), notice: "Post saved successfully!"
+          redirect_to edit_dashboard_post_path(@post.id)
         }
         format.turbo_stream {
-          flash.now[:notice] = "Post updated successfully!"
+          render :update, status: :ok
         }
       end
     else

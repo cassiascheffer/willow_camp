@@ -1,0 +1,2 @@
+<label class="label">Published at</label>
+<input type="datetime-local" name="post[published_at]" value="<%= post.published_at&.in_time_zone&.strftime('%Y-%m-%dT%H:%M') %>" class="input input-bordered w-full">
