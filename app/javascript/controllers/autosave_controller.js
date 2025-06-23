@@ -162,7 +162,7 @@ export default class extends Controller {
   }
 
   getBadgeClass(type) {
-    const baseClass = "badge badge-sm"
+    const baseClass = "badge badge-soft badge-sm"
     const typeClasses = {
       success: "badge-success",
       error: "badge-error",
