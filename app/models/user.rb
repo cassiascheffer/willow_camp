@@ -9,10 +9,9 @@ class User < ApplicationRecord
 
   # Normalizations
   normalizes :subdomain, with: ->(s) { s.strip.downcase }
-  normalizes :custom_domain, with: ->(s) { s.strip.downcase }
+  normalizes :custom_domain, with: ->(s) { s.strip.downcase.presence }
 
   # Callbacks
-  before_save :normalize_custom_domain
 
   # Validations
   validates :subdomain,
@@ -75,10 +74,6 @@ class User < ApplicationRecord
   end
 
   private
-
-  def normalize_custom_domain
-    self.custom_domain = nil if custom_domain.blank?
-  end
 
   def custom_domain_format
     return if custom_domain.blank?

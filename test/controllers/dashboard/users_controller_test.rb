@@ -36,7 +36,7 @@ class Dashboard::UsersControllerTest < ActionDispatch::IntegrationTest
     }
     assert_response :redirect
     @user.reload
-    assert_equal "", @user.custom_domain
+    assert_nil @user.custom_domain
   end
 
   test "should reject invalid custom domain format" do
