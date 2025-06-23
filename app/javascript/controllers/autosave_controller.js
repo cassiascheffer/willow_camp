@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["status", "form"]
+  static targets = ["status", "statusContainer", "form"]
   static values = {
     interval: { type: Number, default: 10000 }
   }
@@ -13,7 +13,7 @@ export default class extends Controller {
     this.bindEventHandlers()
     this.attachEventListeners()
     this.startAutoSave()
-    this.setStatus("Auto-save enabled")
+    this.setStatus("Auto-save enabled", "info")
   }
 
   disconnect() {
@@ -65,7 +65,7 @@ export default class extends Controller {
     if (this.isSubmitting) return
 
     if (this.isPublished) {
-      this.setStatus("Auto-save disabled (published post)")
+      this.setStatus("Auto-save disabled (published post)", "warning")
       return
     }
 
@@ -107,7 +107,7 @@ export default class extends Controller {
     // If auto-save was aborted due to published state change, ignore the result
     if (wasAutoSaving && this.abortAutoSave) {
       this.abortAutoSave = false
-      this.setStatus("Auto-save cancelled - Published state changed")
+      this.setStatus("Auto-save cancelled - Published state changed", "warning")
       return
     }
 
@@ -117,11 +117,11 @@ export default class extends Controller {
         this.setStatus("Saved - Auto-save disabled (published)", "success")
       } else {
         this.setStatus("Saved", "success")
-        this.setStatusWithDelay("Auto-save enabled", 3000)
+        this.setStatusWithDelay("Auto-save enabled", 3000, "info")
       }
     } else {
       this.setStatus("Save failed", "error")
-      this.setStatusWithDelay("Auto-save enabled", 5000)
+      this.setStatusWithDelay("Auto-save enabled", 5000, "info")
     }
   }
 
@@ -133,10 +133,10 @@ export default class extends Controller {
 
     if (event.target.checked) {
       this.stopAutoSave()
-      this.setStatus("Auto-save disabled (manual save only)")
+      this.setStatus("Auto-save disabled (manual save only)", "warning")
     } else {
       this.startAutoSave()
-      this.setStatus("Auto-save re-enabled")
+      this.setStatus("Auto-save re-enabled", "info")
     }
   }
 
@@ -153,20 +153,22 @@ export default class extends Controller {
     if (!this.hasStatusTarget) return
 
     this.statusTarget.textContent = message
-    this.statusTarget.className = this.getStatusClass(type)
+    this.statusTarget.className = this.getBadgeClass(type)
   }
 
-  setStatusWithDelay(message, delay) {
+  setStatusWithDelay(message, delay, type = "default") {
     this.clearTimer('statusTimeout')
-    this.statusTimeout = setTimeout(() => this.setStatus(message), delay)
+    this.statusTimeout = setTimeout(() => this.setStatus(message, type), delay)
   }
 
-  getStatusClass(type) {
-    const baseClass = "text-sm mt-2"
+  getBadgeClass(type) {
+    const baseClass = "badge badge-sm"
     const typeClasses = {
-      success: "text-green-600",
-      error: "text-red-600",
-      default: "text-gray-600"
+      success: "badge-success",
+      error: "badge-error",
+      warning: "badge-warning",
+      info: "badge-neutral",
+      default: "badge-neutral"
     }
     return `${baseClass} ${typeClasses[type] || typeClasses.default}`
   }

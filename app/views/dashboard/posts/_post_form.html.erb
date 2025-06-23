@@ -5,9 +5,11 @@
         Editing post
       </h1>
       <div id="autosave_status"
-           data-autosave-target="status"
-           class="text-sm text-gray-600 mb-2">
-        Auto-save loading...
+           data-autosave-target="statusContainer"
+           class="sticky top-0 z-10">
+        <span data-autosave-target="status" class="badge badge-sm badge-neutral">
+          Auto-save loading...
+        </span>
       </div>
       <%= form_with(model: post,
                     url: form_url,
