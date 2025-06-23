@@ -7,170 +7,175 @@ export default class extends Controller {
   }
 
   connect() {
+    this.isSubmitting = false
+    this.isAutoSaving = false
+    this.abortAutoSave = false
+    this.bindEventHandlers()
+    this.attachEventListeners()
     this.startAutoSave()
-    this.updateStatus("Auto-save enabled")
-    this.bindEvents()
+    this.setStatus("Auto-save enabled")
   }
 
   disconnect() {
     this.stopAutoSave()
-    this.unbindEvents()
+    this.removeEventListeners()
   }
 
-  bindEvents() {
-    // Listen for Turbo form events
-    this.formTarget.addEventListener("turbo:submit-start", this.handleSubmitStart.bind(this))
-    this.formTarget.addEventListener("turbo:submit-end", this.handleSubmitEnd.bind(this))
+  // Event handler binding (fixes memory leak issue)
+  bindEventHandlers() {
+    this.boundSubmitStart = this.handleSubmitStart.bind(this)
+    this.boundSubmitEnd = this.handleSubmitEnd.bind(this)
+    this.boundKeydown = this.handleKeydown.bind(this)
+    this.boundPublishedChange = this.handlePublishedChange.bind(this)
+  }
 
-    // Listen for keyboard shortcuts
-    document.addEventListener("keydown", this.handleKeydown.bind(this))
+  attachEventListeners() {
+    this.formTarget.addEventListener("turbo:submit-start", this.boundSubmitStart)
+    this.formTarget.addEventListener("turbo:submit-end", this.boundSubmitEnd)
+    document.addEventListener("keydown", this.boundKeydown)
 
-    // Listen for published checkbox changes
-    const publishedInput = this.getPublishedInput()
+    const publishedInput = this.publishedInput
     if (publishedInput) {
-      publishedInput.addEventListener("change", this.handlePublishedChange.bind(this))
+      publishedInput.addEventListener("change", this.boundPublishedChange)
     }
   }
 
-  unbindEvents() {
-    this.formTarget.removeEventListener("turbo:submit-start", this.handleSubmitStart.bind(this))
-    this.formTarget.removeEventListener("turbo:submit-end", this.handleSubmitEnd.bind(this))
-    document.removeEventListener("keydown", this.handleKeydown.bind(this))
+  removeEventListeners() {
+    this.formTarget.removeEventListener("turbo:submit-start", this.boundSubmitStart)
+    this.formTarget.removeEventListener("turbo:submit-end", this.boundSubmitEnd)
+    document.removeEventListener("keydown", this.boundKeydown)
 
-    // Remove published checkbox listener
-    const publishedInput = this.getPublishedInput()
+    const publishedInput = this.publishedInput
     if (publishedInput) {
-      publishedInput.removeEventListener("change", this.handlePublishedChange.bind(this))
+      publishedInput.removeEventListener("change", this.boundPublishedChange)
     }
   }
 
+  // Auto-save management
   startAutoSave() {
-    this.stopAutoSave() // Ensure no duplicate timers
-    this.autoSaveTimer = setInterval(() => {
-      this.performAutoSave()
-    }, this.intervalValue)
+    this.clearTimer('autoSaveTimer')
+    this.autoSaveTimer = setInterval(() => this.performAutoSave(), this.intervalValue)
   }
 
   stopAutoSave() {
-    if (this.autoSaveTimer) {
-      clearInterval(this.autoSaveTimer)
-      this.autoSaveTimer = null
-    }
+    this.clearTimer('autoSaveTimer')
   }
 
   performAutoSave() {
-    // Don't auto-save if form is currently being submitted
     if (this.isSubmitting) return
 
-    // Don't auto-save published posts
-    if (this.isPostPublished()) {
-      this.updateStatus("Auto-save disabled (published post)")
+    if (this.isPublished) {
+      this.setStatus("Auto-save disabled (published post)")
       return
     }
 
-    this.updateStatus("Saving...")
-
-    // Let Turbo handle the form submission naturally
+    this.isAutoSaving = true
+    this.abortAutoSave = false
+    this.setStatus("Saving...")
     this.formTarget.requestSubmit()
   }
 
+  // Manual save (Cmd+S / Ctrl+S)
   manualSave(event = null) {
     event?.preventDefault()
-    // Temporarily stop auto-save during manual save
+
     this.stopAutoSave()
-
-    this.updateStatus("Saving...")
-
-    // Let Turbo handle the form submission naturally
+    this.setStatus("Saving...")
     this.formTarget.requestSubmit()
 
-    // Restart auto-save after a brief delay
-    setTimeout(() => {
-      this.startAutoSave()
-    }, 1000)
+    // Restart auto-save after brief delay
+    setTimeout(() => this.startAutoSave(), 1000)
   }
 
+  // Event handlers
   handleKeydown(event) {
-    // Handle Cmd+S (Mac) or Ctrl+S (Windows/Linux)
     if ((event.metaKey || event.ctrlKey) && event.key === 's') {
       event.preventDefault()
       this.manualSave()
     }
   }
 
-  handleSubmitStart(event) {
+  handleSubmitStart() {
     this.isSubmitting = true
   }
 
   handleSubmitEnd(event) {
     this.isSubmitting = false
+    const wasAutoSaving = this.isAutoSaving
+    this.isAutoSaving = false
+
+    // If auto-save was aborted due to published state change, ignore the result
+    if (wasAutoSaving && this.abortAutoSave) {
+      this.abortAutoSave = false
+      this.setStatus("Auto-save cancelled - Published state changed")
+      return
+    }
 
     if (event.detail.success) {
-      // Check if post was just published
-      if (this.isPostPublished()) {
+      if (this.isPublished) {
         this.stopAutoSave()
-        this.updateStatus("Saved - Auto-save disabled (published)", "success")
+        this.setStatus("Saved - Auto-save disabled (published)", "success")
       } else {
-        this.updateStatus("Saved", "success")
-        this.clearStatusAfterDelay(3000, "Auto-save enabled")
+        this.setStatus("Saved", "success")
+        this.setStatusWithDelay("Auto-save enabled", 3000)
       }
     } else {
-      this.updateStatus("Save failed", "error")
-      this.clearStatusAfterDelay(5000, "Auto-save enabled")
+      this.setStatus("Save failed", "error")
+      this.setStatusWithDelay("Auto-save enabled", 5000)
     }
   }
 
   handlePublishedChange(event) {
+    // If auto-save is currently in progress, mark it for abortion
+    if (this.isAutoSaving) {
+      this.abortAutoSave = true
+    }
+
     if (event.target.checked) {
-      // User just checked the published checkbox - stop auto-save immediately
       this.stopAutoSave()
-      this.updateStatus("Auto-save disabled (manual save only)")
+      this.setStatus("Auto-save disabled (manual save only)")
     } else {
-      // User unchecked the published checkbox - re-enable auto-save
-      if (!this.autoSaveTimer) {
-        this.startAutoSave()
-        this.updateStatus("Auto-save re-enabled")
-      }
+      this.startAutoSave()
+      this.setStatus("Auto-save re-enabled")
     }
   }
 
   // Helper methods
-
-  getPublishedInput() {
+  get publishedInput() {
     return this.formTarget.querySelector('input[name*="[published]"][type="checkbox"]')
   }
 
-  isPostPublished() {
-    const publishedInput = this.getPublishedInput()
-    return publishedInput?.checked || false
+  get isPublished() {
+    return this.publishedInput?.checked || false
   }
 
-  updateStatus(message, type = "default") {
-    if (this.hasStatusTarget) {
-      this.statusTarget.textContent = message
-      this.statusTarget.className = this.getStatusClass(type)
-    }
+  setStatus(message, type = "default") {
+    if (!this.hasStatusTarget) return
+
+    this.statusTarget.textContent = message
+    this.statusTarget.className = this.getStatusClass(type)
+  }
+
+  setStatusWithDelay(message, delay) {
+    this.clearTimer('statusTimeout')
+    this.statusTimeout = setTimeout(() => this.setStatus(message), delay)
   }
 
   getStatusClass(type) {
     const baseClass = "text-sm mt-2"
-    switch (type) {
-      case "success":
-        return `${baseClass} text-green-600`
-      case "error":
-        return `${baseClass} text-red-600`
-      default:
-        return `${baseClass} text-gray-600`
+    const typeClasses = {
+      success: "text-green-600",
+      error: "text-red-600",
+      default: "text-gray-600"
     }
+    return `${baseClass} ${typeClasses[type] || typeClasses.default}`
   }
 
-  clearStatusAfterDelay(delay, message) {
-    if (this.statusTimeout) {
-      clearTimeout(this.statusTimeout)
+  clearTimer(timerName) {
+    if (this[timerName]) {
+      clearInterval(this[timerName])
+      clearTimeout(this[timerName])
+      this[timerName] = null
     }
-
-    this.statusTimeout = setTimeout(() => {
-      this.updateStatus(message)
-    }, delay)
   }
 }
