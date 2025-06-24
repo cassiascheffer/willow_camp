@@ -11,8 +11,8 @@
     <!-- Apply theme immediately to prevent flash -->
     <script>
       try {
-        const lightTheme = '<%= j(@author&.effective_light_theme || 'light') %>';
-        const darkTheme = '<%= j(@author&.effective_dark_theme || 'dark') %>';
+        const lightTheme = <%= raw (@author&.effective_light_theme || 'light').to_json %>;
+        const darkTheme = <%= raw (@author&.effective_dark_theme || 'dark').to_json %>;
 
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
         const expectedDefault = prefersDark ? 'dark' : 'light';
