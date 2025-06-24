@@ -1,0 +1,46 @@
+<% # Renders a theme selector dropdown using daisyUI styling %>
+<div class="form-control w-full">
+  <%= form.label field_name, label, class: "label" %>
+  <%= form.hidden_field field_name, value: current_theme %>
+  <div class="dropdown dropdown-end w-full">
+    <div tabindex="0" role="button" class="btn btn-outline w-full justify-between normal-case">
+      <div class="flex items-center gap-2">
+        <div data-theme="<%= current_theme %>" class="bg-base-100 group-hover:border-base-content/20 border-base-content/10 grid shrink-0 grid-cols-2 gap-0.5 rounded-md border p-1 transition-colors">
+          <div class="bg-base-content size-1 rounded-full"></div>
+          <div class="bg-primary size-1 rounded-full"></div>
+          <div class="bg-secondary size-1 rounded-full"></div>
+          <div class="bg-accent size-1 rounded-full"></div>
+        </div>
+        <span class="capitalize"><%= current_theme %></span>
+      </div>
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+      </svg>
+    </div>
+    <div tabindex="0" class="dropdown-content z-[1] menu p-2 shadow-lg bg-base-100 rounded-box w-full max-h-80 overflow-y-auto border border-base-300">
+      <div class="menu-title text-xs mb-2"><%= label %></div>
+      <% themes.each do |theme| %>
+        <li>
+          <button type="button"
+                  class="flex items-center gap-3 p-2 hover:bg-base-200 rounded"
+                  data-theme-value="<%= theme %>"
+                  data-theme-type="<%= theme_type %>"
+                  data-action="click->theme-selector#selectTheme mouseenter->theme-selector#previewTheme mouseleave->theme-selector#restoreTheme">
+            <div data-theme="<%= theme %>" class="bg-base-100 group-hover:border-base-content/20 border-base-content/10 grid shrink-0 grid-cols-2 gap-0.5 rounded-md border p-1 transition-colors">
+              <div class="bg-base-content size-1 rounded-full"></div>
+              <div class="bg-primary size-1 rounded-full"></div>
+              <div class="bg-secondary size-1 rounded-full"></div>
+              <div class="bg-accent size-1 rounded-full"></div>
+            </div>
+            <span class="capitalize flex-1 text-left"><%= theme %></span>
+            <% if theme == current_theme %>
+              <svg class="w-4 h-4 text-primary" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+              </svg>
+            <% end %>
+          </button>
+        </li>
+      <% end %>
+    </div>
+  </div>
+</div>

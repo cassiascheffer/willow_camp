@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-theme="light" data-controller="favicon" data-favicon-emoji-value="⛺">
+<html data-controller="favicon" data-favicon-emoji-value="⛺">
   <head>
     <title>
       "willow.camp | A blogging platform"
@@ -21,6 +21,17 @@
     <meta name="twitter:title" content="willow.camp | A blogging platform">
     <meta name="twitter:description" content="willow.camp is a small blogging platform for people who like to write.">
     <%= yield :head %>
+    <!-- Apply theme based on user preference to prevent flash -->
+    <script>
+      try {
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const theme = prefersDark ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {
+        // Fail silently and use default
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    </script>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⛺</text></svg>">
   <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
   <%= javascript_importmap_tags %>

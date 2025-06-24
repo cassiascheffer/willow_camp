@@ -1,0 +1,137 @@
+/* Theme Transition Styles */
+/* Smooth transitions for theme changes to prevent flashing */
+
+/* CSS custom property for dynamic transition timing */
+:root {
+  --theme-transition-duration: 0.3s;
+}
+
+/* Transition all theme-dependent properties smoothly */
+*,
+*::before,
+*::after {
+  transition:
+    background-color var(--theme-transition-duration) ease,
+    border-color var(--theme-transition-duration) ease,
+    color var(--theme-transition-duration) ease,
+    fill var(--theme-transition-duration) ease,
+    stroke var(--theme-transition-duration) ease,
+    box-shadow var(--theme-transition-duration) ease,
+    text-decoration-color var(--theme-transition-duration) ease,
+    outline-color var(--theme-transition-duration) ease;
+}
+
+/* Specific transitions for common elements */
+html {
+  transition: background-color var(--theme-transition-duration) ease;
+}
+
+body {
+  transition:
+    background-color var(--theme-transition-duration) ease,
+    color var(--theme-transition-duration) ease;
+}
+
+/* DaisyUI component transitions */
+.btn,
+.card,
+.navbar,
+.dropdown-content,
+.menu,
+.input,
+.select,
+.textarea,
+.badge,
+.alert,
+.modal,
+.drawer,
+.tooltip {
+  transition:
+    background-color var(--theme-transition-duration) ease,
+    border-color var(--theme-transition-duration) ease,
+    color var(--theme-transition-duration) ease,
+    box-shadow var(--theme-transition-duration) ease;
+}
+
+/* Theme preview squares transitions */
+[data-theme] .bg-base-100,
+[data-theme] .bg-base-200,
+[data-theme] .bg-base-300,
+[data-theme] .bg-base-content,
+[data-theme] .bg-primary,
+[data-theme] .bg-secondary,
+[data-theme] .bg-accent,
+[data-theme] .bg-neutral,
+[data-theme] .bg-info,
+[data-theme] .bg-success,
+[data-theme] .bg-warning,
+[data-theme] .bg-error {
+  transition: background-color var(--theme-transition-duration) ease;
+}
+
+/* Text color transitions */
+[data-theme] .text-base-content,
+[data-theme] .text-primary,
+[data-theme] .text-secondary,
+[data-theme] .text-accent,
+[data-theme] .text-neutral,
+[data-theme] .text-info,
+[data-theme] .text-success,
+[data-theme] .text-warning,
+[data-theme] .text-error {
+  transition: color var(--theme-transition-duration) ease;
+}
+
+/* Border color transitions */
+[data-theme] .border-base-300,
+[data-theme] .border-primary,
+[data-theme] .border-secondary,
+[data-theme] .border-accent,
+[data-theme] .border-neutral {
+  transition: border-color var(--theme-transition-duration) ease;
+}
+
+/* SVG fill transitions for icons */
+svg {
+  transition: fill var(--theme-transition-duration) ease, stroke var(--theme-transition-duration) ease;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Special handling for dropdown theme preview squares */
+.theme-option [data-theme] {
+  transition: all var(--theme-transition-duration) ease;
+}
+
+/* Ensure dropdown content transitions smoothly */
+.dropdown-content {
+  transition:
+    background-color var(--theme-transition-duration) ease,
+    border-color var(--theme-transition-duration) ease,
+    box-shadow var(--theme-transition-duration) ease;
+}
+
+/* Theme preview button hover states */
+.theme-option:hover {
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+/* Theme dropdown styling */
+.dropdown-content {
+  transition:
+    background-color var(--theme-transition-duration) ease,
+    border-color var(--theme-transition-duration) ease,
+    box-shadow var(--theme-transition-duration) ease;
+}

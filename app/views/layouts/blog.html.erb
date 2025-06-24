@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-theme="<%= @author&.theme || "light" %>" data-controller="favicon" data-favicon-emoji-value="<%= @author&.favicon_emoji || "⛺" %>">
+<html data-controller="favicon theme" data-favicon-emoji-value="<%= @author&.favicon_emoji || "⛺" %>" data-theme-light-theme-value="<%= @author&.effective_light_theme || 'light' %>" data-theme-dark-theme-value="<%= @author&.effective_dark_theme || 'dark' %>">
   <head>
     <title>
       <%= content_for(:title) || blog_title_for(@author) %>

@@ -1,15 +1,6 @@
 <%= turbo_frame_tag "user_form" do %>
   <%= form_with(model: user, url: dashboard_user_path(user), method: :patch, id: dom_id(user), class: "form-control", data: { turbo_frame: "user_form" }) do |form| %>
-    <% if user.errors.any? %>
-      <div id="error_explanation" class="alert alert-error">
-        <h2><%= pluralize(user.errors.count, "error") %> prohibited this user from being saved:</h2>
-        <ul>
-          <% user.errors.full_messages.each do |message| %>
-            <li><%= message %></li>
-          <% end %>
-        </ul>
-      </div>
-    <% end %>
+    <%= render "shared/form_errors", user: user %>
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
       <div class="form-control w-full">
         <%= form.label :name, class: "label" %>
@@ -58,10 +49,15 @@
         </div>
       </div>
     </div>
-    <div class="grid grid-cols-1 gap-4 mb-4">
-      <div class="form-control w-full">
-        <%= form.label :theme, class: "label" %>
-        <%= form.select :theme, options_for_select([["Light", "light"], ["Dark", "dark"], ["Cupcake", "cupcake"], ["Bumblebee", "bumblebee"], ["Emerald", "emerald"], ["Corporate", "corporate"], ["Synthwave", "synthwave"], ["Retro", "retro"], ["Cyberpunk", "cyberpunk"], ["Valentine", "valentine"], ["Halloween", "halloween"], ["Garden", "garden"], ["Forest", "forest"], ["Aqua", "aqua"], ["Lofi", "lofi"], ["Pastel", "pastel"], ["Fantasy", "fantasy"], ["Wireframe", "wireframe"], ["Black", "black"], ["Luxury", "luxury"], ["Dracula", "dracula"], ["CMYK", "cmyk"], ["Autumn", "autumn"], ["Business", "business"], ["Acid", "acid"], ["Lemonade", "lemonade"], ["Night", "night"], ["Coffee", "coffee"], ["Winter", "winter"], ["Dim", "dim"], ["Nord", "nord"], ["Sunset", "sunset"], ["Caramellatte", "caramellatte"], ["Abyss", "abyss"], ["Silk", "silk"]], user.theme), { include_blank: false }, class: "select select-bordered w-full", data: { controller: "theme-preview", action: "change->theme-preview#updateTheme" } %>
+    <div class="mb-6" id="theme-controller" data-controller="theme" data-theme-light-theme-value="<%= user.effective_light_theme %>" data-theme-dark-theme-value="<%= user.effective_dark_theme %>">
+      <div data-controller="theme-selector" data-theme-selector-theme-outlet="#theme-controller">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+          <%= render "shared/theme_selector", form: form, field_name: :light_theme, label: "Light Mode Theme", current_theme: user.effective_light_theme, theme_type: "light", themes: DashboardHelper::LIGHT_THEMES %>
+          <%= render "shared/theme_selector", form: form, field_name: :dark_theme, label: "Dark Mode Theme", current_theme: user.effective_dark_theme, theme_type: "dark", themes: DashboardHelper::DARK_THEMES %>
+        </div>
+      </div>
+      <div class="text-xs text-gray-500 mb-4">
+        Themes will automatically switch based on your browser's light/dark mode preference. Select a theme above to preview it immediately.
       </div>
     </div>
     <div class="form-control w-full mb-4">

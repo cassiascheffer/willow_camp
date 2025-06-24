@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-theme="<%= @author&.theme || "light" %>" data-controller="favicon theme" data-favicon-emoji-value="<%= @author&.favicon_emoji || "⛺" %>">
+<html data-controller="favicon theme" data-favicon-emoji-value="<%= @author&.favicon_emoji || "⛺" %>" data-theme-light-theme-value="<%= @author&.effective_light_theme || 'light' %>" data-theme-dark-theme-value="<%= @author&.effective_dark_theme || 'dark' %>">
   <head>
     <title><%= content_for(:title) || "willow.camp" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -8,6 +8,24 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= yield :head %>
+    <!-- Apply theme immediately to prevent flash -->
+    <script>
+      try {
+        const lightTheme = '<%= j(@author&.effective_light_theme || 'light') %>';
+        const darkTheme = '<%= j(@author&.effective_dark_theme || 'dark') %>';
+
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const expectedDefault = prefersDark ? 'dark' : 'light';
+        const currentTheme = prefersDark ? darkTheme : lightTheme;
+
+        // Only apply theme if it differs from expected default to maintain DaisyUI's native behavior
+        if (currentTheme && currentTheme !== expectedDefault) {
+          document.documentElement.setAttribute('data-theme', currentTheme);
+        }
+      } catch (e) {
+        // Fail silently if there are any issues
+      }
+    </script>
     <% if Rails.env.local? %>
       <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22 transform=%22rotate(180,50,50)%22>⛺</text></svg>">
   <% else %>
