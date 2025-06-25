@@ -62,11 +62,9 @@ Rails.application.routes.draw do
     get "/:slug", to: "blog/posts#show", as: :post
 
     # Feed formats
-    namespace :posts do
-      get "/rss", to: "feed#show", defaults: {format: "rss"}, as: :rss
-      get "/atom", to: "feed#show", defaults: {format: "atom"}, as: :atom
-      get "/json", to: "feed#show", defaults: {format: "json"}, as: :json
-    end
+    get "/posts/rss", to: "blog/feed#show", defaults: {format: "rss"}, as: :posts_rss
+    get "/posts/atom", to: "blog/feed#show", defaults: {format: "atom"}, as: :posts_atom
+    get "/posts/json", to: "blog/feed#show", defaults: {format: "json"}, as: :posts_json
   end
 
   namespace :api do
