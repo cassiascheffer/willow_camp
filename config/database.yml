@@ -2,6 +2,8 @@ default: &default
   adapter: postgresql
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  prepared_statements: false
+  checkout_timeout: 30
   <% if ENV["DB_HOST"] %>
   host: <%= ENV["DB_HOST"] %>
   username: postgres
