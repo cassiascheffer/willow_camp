@@ -1,8 +1,4 @@
-class TagsController < ApplicationController
-  include SecureDomainRedirect
-  layout "blog"
-
-  before_action :set_author, only: %i[index show]
+class Blog::TagsController < Blog::BaseController
   before_action :set_tag, only: [:show]
 
   def index

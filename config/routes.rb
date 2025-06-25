@@ -55,11 +55,11 @@ Rails.application.routes.draw do
 
   constraints(DomainConstraint.new) do
     # Tags
-    get "/tags", to: "tags#index", as: :tags
-    get "/t/:tag", to: "tags#show", as: :tag
+    get "/tags", to: "blog/tags#index", as: :tags
+    get "/t/:tag", to: "blog/tags#show", as: :tag
     # Posts
-    get "/", to: "posts#index", as: :posts
-    get "/:slug", to: "posts#show", as: :post
+    get "/", to: "blog/posts#index", as: :posts
+    get "/:slug", to: "blog/posts#show", as: :post
 
     # Feed formats
     namespace :posts do

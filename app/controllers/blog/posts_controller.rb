@@ -1,8 +1,4 @@
-class PostsController < ApplicationController
-  include SecureDomainRedirect
-  layout "blog"
-
-  before_action :set_author, only: %i[index show]
+class Blog::PostsController < Blog::BaseController
   before_action :set_post, only: %i[show]
 
   def index
@@ -18,10 +14,6 @@ class PostsController < ApplicationController
   end
 
   private
-
-  def set_author
-    set_author_with_secure_redirect
-  end
 
   def set_post
     @post = @author.posts.published.find_by(slug: params[:slug])

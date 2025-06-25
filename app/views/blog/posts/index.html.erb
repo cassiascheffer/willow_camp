@@ -19,7 +19,7 @@
 <div id="posts" class="space-y-8">
   <% if @posts.any? %>
     <div class="posts-list space-y-2">
-      <%= render partial: 'posts/post_row', collection: @posts %>
+      <%= render partial: 'blog/posts/post_row', collection: @posts %>
     </div>
   <% else %>
     <div class="text-center py-8">
