@@ -49,16 +49,8 @@
         </div>
       </div>
     </div>
-    <div class="mb-6" id="theme-controller" data-controller="theme" data-theme-light-theme-value="<%= user.effective_light_theme %>" data-theme-dark-theme-value="<%= user.effective_dark_theme %>">
-      <div data-controller="theme-selector" data-theme-selector-theme-outlet="#theme-controller">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
-          <%= render "shared/theme_selector", form: form, field_name: :light_theme, label: "Light Mode Theme", current_theme: user.effective_light_theme, theme_type: "light", themes: DashboardHelper::LIGHT_THEMES %>
-          <%= render "shared/theme_selector", form: form, field_name: :dark_theme, label: "Dark Mode Theme", current_theme: user.effective_dark_theme, theme_type: "dark", themes: DashboardHelper::DARK_THEMES %>
-        </div>
-      </div>
-      <div class="text-xs text-gray-500 mb-4">
-        Themes will automatically switch based on your browser's light/dark mode preference. Select a theme above to preview it immediately.
-      </div>
+    <div class="mb-6">
+      <%= render "dashboard/settings/theme_selector", form: form, user: user %>
     </div>
     <div class="form-control w-full mb-4">
       <%= form.label :site_meta_description, "Site Meta Description", class: "label" %>

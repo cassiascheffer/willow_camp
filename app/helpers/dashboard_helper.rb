@@ -1,4 +1,3 @@
 module DashboardHelper
-  LIGHT_THEMES = %w[light wireframe cupcake bumblebee pastel lemonade caramellatte silk emerald garden acid cyberpunk valentine fantasy lofi cmyk corporate autumn winter retro nord sunset aqua forest business luxury halloween synthwave coffee dracula dim night black abyss dark].freeze
-  DARK_THEMES = LIGHT_THEMES.reverse
+  ALL_THEMES = %w[light dark abyss acid aqua autumn black bumblebee business caramellatte cmyk coffee corporate cupcake cyberpunk dim dracula emerald fantasy forest garden halloween lemonade lofi luxury night nord pastel retro silk sunset synthwave valentine vineframe winter].freeze
 end

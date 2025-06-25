@@ -35,15 +35,6 @@ class User < ApplicationRecord
     allow_blank: true
   validate :custom_domain_format
 
-  # Theme preference methods
-  def effective_light_theme
-    light_theme.presence || "light"
-  end
-
-  def effective_dark_theme
-    dark_theme.presence || "dark"
-  end
-
   # Scopes
   scope :by_domain, ->(domain) do
     return none if domain.blank?

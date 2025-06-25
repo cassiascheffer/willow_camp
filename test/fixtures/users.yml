@@ -5,8 +5,7 @@ one:
   subdomain: one
   name: "User One"
   blog_title: "One's Blog"
-  light_theme: "light"
-  dark_theme: "dark"
+  theme: "light"
   slug: "user-one"
   created_at: <%= 1.week.ago %>
   updated_at: <%= 1.day.ago %>
@@ -18,8 +17,7 @@ two:
   subdomain: two
   name: "User Two"
   blog_title: "Two's Blog"
-  light_theme: "light"
-  dark_theme: "dark"
+  theme: "light"
   slug: "user-two"
   created_at: <%= 1.week.ago %>
   updated_at: <%= 1.day.ago %>
@@ -32,8 +30,7 @@ custom_domain_user:
   custom_domain: myblog.com
   name: "Custom Domain User"
   blog_title: "My Custom Blog"
-  light_theme: "light"
-  dark_theme: "dark"
+  theme: "light"
   slug: "custom-domain-user"
   created_at: <%= 1.week.ago %>
   updated_at: <%= 1.day.ago %>
@@ -44,8 +41,7 @@ no_blog_title:
   encrypted_password: <%= BCrypt::Password.create("password") %>
   subdomain: notitle
   name: "No Blog Title User"
-  light_theme: "light"
-  dark_theme: "dark"
+  theme: "light"
   slug: "no-blog-title-user"
   created_at: <%= 1.week.ago %>
   updated_at: <%= 1.day.ago %>
@@ -57,8 +53,7 @@ custom_domain_no_title:
   subdomain: customnotitle
   custom_domain: example.org
   name: "Custom No Title User"
-  light_theme: "light"
-  dark_theme: "dark"
+  theme: "light"
   slug: "custom-no-title-user"
   created_at: <%= 1.week.ago %>
   updated_at: <%= 1.day.ago %>

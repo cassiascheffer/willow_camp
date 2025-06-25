@@ -21,7 +21,7 @@
     <meta name="twitter:title" content="willow.camp | A blogging platform">
     <meta name="twitter:description" content="willow.camp is a small blogging platform for people who like to write.">
     <%= yield :head %>
-    <!-- Apply theme based on user preference to prevent flash -->
+    <!-- Apply theme immediately to prevent flash -->
     <script>
       try {
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
