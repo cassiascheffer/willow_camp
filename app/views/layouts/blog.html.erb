@@ -34,13 +34,35 @@
     <%= javascript_importmap_tags %>
   </head>
   <body class="font-mono">
-    <header class="navbar bg-base-100 shadow-md w-full px-8">
-      <div class="navbar-start">
+    <header class="bg-base-100 shadow-md w-full px-8">
+      <!-- Mobile menu with details/summary -->
+      <details class="lg:hidden">
+        <summary class="py-4 flex items-center justify-between cursor-pointer">
+          <a href="/" class="text-xl font-bold hover:text-primary transition-colors" aria-label="Home">
+            <%= blog_title_for(@author) %>
+          </a>
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </summary>
+        <nav class="pb-4 space-y-2">
+          <% if @author.pages.present? %>
+            <% @author.pages.each do |page| %>
+              <a href="<%= post_path(page) %>" class="block link link-hover font-medium py-2" aria-label="<%= page.title %>">
+                <%= page.title %>
+              </a>
+            <% end %>
+          <% end %>
+          <a href="<%= posts_rss_path(format: :rss) %>" class="block link link-hover font-medium py-2" title="RSS Feed" aria-label="RSS Feed">
+            RSS
+          </a>
+        </nav>
+      </details>
+      <!-- Desktop menu -->
+      <div class="hidden lg:flex lg:items-center lg:justify-between py-4">
         <a href="/" class="text-xl font-bold hover:text-primary transition-colors" aria-label="Home">
           <%= blog_title_for(@author) %>
         </a>
-      </div>
-      <div class="navbar-end">
         <nav class="space-x-4">
           <% if @author.pages.present? %>
             <% @author.pages.each do |page| %>
