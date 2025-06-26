@@ -39,5 +39,8 @@
 /node_modules
 .envrc
 
-# don't ignore app/views/tags/
-!app/views/tags/
+# ignore all generic tags directories
+**/tags/
+
+# don't ignore tags directories under views folders
+!**/views/**/tags/
