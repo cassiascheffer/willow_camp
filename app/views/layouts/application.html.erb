@@ -26,7 +26,7 @@
   <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
   <%= javascript_importmap_tags %>
 </head>
-<body class="font-mono flex flex-col min-h-screen">
+<body class="font-mono flex flex-col min-h-screen" data-controller="app-favicon">
   <!-- Top Navigation -->
   <div class="navbar bg-base-100 border-b border-base-300 px-2 sm:px-4">
     <div class="navbar-start">
@@ -42,7 +42,7 @@
         </ul>
       </div>
       <%= link_to root_path, class: "btn btn-ghost text-lg sm:text-xl text-primary font-bold" do %>
-        ⛺ willow.camp
+        <span data-app-favicon-target="logo">⛺</span> willow.camp
       <% end %>
     </div>
     <div class="navbar-center hidden lg:flex">
@@ -89,7 +89,7 @@
           </div>
         </div>
         <!-- Emoji Favicon Selector -->
-        <div class="dropdown dropdown-end" data-controller="app-favicon">
+        <div class="dropdown dropdown-end">
           <div tabindex="0" role="button" class="btn btn-ghost btn-sm gap-1 normal-case" aria-label="Favicon selector">
             <span class="text-base" data-app-favicon-target="preview">⛺</span>
             <span class="text-xs opacity-60 hidden sm:inline">favicon</span>

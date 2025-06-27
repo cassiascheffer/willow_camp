@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["preview"]
+  static targets = ["preview", "logo"]
 
   connect() {
     // Set initial favicon from cookie or default
@@ -16,6 +16,11 @@ export default class extends Controller {
     if (this.hasPreviewTarget) {
       this.previewTarget.textContent = savedEmoji
     }
+
+    // Update all logo targets
+    this.logoTargets.forEach(logo => {
+      logo.textContent = savedEmoji
+    })
   }
 
   selectEmoji(event) {
@@ -25,6 +30,11 @@ export default class extends Controller {
     if (this.hasPreviewTarget) {
       this.previewTarget.textContent = emoji
     }
+
+    // Update all logo targets
+    this.logoTargets.forEach(logo => {
+      logo.textContent = emoji
+    })
 
     // Update favicon
     this.setFavicon(emoji)
