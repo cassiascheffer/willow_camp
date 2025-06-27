@@ -26,8 +26,92 @@
   <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
   <%= javascript_importmap_tags %>
 </head>
-<body class="font-mono">
-  <main class="mx-auto p-8">
+<body class="font-mono flex flex-col min-h-screen">
+  <!-- Top Navigation -->
+  <div class="navbar bg-base-100 border-b border-base-300 px-2 sm:px-4">
+    <div class="navbar-start">
+      <div class="dropdown">
+        <div tabindex="0" role="button" class="btn btn-ghost lg:hidden" aria-label="Menu">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16"></path>
+          </svg>
+        </div>
+        <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52 border border-base-300">
+          <li><%= link_to "Home", root_path, class: "text-sm" %></li>
+          <li><%= link_to "Docs", documentation_path, class: "text-sm" %></li>
+        </ul>
+      </div>
+      <%= link_to root_path, class: "btn btn-ghost text-lg sm:text-xl text-primary font-bold" do %>
+        ⛺ willow.camp
+      <% end %>
+    </div>
+    <div class="navbar-center hidden lg:flex">
+      <ul class="menu menu-horizontal px-1">
+        <li><%= link_to "Home", root_path, class: "text-sm" %></li>
+        <li><%= link_to "Docs", documentation_path, class: "text-sm" %></li>
+      </ul>
+    </div>
+    <div class="navbar-end">
+      <!-- Theme and Emoji Pickers -->
+      <div class="flex items-center gap-2">
+        <!-- Theme Selector -->
+        <div class="dropdown dropdown-end" data-controller="app-theme">
+          <div tabindex="0" role="button" class="btn btn-ghost btn-sm gap-1 sm:gap-2 normal-case" aria-label="Theme selector">
+            <div data-theme="light" data-app-theme-target="preview" class="bg-base-100 grid shrink-0 grid-cols-2 gap-0.5 rounded-md border border-base-content/10 p-1">
+              <div class="bg-base-content size-1 rounded-full"></div>
+              <div class="bg-primary size-1 rounded-full"></div>
+              <div class="bg-secondary size-1 rounded-full"></div>
+              <div class="bg-accent size-1 rounded-full"></div>
+            </div>
+            <span class="capitalize text-xs hidden sm:inline" data-app-theme-target="text">light</span>
+          </div>
+          <div tabindex="0" class="dropdown-content z-[1] menu p-2 shadow-lg bg-base-100 rounded-box w-64 max-h-96 overflow-y-auto border border-base-300">
+            <div class="menu-title text-xs mb-2">
+              Choose Theme
+              <div class="text-xs opacity-60 mt-1">Themes by <a href="https://daisyui.com" class="link" target="_blank">daisyUI</a></div>
+            </div>
+            <div class="grid grid-cols-2 gap-1">
+              <% %w[light dark cupcake bumblebee emerald corporate synthwave retro cyberpunk valentine halloween garden forest aqua lofi pastel fantasy wireframe black luxury dracula cmyk autumn business acid lemonade night coffee winter dim nord sunset prose].each do |theme| %>
+                <button type="button"
+                        class="flex items-center gap-2 p-2 hover:bg-base-200 rounded text-xs"
+                        data-theme-value="<%= theme %>"
+                        data-action="click->app-theme#selectTheme">
+                  <div data-theme="<%= theme %>" class="bg-base-100 grid shrink-0 grid-cols-2 gap-0.5 rounded-md border border-base-content/10 p-1">
+                    <div class="bg-base-content size-1 rounded-full"></div>
+                    <div class="bg-primary size-1 rounded-full"></div>
+                    <div class="bg-secondary size-1 rounded-full"></div>
+                    <div class="bg-accent size-1 rounded-full"></div>
+                  </div>
+                  <span class="capitalize flex-1 text-left"><%= theme %></span>
+                </button>
+              <% end %>
+            </div>
+          </div>
+        </div>
+        <!-- Emoji Favicon Selector -->
+        <div class="dropdown dropdown-end" data-controller="app-favicon">
+          <div tabindex="0" role="button" class="btn btn-ghost btn-sm gap-1 normal-case" aria-label="Favicon selector">
+            <span class="text-base" data-app-favicon-target="preview">⛺</span>
+            <span class="text-xs opacity-60 hidden sm:inline">favicon</span>
+          </div>
+          <div tabindex="0" class="dropdown-content z-[1] menu p-2 shadow-lg bg-base-100 rounded-box w-48 border border-base-300">
+            <div class="menu-title text-xs mb-2">Choose Favicon</div>
+            <div class="grid grid-cols-5 gap-2">
+              <% %w[⛺ 🏕️ 🌲 🌊 🌸 🚀 ✨ 🎨 📝 💡].each do |emoji| %>
+                <button type="button"
+                        class="btn btn-ghost btn-sm text-lg p-1 h-auto min-h-0"
+                        data-emoji-value="<%= emoji %>"
+                        data-action="click->app-favicon#selectEmoji">
+                  <%= emoji %>
+                </button>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <main class="mx-auto p-4 sm:p-6 lg:p-8 flex-1 flex items-center justify-center">
     <%= yield %>
   </main>
   <footer class="footer p-4 bg-base-200 text-base-content">

@@ -82,6 +82,9 @@ Rails.application.routes.draw do
 
   get "up" => "rails/health#show", :as => :rails_health_check
 
+  # Documentation
+  get "/docs", to: "documentations#show", as: :documentation
+
   # Robots.txt for root domain
   get "/robots.:format", to: "robots#show", as: :root_robots
 

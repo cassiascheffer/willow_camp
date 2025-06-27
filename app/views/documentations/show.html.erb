@@ -1,0 +1,191 @@
+<% content_for :head do %>
+  <title>API Documentation | willow.camp</title>
+  <meta name="description" content="Complete API documentation for willow.camp - learn how to use our REST API and CLI tool to manage your blog posts programmatically.">
+<% end %>
+<div class="py-8 md:py-16">
+  <div class="py-8 sm:py-12 lg:py-16 px-4">
+    <div class="max-w-3xl mx-auto">
+      <div class="text-center mb-8 sm:mb-12">
+        <h1 class="text-2xl sm:text-3xl font-bold text-primary mb-4">Documentation</h1>
+      </div>
+      <div class="prose prose-sm sm:prose-base max-w-none mb-8">
+        <p>You can create posts in the willow.camp editor. Log in to get started. You don't need to be an expert! But if you're like me and want full access to your content, you can use the CLI tool or API to manage your posts.</p>
+        <p>willow.camp is designed around an API for syncing your markdown files. You can import and export your content using the CLI tool or API. Your posts belong to you after all.</p>
+      </div>
+      <!-- Table of Contents -->
+      <div class="my-8">
+        <div class="text-center mb-8 sm:mb-12">
+          <div class="flex justify-center">
+            <a href="https://rubygems.org/gems/willow_camp_cli" class="btn btn-outline btn-primary" target="_blank">
+              CLI Tool on RubyGems
+            </a>
+          </div>
+        </div>
+        <h3 class="text-lg sm:text-xl font-semibold mb-4 text-primary">Contents</h3>
+        <ul class="space-y-2 mb-8">
+          <li><a href="#authentication" class="link">Authentication</a></li>
+          <li><a href="#endpoints" class="link">API Endpoints</a></li>
+          <li><a href="#examples" class="link">Example Usage</a></li>
+          <li><a href="#error-handling" class="link">Error Handling</a></li>
+          <li><a href="#markdown-format" class="link">Markdown Format</a></li>
+        </ul>
+      </div>
+      <div class="prose prose-sm sm:prose-base max-w-none">
+        <h3 id="authentication">Authentication</h3>
+        <p>All API endpoints require authentication using a bearer token. Get your API key from the Settings page after signing in.</p>
+        <pre><code>Authorization: Bearer your-api-token</code></pre>
+        <h3 id="endpoints">API Endpoints</h3>
+        <div class="space-y-6">
+          <div>
+            <h4>List Posts</h4>
+            <pre><code>GET /api/posts</code></pre>
+            <p>Returns all posts belonging to the authenticated user.</p>
+            <div class="collapse collapse-arrow">
+              <input type="checkbox">
+              <div class="collapse-title text-sm font-medium">cURL Example</div>
+              <div class="collapse-content">
+                <pre><code>curl -X GET https://willow.camp/api/posts \
+  -H "Authorization: Bearer your-api-token"</code></pre>
+              </div>
+            </div>
+            <div class="collapse collapse-arrow">
+              <input type="checkbox">
+              <div class="collapse-title text-sm font-medium">Response Format</div>
+              <div class="collapse-content">
+                <pre><code>{
+    "posts": [
+      {
+        "id": 1,
+        "slug": "my-awesome-post",
+        "markdown": "---\ntitle: My Awesome Post\n---\n# Content"
+      }
+    ]
+  }</code></pre>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h4>Get a Post</h4>
+            <pre><code>GET /api/posts/:slug</code></pre>
+            <p>Returns a specific post by its slug.</p>
+            <div class="collapse collapse-arrow">
+              <input type="checkbox">
+              <div class="collapse-title text-sm font-medium">cURL Example</div>
+              <div class="collapse-content">
+                <pre><code>curl -X GET https://willow.camp/api/posts/my-awesome-post \
+  -H "Authorization: Bearer your-api-token"</code></pre>
+              </div>
+            </div>
+            <div class="collapse collapse-arrow">
+              <input type="checkbox">
+              <div class="collapse-title text-sm font-medium">Response Format</div>
+              <div class="collapse-content">
+                <pre><code>{
+    "post": {
+      "id": 1,
+      "slug": "my-awesome-post",
+      "markdown": "---\ntitle: My Awesome Post\n---\n# Content"
+    }
+  }</code></pre>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h4>Create a Post</h4>
+            <pre><code>POST /api/posts</code></pre>
+            <p>Creates a new post with Markdown content and YAML frontmatter.</p>
+            <div class="collapse collapse-arrow">
+              <input type="checkbox">
+              <div class="collapse-title text-sm font-medium">cURL Example</div>
+              <div class="collapse-content">
+                <pre><code>curl -X POST https://willow.camp/api/posts \
+  -H "Authorization: Bearer your-api-token" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "post": {
+      "markdown": "---\ntitle: My New Post\npublished: true\n---\n# Hello World"
+    }
+  }'</code></pre>
+              </div>
+            </div>
+            <div class="collapse collapse-arrow">
+              <input type="checkbox">
+              <div class="collapse-title text-sm font-medium">Request Format</div>
+              <div class="collapse-content">
+                <pre><code>{
+  "post": {
+    "markdown": "---\ntitle: My New Post\npublished: true\n---\n# Content here"
+  }
+}</code></pre>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h4>Update a Post</h4>
+            <pre><code>PATCH /api/posts/:slug</code></pre>
+            <p>Updates an existing post.</p>
+            <div class="collapse collapse-arrow">
+              <input type="checkbox">
+              <div class="collapse-title text-sm font-medium">cURL Example</div>
+              <div class="collapse-content">
+                <pre><code>curl -X PATCH https://willow.camp/api/posts/my-awesome-post \
+  -H "Authorization: Bearer your-api-token" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "post": {
+      "markdown": "---\ntitle: Updated Post Title\npublished: true\n---\n# Updated content"
+    }
+  }'</code></pre>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h4>Delete a Post</h4>
+            <pre><code>DELETE /api/posts/:slug</code></pre>
+            <p>Deletes a post. Returns 204 on success.</p>
+            <div class="collapse collapse-arrow">
+              <input type="checkbox">
+              <div class="collapse-title text-sm font-medium">cURL Example</div>
+              <div class="collapse-content">
+                <pre><code>curl -X DELETE https://willow.camp/api/posts/my-awesome-post \
+  -H "Authorization: Bearer your-api-token"</code></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+        <h3 id="examples">Example Usage</h3>
+        <h4>Creating a post with cURL</h4>
+        <pre><code>curl -X POST https://willow.camp/api/posts \
+  -H "Authorization: Bearer your-api-token" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "post": {
+      "markdown": "---\ntitle: API Created Post\npublished: true\n---\n# Hello World"
+    }
+  }'</code></pre>
+        <h3 id="error-handling">Error Handling</h3>
+        <p><strong>401 Unauthorized:</strong> Missing or invalid authentication token</p>
+        <pre><code>{ "error": "Unauthorized" }</code></pre>
+        <p><strong>404 Not Found:</strong> Post does not exist</p>
+        <pre><code>{ "error": "Post not found" }</code></pre>
+        <p><strong>422 Unprocessable Entity:</strong> Validation errors</p>
+        <pre><code>{ "errors": ["Title can't be blank"] }</code></pre>
+        <h3 id="markdown-format">Markdown Format</h3>
+        <p>Posts use Markdown with YAML frontmatter for metadata:</p>
+        <pre><code>---
+title: My Awesome Post
+description: This is a great post
+published: true
+date: 2023-05-25
+tags:
+  - rails
+  - ruby
+---
+
+# Post content starts here
+
+Regular markdown content goes here...</code></pre>
+      </div>
+    </div>
+  </div>
+</div>
