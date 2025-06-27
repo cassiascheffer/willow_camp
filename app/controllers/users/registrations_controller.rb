@@ -1,16 +1,18 @@
 # frozen_string_literal: true
 
 class Users::RegistrationsController < Devise::RegistrationsController
+  skip_before_action :require_no_authentication, only: [:new]
   # before_action :configure_sign_up_params, only: [:create]
   # before_action :configure_account_update_params, only: [:update]
 
   # GET /resource/sign_up
   def new
     if current_user
-      redirect_to dashboard_path(current_user)
-    else
-      super
+      sign_out(current_user)
+      # Clear the current_user after sign out
+      @current_user = nil
     end
+    super
   end
 
   # POST /resource
