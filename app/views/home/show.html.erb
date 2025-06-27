@@ -3,15 +3,78 @@
     <div class="w-full">
       <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-primary mb-6 md:mb-8">⛺ willow.camp</h1>
       <h2 class="text-lg sm:text-xl font-light mb-8 md:mb-10 text-base-content/70">A blogging platform</h2>
-      <div class="mb-8 md:mb-10">
-        <p class="text-base sm:text-lg">Custom Themes, favicons, and domains. Import & Export in Markdown.</p>
+      <div class="mb-6 md:mb-8">
+        <p class="text-base sm:text-lg mb-4">Custom Themes, favicons, and domains. Import & Export in Markdown.</p>
+        <p class="text-base-content/60 text-sm sm:text-base">Coming soon: RSS feeds and bookmarks.</p>
       </div>
-      <p class="mb-8 md:mb-10 text-base-content/60 text-sm sm:text-base">Coming soon: RSS feeds and bookmarks.</p>
-      <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mb-8 md:mb-10">
-        <%= link_to "Sign In", new_user_session_path, class: "btn btn-primary btn-lg w-full sm:w-auto" %>
-        <%= link_to "Sign Up", new_user_registration_path, class: "btn btn-secondary btn-lg w-full sm:w-auto" %>
+      <!-- Customization Controls -->
+      <div class="card bg-base-200/50 shadow-sm rounded-lg p-4 mb-6 md:mb-8">
+        <div class="text-center mb-3">
+          <h3 class="text-sm font-medium text-base-content/80">Try it out - customize this page!</h3>
+        </div>
+        <div class="flex flex-col sm:flex-row gap-3 justify-center items-center">
+          <!-- Theme Selector -->
+          <div class="dropdown dropdown-end" data-controller="app-theme">
+            <div tabindex="0" role="button" class="btn btn-outline btn-sm gap-2 normal-case">
+              <div data-theme="light" data-app-theme-target="preview" class="bg-base-100 grid shrink-0 grid-cols-2 gap-0.5 rounded-md border border-base-content/10 p-1">
+                <div class="bg-base-content size-1 rounded-full"></div>
+                <div class="bg-primary size-1 rounded-full"></div>
+                <div class="bg-secondary size-1 rounded-full"></div>
+                <div class="bg-accent size-1 rounded-full"></div>
+              </div>
+              <span class="capitalize text-xs" data-app-theme-target="text">light</span>
+              <span class="text-xs opacity-60">theme</span>
+            </div>
+            <div tabindex="0" class="dropdown-content z-[1] menu p-2 shadow-lg bg-base-100 rounded-box w-64 max-h-96 overflow-y-auto border border-base-300">
+              <div class="menu-title text-xs mb-2">Choose Theme</div>
+              <div class="grid grid-cols-2 gap-1">
+                <% %w[light dark cupcake bumblebee emerald corporate synthwave retro cyberpunk valentine halloween garden forest aqua lofi pastel fantasy wireframe black luxury dracula cmyk autumn business acid lemonade night coffee winter dim nord sunset prose].each do |theme| %>
+                  <button type="button"
+                          class="flex items-center gap-2 p-2 hover:bg-base-200 rounded text-xs"
+                          data-theme-value="<%= theme %>"
+                          data-action="click->app-theme#selectTheme">
+                    <div data-theme="<%= theme %>" class="bg-base-100 grid shrink-0 grid-cols-2 gap-0.5 rounded-md border border-base-content/10 p-1">
+                      <div class="bg-base-content size-1 rounded-full"></div>
+                      <div class="bg-primary size-1 rounded-full"></div>
+                      <div class="bg-secondary size-1 rounded-full"></div>
+                      <div class="bg-accent size-1 rounded-full"></div>
+                    </div>
+                    <span class="capitalize flex-1 text-left"><%= theme %></span>
+                  </button>
+                <% end %>
+              </div>
+            </div>
+          </div>
+          <!-- Emoji Favicon Selector -->
+          <div class="dropdown dropdown-end" data-controller="app-favicon">
+            <div tabindex="0" role="button" class="btn btn-outline btn-sm gap-2 normal-case">
+              <span class="text-base" data-app-favicon-target="preview">⛺</span>
+              <span class="text-xs opacity-60">favicon</span>
+            </div>
+            <div tabindex="0" class="dropdown-content z-[1] menu p-2 shadow-lg bg-base-100 rounded-box w-48 border border-base-300">
+              <div class="menu-title text-xs mb-2">Choose Favicon</div>
+              <div class="grid grid-cols-5 gap-2">
+                <% %w[⛺ 🏕️ 🌲 🌊 🌸 🚀 ✨ 🎨 📝 💡].each do |emoji| %>
+                  <button type="button"
+                          class="btn btn-ghost btn-sm text-lg p-1 h-auto min-h-0"
+                          data-emoji-value="<%= emoji %>"
+                          data-action="click->app-favicon#selectEmoji">
+                    <%= emoji %>
+                  </button>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <p class="text-base-content/60 text-sm">Made by <a href="https://enumerator.dev" class="link">Cassia</a> • <a href="https://letterbird.co/cassia" class="link">Get in touch</a></p>
+      <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mb-6 md:mb-8">
+        <%= link_to "Sign In", new_user_session_path, class: "btn btn-primary btn-lg w-full sm:w-auto min-w-32" %>
+        <%= link_to "Sign Up", new_user_registration_path, class: "btn btn-secondary btn-lg w-full sm:w-auto min-w-32" %>
+      </div>
+      <div class="text-base-content/60 text-sm space-y-1">
+        <p>Made by <a href="https://enumerator.dev" class="link hover:link-primary">Cassia</a></p>
+        <p><a href="https://letterbird.co/cassia" class="link hover:link-primary">Get in touch</a></p>
+      </div>
     </div>
   </div>
 </div>
