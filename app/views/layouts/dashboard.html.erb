@@ -17,7 +17,7 @@
 <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
 <%= javascript_importmap_tags %>
 </head>
-<body class="font-mono">
+<body class="font-mono" data-controller="theme" data-theme-theme-value="<%= @author&.theme || 'light' %>">
   <nav class="bg-base-100 shadow-md w-full px-8" aria-label="Main Navigation">
     <!-- Mobile menu with details/summary -->
     <details class="lg:hidden">

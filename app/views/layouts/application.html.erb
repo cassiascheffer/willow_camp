@@ -36,7 +36,7 @@
   <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
   <%= javascript_importmap_tags %>
 </head>
-<body class="font-mono">
+<body class="font-mono" data-controller="theme" data-theme-theme-value="light">
   <main class="mx-auto p-8">
     <%= yield %>
   </main>
