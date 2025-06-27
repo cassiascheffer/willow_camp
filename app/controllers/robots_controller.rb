@@ -4,6 +4,6 @@ class RobotsController < ApplicationController
 
   def show
     respond_to :text
-    expires_in 6.hours, public: true
+    expires_in 30.days, public: true
   end
 end

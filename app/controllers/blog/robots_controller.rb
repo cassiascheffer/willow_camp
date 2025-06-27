@@ -6,6 +6,6 @@ class Blog::RobotsController < Blog::BaseController
     @sitemap_url = sitemap_url(format: :xml)
 
     respond_to :text
-    expires_in 6.hours, public: true
+    expires_in 30.days, public: true
   end
 end
