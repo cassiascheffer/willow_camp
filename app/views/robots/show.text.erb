@@ -1,0 +1,24 @@
+# See https://www.robotstxt.org/robotstxt.html for documentation on how to use the robots.txt file
+# Robots.txt for the main willow.camp domain
+User-agent: *
+# Allow crawling of public marketing pages
+Allow: /
+# Disallow crawling of user authentication and registration pages
+Disallow: /users/login
+Disallow: /users/logout
+Disallow: /users/signup
+Disallow: /users/register
+Disallow: /users/secret
+Disallow: /users/verification
+Disallow: /users/unblock
+# Disallow crawling of dashboard and admin areas
+Disallow: /dashboard/
+Disallow: /dashboard
+# Disallow crawling of API endpoints
+Disallow: /api/
+# Disallow crawling of health check endpoint
+Disallow: /up
+# Disallow crawling of Rails system routes
+Disallow: /rails/
+# Common crawl delay to be respectful to server resources
+Crawl-delay: 1

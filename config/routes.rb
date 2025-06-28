@@ -59,12 +59,23 @@ Rails.application.routes.draw do
     get "/t/:tag", to: "blog/tags#show", as: :tag
     # Posts
     get "/", to: "blog/posts#index", as: :posts
-    get "/:slug", to: "blog/posts#show", as: :post
 
     # Feed formats
     get "/posts/rss", to: "blog/feed#show", defaults: {format: "rss"}, as: :posts_rss
     get "/posts/atom", to: "blog/feed#show", defaults: {format: "atom"}, as: :posts_atom
     get "/posts/json", to: "blog/feed#show", defaults: {format: "json"}, as: :posts_json
+
+    # Feed subscription page
+    get "/subscribe", to: "blog/feed#subscribe", as: :subscribe
+
+    # Sitemap
+    get "/sitemap.:format", to: "blog/sitemap#show", as: :sitemap
+
+    # Robots.txt
+    get "/robots.:format", to: "blog/robots#show", as: :robots
+
+    # This catch-all route must come last to avoid matching other specific routes
+    get "/:slug", to: "blog/posts#show", as: :post
   end
 
   namespace :api do
@@ -73,6 +84,12 @@ Rails.application.routes.draw do
   end
 
   get "up" => "rails/health#show", :as => :rails_health_check
+
+  # Documentation
+  get "/docs", to: "documentations#show", as: :documentation
+
+  # Robots.txt for root domain
+  get "/robots.:format", to: "robots#show", as: :root_robots
 
   root "home#show"
 end

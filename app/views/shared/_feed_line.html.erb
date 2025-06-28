@@ -1,0 +1,13 @@
+<li class="flex items-center justify-between gap-4" data-controller="clipboard">
+  <div class="flex-1">
+    <span class="font-bold mr-2"><%= feed_name %>:</span>
+    <span class="font-mono text-sm text-base-content/70"><%= feed_url %></span>
+  </div>
+  <button class="btn btn-ghost btn-sm btn-square"
+          data-action="click->clipboard#copy"
+    aria-label="Copy <%= feed_name %> URL">
+    <span data-clipboard-target="source" class="hidden"><%= feed_url %></span>
+    <%= render 'shared/copy_icon' %>
+    <span data-clipboard-target="success" class="hidden ml-2">✓</span>
+  </button>
+</li>

@@ -136,7 +136,7 @@ export default class extends Controller {
         this.setStatus("Saved - Auto-save disabled (published)", "success")
       } else {
         this.setStatus("Saved", "success")
-        this.setStatusWithDelay("Auto-save enabled", 3000, "info")
+        this.setStatusWithDelay("Last saved at " + new Date().toLocaleString(), 3000, "info")
       }
     } else {
       this.setStatus("Save failed", "error")

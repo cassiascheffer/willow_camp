@@ -1,5 +1,8 @@
 module Blog
   class FeedController < Blog::BaseController
+    # Allow all browsers for feed access (for crawlers, feed readers, etc.)
+    allow_browser versions: {chrome: 1, firefox: 1, safari: 1, edge: 1, opera: 1, ie: false}
+
     def show
       @posts = @author.posts.published
         .order(published_at: :desc, created_at: :desc)
@@ -10,6 +13,10 @@ module Blog
         format.rss { render layout: false }
         format.json { render layout: false }
       end
+    end
+
+    def subscribe
+      # HTML subscription page for feeds
     end
   end
 end

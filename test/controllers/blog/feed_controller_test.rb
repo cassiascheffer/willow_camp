@@ -179,5 +179,164 @@ module Blog
       assert_response :success
       assert_includes @response.body, @post_one.title
     end
+
+    test "json feed URLs should use subdomain format for subdomain users" do
+      get "/posts/json", headers: {host: "#{@user_one.subdomain}.willow.camp"}
+      assert_response :success
+
+      json_response = JSON.parse(@response.body)
+
+      # Check main feed URLs
+      assert_equal "http://#{@user_one.subdomain}.willow.camp/", json_response["home_page_url"]
+      assert_equal "http://#{@user_one.subdomain}.willow.camp/posts/json", json_response["feed_url"]
+
+      # Check post URLs
+      json_response["items"].each do |item|
+        assert item["url"].start_with?("http://#{@user_one.subdomain}.willow.camp/")
+        assert item["id"].start_with?("http://#{@user_one.subdomain}.willow.camp/")
+        # URLs should not contain concatenated domain like "subdomain.customdomain"
+        refute item["url"].include?("#{@user_one.subdomain}.enumerator.dev")
+        refute item["id"].include?("#{@user_one.subdomain}.enumerator.dev")
+      end
+    end
+
+    test "json feed URLs should use custom domain format for custom domain users" do
+      get "/posts/json", headers: {host: @custom_domain_user.custom_domain}
+      assert_response :success
+
+      json_response = JSON.parse(@response.body)
+
+      # Check main feed URLs
+      assert_equal "http://#{@custom_domain_user.custom_domain}/", json_response["home_page_url"]
+      assert_equal "http://#{@custom_domain_user.custom_domain}/posts/json", json_response["feed_url"]
+
+      # Check post URLs
+      json_response["items"].each do |item|
+        assert item["url"].start_with?("http://#{@custom_domain_user.custom_domain}/")
+        assert item["id"].start_with?("http://#{@custom_domain_user.custom_domain}/")
+        # URLs should not contain willow.camp subdomain
+        refute item["url"].include?("willow.camp")
+        refute item["id"].include?("willow.camp")
+        # URLs should not contain concatenated domain like "subdomain.customdomain"
+        refute item["url"].include?("#{@custom_domain_user.subdomain}.#{@custom_domain_user.custom_domain}")
+        refute item["id"].include?("#{@custom_domain_user.subdomain}.#{@custom_domain_user.custom_domain}")
+      end
+    end
+
+    test "rss feed URLs should use subdomain format for subdomain users" do
+      get "/posts/rss", headers: {host: "#{@user_one.subdomain}.willow.camp"}
+      assert_response :success
+
+      # Check channel link
+      assert_match %r{<link>http://#{@user_one.subdomain}\.willow\.camp/</link>}, @response.body
+
+      # Check atom self-link
+      assert_match %r{<atom:link.*href="http://#{@user_one.subdomain}\.willow\.camp/posts/rss"}, @response.body
+
+      # Check item links
+      @response.body.scan(%r{<link>(http://[^<]+)</link>}).flatten.each do |url|
+        assert url.start_with?("http://#{@user_one.subdomain}.willow.camp/")
+        # URLs should not contain concatenated domain
+        refute url.include?("#{@user_one.subdomain}.enumerator.dev")
+      end
+
+      # Check item GUIDs
+      @response.body.scan(%r{<guid>(http://[^<]+)</guid>}).flatten.each do |url|
+        assert url.start_with?("http://#{@user_one.subdomain}.willow.camp/")
+        # URLs should not contain concatenated domain
+        refute url.include?("#{@user_one.subdomain}.enumerator.dev")
+      end
+    end
+
+    test "rss feed URLs should use custom domain format for custom domain users" do
+      get "/posts/rss", headers: {host: @custom_domain_user.custom_domain}
+      assert_response :success
+
+      # Check channel link
+      assert_match %r{<link>http://#{Regexp.escape(@custom_domain_user.custom_domain)}/</link>}, @response.body
+
+      # Check atom self-link
+      assert_match %r{<atom:link.*href="http://#{Regexp.escape(@custom_domain_user.custom_domain)}/posts/rss"}, @response.body
+
+      # Check item links
+      @response.body.scan(%r{<link>(http://[^<]+)</link>}).flatten.each do |url|
+        assert url.start_with?("http://#{@custom_domain_user.custom_domain}/")
+        # URLs should not contain willow.camp
+        refute url.include?("willow.camp")
+        # URLs should not contain concatenated domain
+        refute url.include?("#{@custom_domain_user.subdomain}.#{@custom_domain_user.custom_domain}")
+      end
+
+      # Check item GUIDs
+      @response.body.scan(%r{<guid>(http://[^<]+)</guid>}).flatten.each do |url|
+        assert url.start_with?("http://#{@custom_domain_user.custom_domain}/")
+        # URLs should not contain willow.camp
+        refute url.include?("willow.camp")
+        # URLs should not contain concatenated domain
+        refute url.include?("#{@custom_domain_user.subdomain}.#{@custom_domain_user.custom_domain}")
+      end
+    end
+
+    test "atom feed URLs should use subdomain format for subdomain users" do
+      get "/posts/atom", headers: {host: "#{@user_one.subdomain}.willow.camp"}
+      assert_response :success
+
+      # Check feed ID
+      assert_match %r{<id>http://#{@user_one.subdomain}\.willow\.camp/</id>}, @response.body
+
+      # Check self link
+      assert_match %r{<link.*href="http://#{@user_one.subdomain}\.willow\.camp/posts/atom".*rel="self"}, @response.body
+
+      # Check alternate link
+      assert_match %r{<link.*href="http://#{@user_one.subdomain}\.willow\.camp/".*rel="alternate"}, @response.body
+
+      # Check entry links
+      @response.body.scan(%r{<link.*href="(http://[^"]+)".*rel="alternate"}).flatten.each do |url|
+        assert url.start_with?("http://#{@user_one.subdomain}.willow.camp/")
+        # URLs should not contain concatenated domain
+        refute url.include?("#{@user_one.subdomain}.enumerator.dev")
+      end
+
+      # Check entry IDs
+      @response.body.scan(%r{<id>(http://[^<]+)</id>}).flatten.each do |url|
+        next if url == "http://#{@user_one.subdomain}.willow.camp/" # Skip feed ID
+        assert url.start_with?("http://#{@user_one.subdomain}.willow.camp/")
+        # URLs should not contain concatenated domain
+        refute url.include?("#{@user_one.subdomain}.enumerator.dev")
+      end
+    end
+
+    test "atom feed URLs should use custom domain format for custom domain users" do
+      get "/posts/atom", headers: {host: @custom_domain_user.custom_domain}
+      assert_response :success
+
+      # Check feed ID
+      assert_match %r{<id>http://#{Regexp.escape(@custom_domain_user.custom_domain)}/</id>}, @response.body
+
+      # Check self link
+      assert_match %r{<link.*href="http://#{Regexp.escape(@custom_domain_user.custom_domain)}/posts/atom".*rel="self"}, @response.body
+
+      # Check alternate link
+      assert_match %r{<link.*href="http://#{Regexp.escape(@custom_domain_user.custom_domain)}/".*rel="alternate"}, @response.body
+
+      # Check entry links
+      @response.body.scan(%r{<link.*href="(http://[^"]+)".*rel="alternate"}).flatten.each do |url|
+        assert url.start_with?("http://#{@custom_domain_user.custom_domain}/")
+        # URLs should not contain willow.camp
+        refute url.include?("willow.camp")
+        # URLs should not contain concatenated domain
+        refute url.include?("#{@custom_domain_user.subdomain}.#{@custom_domain_user.custom_domain}")
+      end
+
+      # Check entry IDs
+      @response.body.scan(%r{<id>(http://[^<]+)</id>}).flatten.each do |url|
+        next if url == "http://#{@custom_domain_user.custom_domain}/" # Skip feed ID
+        assert url.start_with?("http://#{@custom_domain_user.custom_domain}/")
+        # URLs should not contain willow.camp
+        refute url.include?("willow.camp")
+        # URLs should not contain concatenated domain
+        refute url.include?("#{@custom_domain_user.subdomain}.#{@custom_domain_user.custom_domain}")
+      end
+    end
   end
 end

@@ -23,11 +23,11 @@
     <%= yield :head %>
     <% if @author %>
       <%# RSS feed discovery link %>
-      <%= auto_discovery_link_tag(:rss, posts_rss_url(format: :rss, subdomain: @author.subdomain), title: "#{blog_title_for(@author)} RSS Feed") %>
+      <%= auto_discovery_link_tag(:rss, posts_rss_url(url_options_for(@author).merge(format: :rss)), title: "#{blog_title_for(@author)} RSS Feed") %>
       <%# Atom feed discovery link %>
-      <%= auto_discovery_link_tag(:atom, posts_atom_url(format: :atom, subdomain: @author.subdomain), title: "#{blog_title_for(@author)} Atom Feed") %>
+      <%= auto_discovery_link_tag(:atom, posts_atom_url(url_options_for(@author).merge(format: :atom)), title: "#{blog_title_for(@author)} Atom Feed") %>
       <%# JSON feed discovery link %>
-      <link type="application/feed+json" rel="alternate" href="<%= posts_json_url(format: :json, subdomain: @author.subdomain) %>" title="<%= blog_title_for(@author) %> JSON Feed">
+      <link type="application/feed+json" rel="alternate" href="<%= posts_json_url(url_options_for(@author).merge(format: :json)) %>" title="<%= blog_title_for(@author) %> JSON Feed">
     <% end %>
     <!-- Favicon will be set dynamically by JS -->
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
@@ -53,8 +53,8 @@
               </a>
             <% end %>
           <% end %>
-          <a href="<%= posts_rss_path(format: :rss) %>" class="block link link-hover font-medium py-2" title="RSS Feed" aria-label="RSS Feed">
-            RSS
+          <a href="<%= subscribe_path %>" class="block link link-hover font-medium py-2" title="Subscribe to RSS Feed" aria-label="Subscribe to RSS Feed">
+            Subscribe
           </a>
         </nav>
       </details>
@@ -71,8 +71,8 @@
               </a>
             <% end %>
           <% end %>
-          <a href="<%= posts_rss_path(format: :rss) %>" class="link link-hover font-medium" title="RSS Feed" aria-label="RSS Feed">
-            RSS
+          <a href="<%= subscribe_path %>" class="link link-hover font-medium" title="Subscribe to RSS Feed" aria-label="Subscribe to RSS Feed">
+            Subscribe
           </a>
         </nav>
       </div>

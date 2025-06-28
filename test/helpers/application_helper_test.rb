@@ -99,4 +99,31 @@ class ApplicationHelperTest < ActionView::TestCase
     assert_equal "notitle.willow.camp", blog_title_for(@user_without_blog_title)
     assert_equal "example.org", blog_title_for(@user_with_custom_domain_no_title)
   end
+
+  test "url_options_for helper returns correct options for subdomain users" do
+    assert_equal({subdomain: @user_with_subdomain.subdomain}, url_options_for(@user_with_subdomain))
+  end
+
+  test "url_options_for helper returns correct options for custom domain users" do
+    assert_equal({host: @user_with_custom_domain.custom_domain}, url_options_for(@user_with_custom_domain))
+  end
+
+  test "url_options_for helper returns empty hash for nil user" do
+    assert_equal({}, url_options_for(nil))
+  end
+
+  test "url_options_for helper returns empty hash for user with no subdomain or custom domain" do
+    user = User.new(subdomain: nil, custom_domain: nil)
+    assert_equal({}, url_options_for(user))
+  end
+
+  test "url_options_for helper returns empty hash for user with blank subdomain and no custom domain" do
+    user = User.new(subdomain: "", custom_domain: nil)
+    assert_equal({}, url_options_for(user))
+  end
+
+  test "url_options_for helper prioritizes custom domain over subdomain" do
+    user = User.new(subdomain: "test", custom_domain: "example.com")
+    assert_equal({host: "example.com"}, url_options_for(user))
+  end
 end

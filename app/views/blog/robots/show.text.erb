@@ -1,0 +1,31 @@
+# See https://www.robotstxt.org/robotstxt.html for documentation on how to use the robots.txt file
+# Allow all web crawlers to access public blog content
+User-agent: *
+Allow: /
+# Disallow crawling of user authentication and registration pages
+Disallow: /users/login
+Disallow: /users/logout
+Disallow: /users/signup
+Disallow: /users/register
+Disallow: /users/secret
+Disallow: /users/verification
+Disallow: /users/unblock
+# Disallow crawling of dashboard and admin areas
+Disallow: /dashboard/
+Disallow: /dashboard
+# Disallow crawling of API endpoints
+Disallow: /api/
+# Disallow crawling of health check endpoint
+Disallow: /up
+# Disallow crawling of Rails system routes
+Disallow: /rails/
+# Allow crawling of public blog content (these are the main content routes)
+Allow: /tags
+Allow: /t/
+Allow: /posts/rss
+Allow: /posts/atom
+Allow: /posts/json
+# Common crawl delay to be respectful to server resources
+Crawl-delay: 1
+# Sitemap location
+Sitemap: <%= @sitemap_url %>
