@@ -8,7 +8,7 @@ export default class extends Controller {
     navigator.clipboard.writeText(this.sourceTarget.textContent).then(() => {
       // Show success message
       this.successTarget.classList.remove("hidden")
-      
+
       // Hide success message after 2 seconds
       setTimeout(() => {
         this.successTarget.classList.add("hidden")

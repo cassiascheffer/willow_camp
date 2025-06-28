@@ -65,6 +65,9 @@ Rails.application.routes.draw do
     get "/posts/atom", to: "blog/feed#show", defaults: {format: "atom"}, as: :posts_atom
     get "/posts/json", to: "blog/feed#show", defaults: {format: "json"}, as: :posts_json
 
+    # Feed subscription page
+    get "/subscribe", to: "blog/feed#subscribe", as: :subscribe
+
     # Sitemap
     get "/sitemap.:format", to: "blog/sitemap#show", as: :sitemap
 

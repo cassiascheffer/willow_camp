@@ -14,5 +14,9 @@ module Blog
         format.json { render layout: false }
       end
     end
+
+    def subscribe
+      # HTML subscription page for feeds
+    end
   end
 end
