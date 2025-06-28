@@ -13,9 +13,9 @@
     <div class="card-body">
       <h2 class="card-title text-2xl mb-4">Available Feed Formats</h2>
       <div class="space-y-4">
-        <%= render 'shared/feed_line', feed_name: 'RSS Feed', feed_url: posts_rss_url(format: :rss, subdomain: @author.subdomain) %>
-        <%= render 'shared/feed_line', feed_name: 'Atom Feed', feed_url: posts_atom_url(format: :atom, subdomain: @author.subdomain) %>
-        <%= render 'shared/feed_line', feed_name: 'JSON Feed', feed_url: posts_json_url(format: :json, subdomain: @author.subdomain) %>
+        <%= render 'shared/feed_line', feed_name: 'RSS Feed', feed_url: posts_rss_url(feed_url_options_for(@author).merge(format: :rss)) %>
+        <%= render 'shared/feed_line', feed_name: 'Atom Feed', feed_url: posts_atom_url(feed_url_options_for(@author).merge(format: :atom)) %>
+        <%= render 'shared/feed_line', feed_name: 'JSON Feed', feed_url: posts_json_url(feed_url_options_for(@author).merge(format: :json)) %>
       </div>
     </div>
   </div>

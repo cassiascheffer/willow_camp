@@ -23,11 +23,11 @@
     <%= yield :head %>
     <% if @author %>
       <%# RSS feed discovery link %>
-      <%= auto_discovery_link_tag(:rss, posts_rss_url(format: :rss, subdomain: @author.subdomain), title: "#{blog_title_for(@author)} RSS Feed") %>
+      <%= auto_discovery_link_tag(:rss, posts_rss_url(feed_url_options_for(@author).merge(format: :rss)), title: "#{blog_title_for(@author)} RSS Feed") %>
       <%# Atom feed discovery link %>
-      <%= auto_discovery_link_tag(:atom, posts_atom_url(format: :atom, subdomain: @author.subdomain), title: "#{blog_title_for(@author)} Atom Feed") %>
+      <%= auto_discovery_link_tag(:atom, posts_atom_url(feed_url_options_for(@author).merge(format: :atom)), title: "#{blog_title_for(@author)} Atom Feed") %>
       <%# JSON feed discovery link %>
-      <link type="application/feed+json" rel="alternate" href="<%= posts_json_url(format: :json, subdomain: @author.subdomain) %>" title="<%= blog_title_for(@author) %> JSON Feed">
+      <link type="application/feed+json" rel="alternate" href="<%= posts_json_url(feed_url_options_for(@author).merge(format: :json)) %>" title="<%= blog_title_for(@author) %> JSON Feed">
     <% end %>
     <!-- Favicon will be set dynamically by JS -->
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>

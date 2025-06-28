@@ -39,4 +39,16 @@ module ApplicationHelper
     return "willow.camp" if author.nil? || (author.subdomain.blank? && author.custom_domain.blank?)
     author.blog_title.presence || author.domain || "willow.camp"
   end
+
+  def feed_url_options_for(author)
+    return {} if author.nil?
+
+    if author.uses_custom_domain?
+      {host: author.custom_domain}
+    elsif author.subdomain.present?
+      {subdomain: author.subdomain}
+    else
+      {}
+    end
+  end
 end
