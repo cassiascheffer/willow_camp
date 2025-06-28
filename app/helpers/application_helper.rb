@@ -40,7 +40,7 @@ module ApplicationHelper
     author.blog_title.presence || author.domain || "willow.camp"
   end
 
-  def feed_url_options_for(author)
+  def url_options_for(author)
     return {} if author.nil?
 
     if author.uses_custom_domain?
