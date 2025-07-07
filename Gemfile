@@ -51,7 +51,7 @@ gem "marksmith", "~> 0.4.5"
 gem "pagy"
 gem "public_suffix"
 gem "tailwindcss-rails"
-gem "tailwindcss-ruby", "~> 4.1.10"
+gem "tailwindcss-ruby", "~> 4.1.11"
 
 # APM and Logs
 gem "honeybadger"
