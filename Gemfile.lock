@@ -358,6 +358,10 @@ GEM
       json
       require_all (~> 3.0)
       ruby-progressbar
+    rails_semantic_logger (4.17.0)
+      rack
+      railties (>= 5.1)
+      semantic_logger (~> 4.16)
     railties (8.0.2)
       actionpack (= 8.0.2)
       activesupport (= 8.0.2)
@@ -431,6 +435,8 @@ GEM
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
+    semantic_logger (4.16.1)
+      concurrent-ruby (~> 1.0)
     sexp_processor (4.17.3)
     smart_properties (1.17.0)
     solid_cable (3.0.11)
@@ -555,6 +561,7 @@ DEPENDENCIES
   rails (~> 8.0.2)
   rails-controller-testing
   rails_best_practices
+  rails_semantic_logger
   rubocop-rails-omakase
   scout_apm
   scout_apm_logging

@@ -23,5 +23,16 @@ module WillowCamp
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+
+    # Setup structured logging with Semantic Logger
+    config.semantic_logger.application = "willow_camp"
+    config.semantic_logger.environment = ENV["RAILS_ENV"] || Rails.env
+    config.log_level = ENV["LOG_LEVEL"] || :info
+
+    # Switch to JSON Logging output to stdout when running in production or if LOG_TO_CONSOLE is set
+    if ENV["LOG_TO_CONSOLE"] || Rails.env.production?
+      config.rails_semantic_logger.add_file_appender = false
+      config.semantic_logger.add_appender(io: $stdout, formatter: :json)
+    end
   end
 end
