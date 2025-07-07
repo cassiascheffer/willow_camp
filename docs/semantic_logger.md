@@ -9,7 +9,6 @@ The logging system automatically captures structured data from your application 
 - **File logs**: Written to `log/` directory in development and test
 - **JSON output**: Structured logs to stdout in production
 - **Honeybadger Insights**: Centralized log aggregation and analysis
-- **Scout APM**: Performance monitoring integration
 
 ## Log Levels
 
@@ -83,12 +82,6 @@ All logs are automatically sent to Honeybadger for:
 - Centralized log search and filtering
 - Error correlation with application traces
 - Performance analysis and alerting
-
-### Scout APM Integration
-Logs are correlated with performance metrics:
-- Request tracing
-- Database query analysis
-- Memory and CPU usage tracking
 
 ## Best Practices
 

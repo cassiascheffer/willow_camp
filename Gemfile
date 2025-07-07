@@ -55,8 +55,7 @@ gem "tailwindcss-ruby", "~> 4.1.10"
 
 # APM and Logs
 gem "honeybadger"
-gem "scout_apm"
-gem "scout_apm_logging"
+
 gem "rails_semantic_logger"
 
 group :development, :test do
