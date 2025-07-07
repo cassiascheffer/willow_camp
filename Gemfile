@@ -51,7 +51,7 @@ gem "marksmith", "~> 0.4.5"
 gem "pagy"
 gem "public_suffix"
 gem "tailwindcss-rails"
-gem "tailwindcss-ruby", "~> 4.1.10"
+gem "tailwindcss-ruby", "~> 4.1.11"
 
 # APM and Logs
 gem "honeybadger"
@@ -73,7 +73,7 @@ end
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "htmlbeautifier"
-  gem "lefthook", "~> 1.11.14"
+  gem "lefthook", "~> 1.11.16"
   gem "rails_best_practices"
   gem "standardrb"
   gem "web-console"
