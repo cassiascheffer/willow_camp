@@ -73,7 +73,7 @@ end
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "htmlbeautifier"
-  gem "lefthook", "~> 1.11.16"
+  gem "lefthook", "~> 1.12.0"
   gem "rails_best_practices"
   gem "standardrb"
   gem "web-console"
