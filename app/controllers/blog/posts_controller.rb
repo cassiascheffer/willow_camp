@@ -11,14 +11,14 @@ class Blog::PostsController < Blog::BaseController
   end
 
   def show
+    if @post.nil?
+      render "not_found", status: :not_found
+    end
   end
 
   private
 
   def set_post
     @post = @author.posts.published.find_by(slug: params[:slug])
-    if @post.nil?
-      redirect_to posts_path, alert: "Not found.", allow_other_host: true
-    end
   end
 end
