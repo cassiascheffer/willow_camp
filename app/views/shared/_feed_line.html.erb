@@ -1,7 +1,7 @@
 <div class="flex items-center justify-between gap-4" data-controller="clipboard">
   <div class="flex-1">
-    <dt class="font-bold mr-2 inline"><%= feed_name %>:</dt>
-    <dd class="font-mono text-sm text-base-content/70 inline" id="<%= feed_name.downcase.gsub(' ', '-') %>-url"><%= feed_url %></dd>
+    <span class="font-bold mr-2"><%= feed_name %>:</span>
+    <span class="font-mono text-sm text-base-content/70" id="<%= feed_name.downcase.gsub(' ', '-') %>-url" role="text"><%= feed_url %></span>
   </div>
   <button class="btn btn-ghost btn-sm btn-square"
           data-action="click->clipboard#copy"

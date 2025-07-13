@@ -12,11 +12,11 @@
   <div class="card bg-base-100 mb-12">
     <div class="card-body">
       <h2 class="card-title text-2xl mb-4">Available Feed Formats</h2>
-      <dl class="space-y-4" role="list">
+      <div class="space-y-4">
         <%= render 'shared/feed_line', feed_name: 'RSS Feed', feed_url: posts_rss_url(url_options_for(@author).merge(format: :rss)) %>
         <%= render 'shared/feed_line', feed_name: 'Atom Feed', feed_url: posts_atom_url(url_options_for(@author).merge(format: :atom)) %>
         <%= render 'shared/feed_line', feed_name: 'JSON Feed', feed_url: posts_json_url(url_options_for(@author).merge(format: :json)) %>
-      </dl>
+      </div>
     </div>
   </div>
   <!-- What is RSS Section -->
