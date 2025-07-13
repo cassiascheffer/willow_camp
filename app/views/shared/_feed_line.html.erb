@@ -5,8 +5,8 @@
   </div>
   <button class="btn btn-ghost btn-sm btn-square"
           data-action="click->clipboard#copy"
-          aria-label="Copy <%= feed_name %> URL"
-          aria-describedby="<%= feed_name.downcase.gsub(' ', '-') %>-url">
+    aria-label="Copy <%= feed_name %> URL"
+    aria-describedby="<%= feed_name.downcase.gsub(' ', '-') %>-url">
     <span data-clipboard-target="source" class="hidden"><%= feed_url %></span>
     <%= render 'shared/copy_icon' %>
     <span data-clipboard-target="success" class="hidden ml-2" aria-label="Copied successfully">✓</span>
