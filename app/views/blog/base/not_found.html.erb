@@ -1,0 +1,15 @@
+<% content_for :title, "Post Not Found" %>
+
+<div class="text-center py-16">
+  <h1 class="text-6xl font-bold text-gray-400 mb-4">404</h1>
+  <h2 class="text-2xl font-semibold mb-4">Post Not Found</h2>
+  <p class="text-gray-600 mb-8">
+    The post you're looking for doesn't exist or may have been moved.
+  </p>
+  <div class="space-x-4">
+    <%= link_to "← Back to Blog", posts_path, class: "btn btn-primary" %>
+    <% if @author.pages.present? %>
+      <%= link_to "Browse Pages", "#", class: "btn btn-ghost" %>
+    <% end %>
+  </div>
+</div>
