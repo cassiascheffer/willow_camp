@@ -10,13 +10,15 @@
   </div>
   <div id="tags" class="space-y-8">
     <% if @tags.any? %>
-      <div class="tags-list space-y-2">
-        <% @tags.each do |tag| %>
-          <div class="mb-2">
-            <%= link_to tag.name, tag_path(tag.slug), class: "link link-primary" %>
-          </div>
-        <% end %>
-      </div>
+      <nav aria-label="Available tags" role="navigation">
+        <ul class="tags-list space-y-2" role="list">
+          <% @tags.each do |tag| %>
+            <li class="mb-2">
+              <%= link_to tag.name, tag_path(tag.slug), class: "link link-primary", aria: { label: "View all posts tagged with #{tag.name}" } %>
+            </li>
+          <% end %>
+        </ul>
+      </nav>
     <% else %>
       <div class="text-center py-8">
         <p class="text-xl text-base-content/60">No tags yet!</p>

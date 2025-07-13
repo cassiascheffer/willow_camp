@@ -1,8 +1,10 @@
-<div class="">
-  <%= link_to post_path(post_row.slug), class: "block p-4" do %>
-    <h3 class="text-lg font-medium flex flex-col">
-      <span class="text-xs text-base-content/60 pb-1"><%= post_row.published_at.strftime("%b %d, %Y") %></span>
-      <span class="sm:pl-3"><%= post_row.title %></span>
-    </h3>
+<article class="post-summary">
+  <%= link_to post_path(post_row.slug), class: "block p-4", aria: { label: "Read post: #{post_row.title}" } do %>
+    <header>
+      <time datetime="<%= post_row.published_at.iso8601 %>" class="text-xs text-base-content/60 block pb-1" aria-label="Published on <%= post_row.published_at.strftime("%B %d, %Y") %>">
+        <%= post_row.published_at.strftime("%b %d, %Y") %>
+      </time>
+      <h3 class="text-lg font-medium sm:pl-3"><%= post_row.title %></h3>
+    </header>
   <% end %>
-</div>
+</article>

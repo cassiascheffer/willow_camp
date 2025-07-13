@@ -15,7 +15,7 @@
 <% end %>
 <div class="">
   <% if notice.present? %>
-    <div role="alert" class="alert alert-success" id="notice"><%= notice %></div>
+    <div role="alert" aria-live="polite" class="alert alert-success" id="notice"><%= notice %></div>
   <% end %>
   <article>
     <h1 class="text-3xl font-bold mb-6"><%= @post.title %></h1>
@@ -28,11 +28,16 @@
     <%= render partial: post_partial, object: @post %>
   </article>
   <% if @post.tags.any? %>
-    <nav class="text-sm text-base-content/70 my-8" aria-label="Post tags">
-      Tagged:
-      <% @post.tags.each do |tag| %>
-        <%= link_to tag.name, tag_path(tag.slug), class: "badge badge-ghost badge-sm hover:badge-primary ml-2", aria: { label: "Tag: #{tag.name}" } %>
-      <% end %>
+    <nav class="text-sm text-base-content/70 my-8" aria-label="Post tags" role="navigation">
+      <span class="sr-only">This post is tagged with:</span>
+      <span aria-hidden="true">Tagged:</span>
+      <ul class="inline-flex flex-wrap gap-2 ml-2" role="list">
+        <% @post.tags.each do |tag| %>
+          <li>
+            <%= link_to tag.name, tag_path(tag.slug), class: "badge badge-ghost badge-sm hover:badge-primary", aria: { label: "View all posts tagged with #{tag.name}" } %>
+          </li>
+        <% end %>
+      </ul>
     </nav>
   <% end %>
   <div class="divider"></div>

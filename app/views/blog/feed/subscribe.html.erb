@@ -12,11 +12,11 @@
   <div class="card bg-base-100 mb-12">
     <div class="card-body">
       <h2 class="card-title text-2xl mb-4">Available Feed Formats</h2>
-      <div class="space-y-4">
+      <dl class="space-y-4" role="list">
         <%= render 'shared/feed_line', feed_name: 'RSS Feed', feed_url: posts_rss_url(url_options_for(@author).merge(format: :rss)) %>
         <%= render 'shared/feed_line', feed_name: 'Atom Feed', feed_url: posts_atom_url(url_options_for(@author).merge(format: :atom)) %>
         <%= render 'shared/feed_line', feed_name: 'JSON Feed', feed_url: posts_json_url(url_options_for(@author).merge(format: :json)) %>
-      </div>
+      </dl>
     </div>
   </div>
   <!-- What is RSS Section -->
@@ -27,11 +27,13 @@
       Instead of checking websites manually, you can follow all your favorite sites in one place.
     </p>
     <div class="not-prose flex flex-wrap gap-4 mt-4">
-      <a href="https://aboutfeeds.com/" class="link link-primary" target="_blank" rel="noopener">
+      <a href="https://aboutfeeds.com/" class="link link-primary" target="_blank" rel="noopener" aria-describedby="external-link-help">
         Learn more about feeds
+        <span class="sr-only">(opens in new tab)</span>
       </a>
-      <a href="https://github.com/AboutRSS/ALL-about-RSS" class="link link-primary" target="_blank" rel="noopener">
+      <a href="https://github.com/AboutRSS/ALL-about-RSS" class="link link-primary" target="_blank" rel="noopener" aria-describedby="external-link-help">
         Everything about RSS
+        <span class="sr-only">(opens in new tab)</span>
       </a>
     </div>
   </div>
@@ -39,8 +41,9 @@
   <div class="mb-12 text-center">
     <p class="text-base-content/60 mb-3">Looking for more RSS reader options?</p>
     <a href="https://github.com/AboutRSS/ALL-about-RSS#-rss-readers"
-       class="btn btn-outline btn-primary" target="_blank" rel="noopener">
+       class="btn btn-outline btn-primary" target="_blank" rel="noopener" aria-describedby="external-link-help">
       View complete list of RSS readers
+      <span class="sr-only">(opens in new tab)</span>
     </a>
   </div>
   <!-- Instructions -->
@@ -52,4 +55,6 @@
       <li>Your reader will automatically check for new posts and notify you when they're published</li>
     </ol>
   </div>
+  <!-- Screen reader help for external links -->
+  <div id="external-link-help" class="sr-only">External links open in a new tab</div>
 </div>

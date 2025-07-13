@@ -1,9 +1,9 @@
 <div class="max-w-3xl mx-auto">
   <% if notice.present? %>
-    <div role="alert" class="alert alert-success" id="notice"><%= notice %></div>
+    <div role="alert" aria-live="polite" class="alert alert-success" id="notice"><%= notice %></div>
   <% end %>
   <% if alert.present? %>
-    <div role="alert" class="alert alert-error" id="alert"><%= alert %></div>
+    <div role="alert" aria-live="assertive" class="alert alert-error" id="alert"><%= alert %></div>
   <% end %>
   <div class="flex justify-between items-center mb-10">
     <h1 class="text-3xl font-bold">Posts tagged with <%= @tag %></h1>
@@ -18,6 +18,8 @@
         <p class="text-xl text-base-content/60">No posts found</p>
       </div>
     <% end %>
-    <%== pagy_nav(@pagy) if @pagy.pages > 1 %>
+    <nav aria-label="Tagged posts pagination" role="navigation">
+      <%== pagy_nav(@pagy) if @pagy.pages > 1 %>
+    </nav>
   </div>
 </div>

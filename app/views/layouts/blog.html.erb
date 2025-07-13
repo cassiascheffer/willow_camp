@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-controller="favicon" data-favicon-emoji-value="<%= @author&.favicon_emoji || "⛺" %>" data-theme="<%= @author&.theme || 'light' %>">
+<html lang="en" data-controller="favicon" data-favicon-emoji-value="<%= @author&.favicon_emoji || "⛺" %>" data-theme="<%= @author&.theme || 'light' %>">
   <head>
     <title>
       <%= content_for(:title) || blog_title_for(@author) %>
@@ -34,18 +34,21 @@
     <%= javascript_importmap_tags %>
   </head>
   <body class="font-mono">
+    <!-- Skip links for keyboard navigation -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
     <header class="bg-base-100 shadow-md w-full px-8">
-      <!-- Mobile menu with details/summary -->
-      <details class="lg:hidden">
-        <summary class="py-4 flex items-center justify-between cursor-pointer">
+      <!-- Mobile menu with improved accessibility -->
+      <details class="lg:hidden" role="navigation" aria-label="Mobile navigation" data-controller="mobile-menu">
+        <summary class="py-4 flex items-center justify-between cursor-pointer" aria-expanded="false" aria-controls="mobile-nav" data-mobile-menu-target="summary">
           <a href="/" class="text-xl font-bold hover:text-primary transition-colors" aria-label="Home">
             <%= blog_title_for(@author) %>
           </a>
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true" role="img">
+            <title>Open menu</title>
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
           </svg>
         </summary>
-        <nav class="pb-4 space-y-2">
+        <nav id="mobile-nav" class="pb-4 space-y-2" aria-label="Mobile navigation menu" data-mobile-menu-target="nav">
           <% if @author.pages.present? %>
             <% @author.pages.each do |page| %>
               <a href="<%= post_path(page) %>" class="block link link-hover font-medium py-2" aria-label="<%= page.title %>">
@@ -63,7 +66,7 @@
         <a href="/" class="text-xl font-bold hover:text-primary transition-colors" aria-label="Home">
           <%= blog_title_for(@author) %>
         </a>
-        <nav class="space-x-4">
+        <nav id="navigation" class="space-x-4" aria-label="Main navigation">
           <% if @author.pages.present? %>
             <% @author.pages.each do |page| %>
               <a href="<%= post_path(page) %>" class="link link-hover font-medium" aria-label="<%= page.title %>">
@@ -77,7 +80,7 @@
         </nav>
       </div>
     </header>
-    <main class="max-w-3xl mx-auto p-8">
+    <main id="main-content" class="max-w-3xl mx-auto p-8">
       <%= yield %>
     </main>
     <footer class="footer p-4 bg-base-200 text-base-content">
