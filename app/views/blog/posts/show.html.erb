@@ -40,8 +40,14 @@
       </ul>
     </nav>
   <% end %>
-  <div class="divider"></div>
-  <div class="mt-6">
+  <% if @post.author.post_footer_html.present? %>
+    <footer class="mt-8 pt-6 border-t border-base-300">
+      <div class="prose prose-sm max-w-none">
+        <%= raw @post.author.post_footer_html %>
+      </div>
+    </footer>
+  <% end %>
+  <div class="mt-8 border-t border-base-300 pt-6">
     <%= link_to "Back to posts", posts_path, class: "btn btn-ghost btn-sm" %>
   </div>
 </div>

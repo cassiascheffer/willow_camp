@@ -12,6 +12,7 @@ class User < ApplicationRecord
   normalizes :custom_domain, with: ->(s) { s.strip.downcase.presence }
 
   # Callbacks
+  before_save :set_post_footer_html
 
   # Validations
   validates :subdomain,
@@ -23,6 +24,7 @@ class User < ApplicationRecord
   validates :name, presence: true, length: {maximum: 255}, allow_blank: true
   validates :blog_title, length: {maximum: 255}, allow_blank: true
   validates :site_meta_description, length: {maximum: 255}, allow_blank: true
+  validates :post_footer_markdown, length: {maximum: 10000}, allow_blank: true
   validates :favicon_emoji,
     presence: true,
     format: {
@@ -74,6 +76,14 @@ class User < ApplicationRecord
   end
 
   private
+
+  def set_post_footer_html
+    self.post_footer_html = if post_footer_markdown.present?
+      PostMarkdown.new(post_footer_markdown).to_html
+    else
+      nil
+    end
+  end
 
   def custom_domain_format
     return if custom_domain.blank?
