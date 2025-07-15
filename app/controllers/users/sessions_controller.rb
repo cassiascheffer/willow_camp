@@ -6,11 +6,7 @@ class Users::SessionsController < Devise::SessionsController
 
   # GET /resource/sign_in
   def new
-    if user_signed_in?
-      redirect_to dashboard_path, notice: "You are already signed in."
-    else
-      super
-    end
+    super
   end
 
   # POST /resource/sign_in
