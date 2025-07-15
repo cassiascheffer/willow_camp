@@ -13,8 +13,9 @@
       <nav aria-label="Available tags" role="navigation">
         <ul class="tags-list space-y-2" role="list">
           <% @tags.each do |tag| %>
-            <li class="mb-2">
+            <li class="mb-2 flex justify-between items-center">
               <%= link_to tag.name, tag_path(tag.slug), class: "link link-primary", aria: { label: "View all posts tagged with #{tag.name}" } %>
+              <span class="badge badge-ghost"><%= tag.posts_count %></span>
             </li>
           <% end %>
         </ul>
