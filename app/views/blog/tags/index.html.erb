@@ -13,9 +13,11 @@
       <nav aria-label="Available tags" role="navigation">
         <ul class="tags-list space-y-2" role="list">
           <% @tags.each do |tag| %>
-            <li class="mb-2 flex justify-between items-center">
-              <%= link_to tag.name, tag_path(tag.slug), class: "link link-primary", aria: { label: "View all posts tagged with #{tag.name}" } %>
-              <span class="badge badge-ghost"><%= tag.posts_count %></span>
+            <li class="mb-2">
+              <%= link_to tag_path(tag.slug), class: "link link-primary no-underline", aria: { label: "View all posts tagged with #{tag.name}" } do %>
+                <span class="underline"><%= tag.name %></span>
+                <span class="badge badge-ghost ml-2"><%= tag.posts_count %></span>
+              <% end %>
             </li>
           <% end %>
         </ul>

@@ -18,6 +18,7 @@
         <p class="text-xl text-base-content/60">No posts found</p>
       </div>
     <% end %>
+    <%= link_to "All Tags", tags_path, class: "btn btn-outline btn-sm" %>
     <nav aria-label="Tagged posts pagination" role="navigation">
       <%== pagy_nav(@pagy) if @pagy.pages > 1 %>
     </nav>

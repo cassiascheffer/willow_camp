@@ -5,7 +5,7 @@ class Blog::TagsController < Blog::BaseController
     @tags = ActsAsTaggableOn::Tag.for_tenant(@author.id)
       .joins(:taggings)
       .joins("INNER JOIN posts ON taggings.taggable_id = posts.id AND taggings.taggable_type = 'Post'")
-      .where(posts: {author_id: @author.id, status: "published"})
+      .where(posts: {author_id: @author.id, published: true})
       .group("tags.id, tags.name")
       .select("tags.*, COUNT(posts.id) as posts_count")
       .order("tags.name")
