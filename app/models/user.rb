@@ -80,8 +80,6 @@ class User < ApplicationRecord
   def set_post_footer_html
     self.post_footer_html = if post_footer_markdown.present?
       PostMarkdown.new(post_footer_markdown).to_html
-    else
-      nil
     end
   end
 
