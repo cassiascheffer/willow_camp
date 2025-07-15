@@ -73,4 +73,16 @@ class Blog::PostsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "title", text: /#{@custom_domain_user.blog_title}/i
   end
+
+  test "should return 404 for non-existent post with JSON format" do
+    get "/nonexistent-post.json", headers: {host: "#{@user.subdomain}.willow.camp"}
+    assert_response :not_found
+    assert_equal "application/json", response.media_type
+  end
+
+  test "should return 404 HTML for non-existent post with HTML format" do
+    get "/nonexistent-post", headers: {host: "#{@user.subdomain}.willow.camp"}
+    assert_response :not_found
+    assert_equal "text/html", response.media_type
+  end
 end
