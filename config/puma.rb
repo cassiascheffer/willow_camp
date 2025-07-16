@@ -27,7 +27,10 @@
 workers ENV.fetch("WEB_CONCURRENCY", 0)
 threads_count = ENV.fetch("RAILS_MAX_THREADS", 3)
 threads threads_count, threads_count
-preload_app!
+
+# Only preload the application in production
+# In development, this interferes with code reloading
+preload_app! if ENV["RAILS_ENV"] == "production"
 
 # Specifies the `port` that Puma will listen on to receive requests; default is 3000.
 port ENV.fetch("PORT", 3000)
