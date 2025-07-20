@@ -44,3 +44,7 @@
 
 # don't ignore tags directories under views folders
 !**/views/**/tags/
+
+# Ignore Claude configuration directory
+.claude
+PROMPT.md

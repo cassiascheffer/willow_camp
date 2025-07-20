@@ -5,3 +5,4 @@
 }
 /* Import modular component CSS files */
 @import "../stylesheets/components/_pagy.css";
+@import "../stylesheets/components/_choices.css";

@@ -3,6 +3,7 @@ class Dashboard::PostsController < Dashboard::BaseController
   before_action :authorize_user!, only: %i[edit update destroy]
 
   def edit
+    @tags = ActsAsTaggableOn::Tag.for_tenant(current_user.id).pluck(:name).uniq
   end
 
   def update

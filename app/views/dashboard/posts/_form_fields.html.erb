@@ -19,10 +19,13 @@
     <% end %>
   </div>
   <div class="form-control w-full lg:w-1/2">
-    <div class="tooltip tooltip-right" data-tip="Enter tags as a comma separated list (e.g., 'tag1, tag2')">
-      <%= form.label :tag_list, class: "label" %>
+    <%= form.label :tag_list, class: "label" %>
+    <div data-controller="tag-choices"
+         data-tag-choices-existing-tags-value="<%= @tags.to_json %>"
+         class="tag-choices-wrapper">
+      <%= form.hidden_field :tag_list, value: post.tag_list.join(', '), data: { "tag-choices-target": "input" } %>
+      <select multiple data-tag-choices-target="select" class="w-full"></select>
     </div>
-    <%= form.text_field :tag_list, value: post.tag_list.join(', '), class: "input input-bordered w-full" %>
   </div>
 </div>
 <div class="form-control w-full mb-4">
