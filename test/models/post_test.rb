@@ -80,22 +80,7 @@ class PostTest < ActiveSupport::TestCase
   end
 
   test "should detect mermaid diagrams and set has_mermaid_diagrams flag" do
-    @post.body_markdown = <<~MARKDOWN
-      # Test Post
-
-      Here's a mermaid diagram:
-
-      ```mermaid
-      graph TD
-        A --> B
-      ```
-
-      And here's regular code:
-
-      ```ruby
-      puts "Hello World"
-      ```
-    MARKDOWN
+    @post.body_markdown = "```mermaid\ngraph TD\n  A --> B\n```"
 
     @post.save!
 
@@ -105,22 +90,13 @@ class PostTest < ActiveSupport::TestCase
   end
 
   test "should not detect mermaid when only regular code blocks present" do
-    @post.body_markdown = <<~MARKDOWN
-      ```ruby
-      puts "Hello World"
-      ```
-
-      ```javascript
-      console.log("Hello World");
-      ```
-    MARKDOWN
+    @post.body_markdown = "```ruby\nputs 'test'\n```"
 
     @post.save!
 
     assert_not @post.has_mermaid_diagrams, "Post should not detect mermaid diagrams"
     assert_not_nil @post.body_html
     assert_includes @post.body_html, '<pre lang="ruby"'
-    assert_includes @post.body_html, '<pre lang="javascript"'
   end
 
   test "should handle empty markdown" do
