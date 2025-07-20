@@ -138,4 +138,19 @@ class PostTest < ActiveSupport::TestCase
     assert_nil @post.body_html
     assert_not @post.has_mermaid_diagrams
   end
+
+  test "draft? should return true when not published" do
+    @post.published = false
+    assert @post.draft?
+  end
+
+  test "draft? should return true when published is nil" do
+    @post.published = nil
+    assert @post.draft?
+  end
+
+  test "draft? should return false when published" do
+    @post.published = true
+    assert_not @post.draft?
+  end
 end

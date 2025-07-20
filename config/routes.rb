@@ -53,6 +53,8 @@ Rails.application.routes.draw do
     resource :subdomain, only: %i[update]
   end
 
+  resources :previews, only: %i[show]
+
   constraints(DomainConstraint.new) do
     # Tags
     get "/tags", to: "blog/tags#index", as: :tags

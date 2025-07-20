@@ -58,6 +58,10 @@ class Post < ApplicationRecord
     frontmatter&.dig(key.to_s)
   end
 
+  def draft?
+    !published
+  end
+
   private
 
   def set_published_at
