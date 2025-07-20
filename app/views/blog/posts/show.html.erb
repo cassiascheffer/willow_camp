@@ -21,11 +21,12 @@
     <h1 class="text-3xl font-bold mb-6"><%= @post.title %></h1>
     <% if @post.draft? %>
       <div class="badge badge-soft badge-info mb-4">Draft</div>
-    <% end %>
+    <% else %>
     <div class="mb-6">
       <p class="font-medium"><%= @post.author_name %></p>
       <p class="text-sm text-base-content/60">Published on <%= @post.published_at.strftime("%B %d, %Y") %></p>
     </div>
+    <% end %>
     <%# Ensure that even if @post is a Page, we render blog/posts/_post %>
     <% post_partial = "blog/posts/post" %>
     <%= render partial: post_partial, object: @post %>
