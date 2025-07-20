@@ -25,6 +25,9 @@
   </section>
   <section aria-label="API Tokens" class="space-y-6">
     <h2 class="text-2xl font-semibold">API Tokens</h2>
+    <div class="mb-4">
+      <%= link_to "View API Documentation", documentation_url, class: "link link-primary", target: "_blank" %>
+    </div>
     <div class="card p-4">
       <h3 class="text-xl font-medium mb-2">Create New Token</h3>
       <%= render "token_form", token: @token %>
