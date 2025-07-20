@@ -32,12 +32,14 @@
   <%= form.label :meta_description, "Meta Description", class: "label" %>
   <%= form.text_area :meta_description, required: false, maxlength: 255, class: "textarea textarea-bordered w-full" %>
 </div>
-<div class="form-control w-full mb-4">
+<div class="form-control w-full mb-4" data-controller="marksmith-theme">
   <%= form.label :body, class: "label" %>
-  <%= form.marksmith :body_markdown,
-      enable_file_uploads: false,
-      class: "textarea textarea-bordered w-full",
-      style: "min-height: 600px;" %>
+  <div data-marksmith-theme-target="wrapper">
+    <%= form.marksmith :body_markdown,
+        enable_file_uploads: false,
+        class: "textarea textarea-bordered w-full",
+        style: "min-height: 600px;" %>
+  </div>
 </div>
 <div class="flex flex-col lg:flex-row lg:gap-4 lg:items-end mb-4">
   <div class="form-control w-full lg:w-auto mb-4 lg:mb-0">
