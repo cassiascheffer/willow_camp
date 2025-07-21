@@ -58,6 +58,53 @@ class User < ApplicationRecord
     pages.create!(title: "About", slug: "about")
   end
 
+  # Tag helper methods
+  def all_tags
+    # Get all unique tags used on this user's posts
+    ActsAsTaggableOn::Tag.joins(:taggings)
+      .where(taggings: {taggable_type: "Post", taggable_id: posts.pluck(:id)})
+      .distinct
+      .order(:name)
+  end
+
+  def tags_with_counts
+    # Get tags with their usage counts on published posts
+    ActsAsTaggableOn::Tag
+      .select("tags.*, COUNT(DISTINCT taggings.taggable_id) as taggings_count")
+      .joins(:taggings)
+      .joins("INNER JOIN posts ON posts.id = taggings.taggable_id")
+      .where(taggings: {taggable_type: "Post", taggable_id: posts.published.pluck(:id)})
+      .group("tags.id")
+      .order(Arel.sql("COUNT(DISTINCT taggings.taggable_id) DESC"))
+  end
+
+  def all_tags_with_counts
+    # Get tags with their usage counts on all posts (published and unpublished)
+    ActsAsTaggableOn::Tag
+      .select("tags.*, COUNT(DISTINCT taggings.taggable_id) as taggings_count")
+      .joins(:taggings)
+      .joins("INNER JOIN posts ON posts.id = taggings.taggable_id")
+      .where(taggings: {taggable_type: "Post", taggable_id: posts.pluck(:id)})
+      .group("tags.id")
+      .order(Arel.sql("COUNT(DISTINCT taggings.taggable_id) DESC"))
+  end
+
+  def all_tags_with_published_and_draft_counts
+    # Get tags with separate counts for published and draft posts
+    ActsAsTaggableOn::Tag
+      .select(
+        "tags.*,
+         COUNT(DISTINCT CASE WHEN posts.published = true THEN taggings.taggable_id END) as published_count,
+         COUNT(DISTINCT CASE WHEN posts.published = false OR posts.published IS NULL THEN taggings.taggable_id END) as draft_count,
+         COUNT(DISTINCT taggings.taggable_id) as taggings_count"
+      )
+      .joins(:taggings)
+      .joins("INNER JOIN posts ON posts.id = taggings.taggable_id")
+      .where(taggings: {taggable_type: "Post", taggable_id: posts.pluck(:id)})
+      .group("tags.id")
+      .order(Arel.sql("COUNT(DISTINCT taggings.taggable_id) DESC"))
+  end
+
   # Domain helper methods
   def domain
     return custom_domain if custom_domain.present?

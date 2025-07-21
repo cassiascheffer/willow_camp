@@ -51,6 +51,7 @@ Rails.application.routes.draw do
     resources :users, only: %i[edit update]
     resources :tokens, only: %i[create destroy]
     resource :subdomain, only: %i[update]
+    resources :tags, only: %i[index update destroy]
   end
 
   resources :previews, only: %i[show]

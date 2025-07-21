@@ -1,0 +1,23 @@
+<tr id="tag_<%= tag.id %>" data-controller="inline-edit tag-delete" data-inline-edit-url-value="<%= dashboard_tag_path(tag.id) %>" data-tag-delete-url-value="<%= dashboard_tag_path(tag.id) %>">
+  <td>
+    <div data-inline-edit-target="display">
+      <button type="button" 
+              class="text-left hover:bg-base-200 rounded px-1 py-0.5 -mx-1 -my-0.5 cursor-pointer transition-colors"
+              data-action="click->inline-edit#edit">
+        <%= tag.name %>
+      </button>
+    </div>
+    <%= render "tag_form", tag: tag %>
+  </td>
+  <td><%= tag.published_count %></td>
+  <td><%= tag.draft_count %></td>
+  <td><%= tag.taggings_count %></td>
+  <td>
+    <button type="button" 
+            class="btn btn-ghost btn-xs text-error hover:bg-error hover:text-error-content"
+            data-action="click->tag-delete#confirmDelete"
+      title="Delete tag">
+      ✕
+    </button>
+  </td>
+</tr>

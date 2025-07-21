@@ -1,11 +1,4 @@
-<div class="py-8 px-4 lg:px-8">
-  <header aria-label="Dashboard Header" class="flex justify-between items-center mb-8">
-    <% if @user.subdomain.present? %>
-      <%= button_to "New Post", dashboard_untitled_posts_path, method: :post, class: "btn btn-primary ml-auto" %>
-      <a href="<%= posts_url(subdomain: @user.subdomain) %>" class="btn btn-outline ml-2" target="_blank">View Site</a>
-    <% end %>
-  </header>
-  <div class="w-full">
+<div class="w-full">
     <% if @posts.present? %>
       <%= render partial: 'dashboard/post_list_mobile' %>
       <%= render partial: 'dashboard/post_list_desktop' %>
@@ -42,5 +35,4 @@
       </section>
     <% end %>
     <%== pagy_nav(@pagy) if @pagy.pages > 1 %>
-  </div>
 </div>

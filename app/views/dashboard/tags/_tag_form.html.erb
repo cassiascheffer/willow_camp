@@ -1,0 +1,24 @@
+<div id="tag_<%= tag.id %>_form" data-inline-edit-target="form" hidden>
+  <%= form_with model: tag, url: dashboard_tag_path(tag.id), method: :patch, local: false, scope: :tag, data: { turbo_frame: "tag_#{tag.id}" } do |form| %>
+    <div class="flex items-center gap-2">
+      <%= form.text_field :name, 
+          value: tag.name,
+          class: "input input-sm input-bordered flex-1 min-w-0",
+          data: { 
+            inline_edit_target: "input",
+            action: "keydown->inline-edit#handleKeydown blur->inline-edit#handleBlur"
+          } %>
+      <div class="flex gap-1">
+        <%= button_tag "✓", 
+            type: "submit",
+            class: "btn btn-xs btn-success",
+            title: "Save" %>
+        <%= button_tag "✕", 
+            type: "button",
+            class: "btn btn-xs btn-outline",
+            title: "Cancel",
+            data: { action: "click->inline-edit#cancel" } %>
+      </div>
+    </div>
+  <% end %>
+</div>

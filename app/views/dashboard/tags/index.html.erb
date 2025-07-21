@@ -1,0 +1,27 @@
+<div class="w-full">
+  <% if @tags.present? %>
+    <div class="overflow-x-auto">
+      <table class="table w-full">
+        <thead>
+          <tr>
+            <th>Tag</th>
+            <th>Published</th>
+            <th>Drafts</th>
+            <th>Total</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @tags.each do |tag| %>
+            <%= render "tag_row", tag: tag %>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <section class="empty-state text-center bg-base-200 rounded-lg p-12" aria-label="No Tags">
+      <p class="text-xl font-bold mb-2">No tags yet</p>
+      <p class="text-base-content">Tags will appear here when you add them to your posts</p>
+    </section>
+  <% end %>
+</div>
