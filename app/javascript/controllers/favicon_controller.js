@@ -6,7 +6,8 @@ export default class extends Controller {
   static targets = ["input"]
 
   connect() {
-    this.setFavicon(this.emojiValue || this.inputTarget?.value || "⛺")
+    const inputValue = this.hasInputTarget ? this.inputTarget.value : null
+    this.setFavicon(this.emojiValue || inputValue || "⛺")
   }
 
 
@@ -17,7 +18,8 @@ export default class extends Controller {
     } else if (eventOrEmoji && eventOrEmoji.target) {
       emoji = eventOrEmoji.target.value
     } else {
-      emoji = this.emojiValue || this.inputTarget?.value || "⛺"
+      const inputValue = this.hasInputTarget ? this.inputTarget.value : null
+      emoji = this.emojiValue || inputValue || "⛺"
     }
     if (!emoji) return;
 
