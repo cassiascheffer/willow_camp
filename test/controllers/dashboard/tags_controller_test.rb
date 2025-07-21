@@ -50,14 +50,15 @@ class Dashboard::TagsControllerTest < ActionDispatch::IntegrationTest
     assert_select "td", text: "1"
   end
 
-  test "index table header shows 'All Posts' not 'Published Posts'" do
+  test "index table header shows separate columns for Published, Drafts, and Total" do
     @user.posts.create!(title: "Test Post", body_markdown: "Content", published: false, tag_list: "test-tag")
 
     get dashboard_tags_url
 
     assert_response :success
-    assert_select "th", text: "All Posts"
-    assert_select "th", text: "Published Posts", count: 0
+    assert_select "th", text: "Published"
+    assert_select "th", text: "Drafts"
+    assert_select "th", text: "Total"
   end
 
   test "should update tag name successfully" do
