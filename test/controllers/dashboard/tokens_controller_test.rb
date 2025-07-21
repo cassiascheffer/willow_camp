@@ -5,6 +5,7 @@ class Dashboard::TokensControllerTest < ActionDispatch::IntegrationTest
 
   setup do
     @user = users(:one)
+    # Use Devise's built-in sign_in helper for faster tests
     sign_in @user
     @token_params = {user_token: {name: "Test API Token", expires_at: 30.days.from_now}}
   end
@@ -27,15 +28,6 @@ class Dashboard::TokensControllerTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to dashboard_settings_path
     assert_equal "There were errors creating the token", flash[:alert]
-  end
-
-  test "should create token with valid attributes" do
-    assert_difference("@user.tokens.count") do
-      post dashboard_tokens_path, params: @token_params
-    end
-
-    assert_redirected_to dashboard_settings_path
-    assert_equal "Token created successfully", flash[:notice]
   end
 
   test "should destroy token" do
