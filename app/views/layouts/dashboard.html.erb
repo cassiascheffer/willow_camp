@@ -28,6 +28,10 @@
         </svg>
       </summary>
       <div class="pb-4 space-y-2">
+        <%= link_to "Posts", dashboard_path, class: "block link link-hover font-medium py-2 #{current_page?(dashboard_path) ? 'text-primary' : ''}" %>
+        <%= link_to "Tags", dashboard_tags_path, class: "block link link-hover font-medium py-2 #{current_page?(dashboard_tags_path) ? 'text-primary' : ''}" %>
+        <%= link_to "Settings", dashboard_settings_path, class: "block link link-hover font-medium py-2 #{current_page?(dashboard_settings_path) ? 'text-primary' : ''}" %>
+        <hr class="my-2">
         <%= link_to 'Logout', destroy_user_session_path(@user), data: { turbo_method: :delete }, class: 'block link link-hover font-medium py-2', role: 'button', tabindex: '0' %>
       </div>
     </details>
@@ -41,7 +45,7 @@
   </nav>
   <main class="max-w-6xl mx-auto p-4" aria-label="Dashboard Content">
     <header aria-label="Dashboard Header" class="flex justify-between items-center mb-6">
-      <div role="tablist" class="tabs tabs-boxed">
+      <div role="tablist" class="tabs tabs-boxed hidden lg:flex">
         <%= link_to "Posts", dashboard_path, class: "tab #{current_page?(dashboard_path) ? 'tab-active' : ''}" %>
         <%= link_to "Tags", dashboard_tags_path, class: "tab #{current_page?(dashboard_tags_path) ? 'tab-active' : ''}" %>
         <%= link_to "Settings", dashboard_settings_path, class: "tab #{current_page?(dashboard_settings_path) ? 'tab-active' : ''}" %>
