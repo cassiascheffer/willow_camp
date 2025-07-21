@@ -1,16 +1,16 @@
 <div class="w-full">
-    <% if @posts.present? %>
-      <%= render partial: 'dashboard/post_list_mobile' %>
-      <%= render partial: 'dashboard/post_list_desktop' %>
-    <% else %>
-      <section class="empty-state text-center bg-base-200 rounded-lg p-12" aria-label="No Posts">
-        <% if @user.subdomain.blank? %>
-          <div class="max-w-md mx-auto">
-            <%= form_with model: @user, url: dashboard_subdomain_path, method: :patch, local: true, class: "space-y-4" do |form| %>
-              <div class="form-control">
-                <%= form.label :subdomain, "Choose a subdomain to get started", class: "label" %>
-                <div class="join">
-                  <%= form.text_field :subdomain,
+  <% if @posts.present? %>
+    <%= render partial: 'dashboard/post_list_mobile' %>
+    <%= render partial: 'dashboard/post_list_desktop' %>
+  <% else %>
+    <section class="empty-state text-center bg-base-200 rounded-lg p-12" aria-label="No Posts">
+      <% if @user.subdomain.blank? %>
+        <div class="max-w-md mx-auto">
+          <%= form_with model: @user, url: dashboard_subdomain_path, method: :patch, local: true, class: "space-y-4" do |form| %>
+            <div class="form-control">
+              <%= form.label :subdomain, "Choose a subdomain to get started", class: "label" %>
+              <div class="join">
+                <%= form.text_field :subdomain,
                       placeholder: "yourname",
                       value: @user.subdomain,
                       class: "input input-bordered join-item flex-1",
@@ -18,21 +18,21 @@
                       pattern: "[a-z0-9]+",
                       minlength: 3,
                       maxlength: 63 %>
-                  <span class="btn btn-disabled join-item">.willow.camp</span>
-                </div>
-                <div class="label pb-4">
-                  <span class="label-text-alt text-sm">3-63 characters, letters and numbers only</span>
-                </div>
+                <span class="btn btn-disabled join-item">.willow.camp</span>
               </div>
-              <%= form.submit "Save & Create First Post", class: "btn btn-primary w-full" %>
-            <% end %>
-          </div>
-        <% else %>
-          <p class="text-xl font-bold mb-2">No posts yet</p>
-          <p class="text-base-content mb-8">Create your first blog post to get started</p>
-          <%= button_to "Create First Post", dashboard_untitled_posts_path, method: :post, class: "btn btn-primary" %>
-        <% end %>
-      </section>
-    <% end %>
-    <%== pagy_nav(@pagy) if @pagy.pages > 1 %>
+              <div class="label pb-4">
+                <span class="label-text-alt text-sm">3-63 characters, letters and numbers only</span>
+              </div>
+            </div>
+            <%= form.submit "Save & Create First Post", class: "btn btn-primary w-full" %>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="text-xl font-bold mb-2">No posts yet</p>
+        <p class="text-base-content mb-8">Create your first blog post to get started</p>
+        <%= button_to "Create First Post", dashboard_untitled_posts_path, method: :post, class: "btn btn-primary" %>
+      <% end %>
+    </section>
+  <% end %>
+  <%== pagy_nav(@pagy) if @pagy.pages > 1 %>
 </div>

@@ -13,7 +13,6 @@
   <% else %>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⛺</text></svg>">
 <% end %>
-
 <%= stylesheet_link_tag "marksmith" %>
 <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
 <%= javascript_importmap_tags %>
@@ -29,7 +28,6 @@
         </svg>
       </summary>
       <div class="pb-4 space-y-2">
-        <%= link_to 'Settings', dashboard_settings_path, class: 'block link link-hover font-medium py-2', role: 'button', tabindex: '0' %>
         <%= link_to 'Logout', destroy_user_session_path(@user), data: { turbo_method: :delete }, class: 'block link link-hover font-medium py-2', role: 'button', tabindex: '0' %>
       </div>
     </details>
@@ -37,7 +35,6 @@
     <div class="hidden lg:flex lg:items-center lg:justify-between py-4">
       <a class="text-xl font-bold hover:text-primary transition-colors" href="<%= dashboard_path %>"><%= blog_title_for(@user) %></a>
       <div class="space-x-4">
-        <%= link_to 'Settings', dashboard_settings_path, class: 'link link-hover font-medium', role: 'button', tabindex: '0' %>
         <%= link_to 'Logout', destroy_user_session_path(@user), data: { turbo_method: :delete }, class: 'link link-hover font-medium', role: 'button', tabindex: '0' %>
       </div>
     </div>
@@ -47,6 +44,7 @@
       <div role="tablist" class="tabs tabs-boxed">
         <%= link_to "Posts", dashboard_path, class: "tab #{current_page?(dashboard_path) ? 'tab-active' : ''}" %>
         <%= link_to "Tags", dashboard_tags_path, class: "tab #{current_page?(dashboard_tags_path) ? 'tab-active' : ''}" %>
+        <%= link_to "Settings", dashboard_settings_path, class: "tab #{current_page?(dashboard_settings_path) ? 'tab-active' : ''}" %>
       </div>
       <div class="flex gap-2">
         <% if @user&.subdomain.present? %>
