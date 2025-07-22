@@ -100,3 +100,32 @@ curl -X POST https://willow.camp/api/posts \
     }
   }'
 ```
+
+## Markdown Posts
+
+Posts use Markdown with YAML frontmatter:
+
+```yaml
+---
+title: My Post
+description: Post description
+published: true
+date: 2023-05-25
+tags:
+  - rails
+  - ruby
+---
+
+# Post content
+
+Regular markdown content here.
+```
+
+### Creating Posts from Files
+
+```ruby
+markdown_content = File.read("path/to/post.md")
+author = User.find_by(email: "author@example.com")
+post = Post.from_markdown(markdown_content, author)
+post.save
+```

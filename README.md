@@ -1,6 +1,4 @@
-[willow.camp](HTTP://willow.camp)
-
-# ⛺ willow.camp
+# ⛺ [willow.camp](https://willow.camp)
 
 A blogging platform built with Ruby on Rails. Supports subdomains, custom domains, multiple themes, and markdown posts.
 
@@ -56,34 +54,6 @@ Themes can be changed in the settings page. The application supports all DaisyUI
 rails test
 ```
 
-## Markdown Posts
-
-Posts use Markdown with YAML frontmatter:
-
-```yaml
----
-title: My Post
-description: Post description
-published: true
-date: 2023-05-25
-tags:
-  - rails
-  - ruby
----
-
-# Post content
-
-Regular markdown content here.
-```
-
-### Creating Posts from Files
-
-```ruby
-markdown_content = File.read("path/to/post.md")
-author = User.find_by(email: "author@example.com")
-post = Post.from_markdown(markdown_content, author)
-post.save
-```
 
 ## Deployment
 
