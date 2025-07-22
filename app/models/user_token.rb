@@ -7,7 +7,6 @@ class UserToken < ApplicationRecord
   validates :name, presence: true, length: {maximum: 255}
   validates :token, uniqueness: true, length: {is: 32}, if: -> { token.present? }
   validate :expires_at_is_in_future
-  validates :user, presence: true
 
   # Returns active tokens (not expired or with no expiration date)
   scope :active, -> { where("expires_at IS NULL OR expires_at > ?", Time.current) }

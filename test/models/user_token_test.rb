@@ -19,7 +19,7 @@ class UserTokenTest < ActiveSupport::TestCase
   test "user is required" do
     token = UserToken.new(name: "Test Token")
     assert_not token.valid?
-    assert_includes token.errors[:user], "can't be blank"
+    assert_includes token.errors[:user], "must exist"
   end
 
   test "token is auto-generated on create" do

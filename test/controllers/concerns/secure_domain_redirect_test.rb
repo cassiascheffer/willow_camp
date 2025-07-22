@@ -65,7 +65,7 @@ class SecureDomainRedirectTest < ActionController::TestCase
     ]
 
     invalid_domains.each do |domain|
-      refute @controller.test_valid_redirect_domain?(domain),
+      assert_not @controller.test_valid_redirect_domain?(domain),
         "Expected '#{domain}' to be invalid"
     end
   end

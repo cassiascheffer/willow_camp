@@ -195,8 +195,8 @@ module Blog
         assert item["url"].start_with?("http://#{@user_one.subdomain}.willow.camp/")
         assert item["id"].start_with?("http://#{@user_one.subdomain}.willow.camp/")
         # URLs should not contain concatenated domain like "subdomain.customdomain"
-        refute item["url"].include?("#{@user_one.subdomain}.enumerator.dev")
-        refute item["id"].include?("#{@user_one.subdomain}.enumerator.dev")
+        assert_not item["url"].include?("#{@user_one.subdomain}.enumerator.dev")
+        assert_not item["id"].include?("#{@user_one.subdomain}.enumerator.dev")
       end
     end
 
@@ -215,11 +215,11 @@ module Blog
         assert item["url"].start_with?("http://#{@custom_domain_user.custom_domain}/")
         assert item["id"].start_with?("http://#{@custom_domain_user.custom_domain}/")
         # URLs should not contain willow.camp subdomain
-        refute item["url"].include?("willow.camp")
-        refute item["id"].include?("willow.camp")
+        assert_not item["url"].include?("willow.camp")
+        assert_not item["id"].include?("willow.camp")
         # URLs should not contain concatenated domain like "subdomain.customdomain"
-        refute item["url"].include?("#{@custom_domain_user.subdomain}.#{@custom_domain_user.custom_domain}")
-        refute item["id"].include?("#{@custom_domain_user.subdomain}.#{@custom_domain_user.custom_domain}")
+        assert_not item["url"].include?("#{@custom_domain_user.subdomain}.#{@custom_domain_user.custom_domain}")
+        assert_not item["id"].include?("#{@custom_domain_user.subdomain}.#{@custom_domain_user.custom_domain}")
       end
     end
 
@@ -237,14 +237,14 @@ module Blog
       @response.body.scan(%r{<link>(http://[^<]+)</link>}).flatten.each do |url|
         assert url.start_with?("http://#{@user_one.subdomain}.willow.camp/")
         # URLs should not contain concatenated domain
-        refute url.include?("#{@user_one.subdomain}.enumerator.dev")
+        assert_not url.include?("#{@user_one.subdomain}.enumerator.dev")
       end
 
       # Check item GUIDs
       @response.body.scan(%r{<guid>(http://[^<]+)</guid>}).flatten.each do |url|
         assert url.start_with?("http://#{@user_one.subdomain}.willow.camp/")
         # URLs should not contain concatenated domain
-        refute url.include?("#{@user_one.subdomain}.enumerator.dev")
+        assert_not url.include?("#{@user_one.subdomain}.enumerator.dev")
       end
     end
 
@@ -262,18 +262,18 @@ module Blog
       @response.body.scan(%r{<link>(http://[^<]+)</link>}).flatten.each do |url|
         assert url.start_with?("http://#{@custom_domain_user.custom_domain}/")
         # URLs should not contain willow.camp
-        refute url.include?("willow.camp")
+        assert_not url.include?("willow.camp")
         # URLs should not contain concatenated domain
-        refute url.include?("#{@custom_domain_user.subdomain}.#{@custom_domain_user.custom_domain}")
+        assert_not url.include?("#{@custom_domain_user.subdomain}.#{@custom_domain_user.custom_domain}")
       end
 
       # Check item GUIDs
       @response.body.scan(%r{<guid>(http://[^<]+)</guid>}).flatten.each do |url|
         assert url.start_with?("http://#{@custom_domain_user.custom_domain}/")
         # URLs should not contain willow.camp
-        refute url.include?("willow.camp")
+        assert_not url.include?("willow.camp")
         # URLs should not contain concatenated domain
-        refute url.include?("#{@custom_domain_user.subdomain}.#{@custom_domain_user.custom_domain}")
+        assert_not url.include?("#{@custom_domain_user.subdomain}.#{@custom_domain_user.custom_domain}")
       end
     end
 
@@ -294,7 +294,7 @@ module Blog
       @response.body.scan(%r{<link.*href="(http://[^"]+)".*rel="alternate"}).flatten.each do |url|
         assert url.start_with?("http://#{@user_one.subdomain}.willow.camp/")
         # URLs should not contain concatenated domain
-        refute url.include?("#{@user_one.subdomain}.enumerator.dev")
+        assert_not url.include?("#{@user_one.subdomain}.enumerator.dev")
       end
 
       # Check entry IDs
@@ -302,7 +302,7 @@ module Blog
         next if url == "http://#{@user_one.subdomain}.willow.camp/" # Skip feed ID
         assert url.start_with?("http://#{@user_one.subdomain}.willow.camp/")
         # URLs should not contain concatenated domain
-        refute url.include?("#{@user_one.subdomain}.enumerator.dev")
+        assert_not url.include?("#{@user_one.subdomain}.enumerator.dev")
       end
     end
 
@@ -323,9 +323,9 @@ module Blog
       @response.body.scan(%r{<link.*href="(http://[^"]+)".*rel="alternate"}).flatten.each do |url|
         assert url.start_with?("http://#{@custom_domain_user.custom_domain}/")
         # URLs should not contain willow.camp
-        refute url.include?("willow.camp")
+        assert_not url.include?("willow.camp")
         # URLs should not contain concatenated domain
-        refute url.include?("#{@custom_domain_user.subdomain}.#{@custom_domain_user.custom_domain}")
+        assert_not url.include?("#{@custom_domain_user.subdomain}.#{@custom_domain_user.custom_domain}")
       end
 
       # Check entry IDs
@@ -333,9 +333,9 @@ module Blog
         next if url == "http://#{@custom_domain_user.custom_domain}/" # Skip feed ID
         assert url.start_with?("http://#{@custom_domain_user.custom_domain}/")
         # URLs should not contain willow.camp
-        refute url.include?("willow.camp")
+        assert_not url.include?("willow.camp")
         # URLs should not contain concatenated domain
-        refute url.include?("#{@custom_domain_user.subdomain}.#{@custom_domain_user.custom_domain}")
+        assert_not url.include?("#{@custom_domain_user.subdomain}.#{@custom_domain_user.custom_domain}")
       end
     end
   end

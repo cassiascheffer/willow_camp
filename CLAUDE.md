@@ -15,10 +15,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `rails test test/path/to/test.rb:LINE` - Run specific test at line number
 
 ### Code Quality
-- `bin/rubocop` - Run Ruby style checker
-- `bin/rubocop -a` - Auto-fix Ruby style issues
+- `standardrb` - Run Ruby style checker and formatter
+- `standardrb --fix` - Auto-fix Ruby style issues
 - `bin/brakeman` - Run security scanner
-- `standardrb` - Alternative Ruby formatter/linter
 
 ### Database
 - `rails db:migrate` - Run pending migrations
