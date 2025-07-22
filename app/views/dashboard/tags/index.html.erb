@@ -1,14 +1,58 @@
 <div class="w-full">
   <% if @tags.present? %>
-    <div class="overflow-x-auto">
-      <table class="table w-full">
+    <!-- Mobile view with cards -->
+    <div class="block lg:hidden space-y-4">
+      <% @tags.each do |tag| %>
+        <div class="card bg-base-100 shadow-md" id="tag_<%= tag.id %>" data-controller="inline-edit tag-delete" data-inline-edit-url-value="<%= dashboard_tag_path(tag.id) %>" data-tag-delete-url-value="<%= dashboard_tag_path(tag.id) %>">
+          <div class="card-body">
+            <div class="flex items-center justify-between mb-3">
+              <div data-inline-edit-target="display" class="flex-1">
+                <button type="button"
+                        class="text-left hover:bg-base-200 rounded px-2 py-1 -mx-2 -my-1 cursor-pointer transition-colors text-lg font-semibold flex items-center gap-2 group"
+                        data-action="click->inline-edit#edit"
+                  title="Click to edit tag name">
+                  <%= tag.name %>
+                  <svg class="w-4 h-4 text-base-content/40 group-hover:text-base-content transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                  </svg>
+                </button>
+              </div>
+              <button type="button"
+                      class="btn btn-error btn-outline btn-sm"
+                      data-action="click->tag-delete#confirmDelete"
+                title="Delete tag">
+                Delete
+              </button>
+            </div>
+            <%= render "tag_form", tag: tag %>
+            <div class="grid grid-cols-3 gap-4 text-center">
+              <div>
+                <div class="text-sm text-gray-500">Published</div>
+                <div class="text-lg font-semibold"><%= tag.published_count %></div>
+              </div>
+              <div>
+                <div class="text-sm text-gray-500">Drafts</div>
+                <div class="text-lg font-semibold"><%= tag.draft_count %></div>
+              </div>
+              <div>
+                <div class="text-sm text-gray-500">Total</div>
+                <div class="text-lg font-semibold"><%= tag.taggings_count %></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    <!-- Desktop view with table -->
+    <div class="hidden lg:block card bg-base-100 shadow-md">
+      <table class="table w-full border-collapse" aria-label="Tags Table">
         <thead>
           <tr>
-            <th>Tag</th>
-            <th>Published</th>
-            <th>Drafts</th>
-            <th>Total</th>
-            <th></th>
+            <th class="text-left py-2">Tag</th>
+            <th class="text-left py-2">Published</th>
+            <th class="text-left py-2">Drafts</th>
+            <th class="text-left py-2">Total</th>
+            <th class="text-left py-2"></th>
           </tr>
         </thead>
         <tbody>
