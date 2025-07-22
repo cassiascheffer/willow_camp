@@ -52,6 +52,7 @@ gem "pagy"
 gem "public_suffix"
 gem "tailwindcss-rails"
 gem "tailwindcss-ruby", "~> 4.1.11"
+gem "heroicons", "~> 2.1.1"
 
 # APM and Logs
 gem "honeybadger"

@@ -153,6 +153,9 @@ GEM
       raabro (~> 1.4)
     globalid (1.2.1)
       activesupport (>= 6.1)
+    heroicons (2.1.1)
+      nokogiri
+      railties (>= 5.2)
     honeybadger (5.29.1)
       logger
       ostruct
@@ -481,6 +484,7 @@ DEPENDENCIES
   faker
   friendly_id
   front_matter_parser
+  heroicons (~> 2.1.1)
   honeybadger
   htmlbeautifier
   importmap-rails

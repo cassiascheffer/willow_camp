@@ -32,9 +32,7 @@
     <div class="navbar-start">
       <div class="dropdown">
         <div tabindex="0" role="button" class="btn btn-ghost lg:hidden" aria-label="Menu">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16"></path>
-          </svg>
+          <%= heroicon "bars-3", options: { class: "w-5 h-5" } %>
         </div>
         <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52 border border-base-300">
           <li><%= link_to "Home", root_path, class: "text-sm" %></li>

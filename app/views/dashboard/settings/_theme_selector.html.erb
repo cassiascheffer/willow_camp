@@ -13,9 +13,7 @@
         </div>
         <span class="capitalize" data-theme-selector-target="buttonText"><%= user.theme %></span>
       </div>
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-      </svg>
+      <%= heroicon "chevron-down", options: { class: "w-4 h-4" } %>
     </div>
     <div tabindex="0" class="dropdown-content z-[1] menu p-2 shadow-lg bg-base-100 rounded-box w-full max-h-96 overflow-y-auto border border-base-300">
       <div class="menu-title text-xs mb-2">Choose a Theme</div>
@@ -33,9 +31,7 @@
             </div>
             <span class="capitalize flex-1 text-left"><%= theme %></span>
             <% if theme == user.theme %>
-              <svg class="w-4 h-4 text-primary" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-              </svg>
+              <%= heroicon "check", options: { class: "w-4 h-4 text-primary" } %>
             <% end %>
           </button>
         </li>

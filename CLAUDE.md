@@ -42,7 +42,7 @@ This is a multi-tenant blogging platform built with Rails 8.0.2 following standa
 
 **Content Management**: Posts are stored as Markdown with YAML frontmatter. The PostMarkdown library (app/lib/post_markdown.rb) handles parsing and validation. Services in app/services/ handle conversion between Post models and Markdown.
 
-**Frontend**: Uses Hotwire (Turbo + Stimulus) for interactivity without a JavaScript build step. Import maps manage JavaScript modules. Tailwind CSS with DaisyUI provides styling and theme support.
+**Frontend**: Uses Hotwire (Turbo + Stimulus) for interactivity without a JavaScript build step. Import maps manage JavaScript modules. Tailwind CSS with DaisyUI provides styling and theme support. Icons are provided by the heroicons gem with view helpers like `<%= heroicon "icon-name" %>`.
 
 **API**: RESTful JSON API under /api namespace. All endpoints require authentication and return consistent error formats.
 
