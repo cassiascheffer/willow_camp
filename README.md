@@ -8,7 +8,7 @@ A blogging platform built with Ruby on Rails. Supports subdomains, custom domain
 - DaisyUI theme picker
 - Markdown posts with YAML frontmatter
 - API for post management
-- CLI for post management: [@cassiascheffer/willow_camp_cli](https://github.com/cassiascheffer/willow_camp_cli)
+- CLI for post management (see `cli/` directory)
 
 ## Development Setup
 
@@ -25,6 +25,17 @@ A blogging platform built with Ruby on Rails. Supports subdomains, custom domain
 ```bash
 git clone https://github.com/cassiascheffer/willow_camp.git
 cd willow_camp
+```
+
+### CLI Development
+
+The CLI is located in the `cli/` directory:
+
+```bash
+cd cli
+bundle install
+bundle exec rake test
+gem build willow_camp_cli.gemspec
 ```
 
 2. Install dependencies:
