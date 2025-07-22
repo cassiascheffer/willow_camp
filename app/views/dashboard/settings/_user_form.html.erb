@@ -57,6 +57,13 @@
       <%= form.text_area :site_meta_description, required: false, 'aria-describedby': "site_meta_description_help", maxlength: 255, class: "textarea textarea-bordered w-full" %>
       <div id="site_meta_description_help" class="text-xs text-gray-500 mt-2">Used for SEO on index pages of your blog</div>
     </div>
+    <div class="form-control mb-4">
+      <label class="label cursor-pointer">
+        <%= form.check_box :no_index, class: "checkbox" %>
+        <span class="label-text">Tell search engines to not index my site</span>
+      </label>
+      <div class="text-xs text-gray-500 mt-1">When checked, search engines will be instructed not to crawl or index your blog</div>
+    </div>
     <div class="form-control w-full mt-6">
       <%= form.submit "Update account", class: "btn btn-primary w-full" %>
     </div>

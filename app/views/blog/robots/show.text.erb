@@ -1,4 +1,9 @@
 # See https://www.robotstxt.org/robotstxt.html for documentation on how to use the robots.txt file
+<% if @author&.no_index? %>
+# Search engine indexing disabled by blog owner
+User-agent: *
+Disallow: /
+<% else %>
 # Allow all web crawlers to access public blog content
 User-agent: *
 Allow: /
@@ -29,3 +34,4 @@ Allow: /posts/json
 Crawl-delay: 1
 # Sitemap location
 Sitemap: <%= @sitemap_url %>
+<% end %>

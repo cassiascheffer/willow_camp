@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_15_105331) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_22_112259) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -113,6 +113,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_15_105331) do
     t.string "theme", default: "light"
     t.text "post_footer_markdown"
     t.text "post_footer_html"
+    t.boolean "no_index", default: false, null: false
     t.index ["custom_domain"], name: "index_users_on_custom_domain", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
