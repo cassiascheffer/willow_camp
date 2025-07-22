@@ -67,6 +67,7 @@ group :development, :test do
   gem "brakeman", require: false
 
   gem "faker"
+  gem "bullet"
 end
 
 group :development do
