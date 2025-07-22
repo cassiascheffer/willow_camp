@@ -75,6 +75,7 @@ group :development do
   gem "lefthook", "~> 1.11.16"
   gem "rails_best_practices"
   gem "standardrb"
+  gem "standard-rails"
   gem "web-console"
   gem "letter_opener"
 end
