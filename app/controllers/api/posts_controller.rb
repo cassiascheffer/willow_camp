@@ -3,7 +3,7 @@ class Api::PostsController < Api::BaseController
   before_action :ensure_author, only: [:show, :update, :destroy]
 
   def index
-    @posts = Post.where(author: @current_user)
+    @posts = Post.where(author: @current_user).includes(:taggings)
     # Render with index.json.jbuilder
   end
 
