@@ -1,114 +1,146 @@
-<!doctype html>
-
-<html lang="en">
-
-  <head>
-
-    <title>The page you were looking for doesn’t exist (404 Not found)</title>
-
-    <meta charset="utf-8">
-    <meta name="viewport" content="initial-scale=1, width=device-width">
-    <meta name="robots" content="noindex, nofollow">
-
-    <style>
-
-      *, *::before, *::after {
-        box-sizing: border-box;
-      }
-
-      * {
-        margin: 0;
-      }
-
-      html {
-        font-size: 16px;
-      }
-
-      body {
-        background: #FFF;
-        color: #261B23;
-        display: grid;
-        font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Aptos, Roboto, "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-        font-size: clamp(1rem, 2.5vw, 2rem);
-        -webkit-font-smoothing: antialiased;
-        font-style: normal;
-        font-weight: 400;
-        letter-spacing: -0.0025em;
-        line-height: 1.4;
-        min-height: 100vh;
-        place-items: center;
-        text-rendering: optimizeLegibility;
-        -webkit-text-size-adjust: 100%;
-      }
-
-      a {
-        color: inherit;
-        font-weight: 700;
-        text-decoration: underline;
-        text-underline-offset: 0.0925em;
-      }
-
-      b, strong {
-        font-weight: 700;
-      }
-
-      i, em {
-        font-style: italic;
-      }
-
-      main {
-        display: grid;
-        gap: 1em;
-        padding: 2em;
-        place-items: center;
-        text-align: center;
-      }
-
-      main header {
-        width: min(100%, 12em);
-      }
-
-      main header svg {
-        height: auto;
-        max-width: 100%;
-        width: 100%;
-      }
-
-      main article {
-        width: min(100%, 30em);
-      }
-
-      main article p {
-        font-size: 75%;
-      }
-
-      main article br {
-
-        display: none;
-
-        @media(min-width: 48em) {
-          display: inline;
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Page Not Found - Willow Camp</title>
+  <meta name="robots" content="noindex, nofollow">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      plugins: [
+        function({ addComponents }) {
+          addComponents({
+            '.btn': {
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.5rem',
+              padding: '0.75rem 1.5rem',
+              borderRadius: '0.5rem',
+              fontSize: '0.875rem',
+              fontWeight: '500',
+              textDecoration: 'none',
+              transition: 'all 0.2s',
+              cursor: 'pointer',
+              border: '1px solid transparent'
+            },
+            '.btn-primary': {
+              backgroundColor: 'oklch(var(--p))',
+              color: 'oklch(var(--pc))',
+              '&:hover': {
+                backgroundColor: 'oklch(var(--p) / 0.8)'
+              }
+            },
+            '.btn-outline': {
+              backgroundColor: 'transparent',
+              color: 'oklch(var(--bc))',
+              borderColor: 'oklch(var(--bc) / 0.2)',
+              '&:hover': {
+                backgroundColor: 'oklch(var(--bc) / 0.1)',
+                borderColor: 'oklch(var(--bc) / 0.3)'
+              }
+            }
+          })
         }
-
+      ],
+      theme: {
+        extend: {
+          colors: {
+            'base-100': 'oklch(var(--b1))',
+            'base-200': 'oklch(var(--b2))',
+            'base-300': 'oklch(var(--b3))',
+            'base-content': 'oklch(var(--bc))',
+            'primary': 'oklch(var(--p))',
+            'primary-content': 'oklch(var(--pc))',
+            'secondary': 'oklch(var(--s))',
+            'accent': 'oklch(var(--a))',
+            'neutral': 'oklch(var(--n))',
+            'error': 'oklch(var(--er))'
+          }
+        }
       }
+    }
+  </script>
+  <style>
+    :root {
+      --p: 49.3% 0.129 196.5;
+      --pc: 89.5% 0.026 196.5;
+      --s: 65.1% 0.14 174.5;
+      --sc: 13.9% 0.057 174.5;
+      --a: 76.8% 0.184 183.6;
+      --ac: 15.3% 0.075 183.6;
+      --n: 32.1% 0.033 196.5;
+      --nc: 89.5% 0.026 196.5;
+      --b1: 100% 0 0;
+      --b2: 96.1% 0 0;
+      --b3: 92.4% 0.016 196.5;
+      --bc: 13.9% 0.057 174.5;
+      --in: 72.1% 0.191 231.3;
+      --inc: 15.3% 0.075 183.6;
+      --su: 64.8% 0.15 160;
+      --suc: 15.3% 0.075 183.6;
+      --wa: 84.7% 0.199 83.3;
+      --wac: 15.3% 0.075 183.6;
+      --er: 71.8% 0.25 22.7;
+      --erc: 15.3% 0.075 183.6;
+    }
+  </style>
+</head>
+<body class="bg-base-100 text-base-content min-h-screen flex flex-col items-center justify-center p-4">
+  <main class="text-center max-w-md mx-auto">
+    <!-- Error Icon -->
+    <div class="mb-8">
+      <svg class="w-24 h-24 mx-auto text-error" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+      </svg>
+    </div>
 
-    </style>
+    <!-- Error Message -->
+    <div class="mb-8">
+      <h1 class="text-4xl font-bold mb-4 text-error">404</h1>
+      <h2 class="text-2xl font-semibold mb-4 text-base-content">Page Not Found</h2>
+      <p class="text-base-content/70 text-lg mb-2">The page you were looking for doesn't exist.</p>
+      <p class="text-base-content/50 text-sm">You may have mistyped the address or the page may have moved.</p>
+    </div>
 
-  </head>
+    <!-- Actions -->
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      <button onclick="history.back()" class="btn btn-primary">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+        </svg>
+        Go Back
+      </button>
+      <a href="/" class="btn btn-outline">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+        </svg>
+        Home
+      </a>
+    </div>
 
-  <body>
-
-    <!-- This file lives in public/404.html -->
-
-    <main>
-      <header>
-        <svg height="172" viewBox="0 0 480 172" width="480" xmlns="http://www.w3.org/2000/svg"><path d="m124.48 3.00509-45.6889 100.02991h26.2239v-28.1168h38.119v28.1168h21.628v35.145h-21.628v30.82h-37.308v-30.82h-72.1833v-31.901l50.2851-103.27391zm115.583 168.69891c-40.822 0-64.884-35.146-64.884-85.7015 0-50.5554 24.062-85.700907 64.884-85.700907 40.823 0 64.884 35.145507 64.884 85.700907 0 50.5555-24.061 85.7015-64.884 85.7015zm0-133.2831c-17.572 0-22.709 21.8984-22.709 47.5816 0 25.6835 5.137 47.5815 22.709 47.5815 17.303 0 22.71-21.898 22.71-47.5815 0-25.6832-5.407-47.5816-22.71-47.5816zm165.328-35.41581-45.689 100.02991h26.224v-28.1168h38.119v28.1168h21.628v35.145h-21.628v30.82h-37.308v-30.82h-72.184v-31.901l50.285-103.27391z" fill="#f0eff0"/><path d="m157.758 68.9967v34.0033h-7.199l-14.233-19.8814v19.8814h-8.584v-34.0033h8.307l13.125 18.7184v-18.7184zm28.454 21.5428c0 7.6978-5.15 13.0145-12.737 13.0145-7.532 0-12.738-5.3167-12.738-13.0145s5.206-13.0143 12.738-13.0143c7.587 0 12.737 5.3165 12.737 13.0143zm-8.528 0c0-3.4336-1.496-5.8703-4.209-5.8703-2.659 0-4.154 2.4367-4.154 5.8703s1.495 5.8149 4.154 5.8149c2.713 0 4.209-2.3813 4.209-5.8149zm13.184 3.8766v-9.5807h-3.655v-6.7564h3.655v-6.8671h8.584v6.8671h5.205v6.7564h-5.205v8.307c0 1.9383.941 2.769 2.658 2.769.941 0 1.994-.2216 2.769-.5538v7.3654c-.997.443-2.88.775-4.818.775-5.87 0-9.193-2.769-9.193-9.0819zm37.027 8.5839h-8.806v-34.0033h23.924v7.6978h-15.118v6.7564h13.9v7.5316h-13.9zm41.876-12.4605c0 7.6978-5.15 13.0145-12.737 13.0145-7.532 0-12.738-5.3167-12.738-13.0145s5.206-13.0143 12.738-13.0143c7.587 0 12.737 5.3165 12.737 13.0143zm-8.529 0c0-3.4336-1.495-5.8703-4.208-5.8703-2.659 0-4.154 2.4367-4.154 5.8703s1.495 5.8149 4.154 5.8149c2.713 0 4.208-2.3813 4.208-5.8149zm35.337-12.4605v24.921h-8.695v-2.16c-1.329 1.551-3.821 2.714-6.646 2.714-5.482 0-8.75-3.5999-8.75-9.1379v-16.3371h8.64v14.288c0 2.1045.997 3.5997 3.212 3.5997 1.606 0 3.101-1.0522 3.544-2.769v-15.1187zm4.076 24.921v-24.921h8.694v2.1598c1.385-1.5506 3.822-2.7136 6.701-2.7136 5.538 0 8.806 3.5997 8.806 9.1377v16.3371h-8.639v-14.2327c0-2.049-1.053-3.5443-3.268-3.5443-1.717 0-3.156.9969-3.6 2.7136v15.0634zm44.113 0v-1.994c-1.163 1.329-3.6 2.548-6.147 2.548-7.2 0-11.132-5.8151-11.132-13.0145s3.932-13.0143 11.132-13.0143c2.547 0 4.984 1.2184 6.147 2.5475v-13.0697h8.695v35.997zm0-9.1931v-6.5902c-.665-1.3291-2.16-2.326-3.821-2.326-2.991 0-4.763 2.4368-4.763 5.6488s1.772 5.5934 4.763 5.5934c1.717 0 3.156-.9415 3.821-2.326z" fill="#d30001"/></svg>
-      </header>
-      <article>
-        <p><strong>The page you were looking for doesn’t exist.</strong> You may have mistyped the address or the page may have moved. If you’re the application owner check the logs for more information.</p>
-      </article>
-    </main>
-
-  </body>
-
+    <!-- Theme Detection Script -->
+    <script>
+      // Detect and apply user's theme preference
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (prefersDark) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        document.documentElement.style.setProperty('--p', '79.8% 0.126 196.5');
+        document.documentElement.style.setProperty('--pc', '13.9% 0.057 174.5');
+        document.documentElement.style.setProperty('--s', '74.8% 0.26 183.6');
+        document.documentElement.style.setProperty('--sc', '13.9% 0.057 174.5');
+        document.documentElement.style.setProperty('--a', '74.8% 0.26 183.6');
+        document.documentElement.style.setProperty('--ac', '13.9% 0.057 174.5');
+        document.documentElement.style.setProperty('--n', '31.3% 0.021 220.4');
+        document.documentElement.style.setProperty('--nc', '74.6% 0.043 220.4');
+        document.documentElement.style.setProperty('--b1', '25.3% 0.015 220.4');
+        document.documentElement.style.setProperty('--b2', '23.2% 0.013 220.4');
+        document.documentElement.style.setProperty('--b3', '21.1% 0.012 220.4');
+        document.documentElement.style.setProperty('--bc', '74.6% 0.043 220.4');
+        document.documentElement.style.setProperty('--er', '71.8% 0.25 22.7');
+      }
+    </script>
+  </main>
+</body>
 </html>
