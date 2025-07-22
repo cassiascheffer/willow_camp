@@ -6,7 +6,7 @@
     <section class="empty-state text-center bg-base-200 rounded-lg p-12" aria-label="No Posts">
       <% if @user.subdomain.blank? %>
         <div class="max-w-md mx-auto">
-          <%= form_with model: @user, url: dashboard_subdomain_path, method: :patch, local: true, class: "space-y-4" do |form| %>
+          <%= form_with model: @user, url: dashboard_subdomain_path, method: :patch, local: true, class: "space-y-4", data: { controller: "domain-downcase", action: "submit->domain-downcase#submit" } do |form| %>
             <div class="form-control">
               <%= form.label :subdomain, "Choose a subdomain to get started", class: "label" %>
               <div class="join">
@@ -17,7 +17,9 @@
                       required: true,
                       pattern: "[a-z0-9]+",
                       minlength: 3,
-                      maxlength: 63 %>
+                      maxlength: 63,
+                      autocapitalize: "off",
+                      data: { domain_downcase_target: "subdomain", action: "input->domain-downcase#downcaseInput" } %>
                 <span class="btn btn-disabled join-item">.willow.camp</span>
               </div>
               <div class="label pb-4">
