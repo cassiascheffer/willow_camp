@@ -14,8 +14,13 @@ module Dashboard
           format.turbo_stream do
             # Get updated count after renaming
             updated_tag = current_user.all_tags_with_published_and_draft_counts.find(@tag.id)
-            render turbo_stream: turbo_stream.replace("tag_#{@tag.id}",
-              partial: "tag_row", locals: {tag: updated_tag})
+            # Replace both mobile card and desktop row
+            render turbo_stream: [
+              turbo_stream.replace("tag_#{@tag.id}",
+                partial: "tag_card", locals: {tag: updated_tag}),
+              turbo_stream.replace("tag_row_#{@tag.id}",
+                partial: "tag_row", locals: {tag: updated_tag})
+            ]
           end
         end
       else
@@ -34,14 +39,23 @@ module Dashboard
       if @tag.destroy
         respond_to do |format|
           format.turbo_stream do
-            render turbo_stream: turbo_stream.remove("tag_#{@tag.id}")
+            # Remove both mobile card and desktop row
+            render turbo_stream: [
+              turbo_stream.remove("tag_#{@tag.id}"),
+              turbo_stream.remove("tag_row_#{@tag.id}")
+            ]
           end
         end
       else
         respond_to do |format|
           format.turbo_stream do
-            render turbo_stream: turbo_stream.replace("tag_#{@tag.id}",
-              partial: "tag_row", locals: {tag: @tag})
+            # Show error on both mobile and desktop views
+            render turbo_stream: [
+              turbo_stream.replace("tag_#{@tag.id}",
+                partial: "tag_card", locals: {tag: @tag}),
+              turbo_stream.replace("tag_row_#{@tag.id}",
+                partial: "tag_row", locals: {tag: @tag})
+            ]
           end
         end
       end

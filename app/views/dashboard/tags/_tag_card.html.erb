@@ -1,0 +1,35 @@
+<div class="card bg-base-100 shadow-md" id="tag_<%= tag.id %>" data-controller="inline-edit tag-delete" data-inline-edit-url-value="<%= dashboard_tag_path(tag.id) %>" data-tag-delete-url-value="<%= dashboard_tag_path(tag.id) %>">
+  <div class="card-body">
+    <div class="flex items-center justify-between mb-3">
+      <div data-inline-edit-target="display" class="flex-1">
+        <button type="button"
+                class="text-left hover:bg-base-200 rounded px-2 py-1 -mx-2 -my-1 cursor-pointer transition-colors text-lg font-semibold"
+                data-action="click->inline-edit#edit"
+          title="Click to edit tag name">
+          <%= tag.name %>
+        </button>
+      </div>
+      <button type="button"
+              class="btn btn-error btn-outline btn-sm"
+              data-action="click->tag-delete#confirmDelete"
+        title="Delete tag">
+        Delete
+      </button>
+    </div>
+    <%= render "tag_form", tag: tag %>
+    <div class="grid grid-cols-3 gap-4 text-center">
+      <div>
+        <div class="text-sm text-gray-500">Published</div>
+        <div class="text-lg font-semibold"><%= tag.published_count %></div>
+      </div>
+      <div>
+        <div class="text-sm text-gray-500">Drafts</div>
+        <div class="text-lg font-semibold"><%= tag.draft_count %></div>
+      </div>
+      <div>
+        <div class="text-sm text-gray-500">Total</div>
+        <div class="text-lg font-semibold"><%= tag.taggings_count %></div>
+      </div>
+    </div>
+  </div>
+</div>
