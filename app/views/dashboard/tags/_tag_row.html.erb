@@ -17,8 +17,9 @@
     <button type="button" 
             class="btn btn-ghost btn-xs text-error hover:bg-error hover:text-error-content"
             data-action="click->tag-delete#confirmDelete"
-      title="Delete tag">
-      ✕
+      title="Delete tag"
+      aria-label="Delete tag <%= tag.name %>">
+      <%= heroicon "x-mark", options: { class: "w-4 h-4" } %>
     </button>
   </td>
 </tr>
