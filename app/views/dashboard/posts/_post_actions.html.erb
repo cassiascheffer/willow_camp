@@ -1,19 +1,56 @@
-<div class="card-actions justify-end mt-4">
-  <%= button_to "Delete",
-                dashboard_post_path(post.id),
-                method: :delete,
-                data: { confirm: 'Are you sure?', turbo: false },
-                class: "btn btn-error" %>
-  <% if post.published? %>
-    <%= link_to "View post",
-                post_url(post.slug, subdomain: post.author.subdomain),
-                target: "_blank",
-                class: "btn btn-primary" %>
-  <% else %>
-    <%= link_to "Preview post",
-                preview_path(post),
-                target: "_blank",
-                class: "btn btn-primary" %>
-  <% end %>
-  <%= link_to "Back to Dashboard", dashboard_path, class: "btn btn-secondary" %>
+<div class="mt-4" data-controller="post-delete post-actions" data-post-delete-url-value="<%= dashboard_post_path(post.id) %>">
+  <!-- Back to Dashboard - Left on large screens, bottom on mobile -->
+  <div class="lg:flex lg:justify-between">
+    <div class="order-2 lg:order-1 mt-4 lg:mt-0">
+      <%= link_to dashboard_path, class: "underline flex items-center gap-1", data: { turbo_frame: "_top" } do %>
+        <%= heroicon "arrow-left", variant: :mini, options: { class: "h-4 w-4"}%>
+        Back to Dashboard
+      <% end %>
+    </div>
+    <!-- Action buttons - Right on large screens, top on mobile -->
+    <div class="flex gap-2 justify-end order-1 lg:order-2">
+      <div class="dropdown dropdown-end dropdown-top" data-post-actions-target="dropdown">
+        <div tabindex="0" role="button" class="btn btn-outline" aria-label="Post actions menu">
+          <%= heroicon "ellipsis-vertical", options: { class: "h-5 w-5" } %>
+        </div>
+        <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow" aria-label="Post actions">
+          <li>
+            <% if post.published? %>
+              <%= link_to "View post",
+                          post_url(post.slug, subdomain: post.author.subdomain),
+                          target: "_blank",
+                          class: "" %>
+            <% else %>
+              <%= link_to "Preview post",
+                          preview_path(post),
+                          target: "_blank",
+                          class: "" %>
+            <% end %>
+          </li>
+          <% if post.published? %>
+            <li>
+              <%= button_to "Unpublish",
+                            dashboard_post_path(post),
+                            method: :patch,
+                            params: { post: { published: false } },
+                            form: { 
+                              data: { 
+                                turbo_frame: "_top",
+                                action: "turbo:submit-start->post-actions#closeDropdown"
+                              } 
+                            },
+                            class: "" %>
+            </li>
+          <% end %>
+          <li>
+            <button type="button"
+                    class="text-error"
+                    data-action="click->post-delete#confirmDelete">
+              Delete
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
 </div>
