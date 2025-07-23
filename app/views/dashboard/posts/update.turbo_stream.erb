@@ -5,6 +5,24 @@
   <%= turbo_stream.update "post_published_at_frame" do %>
     <%= render "published_at_field", post: @post %>
   <% end %>
+  <%= turbo_stream.update "post_buttons" do %>
+    <% # We need to recreate the form builder context for the partial %>
+    <% form_id = dom_id(@post, "edit") %>
+    <%= form_with(model: @post, url: dashboard_post_path(@post), id: form_id, html: { style: "display: none;" }) do |form| %>
+      <%= render "post_buttons", form: form, post: @post %>
+    <% end %>
+    <script>
+      // Move the buttons out of the hidden form wrapper
+      var buttons = document.querySelector('#<%= form_id %> > div');
+      if (buttons) {
+        document.getElementById('post_buttons').appendChild(buttons);
+        document.querySelector('#<%= form_id %>').remove();
+      }
+    </script>
+  <% end %>
+  <%= turbo_stream.update "post_actions" do %>
+    <%= render "post_actions", post: @post %>
+  <% end %>
 <% end %>
 <% if @post.errors.any? %>
   <%= turbo_stream.update "error_explanation" do %>

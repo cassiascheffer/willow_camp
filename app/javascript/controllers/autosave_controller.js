@@ -150,7 +150,7 @@ export default class extends Controller {
       this.abortAutoSave = true
     }
 
-    if (event.target.checked) {
+    if (event.target.value === "true") {
       this.stopAutoSave()
       this.setStatus("Auto-save disabled (manual save only)", "warning")
     } else {
@@ -166,11 +166,11 @@ export default class extends Controller {
 
   // Helper methods
   get publishedInput() {
-    return this.formTarget.querySelector('input[name*="[published]"][type="checkbox"]')
+    return this.formTarget.querySelector('input[name*="[published]"]')
   }
 
   get isPublished() {
-    return this.publishedInput?.checked || false
+    return this.publishedInput?.value === "true"
   }
 
   setStatus(message, type = "default") {

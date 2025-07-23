@@ -1,0 +1,38 @@
+<div class="flex gap-4 mt-6">
+  <% if post.published? %>
+    <%= form.hidden_field :published, value: true, id: "post_published" %>
+    <%= form.button "Convert to draft",
+                    type: "submit",
+                    class: "btn btn-secondary flex-1",
+                    data: { 
+                      action: "click->autosave#manualSave",
+                      turbo_submits_with: "Converting to draft..."
+                    },
+                    onclick: "document.getElementById('post_published').value = 'false'" %>
+    <%= form.button "Save",
+                    type: "submit",
+                    class: "btn btn-primary flex-1",
+                    data: { 
+                      action: "click->autosave#manualSave",
+                      turbo_submits_with: "Saving..."
+                    } %>
+  <% else %>
+    <%= form.hidden_field :published, value: false, id: "post_published" %>
+    <%= form.button "Save draft",
+                    type: "submit",
+                    class: "btn btn-secondary flex-1",
+                    data: { 
+                      action: "click->autosave#manualSave",
+                      turbo_submits_with: "Saving draft..."
+                    },
+                    onclick: "document.getElementById('post_published').value = 'false'" %>
+    <%= form.button "Publish",
+                    type: "submit",
+                    class: "btn btn-primary flex-1",
+                    data: { 
+                      action: "click->autosave#manualSave",
+                      turbo_submits_with: "Publishing..."
+                    },
+                    onclick: "document.getElementById('post_published').value = 'true'" %>
+  <% end %>
+</div>
