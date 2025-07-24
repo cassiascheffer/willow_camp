@@ -1,0 +1,13 @@
+<article class="post-summary">
+  <%= link_to post_path(featured_post_row.slug), class: "block p-4", aria: { label: "Read post: #{featured_post_row.title}" } do %>
+    <header>
+      <time datetime="<%= featured_post_row.published_at.iso8601 %>" class="text-xs text-base-content/60 block pb-1" aria-label="Published on <%= featured_post_row.published_at.strftime("%B %d, %Y") %>">
+        <%= featured_post_row.published_at.strftime("%b %d, %Y") %>
+      </time>
+      <h3 class="text-lg font-medium sm:pl-3"><%= featured_post_row.title %></h3>
+      <% if featured_post_row.meta_description.present? %>
+        <p class="text-sm text-base-content/70 mt-2 sm:pl-3"><%= featured_post_row.meta_description %></p>
+      <% end %>
+    </header>
+  <% end %>
+</article>

@@ -2,6 +2,13 @@ class Blog::PostsController < Blog::BaseController
   before_action :set_post, only: %i[show]
 
   def index
+    @featured_posts = @author.posts
+      .published
+      .not_page
+      .where(featured: true)
+      .order(published_at: :desc)
+      .limit(3)
+
     @pagy, @posts = pagy(
       @author.posts
         .published

@@ -85,4 +85,30 @@ class Blog::PostsControllerTest < ActionDispatch::IntegrationTest
     assert_response :not_found
     assert_equal "text/html", response.media_type
   end
+
+  test "should display featured posts section when featured posts exist" do
+    get posts_url, headers: @headers
+    assert_response :success
+
+    assert_select "h2", text: "Featured"
+    assert_select "article.post-summary" do
+      assert_select "h3", text: @post.title
+    end
+  end
+
+  test "should not display featured posts section when no featured posts exist" do
+    @user.posts.update_all(featured: false)
+
+    get posts_url, headers: @headers
+    assert_response :success
+
+    assert_select "h2", text: "Featured", count: 0
+  end
+
+  test "should show meta description for featured posts when present" do
+    get posts_url, headers: @headers
+    assert_response :success
+
+    assert_select "p", text: @post.meta_description
+  end
 end

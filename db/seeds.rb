@@ -23,18 +23,20 @@ users.each do |user|
   end
   puts "Created user: #{user.email} with subdomain: #{user.subdomain}"
 
-  100.times do
+  100.times do |i|
     user.posts.create! do |post|
       post.title = Faker::Books::Lovecraft.tome
       post.body_markdown = Faker::Markdown.sandwich(sentences: 6, repeat: 3)
       post.published = Faker::Boolean.boolean
       post.published_at = Faker::Date.between(from: 2.days.ago, to: Time.zone.today)
       post.tag_list = ["dogs", "cats", "fun!"]
+      post.featured = i < 3 # First 3 posts are featured
+      post.meta_description = Faker::Lorem.sentence(word_count: 12, supplemental: true, random_words_to_add: 8) if Faker::Boolean.boolean(true_ratio: 0.7)
     end
     print "."
   end
   puts ""
-  puts "Created 100 posts for user: #{user.email}"
+  puts "Created 100 posts for user: #{user.email} (3 featured)"
 end
 
 # rubocop:enable Rails/Output
