@@ -9,12 +9,22 @@
           <%= tag.name %>
         </button>
       </div>
-      <button type="button"
-              class="btn btn-error btn-outline btn-sm"
-              data-action="click->tag-delete#confirmDelete"
-        title="Delete tag">
-        Delete
-      </button>
+      <div class="flex gap-2">
+        <button type="button"
+                class="btn btn-circle btn-outline btn-xs"
+                data-action="click->inline-edit#edit"
+          title="Edit tag"
+          aria-label="Edit tag <%= tag.name %>">
+          <%= heroicon "pencil", variant: :micro, options: { class: "w-4 h-4" } %>
+        </button>
+        <button type="button"
+                class="btn btn-circle btn-outline btn-error btn-xs"
+                data-action="click->tag-delete#confirmDelete"
+          title="Delete tag"
+          aria-label="Delete tag <%= tag.name %>">
+          <%= heroicon "trash", variant: :micro, options: { class: "w-4 h-4" } %>
+        </button>
+      </div>
     </div>
     <%= render "tag_form", tag: tag %>
     <div class="grid grid-cols-3 gap-4 text-center">

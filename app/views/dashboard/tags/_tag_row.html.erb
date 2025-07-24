@@ -14,12 +14,21 @@
   <td><%= tag.draft_count %></td>
   <td><%= tag.taggings_count %></td>
   <td>
-    <button type="button" 
-            class="btn btn-ghost btn-xs text-error hover:bg-error hover:text-error-content"
-            data-action="click->tag-delete#confirmDelete"
-      title="Delete tag"
-      aria-label="Delete tag <%= tag.name %>">
-      <%= heroicon "x-mark", options: { class: "w-4 h-4" } %>
-    </button>
+    <div class="flex gap-2">
+      <button type="button"
+              class="btn btn-circle btn-outline btn-sm"
+              data-action="click->inline-edit#edit"
+        title="Edit tag"
+        aria-label="Edit tag <%= tag.name %>">
+        <%= heroicon "pencil", options: { class: "w-4 h-4" } %>
+      </button>
+      <button type="button" 
+              class="btn btn-circle btn-outline btn-error btn-sm"
+              data-action="click->tag-delete#confirmDelete"
+        title="Delete tag"
+        aria-label="Delete tag <%= tag.name %>">
+        <%= heroicon "trash", options: { class: "w-4 h-4" } %>
+      </button>
+    </div>
   </td>
 </tr>
