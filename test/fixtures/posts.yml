@@ -7,6 +7,8 @@ one:
   published: true
   published_at: 2025-04-27 13:32:14
   slug: "my-post"
+  featured: true
+  meta_description: "This is a test meta description"
 
 two:
   id: "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"
@@ -17,6 +19,7 @@ two:
   published: false
   published_at: 2025-04-27 13:32:14
   slug: "my-post-2"
+  featured: false
 
 page_one:
   id: "cccccccc-cccc-cccc-cccc-cccccccccccc"
@@ -28,6 +31,7 @@ page_one:
   published: true
   published_at: 2025-04-27 13:32:14
   slug: "about-us"
+  featured: false
 
 page_two:
   id: "dddddddd-dddd-dddd-dddd-dddddddddddd"
@@ -39,6 +43,7 @@ page_two:
   published: false
   published_at: 2025-04-27 13:32:14
   slug: "contact"
+  featured: false
 
 custom_domain_post:
   id: "eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"
@@ -49,3 +54,4 @@ custom_domain_post:
   published: true
   published_at: 2025-04-27 13:32:14
   slug: "custom-domain-post"
+  featured: false

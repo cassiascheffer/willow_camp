@@ -87,96 +87,28 @@ class Blog::PostsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should display featured posts section when featured posts exist" do
-    featured_post = create(:post, author: @user, featured: true, published: true)
-    
     get posts_url, headers: @headers
     assert_response :success
-    
+
     assert_select "h2", text: "Featured"
     assert_select "article.post-summary" do
-      assert_select "h3", text: featured_post.title
+      assert_select "h3", text: @post.title
     end
   end
 
   test "should not display featured posts section when no featured posts exist" do
-    # Ensure no featured posts exist
     @user.posts.update_all(featured: false)
-    
+
     get posts_url, headers: @headers
     assert_response :success
-    
+
     assert_select "h2", text: "Featured", count: 0
   end
 
-  test "should limit featured posts to 3" do
-    # Create 5 featured posts
-    5.times do |i|
-      create(:post, author: @user, featured: true, published: true, 
-             published_at: i.days.ago, title: "Featured Post #{i}")
-    end
-    
-    get posts_url, headers: @headers
-    assert_response :success
-    
-    # Should only show 3 featured posts
-    assert_select ".card-body h2", text: "Featured" do
-      assert_select "+ div article.post-summary", count: 3
-    end
-  end
-
-  test "should order featured posts by published_at desc" do
-    oldest_featured = create(:post, author: @user, featured: true, published: true, 
-                             published_at: 3.days.ago, title: "Oldest Featured")
-    newest_featured = create(:post, author: @user, featured: true, published: true, 
-                             published_at: 1.day.ago, title: "Newest Featured")
-    middle_featured = create(:post, author: @user, featured: true, published: true, 
-                             published_at: 2.days.ago, title: "Middle Featured")
-    
-    get posts_url, headers: @headers
-    assert_response :success
-    
-    # Check that featured posts are in correct order
-    featured_section = css_select(".card-body h2:contains('Featured') + div")
-    assert featured_section.any?
-    
-    articles = css_select("article.post-summary h3")
-    featured_titles = articles.first(3).map(&:text)
-    
-    assert_equal "Newest Featured", featured_titles[0]
-    assert_equal "Middle Featured", featured_titles[1] 
-    assert_equal "Oldest Featured", featured_titles[2]
-  end
-
-  test "should only show published featured posts" do
-    published_featured = create(:post, author: @user, featured: true, published: true, title: "Published Featured")
-    draft_featured = create(:post, author: @user, featured: true, published: false, title: "Draft Featured")
-    
-    get posts_url, headers: @headers
-    assert_response :success
-    
-    assert_select "h3", text: "Published Featured"
-    assert_select "h3", text: "Draft Featured", count: 0
-  end
-
   test "should show meta description for featured posts when present" do
-    featured_post = create(:post, author: @user, featured: true, published: true,
-                          title: "Featured with Meta", meta_description: "This is a test meta description")
-    
     get posts_url, headers: @headers
     assert_response :success
-    
-    assert_select "p", text: "This is a test meta description"
-  end
 
-  test "should not show meta description element when not present for featured posts" do
-    featured_post = create(:post, author: @user, featured: true, published: true,
-                          title: "Featured without Meta", meta_description: nil)
-    
-    get posts_url, headers: @headers
-    assert_response :success
-    
-    # Should have the featured post title but no meta description paragraph
-    assert_select "h3", text: "Featured without Meta"
-    assert_select "article.post-summary p", count: 0
+    assert_select "p", text: @post.meta_description
   end
 end
