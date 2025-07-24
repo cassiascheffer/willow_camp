@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_22_112259) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_24_095210) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -40,6 +40,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_22_112259) do
     t.uuid "author_id", null: false
     t.string "type"
     t.boolean "has_mermaid_diagrams", default: false, null: false
+    t.boolean "featured", default: false
     t.index ["author_id"], name: "index_posts_on_author_id_pages_only", where: "((type)::text = 'Page'::text)"
     t.index ["author_id"], name: "index_posts_on_author_uuid"
     t.index ["slug", "author_id"], name: "index_posts_on_slug_and_author_uuid", unique: true

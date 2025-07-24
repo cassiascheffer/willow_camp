@@ -47,6 +47,7 @@ Rails.application.routes.draw do
     end
     resource :settings, only: %i[show]
     resources :posts, only: %i[edit update destroy]
+    resources :featured_posts, only: %i[update]
     resources :untitled_posts, only: %i[create]
     resources :users, only: %i[edit update]
     resources :tokens, only: %i[create destroy]

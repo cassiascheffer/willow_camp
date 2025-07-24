@@ -13,9 +13,16 @@
 <% if alert.present? %>
   <div role="alert" aria-live="assertive" class="alert alert-error" id="alert"><%= alert %></div>
 <% end %>
-<div class="flex justify-between items-center mb-10">
-  <h1 class="text-3xl font-bold">Posts</h1>
-</div>
+<% if @featured_posts.any? %>
+  <div class="card bg-base-100 shadow-sm mb-8">
+    <div class="card-body">
+      <h2 class="card-title text-2xl">Featured</h2>
+      <div class="space-y-2">
+        <%= render partial: 'blog/posts/featured_post_row', collection: @featured_posts %>
+      </div>
+    </div>
+  </div>
+<% end %>
 <div id="posts" class="space-y-8">
   <% if @posts.any? %>
     <div class="posts-list space-y-2">
