@@ -1,6 +1,6 @@
 require "test_helper"
 
-class DomainConstraintTest < ActionDispatch::IntegrationTest
+class DomainConstraintIntegrationTest < ActionDispatch::IntegrationTest
   def setup
     @user_with_subdomain = users(:one)
     @user_with_custom_domain = users(:custom_domain_user)
