@@ -5,6 +5,7 @@
         <th class="text-left py-2">Title</th>
         <th class="text-left py-2">Status</th>
         <th class="text-left py-2">Published</th>
+        <th class="text-left py-2">Featured</th>
         <th class="text-left py-2">View</th>
       </tr>
     </thead>
@@ -24,6 +25,16 @@
             <% end %>
           </td>
           <td class="py-2"><%= post.published_at&.strftime('%b %d, %y') || '' %></td>
+          <td class="py-2">
+            <%= form_with url: dashboard_featured_post_path(post), method: :patch, local: false, data: { controller: "featured-toggle" } do |form| %>
+              <%= form.check_box :featured, { 
+                checked: post.featured, 
+                class: "checkbox checkbox-sm", 
+                onclick: "event.stopPropagation();",
+                data: { action: "change->featured-toggle#toggle" }
+              }, "true", "false" %>
+            <% end %>
+          </td>
           <td class="py-2">
             <% if post.published? %>
               <%= link_to post_url(post.slug, subdomain: @user.subdomain), class: "btn btn-sm btn-ghost", target: "_blank", onclick: "event.stopPropagation();", aria: { label: "View post" } do %>
