@@ -79,6 +79,7 @@ group :development do
   gem "standard-rails"
   gem "web-console"
   gem "letter_opener"
+  gem "rack-mini-profiler"
 end
 
 group :test do
