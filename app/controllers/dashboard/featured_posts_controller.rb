@@ -6,7 +6,7 @@ class Dashboard::FeaturedPostsController < Dashboard::BaseController
       head :no_content
     else
       respond_to do |format|
-        format.turbo_stream { 
+        format.turbo_stream {
           flash.now[:alert] = "Failed to update featured status"
           render turbo_stream: turbo_stream.update("flash-messages", render_to_string(partial: "shared/flash_messages"))
         }

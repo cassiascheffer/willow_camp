@@ -31,6 +31,7 @@ users.each do |user|
       post.published_at = Faker::Date.between(from: 2.days.ago, to: Time.zone.today)
       post.tag_list = ["dogs", "cats", "fun!"]
       post.featured = i < 3 # First 3 posts are featured
+      post.meta_description = Faker::Lorem.sentence(word_count: 12, supplemental: true, random_words_to_add: 8) if Faker::Boolean.boolean(true_ratio: 0.7)
     end
     print "."
   end

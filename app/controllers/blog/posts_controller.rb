@@ -8,7 +8,7 @@ class Blog::PostsController < Blog::BaseController
       .where(featured: true)
       .order(published_at: :desc)
       .limit(3)
-    
+
     @pagy, @posts = pagy(
       @author.posts
         .published
