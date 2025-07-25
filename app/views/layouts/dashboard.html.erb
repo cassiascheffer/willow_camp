@@ -58,8 +58,9 @@
     <%= yield %>
   </main>
   <footer class="footer p-4 bg-base-200 text-base-content" aria-label="Footer">
-    <div class="container mx-auto text-center">
+    <div class="container mx-auto flex gap-4">
       <p>willow.camp</p>
+      <p class="text-sm text-base-content/60"><%= link_to "Terms of Service", terms_path, class: "link hover:link-primary" %></p>
     </div>
   </footer>
   <div id="flash-messages" class="toast toast-bottom toast-end z-50">

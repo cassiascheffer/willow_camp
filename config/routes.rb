@@ -92,6 +92,9 @@ Rails.application.routes.draw do
   # Documentation
   get "/docs", to: "documentations#show", as: :documentation
 
+  # Terms of Service
+  get "/terms", to: "terms#show", as: :terms
+
   # Robots.txt for root domain
   get "/robots.:format", to: "robots#show", as: :root_robots
 
