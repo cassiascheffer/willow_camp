@@ -77,7 +77,6 @@ class Rack::Attack
   end
 
   blocklist("block-creds-probes") do |req|
-    req.path.downcase
     fullpath = req.fullpath.downcase
     fullpath.include?(".aws/credentials") ||
       fullpath.include?(".aws%2fcredentials") ||
@@ -87,7 +86,8 @@ class Rack::Attack
 
   # Block suspicious requests to admin paths
   blocklist("block-admin-probes") do |req|
-    admin_paths = %w[/wp-admin /wp-login /administrator /phpmyadmin /.env]
+    req.path.downcase
+    admin_paths = %w[/wp-admin /wp-login /administrator /phpmyadmin /.env /config.php /admin.php]
     admin_paths.any? { |admin_path| path.start_with?(admin_path) }
   end
 
