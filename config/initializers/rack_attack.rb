@@ -14,9 +14,6 @@ class Rack::Attack
     req.ip == "127.0.0.1" || req.ip == "::1"
   end
 
-  # Allow authenticated API requests with bearer tokens, but they still get throttled
-  # (removed unlimited access safelist)
-
   ### Throttles ###
 
   # Throttle all requests by IP (300 requests per 5 minutes)
@@ -76,15 +73,15 @@ class Rack::Attack
 
   # Block suspicious requests to admin paths
   blocklist("block-admin-probes") do |req|
-    # List of common admin paths that don't exist in this app
+    # Block any request ending with .php or common admin paths that don't exist in this app
+    return true if req.path.downcase.end_with?(".php")
+
     admin_paths = %w[
       /wp-admin
       /wp-login
       /administrator
       /phpmyadmin
       /.env
-      /config.php
-      /admin.php
     ]
     admin_paths.any? { |path| req.path.downcase.start_with?(path) }
   end
