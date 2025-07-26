@@ -70,22 +70,21 @@ class Rack::Attack
   end
 
   ### Blocklists ###
-
-  # Block suspicious requests to admin paths
-  blocklist("block-admin-probes") do |req|
+  blocklist("block-php-requests") do |req|
     path = req.path.downcase
     fullpath = req.fullpath.downcase
+    path.end_with?(".php") || fullpath.include?(".php?")
+  end
 
-    # Block PHP files and queries
-    return true if path.end_with?(".php") || fullpath.include?(".php?")
-
-    # Block credential access attempts
-    return true if fullpath.include?(".aws/credentials") ||
+  blocklist("block-creds-probes") do |req|
+    fullpath.include?(".aws/credentials") ||
       fullpath.include?(".aws%2fcredentials") ||
       fullpath.include?("%252e%252e%252f") ||
       fullpath.match?(/\.\..*credentials/)
+  end
 
-    # Block admin probes
+  # Block suspicious requests to admin paths
+  blocklist("block-admin-probes") do |req|
     admin_paths = %w[/wp-admin /wp-login /administrator /phpmyadmin /.env]
     admin_paths.any? { |admin_path| path.start_with?(admin_path) }
   end

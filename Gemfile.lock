@@ -479,50 +479,50 @@ PLATFORMS
 
 DEPENDENCIES
   acts-as-taggable-on
-  bcrypt (~> 3.1.7)
+  bcrypt
   better_html
   bootsnap
   brakeman
   bullet
   capybara
   commonmarker
-  debug (~> 1.11.0)
-  devise (~> 4.9)
+  debug
+  devise
   faker
   friendly_id
   front_matter_parser
-  heroicons (~> 2.1.1)
+  heroicons
   honeybadger
   htmlbeautifier
   importmap-rails
   jbuilder
-  kamal (~> 2.7.0)
-  lefthook (~> 1.11.16)
+  kamal
+  lefthook
   letter_opener
-  loops_sdk (~> 1.2)
-  marksmith (~> 0.4.5)
+  loops_sdk
+  marksmith
   pagy
-  pg (~> 1.1)
+  pg
   propshaft
   public_suffix
-  puma (>= 5.0)
+  puma
   rack-attack
   rack-mini-profiler
-  rails (~> 8.0.2)
+  rails
   rails-controller-testing
   rails_best_practices
   rails_semantic_logger
   selenium-webdriver
-  solid_cable (~> 3.0.11)
+  solid_cable
   solid_cache
   solid_queue
   standard-rails
   standardrb
   stimulus-rails
   tailwindcss-rails
-  tailwindcss-ruby (~> 4.1.11)
-  thruster (~> 0.1.14)
-  turbo-rails (~> 2.0.16)
+  tailwindcss-ruby
+  thruster
+  turbo-rails
   tzinfo-data
   web-console
 
