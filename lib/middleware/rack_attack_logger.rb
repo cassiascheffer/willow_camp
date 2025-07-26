@@ -33,7 +33,9 @@ module Middleware
           path: req.path,
           method: req.request_method,
           user_agent: req.user_agent,
-          referer: req.referer
+          referer: req.referer,
+          subdomain: req.host.split(".").first,
+          host: req.host
         }
 
         Rails.logger.warn "[Rack::Attack] Request throttled", request_info
@@ -50,7 +52,9 @@ module Middleware
           path: req.path,
           method: req.request_method,
           user_agent: req.user_agent,
-          referer: req.referer
+          referer: req.referer,
+          subdomain: req.host.split(".").first,
+          host: req.host
         }
 
         Rails.logger.error "[Rack::Attack] Request blocked", request_info

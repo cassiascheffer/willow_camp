@@ -12,4 +12,16 @@ Rails.application.configure do
 
   # Filter sensitive parameters from logs
   config.filter_parameters += [:password, :password_confirmation, :token, :api_key, :secret]
+
+  # Customize Rails action_controller payload to include user agent
+  config.after_initialize do
+    ActiveSupport::Notifications.subscribe "process_action.action_controller" do |*args|
+      event = ActiveSupport::Notifications::Event.new(*args)
+      payload = event.payload
+
+      if payload[:request]
+        payload[:user_agent] = payload[:request].user_agent
+      end
+    end
+  end
 end
