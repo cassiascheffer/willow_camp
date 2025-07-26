@@ -73,17 +73,21 @@ class Rack::Attack
 
   # Block suspicious requests to admin paths
   blocklist("block-admin-probes") do |req|
-    # Block any request ending with .php or common admin paths that don't exist in this app
-    return true if req.path.downcase.end_with?(".php")
+    path = req.path.downcase
+    fullpath = req.fullpath.downcase
 
-    admin_paths = %w[
-      /wp-admin
-      /wp-login
-      /administrator
-      /phpmyadmin
-      /.env
-    ]
-    admin_paths.any? { |path| req.path.downcase.start_with?(path) }
+    # Block PHP files and queries
+    return true if path.end_with?(".php") || fullpath.include?(".php?")
+
+    # Block credential access attempts
+    return true if fullpath.include?(".aws/credentials") ||
+      fullpath.include?(".aws%2fcredentials") ||
+      fullpath.include?("%252e%252e%252f") ||
+      fullpath.match?(/\.\..*credentials/)
+
+    # Block admin probes
+    admin_paths = %w[/wp-admin /wp-login /administrator /phpmyadmin /.env]
+    admin_paths.any? { |admin_path| path.start_with?(admin_path) }
   end
 
   ### Custom Responses ###
