@@ -57,6 +57,9 @@ gem "heroicons", "~> 2.1.1"
 # APM and Logs
 gem "honeybadger"
 
+# Rate limiting and security
+gem "rack-attack"
+
 gem "rails_semantic_logger"
 
 group :development, :test do

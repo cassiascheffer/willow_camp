@@ -272,6 +272,8 @@ GEM
     raabro (1.4.0)
     racc (1.8.1)
     rack (3.1.16)
+    rack-attack (6.7.0)
+      rack (>= 1.0, < 4)
     rack-mini-profiler (4.0.0)
       rack (>= 1.2.0)
     rack-session (2.1.1)
@@ -504,6 +506,7 @@ DEPENDENCIES
   propshaft
   public_suffix
   puma (>= 5.0)
+  rack-attack
   rack-mini-profiler
   rails (~> 8.0.2)
   rails-controller-testing
