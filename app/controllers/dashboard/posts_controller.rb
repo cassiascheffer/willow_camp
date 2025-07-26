@@ -46,9 +46,14 @@ class Dashboard::PostsController < Dashboard::BaseController
   end
 
   def post_params
-    params.require(:post).permit(
+    permitted_params = [
       :title, :tag_list, :slug, :body_markdown, :published,
       :published_at, :meta_description, :featured
-    )
+    ]
+
+    # Only allow social_share_image parameter for users with the feature enabled
+    permitted_params << :social_share_image if current_user.social_share_image_enabled?
+
+    params.require(:post).permit(permitted_params)
   end
 end

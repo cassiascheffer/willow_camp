@@ -57,3 +57,16 @@ custom_domain_no_title:
   slug: "custom-no-title-user"
   created_at: <%= 1.week.ago %>
   updated_at: <%= 1.day.ago %>
+
+enumerator_dev:
+  id: "66666666-6666-6666-6666-666666666666"
+  email: enumerator@example.com
+  encrypted_password: "$2a$12$dapdHZiOTxAL8OT9yNI6e.hhTjRhWgXq7kx737t/xf8tBfQbMD2bi"
+  subdomain: enumerator
+  custom_domain: enumerator.dev
+  name: "Enumerator User"
+  blog_title: "Enumerator Blog"
+  theme: "light"
+  slug: "enumerator-user"
+  created_at: <%= 1.week.ago %>
+  updated_at: <%= 1.day.ago %>

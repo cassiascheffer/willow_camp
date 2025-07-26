@@ -116,6 +116,10 @@ class User < ApplicationRecord
     custom_domain.present?
   end
 
+  def social_share_image_enabled?
+    custom_domain == "enumerator.dev"
+  end
+
   # TODO: not a model concern
   def should_redirect_to_custom_domain?(current_host)
     return false unless uses_custom_domain?

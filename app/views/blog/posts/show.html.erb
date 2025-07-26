@@ -2,6 +2,16 @@
 <% content_for :og_title, @post.title %>
 <% content_for :og_description, @post.meta_description || truncate(strip_tags(@post.body_html), length: 160) %>
 <% content_for :og_type, "article" %>
+<% if @post.author.social_share_image_enabled? && @post.social_share_image.attached? %>
+  <% content_for :og_image do %>
+    <meta property="og:image" content="<%= url_for(@post.social_share_image) %>">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="627">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="<%= url_for(@post.social_share_image) %>">
+  <% end %>
+<% else %>
+<% end %>
 <% content_for :head do %>
   <% if @post.meta_description.present? %>
     <meta name="description" content="<%= @post.meta_description %>">

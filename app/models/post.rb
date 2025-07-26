@@ -8,6 +8,7 @@ class Post < ApplicationRecord
 
   # Associations
   belongs_to :author, class_name: "User"
+  has_one_attached :social_share_image
 
   # Callbacks
   before_validation :set_published_at

@@ -16,6 +16,7 @@
     <meta property="og:url" content="<%= request.original_url %>">
     <meta property="og:site_name" content="<%= blog_title_for(@author) %>">
     <meta property="og:locale" content="en_CA">
+    <%= yield :og_image %>
     <!-- Twitter Card meta tags -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="<%= content_for(:og_title) || content_for(:title) || blog_title_for(@author) %>">

@@ -1,29 +1,56 @@
 <div class="flex flex-col items-center justify-center min-h-screen">
   <div class="card w-full lg:w-3/4">
-    <div class="card-body" data-controller="autosave">
-      <h1 class="card-title text-2xl font-bold">
-        Editing post
-      </h1>
-      <div id="autosave_status"
+    <% if post.author.social_share_image_enabled? %>
+      <div class="card-body" data-controller="autosave social-share-image" data-social-share-image-post-id-value="<%= post.id %>" data-social-share-image-favicon-emoji-value="<%= post.author.favicon_emoji %>" data-social-share-image-theme-value="<%= post.author.theme %>">
+      <% else %>
+        <div class="card-body" data-controller="autosave">
+        <% end %>
+        <h1 class="card-title text-2xl font-bold">
+          Editing post
+        </h1>
+        <div id="autosave_status"
            data-autosave-target="statusContainer"
            class="sticky top-0 z-10">
-        <span data-autosave-target="status" class="badge badge-soft badge-sm badge-neutral">
-          Auto-save loading...
-        </span>
-      </div>
-      <%= form_with(model: post,
+          <span data-autosave-target="status" class="badge badge-soft badge-sm badge-neutral">
+            Auto-save loading...
+          </span>
+        </div>
+        <%= form_with(model: post,
                     url: form_url,
                     id: form_id,
                     class: "form-control",
+                    html: { multipart: true },
                     data: { autosave_target: "form" }) do |form| %>
-        <%= render "form_fields", form: form, post: post %>
-        <%= turbo_frame_tag "post_buttons" do %>
-          <%= render "post_buttons", form: form, post: post %>
+          <%= render "form_fields", form: form, post: post %>
+          <%= turbo_frame_tag "post_buttons" do %>
+            <%= render "post_buttons", form: form, post: post %>
+          <% end %>
+          <% if post.author.social_share_image_enabled? %>
+            <%= form.hidden_field :social_share_image, value: nil %>
+          <% end %>
         <% end %>
-      <% end %>
-      <%= turbo_frame_tag "post_actions" do %>
-        <%= render "post_actions", post: post %>
-      <% end %>
+        <%= turbo_frame_tag "post_actions" do %>
+          <%= render "post_actions", post: post %>
+        <% end %>
+        <% if post.author.social_share_image_enabled? %>
+          <!-- Social Share Image Generator -->
+          <div class="divider">Social Share Image Preview</div>
+          <div class="space-y-4">
+            <canvas id="social-share-canvas" 
+                  width="1200" 
+                  height="627" 
+                  class="border border-base-300 rounded-lg w-full max-w-2xl mx-auto"
+                  style="max-width: 600px; height: auto;"
+                  data-social-share-image-target="canvas">
+            </canvas>
+            <% if post.social_share_image.attached? %>
+              <div class="text-center">
+                <p class="text-sm text-base-content/70 mb-2">Current social share image:</p>
+                <%= image_tag post.social_share_image, class: "mx-auto rounded-lg border border-base-300", style: "max-width: 300px;" %>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
     </div>
   </div>
-</div>
