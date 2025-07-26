@@ -77,6 +77,8 @@ class Rack::Attack
   end
 
   blocklist("block-creds-probes") do |req|
+    req.path.downcase
+    fullpath = req.fullpath.downcase
     fullpath.include?(".aws/credentials") ||
       fullpath.include?(".aws%2fcredentials") ||
       fullpath.include?("%252e%252e%252f") ||
