@@ -12,6 +12,7 @@ export default class extends Controller {
     this.abortAutoSave = false
     this.formDirty = false
     this.autoSaveRunning = false
+    this.scrollPositions = new Map()
     this.bindEventHandlers()
     this.attachEventListeners()
     this.startAutoSave()
@@ -30,6 +31,8 @@ export default class extends Controller {
     this.boundKeydown = this.handleKeydown.bind(this)
     this.boundPublishedChange = this.handlePublishedChange.bind(this)
     this.boundFormInput = this.handleFormInput.bind(this)
+    this.boundBeforeStreamRender = this.handleBeforeStreamRender.bind(this)
+    this.boundAfterStreamRender = this.handleAfterStreamRender.bind(this)
   }
 
   attachEventListeners() {
@@ -37,6 +40,8 @@ export default class extends Controller {
     this.formTarget.addEventListener("turbo:submit-end", this.boundSubmitEnd)
     this.formTarget.addEventListener("input", this.boundFormInput)
     document.addEventListener("keydown", this.boundKeydown)
+    document.addEventListener("turbo:before-stream-render", this.boundBeforeStreamRender)
+    document.addEventListener("turbo:after-stream-render", this.boundAfterStreamRender)
 
     const publishedInput = this.publishedInput
     if (publishedInput) {
@@ -49,6 +54,8 @@ export default class extends Controller {
     this.formTarget.removeEventListener("turbo:submit-end", this.boundSubmitEnd)
     this.formTarget.removeEventListener("input", this.boundFormInput)
     document.removeEventListener("keydown", this.boundKeydown)
+    document.removeEventListener("turbo:before-stream-render", this.boundBeforeStreamRender)
+    document.removeEventListener("turbo:after-stream-render", this.boundAfterStreamRender)
 
     const publishedInput = this.publishedInput
     if (publishedInput) {
@@ -85,6 +92,9 @@ export default class extends Controller {
       return
     }
 
+    // Save scroll position before autosave
+    this.saveScrollPosition()
+    
     this.isAutoSaving = true
     this.abortAutoSave = false
     this.setStatus("Saving...")
@@ -202,6 +212,58 @@ export default class extends Controller {
       clearInterval(this[timerName])
       clearTimeout(this[timerName])
       this[timerName] = null
+    }
+  }
+
+  // Scroll position management
+  saveScrollPosition() {
+    // Save scroll position for all scrollable elements
+    const scrollableElements = document.querySelectorAll('[data-marksmith-editor], .marksmith-editor, .textarea, textarea')
+    scrollableElements.forEach(element => {
+      if (element.scrollHeight > element.clientHeight) {
+        this.scrollPositions.set(element, {
+          scrollTop: element.scrollTop,
+          scrollLeft: element.scrollLeft
+        })
+      }
+    })
+    
+    // Also save window scroll position
+    this.scrollPositions.set(window, {
+      scrollTop: window.scrollY,
+      scrollLeft: window.scrollX
+    })
+  }
+
+  restoreScrollPosition() {
+    // Restore scroll positions for all saved elements
+    this.scrollPositions.forEach((position, element) => {
+      if (element === window) {
+        window.scrollTo(position.scrollLeft, position.scrollTop)
+      } else if (document.contains(element)) {
+        element.scrollTop = position.scrollTop
+        element.scrollLeft = position.scrollLeft
+      }
+    })
+    
+    // Clear saved positions after restoration
+    this.scrollPositions.clear()
+  }
+
+  handleBeforeStreamRender(event) {
+    // Only save scroll position during autosave
+    if (this.isAutoSaving) {
+      this.saveScrollPosition()
+    }
+  }
+
+  handleAfterStreamRender(event) {
+    // Only restore scroll position during autosave
+    if (this.isAutoSaving) {
+      // Use requestAnimationFrame to ensure DOM has been updated
+      requestAnimationFrame(() => {
+        this.restoreScrollPosition()
+      })
     }
   }
 }
