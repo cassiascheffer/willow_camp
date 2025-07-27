@@ -3,6 +3,9 @@ require "active_support/core_ext/integer/time"
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
+  # Use lograge for production logging.
+  config.lograge.enabled = true
+
   # Code is not reloaded between requests.
   config.enable_reloading = false
 

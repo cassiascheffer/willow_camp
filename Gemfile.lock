@@ -220,6 +220,11 @@ GEM
       launchy (>= 2.2, < 4)
     lint_roller (1.1.0)
     logger (1.7.0)
+    lograge (0.14.0)
+      actionpack (>= 4)
+      activesupport (>= 4)
+      railties (>= 4)
+      request_store (~> 1.0)
     loofah (2.24.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
@@ -391,6 +396,8 @@ GEM
     regexp_parser (2.10.0)
     reline (0.6.2)
       io-console (~> 0.5)
+    request_store (1.7.0)
+      rack (>= 1.4)
     require_all (3.0.0)
     responders (3.1.1)
       actionpack (>= 5.2)
@@ -564,6 +571,7 @@ DEPENDENCIES
   kamal
   lefthook
   letter_opener
+  lograge
   loops_sdk
   marksmith
   pagy
