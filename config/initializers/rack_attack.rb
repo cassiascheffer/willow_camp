@@ -116,23 +116,27 @@ class Rack::Attack
   end
 
   # Block backup and sensitive file access
-  blocklist("block-backup-files") do |req|
+  # Block backup directories
+  blocklist("block-backup-dirs") do |req|
     path = req.path.downcase
-    fullpath = req.fullpath.downcase
-
-    # Backup directories
     backup_dirs = %w[/backup /backups /old /tmp /temp]
-    return true if backup_dirs.any? { |dir| path.start_with?(dir) }
+    backup_dirs.any? { |dir| path.start_with?(dir) }
+  end
 
-    # Sensitive files
+  # Block sensitive files
+  blocklist("block-sensitive-files") do |req|
+    path = req.path.downcase
     sensitive_files = %w[
       /web.config /htaccess /htpasswd /composer.json /package.json
       /dockerfile /docker-compose.yml /xmlrpc.php /readme.html
       /license.txt /changelog.txt
     ]
-    return true if sensitive_files.any? { |file| path == file || path.start_with?("#{file}?") }
+    sensitive_files.any? { |file| path == file || path.start_with?("#{file}?") }
+  end
 
-    # File extensions that shouldn't be web accessible
+  # Block risky file extensions
+  blocklist("block-risky-extensions") do |req|
+    fullpath = req.fullpath.downcase
     risky_extensions = %w[.bak .backup .old .orig .tmp .sql .zip .tar.gz .rar .log]
     risky_extensions.any? { |ext| fullpath.include?(ext) }
   end
