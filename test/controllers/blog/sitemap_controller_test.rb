@@ -82,7 +82,123 @@ module Blog
       assert_response :success
 
       # Check that individual post URLs are included
-      assert_match(/<loc>.*<\/loc>/, @response.body)
+      assert_match(/<loc>.*#{@post_one.slug}.*<\/loc>/, @response.body)
+    end
+
+    test "should include pages in sitemap" do
+      # Create a page for user_one
+      page = Page.create!(
+        author: @user_one,
+        title: "About Page",
+        slug: "about",
+        body_markdown: "This is an about page",
+        published: true,
+        published_at: Time.current
+      )
+
+      get sitemap_path(format: :xml), headers: @user_one_host
+      assert_response :success
+
+      # Check that page URL is included
+      assert_match(/<loc>.*#{page.slug}.*<\/loc>/, @response.body)
+    end
+
+    test "should not include unpublished pages in sitemap" do
+      # Create an unpublished page
+      unpublished_page = Page.create!(
+        author: @user_one,
+        title: "Draft Page",
+        slug: "draft",
+        body_markdown: "This is a draft",
+        published: false
+      )
+
+      get sitemap_path(format: :xml), headers: @user_one_host
+      assert_response :success
+
+      # Should not include unpublished page
+      assert_not_includes @response.body, unpublished_page.slug
+    end
+
+    test "should include tags index page in sitemap" do
+      get sitemap_path(format: :xml), headers: @user_one_host
+      assert_response :success
+
+      # Check that tags index URL is included
+      assert_match(/<loc>.*\/tags.*<\/loc>/, @response.body)
+    end
+
+    test "should include individual tag pages in sitemap" do
+      # Add tags to a post
+      @post_one.tag_list = "ruby, rails"
+      @post_one.save!
+
+      get sitemap_path(format: :xml), headers: @user_one_host
+      assert_response :success
+
+      # Check that individual tag URLs are included
+      assert_match(/<loc>.*\/t\/ruby.*<\/loc>/, @response.body)
+      assert_match(/<loc>.*\/t\/rails.*<\/loc>/, @response.body)
+    end
+
+    test "should include RSS feed URL in sitemap" do
+      get sitemap_path(format: :xml), headers: @user_one_host
+      assert_response :success
+
+      # Check that RSS feed URL is included
+      assert_match(/<loc>.*\/posts\/rss.*<\/loc>/, @response.body)
+    end
+
+    test "should include Atom feed URL in sitemap" do
+      get sitemap_path(format: :xml), headers: @user_one_host
+      assert_response :success
+
+      # Check that Atom feed URL is included
+      assert_match(/<loc>.*\/posts\/atom.*<\/loc>/, @response.body)
+    end
+
+    test "should include JSON feed URL in sitemap" do
+      get sitemap_path(format: :xml), headers: @user_one_host
+      assert_response :success
+
+      # Check that JSON feed URL is included
+      assert_match(/<loc>.*\/posts\/json.*<\/loc>/, @response.body)
+    end
+
+    test "should include subscribe page in sitemap" do
+      get sitemap_path(format: :xml), headers: @user_one_host
+      assert_response :success
+
+      # Check that subscribe page URL is included
+      assert_match(/<loc>.*\/subscribe.*<\/loc>/, @response.body)
+    end
+
+    test "should set proper priorities for different URL types" do
+      get sitemap_path(format: :xml), headers: @user_one_host
+      assert_response :success
+
+      # Home page should have highest priority
+      assert_match(/<priority>1\.0<\/priority>/, @response.body)
+
+      # Posts should have high priority
+      assert_match(/<priority>0\.9<\/priority>/, @response.body)
+
+      # Tags index should have good priority
+      assert_match(/<priority>0\.8<\/priority>/, @response.body)
+    end
+
+    test "should set proper changefreq for different URL types" do
+      get sitemap_path(format: :xml), headers: @user_one_host
+      assert_response :success
+
+      # Home page should update daily
+      assert_match(/<changefreq>daily<\/changefreq>/, @response.body)
+
+      # Posts should update monthly
+      assert_match(/<changefreq>monthly<\/changefreq>/, @response.body)
+
+      # Feeds should update hourly
+      assert_match(/<changefreq>hourly<\/changefreq>/, @response.body)
     end
 
     test "should handle case insensitive custom domain" do
@@ -105,6 +221,41 @@ module Blog
       get sitemap_path(format: :xml), headers: @user_one_host
       assert_response :success
       assert_match(/<\?xml version="1\.0" encoding="UTF-8"\?>/, @response.body)
+    end
+
+    test "should limit posts in sitemap to 500 most recent" do
+      # First check how many posts already exist
+      @user_one.posts.published.not_page.count
+
+      # Create enough posts to exceed the limit
+      505.times do |i|
+        Post.create!(
+          author: @user_one,
+          title: "Post #{i}",
+          slug: "post-#{i}",
+          body_markdown: "Content for post #{i}",
+          published: true,
+          published_at: i.days.ago
+        )
+      end
+
+      get sitemap_path(format: :xml), headers: @user_one_host
+      assert_response :success
+
+      # Count all post URLs in the sitemap
+      all_post_urls = @response.body.scan(/<loc>.*\/[^\/]+<\/loc>/)
+
+      # Filter to just blog post URLs (exclude home, tags, feeds, etc)
+      post_urls = all_post_urls.select { |url| url =~ /post-\d+/ || url.include?(@post_one.slug) }
+
+      # Should have exactly 500 post URLs total
+      assert_equal 500, post_urls.count, "Sitemap should contain exactly 500 posts"
+
+      # Should include the most recent posts
+      assert_match(/post-0/, @response.body)
+
+      # Should not include the oldest posts
+      assert_not_includes @response.body, "post-504"
     end
   end
 end
