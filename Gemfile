@@ -55,7 +55,9 @@ gem "tailwindcss-ruby"
 gem "heroicons"
 
 # APM and Logs
-gem "honeybadger"
+gem "honeybadger"  # For error monitoring
+gem "scout_apm"    # For performance monitoring
+gem "scout_apm_logging"  # For log management
 
 # Rate limiting and security
 gem "rack-attack"

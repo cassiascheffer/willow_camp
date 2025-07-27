@@ -1,0 +1,51 @@
+# Scout APM Configuration
+# See https://scoutapm.com/docs/ruby/configuration for more options
+
+common: &defaults
+  # Your Scout APM service key (usually set via ENV var)
+  key: <%= ENV['SCOUT_KEY'] %>
+  
+  # Application name in Scout UI
+  name: <%= ENV['SCOUT_APP_NAME'] || 'Willow Camp' %>
+  
+  # Enable Scout APM
+  monitor: true
+  
+  # Enable dev trace (optional, for development)
+  dev_trace: false
+  
+  # Log level for Scout (debug, info, warn, error)
+  log_level: info
+  
+  # Disable payloads to prevent sensitive data collection
+  collect_remote_ip: false
+  
+  # Enable database query collection
+  enable_background_jobs: true
+  
+  # Log monitoring configuration
+  # These can also be set via environment variables:
+  # SCOUT_LOGS_MONITOR=true
+  # SCOUT_LOGS_INGEST_KEY=your-ingest-key
+  logs_monitor: <%= ENV['SCOUT_LOGS_MONITOR'] || false %>
+  logs_ingest_key: <%= ENV['SCOUT_LOGS_INGEST_KEY'] %>
+  
+  # Scout will automatically use Rails.logger (Semantic Logger in our case)
+  # No additional logger configuration needed
+  
+  # Ignored endpoints (health checks, etc)
+  ignore:
+    - "Rails::HealthController#up"
+    - "Rails::HealthController#show"
+
+development:
+  <<: *defaults
+  monitor: false  # Disable in development by default
+
+test:
+  <<: *defaults
+  monitor: false
+
+production:
+  <<: *defaults
+  # Production-specific settings can be added here

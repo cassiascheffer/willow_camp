@@ -29,10 +29,9 @@ module WillowCamp
     config.semantic_logger.environment = ENV["RAILS_ENV"] || Rails.env
     config.log_level = ENV["LOG_LEVEL"] || :info
 
-    # Enable Honeybadger Insights appender (production only)
-    unless Rails.env.development? || Rails.env.test?
-      config.semantic_logger.add_appender(appender: :honeybadger_insights)
-    end
+    # Scout APM configuration
+    # Scout will automatically use Rails.logger (which is Semantic Logger in our case)
+    # Additional configuration is handled via environment variables or scout_apm.yml
 
     # Switch to JSON Logging output to stdout when running in production or if LOG_TO_CONSOLE is set
     if ENV["LOG_TO_CONSOLE"] || Rails.env.production?
