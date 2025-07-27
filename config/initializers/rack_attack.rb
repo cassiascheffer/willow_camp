@@ -102,6 +102,11 @@ class Rack::Attack
     admin_paths.any? { |admin_path| path.start_with?(admin_path) }
   end
 
+  # Block .ghost requests
+  blocklist("block-ghost-requests") do |req|
+    req.path.downcase.start_with?("/.ghost")
+  end
+
   ### Custom Responses ###
 
   # Customize response when request is throttled
