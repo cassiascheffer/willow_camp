@@ -38,7 +38,7 @@ module Middleware
           host: req.host
         }
 
-        Rails.logger.warn("[Rack::Attack] Request throttled", request_info)
+        Rails.logger.warn("[Rack::Attack] Request throttled: #{request_info.to_json}")
       end
 
       # Log blocked requests
@@ -57,7 +57,7 @@ module Middleware
           host: req.host
         }
 
-        Rails.logger.error("[Rack::Attack] Request blocked", request_info)
+        Rails.logger.error("[Rack::Attack] Request blocked: #{request_info.to_json}")
       end
     end
   end
