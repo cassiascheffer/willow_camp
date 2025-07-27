@@ -1,14 +1,14 @@
 # Logging System
 
-This application uses Rails Semantic Logger for structured logging with enhanced observability features.
+This application uses Rails Semantic Logger for structured logging with Scout APM integration for enhanced observability.
 
 ## How It Works
 
 The logging system automatically captures structured data from your application and forwards it to multiple destinations:
 
-- **File logs**: Written to `log/` directory in development and test
-- **JSON output**: Structured logs to stdout in production
-- **Honeybadger Insights**: Centralized log aggregation and analysis
+- **Console output**: Colored format in development for readability
+- **JSON output**: Structured logs to stdout in production with Scout APM formatting
+- **Scout APM**: Centralized log ingestion, performance monitoring, and trace correlation
 
 ## Log Levels
 
@@ -53,35 +53,50 @@ Human-readable format with timestamps:
 ```
 
 ### Production Environment
-JSON format for machine processing:
+JSON format optimized for Scout APM:
 ```json
 {
   "host": "server-01",
   "application": "willow_camp",
   "environment": "production",
-  "timestamp": "2025-07-07T12:22:08.720152Z",
+  "timestamp": "2025-07-07T12:22:08.720Z",
   "level": "info",
   "pid": 51819,
   "name": "Rails",
   "message": "User action",
   "user_id": 123,
-  "action": "login"
+  "action": "login",
+  "trace_id": "abc123def456",
+  "service": {
+    "name": "willow_camp",
+    "version": "unknown",
+    "environment": "production"
+  }
 }
 ```
 
 ## Environment Variables
 
 - `LOG_LEVEL`: Control verbosity (debug, info, warn, error, fatal)
-- `LOG_TO_CONSOLE`: Force JSON output to stdout
+- `DISABLE_SQL_LOGGING`: Disable SQL query logging in production (Scout APM handles this)
 - `RAILS_ENV`: Determines output format and destinations
+- `SCOUT_LOGS_MONITOR`: Enable Scout APM log monitoring
+- `SCOUT_LOGS_INGEST_KEY`: Scout APM log ingestion key
 
 ## Observability Features
 
-### Honeybadger Insights
-All logs are automatically sent to Honeybadger for:
-- Centralized log search and filtering
-- Error correlation with application traces
-- Performance analysis and alerting
+### Scout APM Integration
+All logs are automatically enhanced with Scout APM features:
+- **Trace correlation**: Logs include trace_id for request correlation
+- **Performance context**: Automatic inclusion of performance metrics
+- **Centralized search**: Query logs alongside APM data in Scout dashboard
+- **Error tracking**: Errors are tracked separately via Honeybadger integration
+
+### Error Monitoring
+Honeybadger handles error tracking separately from logs:
+- Exception capture and alerting
+- Error grouping and trends
+- Integration with Scout APM traces
 
 ## Best Practices
 
@@ -119,15 +134,33 @@ No additional code required - this happens automatically.
 ## Testing Logs
 
 ```bash
-# Test basic logging
+# Test basic logging in development
 rails console
-Rails.logger.info("Test message")
+Rails.logger.info("Test message", user_id: 123, action: "test")
 
-# Test JSON output
-LOG_TO_CONSOLE=true rails console
-Rails.logger.info("Test JSON message")
+# Test production JSON format locally
+RAILS_ENV=production rails console
+Rails.logger.info("Test JSON message", user_id: 123)
 ```
+
+## Configuration Details
+
+### Development
+- Colored console output for readability
+- Filters out noisy Rails logs (ActiveView renders, SQL queries)
+- Shows warnings and above in test environment
+
+### Production
+- JSON output to stdout with Scout APM formatter
+- Automatic trace_id injection from Scout APM context
+- Service metadata included in every log entry
+- Optional SQL query logging control via DISABLE_SQL_LOGGING
 
 ## Migration Notes
 
-Existing `Rails.logger` calls work unchanged. You can gradually add structured data to improve observability without breaking existing functionality.
+Existing `Rails.logger` calls work unchanged. The system now:
+- Uses Scout APM for log ingestion and performance monitoring
+- Uses Honeybadger exclusively for error tracking
+- Provides better trace correlation between logs and APM data
+
+Gradually add structured data to improve observability without breaking existing functionality.
