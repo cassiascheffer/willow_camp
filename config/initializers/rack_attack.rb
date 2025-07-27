@@ -87,14 +87,20 @@ class Rack::Attack
       fullpath.match?(/\.\..*credentials/)
   end
 
-  # Block suspicious requests to admin paths
+  # Block WordPress and admin path probes
   blocklist("block-admin-probes") do |req|
     path = req.path.downcase
     admin_paths = %w[
       /wp-admin
       /wp-login
+      /wp-includes
+      /wp-content
+      /wp-json
       /administrator
       /phpmyadmin
+      /pma
+      /adminer
+      /mysql
       /.env
       /config.php
       /admin.php
@@ -102,7 +108,64 @@ class Rack::Attack
     admin_paths.any? { |admin_path| path.start_with?(admin_path) }
   end
 
-  # Block .ghost requests
+  # Block version control directory access
+  blocklist("block-vcs-access") do |req|
+    path = req.path.downcase
+    vcs_paths = %w[/.git /.svn /.hg /.bzr]
+    vcs_paths.any? { |vcs_path| path.start_with?(vcs_path) }
+  end
+
+  # Block backup and sensitive file access
+  blocklist("block-backup-files") do |req|
+    path = req.path.downcase
+    fullpath = req.fullpath.downcase
+    
+    # Backup directories
+    backup_dirs = %w[/backup /backups /old /tmp /temp]
+    return true if backup_dirs.any? { |dir| path.start_with?(dir) }
+    
+    # Sensitive files
+    sensitive_files = %w[
+      /web.config /htaccess /htpasswd /composer.json /package.json
+      /dockerfile /docker-compose.yml /xmlrpc.php /readme.html
+      /license.txt /changelog.txt
+    ]
+    return true if sensitive_files.any? { |file| path == file || path.start_with?("#{file}?") }
+    
+    # File extensions that shouldn't be web accessible
+    risky_extensions = %w[.bak .backup .old .orig .tmp .sql .zip .tar.gz .rar .log]
+    risky_extensions.any? { |ext| fullpath.include?(ext) }
+  end
+
+  # Block server info disclosure
+  blocklist("block-server-info") do |req|
+    path = req.path.downcase
+    info_paths = %w[
+      /server-status /server-info /nginx_status /status
+      /info.php /test.php /phpinfo.php /phptest.php
+    ]
+    info_paths.any? { |info_path| path.start_with?(info_path) }
+  end
+
+  # Block dependency directory access
+  blocklist("block-dependencies") do |req|
+    path = req.path.downcase
+    dep_paths = %w[/vendor /node_modules /cgi-bin /fcgi-bin]
+    dep_paths.any? { |dep_path| path.start_with?(dep_path) }
+  end
+
+  # Block path traversal attempts
+  blocklist("block-path-traversal") do |req|
+    fullpath = req.fullpath
+    # Check for directory traversal patterns
+    fullpath.include?("../") || 
+    fullpath.include?("..\\") ||
+    fullpath.include?("%2e%2e%2f") ||
+    fullpath.include?("%2e%2e%5c") ||
+    fullpath.include?("%252e%252e%252f")
+  end
+
+  # Block Ghost CMS requests
   blocklist("block-ghost-requests") do |req|
     req.path.downcase.start_with?("/.ghost")
   end
