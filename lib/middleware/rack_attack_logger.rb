@@ -59,21 +59,6 @@ module Middleware
 
         Rails.logger.error "[Rack::Attack] Request blocked", request_info
       end
-
-      # Log safelisted requests
-      ActiveSupport::Notifications.subscribe("safelist.rack_attack") do |name, start, finish, instrumenter_id, payload|
-        req = payload[:request]
-        request_info = {
-          timestamp: Time.current.iso8601,
-          event: "safelisted",
-          matched_rule: req.env["rack.attack.matched"],
-          ip: req.ip,
-          path: req.path,
-          method: req.request_method
-        }
-
-        Rails.logger.info "[Rack::Attack] Request safelisted", request_info
-      end
     end
   end
 end
