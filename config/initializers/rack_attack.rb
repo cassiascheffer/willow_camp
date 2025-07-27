@@ -119,11 +119,11 @@ class Rack::Attack
   blocklist("block-backup-files") do |req|
     path = req.path.downcase
     fullpath = req.fullpath.downcase
-    
+
     # Backup directories
     backup_dirs = %w[/backup /backups /old /tmp /temp]
     return true if backup_dirs.any? { |dir| path.start_with?(dir) }
-    
+
     # Sensitive files
     sensitive_files = %w[
       /web.config /htaccess /htpasswd /composer.json /package.json
@@ -131,7 +131,7 @@ class Rack::Attack
       /license.txt /changelog.txt
     ]
     return true if sensitive_files.any? { |file| path == file || path.start_with?("#{file}?") }
-    
+
     # File extensions that shouldn't be web accessible
     risky_extensions = %w[.bak .backup .old .orig .tmp .sql .zip .tar.gz .rar .log]
     risky_extensions.any? { |ext| fullpath.include?(ext) }
@@ -158,11 +158,11 @@ class Rack::Attack
   blocklist("block-path-traversal") do |req|
     fullpath = req.fullpath
     # Check for directory traversal patterns
-    fullpath.include?("../") || 
-    fullpath.include?("..\\") ||
-    fullpath.include?("%2e%2e%2f") ||
-    fullpath.include?("%2e%2e%5c") ||
-    fullpath.include?("%252e%252e%252f")
+    fullpath.include?("../") ||
+      fullpath.include?("..\\") ||
+      fullpath.include?("%2e%2e%2f") ||
+      fullpath.include?("%2e%2e%5c") ||
+      fullpath.include?("%252e%252e%252f")
   end
 
   # Block Ghost CMS requests
