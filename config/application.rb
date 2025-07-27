@@ -29,7 +29,7 @@ module WillowCamp
     config.semantic_logger.environment = ENV["RAILS_ENV"] || Rails.env
     config.log_level = ENV["LOG_LEVEL"] || (Rails.env.production? ? :info : :debug)
     config.semantic_logger.host = ENV["HOSTNAME"] || Socket.gethostname
-    
+
     # Scout APM integration - ensure logs include trace context
     config.rails_semantic_logger.semantic = true
     config.rails_semantic_logger.started = true

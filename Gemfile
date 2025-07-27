@@ -62,6 +62,7 @@ gem "scout_apm_logging"  # For log management
 # Rate limiting and security
 gem "rack-attack"
 
+gem "amazing_print"
 gem "rails_semantic_logger"
 
 group :development, :test do

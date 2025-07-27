@@ -14,9 +14,9 @@ Rails.application.configure do
   if Rails.env.development?
     # Disable file appender
     config.rails_semantic_logger.add_file_appender = false
-    config.rails_semantic_logger.ap_options = { multiline: false }
+    config.rails_semantic_logger.ap_options = {multiline: false}
     config.rails_semantic_logger.console_logger = true
-    
+
     # Use colored output for better readability
     config.rails_semantic_logger.format = :color
 
@@ -34,15 +34,15 @@ Rails.application.configure do
   if Rails.env.production?
     # Disable file appender
     config.rails_semantic_logger.add_file_appender = false
-    
+
     # Load custom Scout APM formatter
     require Rails.root.join("lib/scout_apm_log_formatter")
-    
+
     # Use custom Scout APM formatter
     config.semantic_logger.add_appender(
       io: $stdout,
       formatter: ScoutApmLogFormatter.new,
-      filter: ->(log) { 
+      filter: ->(log) {
         # Add Scout APM trace ID if available
         if defined?(ScoutApm::Context) && ScoutApm::Context.current
           log.named_tags ||= {}
