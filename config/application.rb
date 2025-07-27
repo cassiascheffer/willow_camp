@@ -27,16 +27,13 @@ module WillowCamp
     # Setup structured logging with Semantic Logger
     config.semantic_logger.application = "willow_camp"
     config.semantic_logger.environment = ENV["RAILS_ENV"] || Rails.env
-    config.log_level = ENV["LOG_LEVEL"] || :info
-
-    # Scout APM configuration
-    # Scout will automatically use Rails.logger (which is Semantic Logger in our case)
-    # Additional configuration is handled via environment variables or scout_apm.yml
-
-    # Switch to JSON Logging output to stdout when running in production or if LOG_TO_CONSOLE is set
-    if ENV["LOG_TO_CONSOLE"] || Rails.env.production?
-      config.rails_semantic_logger.add_file_appender = false
-      config.semantic_logger.add_appender(io: $stdout, formatter: :json)
-    end
+    config.log_level = ENV["LOG_LEVEL"] || (Rails.env.production? ? :info : :debug)
+    config.semantic_logger.host = ENV["HOSTNAME"] || Socket.gethostname
+    
+    # Scout APM integration - ensure logs include trace context
+    config.rails_semantic_logger.semantic = true
+    config.rails_semantic_logger.started = true
+    config.rails_semantic_logger.processing = true
+    config.rails_semantic_logger.rendered = true
   end
 end
