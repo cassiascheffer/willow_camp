@@ -41,18 +41,7 @@ Rails.application.configure do
     # Use custom Scout APM formatter
     config.semantic_logger.add_appender(
       io: $stdout,
-      formatter: ScoutApmLogFormatter.new,
-      filter: ->(log) {
-        # Add Scout APM context if available
-        if defined?(ScoutApm::Context) && ScoutApm::Context.current
-          context = ScoutApm::Context.current
-          if context.respond_to?(:to_hash) && context.to_hash.any?
-            log.named_tags ||= {}
-            log.named_tags[:scout_context] = context.to_hash
-          end
-        end
-        true
-      }
+      formatter: ScoutApmLogFormatter.new
     )
 
     # Disable SQL query logging in production (Scout APM handles this)
