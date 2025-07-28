@@ -90,8 +90,6 @@ Rails.application.configure do
   # Enable DNS rebinding protection and other `Host` header attacks.
   # Allow specific IPs and use a proc to dynamically validate hosts based on database
   config.hosts = [
-    "159.203.34.19",      # Digital Ocean App Platform IP for health checks
-    "159.203.34.19:80",   # Digital Ocean App Platform IP for health checks (with port)
     proc do |host|
       # Always allow main domain and subdomains
       next true if host == "willow.camp"
