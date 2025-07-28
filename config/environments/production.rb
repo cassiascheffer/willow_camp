@@ -91,6 +91,10 @@ Rails.application.configure do
     # Allow custom domains that exist in database
     User.exists?(custom_domain: host)
   end
+
+  # Digital Ocean App Platform IP address for health checks and other requests.
+  config.hosts << "159.203.34.19"
+
   #
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
