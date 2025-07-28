@@ -43,10 +43,13 @@ Rails.application.configure do
       io: $stdout,
       formatter: ScoutApmLogFormatter.new,
       filter: ->(log) {
-        # Add Scout APM trace ID if available
+        # Add Scout APM context if available
         if defined?(ScoutApm::Context) && ScoutApm::Context.current
-          log.named_tags ||= {}
-          log.named_tags[:trace_id] = ScoutApm::Context.current.transaction_id
+          context = ScoutApm::Context.current
+          if context.respond_to?(:to_hash) && context.to_hash.any?
+            log.named_tags ||= {}
+            log.named_tags[:scout_context] = context.to_hash
+          end
         end
         true
       }

@@ -7,9 +7,10 @@ class ScoutApmLogFormatter < SemanticLogger::Formatters::Json
     if defined?(ScoutApm::Context) && ScoutApm::Context.current
       context = ScoutApm::Context.current
 
-      # Add Scout trace information
-      hash[:trace_id] = context.transaction_id if context.transaction_id
-      hash[:scout_context] = context.to_h if context.to_h.any?
+      # Add Scout context information
+      if context.respond_to?(:to_hash) && context.to_hash.any?
+        hash[:scout_context] = context.to_hash
+      end
     end
 
     # Flatten named_tags for better Scout APM parsing
