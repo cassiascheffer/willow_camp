@@ -5,6 +5,12 @@ Rails.application.configure do
 
   # Use lograge for production logging.
   config.lograge.enabled = true
+  config.lograge.custom_payload do |controller|
+    {
+      host: controller.request.host,
+      user_id: controller.current_user.try(:id)
+    }
+  end
 
   # Code is not reloaded between requests.
   config.enable_reloading = false
@@ -82,18 +88,19 @@ Rails.application.configure do
   config.active_record.attributes_for_inspect = [:id]
 
   # Enable DNS rebinding protection and other `Host` header attacks.
-  # Use a proc to dynamically validate hosts based on database
-  config.hosts = proc do |host|
-    # Always allow main domain and subdomains
-    next true if host == "willow.camp"
-    next true if host.ends_with?(".willow.camp")
+  # Allow specific IPs and use a proc to dynamically validate hosts based on database
+  config.hosts = [
+    "159.203.34.19",      # Digital Ocean App Platform IP for health checks
+    "159.203.34.19:80",   # Digital Ocean App Platform IP for health checks (with port)
+    proc do |host|
+      # Always allow main domain and subdomains
+      next true if host == "willow.camp"
+      next true if host.ends_with?(".willow.camp")
 
-    # Allow custom domains that exist in database
-    User.exists?(custom_domain: host)
-  end
-
-  # Digital Ocean App Platform IP address for health checks and other requests.
-  config.hosts << "159.203.34.19"
+      # Allow custom domains that exist in database
+      User.exists?(custom_domain: host)
+    end
+  ]
 
   #
   # Skip DNS rebinding protection for the default health check endpoint.
