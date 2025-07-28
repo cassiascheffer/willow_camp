@@ -12,6 +12,9 @@ Rails.application.configure do
     }
   end
 
+  # Quiet the asset pipeline to reduce log noise.
+  config.assets.quiet = true
+
   # Code is not reloaded between requests.
   config.enable_reloading = false
 
