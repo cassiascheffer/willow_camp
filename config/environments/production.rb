@@ -3,15 +3,6 @@ require "active_support/core_ext/integer/time"
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
-  # Use lograge for production logging.
-  config.lograge.enabled = true
-  config.lograge.custom_payload do |controller|
-    {
-      host: controller.request.host,
-      user_id: controller.current_user.try(:id)
-    }
-  end
-
   # Quiet the asset pipeline to reduce log noise.
   config.assets.quiet = true
 
