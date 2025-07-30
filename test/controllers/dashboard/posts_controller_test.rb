@@ -46,12 +46,12 @@ class Dashboard::PostsControllerTest < ActionDispatch::IntegrationTest
   test "should handle replacing existing social share image" do
     # First attach an image directly
     @post.social_share_image.attach(io: File.open(Rails.root.join("test/fixtures/files/test_image.png")), filename: "test.png")
-    
+
     # Now replace it with a new one via controller
     new_image = fixture_file_upload("test_image.png", "image/png")
     patch dashboard_post_url(@post.id), params: {
       post: {
-        title: "Updated Title", 
+        title: "Updated Title",
         social_share_image: new_image
       }
     }
@@ -69,7 +69,7 @@ class Dashboard::PostsControllerTest < ActionDispatch::IntegrationTest
       }
     }
     assert_response :redirect
-    
+
     # Second update with new image - this was failing before the fix
     image2 = fixture_file_upload("test_image.png", "image/png")
     patch dashboard_post_url(@post.id), params: {
@@ -79,7 +79,7 @@ class Dashboard::PostsControllerTest < ActionDispatch::IntegrationTest
       }
     }
     assert_response :redirect
-    
+
     # Verify the title was updated
     @post.reload
     assert_equal "Second Update", @post.title
@@ -100,13 +100,13 @@ class Dashboard::PostsControllerTest < ActionDispatch::IntegrationTest
 
   test "should handle turbo stream format for social share image updates" do
     image = fixture_file_upload("test_image.png", "image/png")
-    
+
     patch dashboard_post_url(@post.id), params: {
       post: {
         title: "Turbo Update",
         social_share_image: image
       }
-    }, headers: { "Accept" => "text/vnd.turbo-stream.html" }
+    }, headers: {"Accept" => "text/vnd.turbo-stream.html"}
 
     assert_response :ok
     assert_equal "text/vnd.turbo-stream.html; charset=utf-8", response.content_type
@@ -115,15 +115,15 @@ class Dashboard::PostsControllerTest < ActionDispatch::IntegrationTest
   test "feature flag works correctly across environments" do
     # In test environment, feature should be enabled for all users
     assert @user.social_share_image_enabled?
-    
+
     # Test that in production it would only work for enumerator.dev
     original_env = Rails.env
     begin
       Rails.env = ActiveSupport::StringInquirer.new("production")
-      
+
       # Should be enabled for enumerator.dev
       assert @user.social_share_image_enabled?
-      
+
       # Should be disabled for other domains
       other_user = users(:one)
       assert_not other_user.social_share_image_enabled?
@@ -131,5 +131,4 @@ class Dashboard::PostsControllerTest < ActionDispatch::IntegrationTest
       Rails.env = original_env
     end
   end
-
 end

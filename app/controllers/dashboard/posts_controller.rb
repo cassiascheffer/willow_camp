@@ -11,7 +11,7 @@ class Dashboard::PostsController < Dashboard::BaseController
     if post_params[:social_share_image].present? && @post.social_share_image.attached?
       @post.social_share_image.purge
     end
-    
+
     if @post.update(post_params)
       respond_to do |format|
         format.html {
