@@ -48,6 +48,9 @@ Rails.application.configure do
   # Don't log any deprecations.
   config.active_support.report_deprecations = false
 
+  # Disable verbose ActionView logging
+  config.action_view.logger = nil
+
   # Use memory store for prod
   config.cache_store = :memory_store, {size: 64.megabytes}
 
