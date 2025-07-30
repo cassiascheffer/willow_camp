@@ -1,6 +1,6 @@
 <% content_for :title, @post.title %>
 <% content_for :og_title, @post.title %>
-<% content_for :og_description, @post.meta_description || truncate(strip_tags(@post.body_html), length: 160) %>
+<% content_for :og_description, @post.meta_description.presence || truncate(strip_tags(@post.body_html), length: 160) %>
 <% content_for :og_type, "article" %>
 <% if @post.author.social_share_image_enabled? && @post.social_share_image.attached? %>
   <% content_for :og_image do %>
