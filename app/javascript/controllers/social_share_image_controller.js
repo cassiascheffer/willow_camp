@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["canvas"]
+  static targets = ["canvas", "titleInput"]
   static values = {
     postId: String,
     faviconEmoji: String,
@@ -9,28 +9,24 @@ export default class extends Controller {
   }
 
   connect() {
-    // Get reference to form element
-    this.formElement = this.element.querySelector('[data-autosave-target="form"]')
-    
     // Generate the image
     this.generate()
     
-    // Override form submission for published posts
-    if (this.formElement) {
-      this.boundHandleSubmit = this.handleFormSubmit.bind(this)
-      this.formElement.addEventListener('submit', this.boundHandleSubmit)
-    }
+    // Populate hidden field on form submit
+    this.boundHandleSubmit = this.handleFormSubmit.bind(this)
+    this.element.addEventListener('submit', this.boundHandleSubmit)
     
     // Regenerate when title changes
-    const titleInput = document.querySelector('input[name="post[title]"]')
-    if (titleInput) {
-      titleInput.addEventListener('input', this.debounce(() => this.generate(), 500))
+    if (this.hasTitleInputTarget) {
+      this.boundTitleChange = this.debounce(() => this.generate(), 500)
+      this.titleInputTarget.addEventListener('input', this.boundTitleChange)
     }
   }
 
   disconnect() {
-    if (this.formElement) {
-      this.formElement.removeEventListener('submit', this.boundHandleSubmit)
+    this.element.removeEventListener('submit', this.boundHandleSubmit)
+    if (this.hasTitleInputTarget && this.boundTitleChange) {
+      this.titleInputTarget.removeEventListener('input', this.boundTitleChange)
     }
   }
 
@@ -47,61 +43,40 @@ export default class extends Controller {
   }
 
   handleFormSubmit(event) {
-    const publishedField = this.formElement.querySelector('input[name="post[published]"]')
-    
-    // Only intercept if post is published or being published
+    // Check if post is being published by looking for the published field
+    const publishedField = this.element.querySelector('input[name="post[published]"]')
     if (!publishedField || publishedField.value !== 'true') {
       return // Let normal submission continue
     }
     
-    // Prevent default submission
+    // Prevent the form submission until we have the image
     event.preventDefault()
     
-    // Get the canvas and convert to blob
+    // Convert canvas to blob and add to FormData
     const canvas = this.canvasTarget
     canvas.toBlob((blob) => {
-      // Create FormData from the form
-      const formData = new FormData(this.formElement)
-      
-      // Add the image file
-      formData.append('post[social_share_image]', blob, `social-share-${Date.now()}.png`)
-      
-      // Get form method and action
-      const method = this.formElement.method.toUpperCase()
-      let url = this.formElement.action
-      
-      // Handle Rails _method override for PATCH/PUT
-      if (formData.has('_method')) {
-        formData.delete('_method')
+      // Find the hidden social_share_image field
+      const hiddenField = this.element.querySelector('input[name="post[social_share_image]"]')
+      if (hiddenField) {
+        // Create a file input to replace the hidden field
+        const fileInput = document.createElement('input')
+        fileInput.type = 'file'
+        fileInput.name = hiddenField.name
+        fileInput.style.display = 'none'
+        
+        // Create a File from the blob and assign it
+        const file = new File([blob], `social-share-${Date.now()}.png`, { type: 'image/png' })
+        const dataTransfer = new DataTransfer()
+        dataTransfer.items.add(file)
+        fileInput.files = dataTransfer.files
+        
+        // Replace the hidden field with the file input
+        hiddenField.parentNode.replaceChild(fileInput, hiddenField)
       }
       
-      // Submit with fetch
-      fetch(url, {
-        method: method === 'POST' ? 'PATCH' : method, // Rails uses PATCH for updates
-        headers: {
-          'X-CSRF-Token': document.querySelector('[name="csrf-token"]').content,
-          'Accept': 'text/vnd.turbo-stream.html, text/html, application/xhtml+xml'
-        },
-        body: formData
-      })
-      .then(response => {
-        if (!response.ok) throw new Error('Network response was not ok')
-        
-        const contentType = response.headers.get('content-type')
-        if (contentType && contentType.includes('text/vnd.turbo-stream.html')) {
-          return response.text().then(html => {
-            Turbo.renderStreamMessage(html)
-          })
-        } else {
-          // Handle redirect
-          window.location.href = response.url
-        }
-      })
-      .catch(error => {
-        console.error('Error submitting form:', error)
-        // Fallback: submit without image
-        this.formElement.submit()
-      })
+      // Now submit the form (remove listener to avoid recursion)
+      this.element.removeEventListener('submit', this.boundHandleSubmit)
+      this.element.submit()
     }, 'image/png')
   }
 
@@ -110,8 +85,7 @@ export default class extends Controller {
     const ctx = canvas.getContext('2d')
     
     // Get the title from the form
-    const titleInput = document.querySelector('input[name="post[title]"]')
-    const title = titleInput ? titleInput.value : 'Untitled Post'
+    const title = this.hasTitleInputTarget ? this.titleInputTarget.value : 'Untitled Post'
     
     // Get theme colors
     const themeColors = this.getThemeColors(this.themeValue)
@@ -134,35 +108,30 @@ export default class extends Controller {
     ctx.textAlign = 'center'
     ctx.textBaseline = 'middle'
     
-    // Start with larger font size and adjust down if needed
-    let fontSize = 80
-    const minFontSize = 40
+    // Use binary search to find optimal font size
+    let minFontSize = 40
+    let maxFontSize = 80
     const maxWidth = canvas.width - 120
     const maxLines = 4
     
     let lines = []
-    let fitFound = false
+    let fontSize = minFontSize
     
-    while (fontSize >= minFontSize && !fitFound) {
-      ctx.font = `bold ${fontSize}px sans-serif`
-      lines = this.wrapText(ctx, title, maxWidth)
+    while (minFontSize <= maxFontSize) {
+      const testFontSize = Math.floor((minFontSize + maxFontSize) / 2)
+      ctx.font = `bold ${testFontSize}px sans-serif`
+      const testLines = this.wrapText(ctx, title, maxWidth)
       
-      if (lines.length <= maxLines) {
-        // Check if all lines fit within maxWidth
-        let allLinesFit = true
-        for (let line of lines) {
-          if (ctx.measureText(line).width > maxWidth) {
-            allLinesFit = false
-            break
-          }
-        }
-        if (allLinesFit) {
-          fitFound = true
-        } else {
-          fontSize -= 2
-        }
+      // Check if text fits (both line count and width constraints)
+      const fitsLineCount = testLines.length <= maxLines
+      const fitsWidth = testLines.every(line => ctx.measureText(line).width <= maxWidth)
+      
+      if (fitsLineCount && fitsWidth) {
+        fontSize = testFontSize
+        lines = testLines
+        minFontSize = testFontSize + 1 // Try larger font
       } else {
-        fontSize -= 2
+        maxFontSize = testFontSize - 1 // Try smaller font
       }
     }
     
@@ -210,6 +179,22 @@ export default class extends Controller {
     let currentLine = ''
     
     for (let word of words) {
+      // Handle very long words that exceed maxWidth by themselves
+      if (ctx.measureText(word).width > maxWidth) {
+        // Push current line if it exists
+        if (currentLine) {
+          lines.push(currentLine)
+          currentLine = ''
+        }
+        // Truncate the long word with ellipsis
+        let truncated = word
+        while (ctx.measureText(truncated + '...').width > maxWidth && truncated.length > 1) {
+          truncated = truncated.slice(0, -1)
+        }
+        lines.push(truncated + (truncated !== word ? '...' : ''))
+        continue
+      }
+      
       const testLine = currentLine + (currentLine ? ' ' : '') + word
       const metrics = ctx.measureText(testLine)
       
