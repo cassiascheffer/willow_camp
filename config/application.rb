@@ -30,10 +30,5 @@ module WillowCamp
     config.semantic_logger.environment = ENV["RAILS_ENV"] || Rails.env
     config.semantic_logger.host = ENV["HOSTNAME"] || Socket.gethostname
     config.semantic_logger.add_appender(appender: :honeybadger_insights)
-    config.rails_semantic_logger.processing = false
-    config.rails_semantic_logger.quiet_assets = true
-    config.rails_semantic_logger.rendered = false
-    config.rails_semantic_logger.semantic = true
-    config.rails_semantic_logger.started = false
   end
 end
