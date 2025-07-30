@@ -117,7 +117,7 @@ class User < ApplicationRecord
   end
 
   def social_share_image_enabled?
-    return true if Rails.env.local?
+    return true if Rails.env.local? || Rails.env.test?
 
     custom_domain == "enumerator.dev"
   end
