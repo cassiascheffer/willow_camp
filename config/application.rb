@@ -25,30 +25,15 @@ module WillowCamp
     # config.eager_load_paths << Rails.root.join("extras")
 
     # Setup structured logging with Semantic Logger
+    config.log_level = ENV["LOG_LEVEL"] || (Rails.env.production? ? :info : :debug)
     config.semantic_logger.application = "willow_camp"
     config.semantic_logger.environment = ENV["RAILS_ENV"] || Rails.env
-    config.log_level = ENV["LOG_LEVEL"] || (Rails.env.production? ? :info : :debug)
     config.semantic_logger.host = ENV["HOSTNAME"] || Socket.gethostname
     config.semantic_logger.add_appender(appender: :honeybadger_insights)
-
-    # Scout APM integration - ensure logs include trace context
+    config.rails_semantic_logger.processing = false
+    config.rails_semantic_logger.quiet_assets = true
+    config.rails_semantic_logger.rendered = false
     config.rails_semantic_logger.semantic = true
-    config.rails_semantic_logger.started = true
-    config.rails_semantic_logger.processing = true
-    config.rails_semantic_logger.rendered = true
-
-    # Filter out noisy log messages in production
-    if Rails.env.production?
-      config.semantic_logger.add_appender(io: $stdout, formatter: :color) do |log|
-        # Skip partial rendering logs
-        next false if log.message&.include?("Rendered")
-        next false if log.message&.include?("Partial")
-
-        # Skip other noisy patterns
-        next false if log.message&.match?(/Completed \d+ OK/)
-
-        true
-      end
-    end
+    config.rails_semantic_logger.started = false
   end
 end
