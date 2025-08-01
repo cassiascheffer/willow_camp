@@ -37,7 +37,7 @@ Rails.application.configure do
   # config.ssl_options = { redirect: { exclude: ->(request) { request.path == "/up" } } }
 
   # Log tags will be handled by Rails Semantic Logger
-  config.log_tags = [:request_id, :remote_ip]
+  config.log_tags = [:request_id, :remote_ip, :host]
 
   # Change to "debug" to log everything (including potentially personally-identifiable information!)
   config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "info")
