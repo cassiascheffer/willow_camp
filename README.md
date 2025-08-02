@@ -1,5 +1,7 @@
 # ⛺ [willow.camp](https://willow.camp)
 
+[![Status](https://img.shields.io/badge/status-page-brightgreen)](https://status.willow.camp/)
+
 A blogging platform built with Ruby on Rails. Supports subdomains, custom domains, multiple themes, and markdown posts.
 
 ## Features
