@@ -30,14 +30,14 @@
         <%= link_to "Tags", dashboard_tags_path, class: "block link link-hover font-medium py-2 #{current_page?(dashboard_tags_path) ? 'text-primary' : ''}" %>
         <%= link_to "Settings", dashboard_settings_path, class: "block link link-hover font-medium py-2 #{current_page?(dashboard_settings_path) ? 'text-primary' : ''}" %>
         <hr class="my-2">
-        <%= link_to 'Logout', destroy_user_session_path(@user), data: { turbo_method: :delete }, class: 'block link link-hover font-medium py-2', role: 'button', tabindex: '0' %>
+        <%= link_to 'Logout', destroy_user_session_path, data: { turbo_method: :delete }, class: 'block link link-hover font-medium py-2', role: 'button', tabindex: '0' %>
       </div>
     </details>
     <!-- Desktop menu -->
     <div class="hidden lg:flex lg:items-center lg:justify-between py-4">
       <a class="text-xl font-bold hover:text-primary transition-colors" href="<%= dashboard_path %>"><%= blog_title_for(@user) %></a>
       <div class="space-x-4">
-        <%= link_to 'Logout', destroy_user_session_path(@user), data: { turbo_method: :delete }, class: 'link link-hover font-medium', role: 'button', tabindex: '0' %>
+        <%= link_to 'Logout', destroy_user_session_path, data: { turbo_method: :delete }, class: 'link link-hover font-medium', role: 'button', tabindex: '0' %>
       </div>
     </div>
   </nav>
