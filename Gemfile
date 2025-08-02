@@ -57,14 +57,12 @@ gem "heroicons"
 # APM and Logs
 gem "honeybadger"  # For error monitoring
 gem "scout_apm"    # For performance monitoring
-gem "scout_apm_logging"  # For log management
 
 # Rate limiting and security
 gem "rack-attack"
 
 gem "amazing_print"
 gem "rails_semantic_logger"
-gem "lograge"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

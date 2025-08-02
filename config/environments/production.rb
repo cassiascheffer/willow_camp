@@ -3,8 +3,8 @@ require "active_support/core_ext/integer/time"
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
-  # Use lograge for production logging.
-  config.lograge.enabled = true
+  # Quiet the asset pipeline to reduce log noise.
+  config.assets.quiet = true
 
   # Code is not reloaded between requests.
   config.enable_reloading = false
@@ -37,7 +37,7 @@ Rails.application.configure do
   # config.ssl_options = { redirect: { exclude: ->(request) { request.path == "/up" } } }
 
   # Log tags will be handled by Rails Semantic Logger
-  config.log_tags = [:request_id, :remote_ip]
+  config.log_tags = [:request_id, :remote_ip, :host]
 
   # Change to "debug" to log everything (including potentially personally-identifiable information!)
   config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "info")
@@ -47,6 +47,9 @@ Rails.application.configure do
 
   # Don't log any deprecations.
   config.active_support.report_deprecations = false
+
+  # Disable verbose ActionView logging
+  config.action_view.logger = nil
 
   # Use memory store for prod
   config.cache_store = :memory_store, {size: 64.megabytes}
@@ -82,18 +85,17 @@ Rails.application.configure do
   config.active_record.attributes_for_inspect = [:id]
 
   # Enable DNS rebinding protection and other `Host` header attacks.
-  # Use a proc to dynamically validate hosts based on database
-  config.hosts = proc do |host|
-    # Always allow main domain and subdomains
-    next true if host == "willow.camp"
-    next true if host.ends_with?(".willow.camp")
+  # Allow specific IPs and use a proc to dynamically validate hosts based on database
+  config.hosts = [
+    proc do |host|
+      # Always allow main domain and subdomains
+      next true if host == "willow.camp"
+      next true if host.ends_with?(".willow.camp")
 
-    # Allow custom domains that exist in database
-    User.exists?(custom_domain: host)
-  end
-
-  # Digital Ocean App Platform IP address for health checks and other requests.
-  config.hosts << "159.203.34.19"
+      # Allow custom domains that exist in database
+      User.exists?(custom_domain: host)
+    end
+  ]
 
   #
   # Skip DNS rebinding protection for the default health check endpoint.

@@ -41,24 +41,24 @@ module Middleware
         Rails.logger.warn("[Rack::Attack] Request throttled: #{request_info.to_json}")
       end
 
-      # Log blocked requests
-      ActiveSupport::Notifications.subscribe("blocklist.rack_attack") do |name, start, finish, instrumenter_id, payload|
-        req = payload[:request]
-        request_info = {
-          timestamp: Time.current.iso8601,
-          event: "blocked",
-          matched_rule: req.env["rack.attack.matched"],
-          ip: req.ip,
-          path: req.path,
-          method: req.request_method,
-          user_agent: req.user_agent,
-          referer: req.referer,
-          subdomain: req.host.split(".").first,
-          host: req.host
-        }
-
-        Rails.logger.error("[Rack::Attack] Request blocked: #{request_info.to_json}")
-      end
+      # Log blocked requests - disabled to reduce log noise
+      # ActiveSupport::Notifications.subscribe("blocklist.rack_attack") do |name, start, finish, instrumenter_id, payload|
+      #   req = payload[:request]
+      #   request_info = {
+      #     timestamp: Time.current.iso8601,
+      #     event: "blocked",
+      #     matched_rule: req.env["rack.attack.matched"],
+      #     ip: req.ip,
+      #     path: req.path,
+      #     method: req.request_method,
+      #     user_agent: req.user_agent,
+      #     referer: req.referer,
+      #     subdomain: req.host.split(".").first,
+      #     host: req.host
+      #   }
+      #
+      #   Rails.logger.error("[Rack::Attack] Request blocked: #{request_info.to_json}")
+      # end
     end
   end
 end

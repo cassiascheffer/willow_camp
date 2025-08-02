@@ -55,3 +55,14 @@ custom_domain_post:
   published_at: 2025-04-27 13:32:14
   slug: "custom-domain-post"
   featured: false
+
+enumerator_post:
+  id: "ffffffff-ffff-ffff-ffff-ffffffffffff"
+  title: "Enumerator Post"
+  body_markdown: "# Enumerator Content\n\nThis is enumerator content."
+  body_html: "<h1>Enumerator Content</h1>\n<p>This is enumerator content.</p>"
+  author_id: "66666666-6666-6666-6666-666666666666"
+  published: true
+  published_at: 2025-04-27 13:32:14
+  slug: "enumerator-post"
+  featured: false

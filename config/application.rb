@@ -24,16 +24,16 @@ module WillowCamp
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
 
+    config.log_tags = {
+      request_id: :request_id,
+      remote_ip: :remote_ip,
+      host: ->(request) { request.host }
+    }
     # Setup structured logging with Semantic Logger
+    config.log_level = ENV["LOG_LEVEL"] || (Rails.env.production? ? :info : :debug)
     config.semantic_logger.application = "willow_camp"
     config.semantic_logger.environment = ENV["RAILS_ENV"] || Rails.env
-    config.log_level = ENV["LOG_LEVEL"] || (Rails.env.production? ? :info : :debug)
     config.semantic_logger.host = ENV["HOSTNAME"] || Socket.gethostname
-
-    # Scout APM integration - ensure logs include trace context
-    config.rails_semantic_logger.semantic = true
-    config.rails_semantic_logger.started = true
-    config.rails_semantic_logger.processing = true
-    config.rails_semantic_logger.rendered = true
+    config.semantic_logger.add_appender(appender: :honeybadger_insights)
   end
 end

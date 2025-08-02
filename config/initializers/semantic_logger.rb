@@ -30,29 +30,18 @@ Rails.application.configure do
     }
   end
 
-  # Production-specific configuration optimized for Scout APM
+  # Production-specific configuration
   if Rails.env.production?
     # Disable file appender
     config.rails_semantic_logger.add_file_appender = false
 
-    # Load custom Scout APM formatter
-    require Rails.root.join("lib/scout_apm_log_formatter")
-
-    # Use custom Scout APM formatter
+    # Use JSON formatter for structured logging
     config.semantic_logger.add_appender(
       io: $stdout,
-      formatter: ScoutApmLogFormatter.new,
-      filter: ->(log) {
-        # Add Scout APM trace ID if available
-        if defined?(ScoutApm::Context) && ScoutApm::Context.current
-          log.named_tags ||= {}
-          log.named_tags[:trace_id] = ScoutApm::Context.current.transaction_id
-        end
-        true
-      }
+      formatter: :json
     )
 
-    # Disable SQL query logging in production (Scout APM handles this)
+    # Disable SQL query logging in production if configured
     config.active_record.logger = nil if ENV["DISABLE_SQL_LOGGING"]
   end
 

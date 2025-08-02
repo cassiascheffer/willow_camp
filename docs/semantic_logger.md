@@ -1,14 +1,13 @@
 # Logging System
 
-This application uses Rails Semantic Logger for structured logging with Scout APM integration for enhanced observability.
+This application uses Rails Semantic Logger for structured logging with enhanced observability.
 
 ## How It Works
 
 The logging system automatically captures structured data from your application and forwards it to multiple destinations:
 
 - **Console output**: Colored format in development for readability
-- **JSON output**: Structured logs to stdout in production with Scout APM formatting
-- **Scout APM**: Centralized log ingestion, performance monitoring, and trace correlation
+- **JSON output**: Structured logs to stdout in production for easy parsing and aggregation
 
 ## Log Levels
 
@@ -53,7 +52,7 @@ Human-readable format with timestamps:
 ```
 
 ### Production Environment
-JSON format optimized for Scout APM:
+JSON format for structured logging:
 ```json
 {
   "host": "server-01",
@@ -61,17 +60,13 @@ JSON format optimized for Scout APM:
   "environment": "production",
   "timestamp": "2025-07-07T12:22:08.720Z",
   "level": "info",
+  "level_index": 2,
   "pid": 51819,
+  "thread": "70123456789",
   "name": "Rails",
   "message": "User action",
   "user_id": 123,
-  "action": "login",
-  "trace_id": "abc123def456",
-  "service": {
-    "name": "willow_camp",
-    "version": "unknown",
-    "environment": "production"
-  }
+  "action": "login"
 }
 ```
 
@@ -80,16 +75,13 @@ JSON format optimized for Scout APM:
 - `LOG_LEVEL`: Control verbosity (debug, info, warn, error, fatal)
 - `DISABLE_SQL_LOGGING`: Disable SQL query logging in production (Scout APM handles this)
 - `RAILS_ENV`: Determines output format and destinations
-- `SCOUT_LOGS_MONITOR`: Enable Scout APM log monitoring
-- `SCOUT_LOGS_INGEST_KEY`: Scout APM log ingestion key
 
 ## Observability Features
 
-### Scout APM Integration
-All logs are automatically enhanced with Scout APM features:
-- **Trace correlation**: Logs include trace_id for request correlation
-- **Performance context**: Automatic inclusion of performance metrics
-- **Centralized search**: Query logs alongside APM data in Scout dashboard
+### Log Aggregation
+The application outputs standard JSON logs that can be ingested by any log aggregation service:
+- **JSON format**: All production logs are output as structured JSON
+- **Searchable**: Structured data enables powerful querying and filtering
 - **Error tracking**: Errors are tracked separately via Honeybadger integration
 
 ### Error Monitoring
@@ -151,16 +143,15 @@ Rails.logger.info("Test JSON message", user_id: 123)
 - Shows warnings and above in test environment
 
 ### Production
-- JSON output to stdout with Scout APM formatter
-- Automatic trace_id injection from Scout APM context
-- Service metadata included in every log entry
+- JSON output to stdout using Rails Semantic Logger JSON formatter
+- Standard JSON formatting for log aggregation compatibility
 - Optional SQL query logging control via DISABLE_SQL_LOGGING
 
 ## Migration Notes
 
 Existing `Rails.logger` calls work unchanged. The system now:
-- Uses Scout APM for log ingestion and performance monitoring
+- Uses structured JSON logging for better observability
 - Uses Honeybadger exclusively for error tracking
-- Provides better trace correlation between logs and APM data
+- Provides consistent structured data for all log entries
 
 Gradually add structured data to improve observability without breaking existing functionality.
