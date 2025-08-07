@@ -157,7 +157,7 @@ GEM
       raabro (~> 1.4)
     globalid (1.2.1)
       activesupport (>= 6.1)
-    heroicons (2.1.1)
+    heroicons (2.2.0)
       nokogiri
       railties (>= 5.2)
     honeybadger (6.0.2)
