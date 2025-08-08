@@ -160,7 +160,7 @@ GEM
     heroicons (2.1.1)
       nokogiri
       railties (>= 5.2)
-    honeybadger (6.0.2)
+    honeybadger (6.0.4)
       logger
       ostruct
     htmlbeautifier (1.4.3)
