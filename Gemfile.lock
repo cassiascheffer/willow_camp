@@ -157,10 +157,10 @@ GEM
       raabro (~> 1.4)
     globalid (1.2.1)
       activesupport (>= 6.1)
-    heroicons (2.1.1)
+    heroicons (2.2.0)
       nokogiri
       railties (>= 5.2)
-    honeybadger (6.0.2)
+    honeybadger (6.0.4)
       logger
       ostruct
     htmlbeautifier (1.4.3)
@@ -211,7 +211,7 @@ GEM
       net-pop
       net-smtp
     marcel (1.0.4)
-    marksmith (0.4.6)
+    marksmith (0.4.7)
       activesupport
     matrix (0.4.3)
     mini_mime (1.1.5)
@@ -255,10 +255,12 @@ GEM
     parser (3.3.9.0)
       ast (~> 2.4.1)
       racc
-    pg (1.6.0)
-    pg (1.6.0-aarch64-linux)
-    pg (1.6.0-arm64-darwin)
-    pg (1.6.0-x86_64-linux)
+    pg (1.6.1)
+    pg (1.6.1-aarch64-linux)
+    pg (1.6.1-aarch64-linux-musl)
+    pg (1.6.1-arm64-darwin)
+    pg (1.6.1-x86_64-linux)
+    pg (1.6.1-x86_64-linux-musl)
     pp (0.6.2)
       prettyprint
     prettyprint (0.2.0)
@@ -374,7 +376,7 @@ GEM
       rubocop-ast (>= 1.38.0, < 2.0)
     ruby-progressbar (1.13.0)
     rubyzip (2.4.1)
-    scout_apm (5.6.5)
+    scout_apm (5.7.0)
       parser
     securerandom (0.4.1)
     selenium-webdriver (4.34.0)
@@ -440,10 +442,10 @@ GEM
     tailwindcss-ruby (4.1.11-x86_64-linux-gnu)
     tailwindcss-ruby (4.1.11-x86_64-linux-musl)
     thor (1.4.0)
-    thruster (0.1.14)
-    thruster (0.1.14-aarch64-linux)
-    thruster (0.1.14-arm64-darwin)
-    thruster (0.1.14-x86_64-linux)
+    thruster (0.1.15)
+    thruster (0.1.15-aarch64-linux)
+    thruster (0.1.15-arm64-darwin)
+    thruster (0.1.15-x86_64-linux)
     timeout (0.4.3)
     turbo-rails (2.0.16)
       actionpack (>= 7.1.0)
@@ -498,8 +500,8 @@ DEPENDENCIES
   faker
   friendly_id
   front_matter_parser
-  heroicons
-  honeybadger
+  heroicons (~> 2.2.0)
+  honeybadger (~> 6.0.4)
   htmlbeautifier
   importmap-rails
   jbuilder
@@ -507,9 +509,9 @@ DEPENDENCIES
   lefthook
   letter_opener
   loops_sdk
-  marksmith
+  marksmith (~> 0.4.7)
   pagy
-  pg
+  pg (~> 1.6.1)
   propshaft
   public_suffix
   puma
@@ -519,7 +521,7 @@ DEPENDENCIES
   rails-controller-testing
   rails_best_practices
   rails_semantic_logger
-  scout_apm
+  scout_apm (~> 5.7.0)
   selenium-webdriver
   solid_cable
   solid_cache
@@ -529,7 +531,7 @@ DEPENDENCIES
   stimulus-rails
   tailwindcss-rails
   tailwindcss-ruby
-  thruster
+  thruster (~> 0.1.15)
   turbo-rails
   tzinfo-data
   web-console

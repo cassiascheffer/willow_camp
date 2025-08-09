@@ -5,7 +5,7 @@ gem "rails"
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
 gem "propshaft"
 # Use postgresql as the database for Active Record
-gem "pg"
+gem "pg", "~> 1.6.1"
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma"
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
@@ -36,7 +36,7 @@ gem "bootsnap", require: false
 gem "kamal", require: false
 
 # Add HTTP asset caching/compression and X-Sendfile acceleration to Puma [https://github.com/basecamp/thruster/]
-gem "thruster", require: false
+gem "thruster", "~> 0.1.15", require: false
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
@@ -47,16 +47,16 @@ gem "commonmarker"
 gem "friendly_id"
 gem "front_matter_parser"
 gem "loops_sdk"
-gem "marksmith"
+gem "marksmith", "~> 0.4.7"
 gem "pagy"
 gem "public_suffix"
 gem "tailwindcss-rails"
 gem "tailwindcss-ruby"
-gem "heroicons"
+gem "heroicons", "~> 2.2.0"
 
 # APM and Logs
-gem "honeybadger"  # For error monitoring
-gem "scout_apm"    # For performance monitoring
+gem "honeybadger", "~> 6.0.4"  # For error monitoring
+gem "scout_apm", "~> 5.7.0"    # For performance monitoring
 
 # Rate limiting and security
 gem "rack-attack"
