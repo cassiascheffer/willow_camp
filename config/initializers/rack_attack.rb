@@ -73,9 +73,9 @@ class Rack::Attack
     end
   end
 
-  # Block bad actors who hit the reserved subdomain throttle limit for 24 hours
+  # Block bad actors who hit the reserved subdomain throttle limit for shorter time
   blocklist("block-subdomain-scanners") do |req|
-    Rack::Attack::Allow2Ban.filter("#{req.ip}/#{req.user_agent}", maxretry: 10, findtime: 1.minute, bantime: 24.hours) do
+    Rack::Attack::Allow2Ban.filter("#{req.ip}/#{req.user_agent}", maxretry: 25, findtime: 5.minutes, bantime: 1.hour) do
       subdomain = extract_subdomain(req.host)
       subdomain && ::ReservedWords::RESERVED_WORDS.include?(subdomain)
     end
