@@ -94,7 +94,8 @@ Rails.application.configure do
           remote_ip: request.remote_ip,
           method: request.method,
           path: request.path,
-          user_id: current_user&.id
+          user_id: current_user&.id,
+          user_agent: request.user_agent
         ) do
           yield
         end
