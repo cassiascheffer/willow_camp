@@ -25,11 +25,11 @@ class Dashboard::PostsController < Dashboard::BaseController
       respond_to do |format|
         format.html {
           flash.now[:alert] = "There were errors updating the post"
-          render :edit, status: :unprocessable_entity
+          render :edit, status: :unprocessable_content
         }
         format.turbo_stream {
           flash.now[:alert] = "There were errors updating the post"
-          render :update, status: :unprocessable_entity
+          render :update, status: :unprocessable_content
         }
       end
     end

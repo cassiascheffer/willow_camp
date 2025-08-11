@@ -18,7 +18,7 @@ class Api::PostsController < Api::BaseController
     if @post.save
       render :create, status: :created
     else
-      render json: {errors: @post.errors.full_messages}, status: :unprocessable_entity
+      render json: {errors: @post.errors.full_messages}, status: :unprocessable_content
     end
   end
 
@@ -27,7 +27,7 @@ class Api::PostsController < Api::BaseController
     if @post.save
       render :update
     else
-      render json: {errors: @post.errors.full_messages}, status: :unprocessable_entity
+      render json: {errors: @post.errors.full_messages}, status: :unprocessable_content
     end
   end
 

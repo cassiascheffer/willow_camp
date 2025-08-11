@@ -58,7 +58,7 @@ class Api::PostsControllerTest < ActionDispatch::IntegrationTest
         markdown: "---\ntitle: \n---\n# Hello World"
       }}, headers: @headers, as: :json
     end
-    assert_response :unprocessable_entity
+    assert_response :unprocessable_content
 
     # Verify response contains errors in expected format
     json_response = JSON.parse(response.body)
@@ -166,7 +166,7 @@ class Api::PostsControllerTest < ActionDispatch::IntegrationTest
       params: {post: {markdown: "---\ntitle: \n---\n# Content"}},
       headers: @headers,
       as: :json
-    assert_response :unprocessable_entity
+    assert_response :unprocessable_content
 
     # Verify response contains errors in expected format
     json_response = JSON.parse(response.body)
