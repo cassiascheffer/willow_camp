@@ -42,12 +42,12 @@ class RackAttackIntegrationTest < ActionDispatch::IntegrationTest
     # Use memory store for testing throttles
     @original_cache_store = Rack::Attack.cache.store
     Rack::Attack.cache.store = ActiveSupport::Cache::MemoryStore.new
-    
+
     # Clear the cache before each test
     Rails.cache.clear
     Rack::Attack.reset!
   end
-  
+
   teardown do
     # Restore original cache store
     Rack::Attack.cache.store = @original_cache_store
@@ -56,7 +56,7 @@ class RackAttackIntegrationTest < ActionDispatch::IntegrationTest
   test "allows normal requests to existing blogs" do
     user = users(:one)
     host! "#{user.subdomain}.willow.camp"
-    
+
     10.times do
       get "/"
       assert_response :success
@@ -78,5 +78,4 @@ class RackAttackIntegrationTest < ActionDispatch::IntegrationTest
     get "/"
     assert_response :not_found, "Non-existent subdomain should return 404"
   end
-
 end

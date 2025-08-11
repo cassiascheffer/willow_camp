@@ -7,22 +7,22 @@ class Rack::Attack
   # Helper method to extract subdomain from host
   def self.extract_subdomain(host)
     return nil if host.nil? || host.empty?
-    
+
     # Remove port if present
     domain = host.split(":").first.downcase
-    
+
     # Check for willow.camp subdomains
     if domain.ends_with?(".willow.camp")
       subdomain = domain.sub(".willow.camp", "")
       return subdomain.presence
     end
-    
+
     # Check for localhost subdomains (for development/test)
     if domain.ends_with?(".localhost")
       subdomain = domain.sub(".localhost", "")
       return subdomain.presence
     end
-    
+
     # Not a willow.camp or localhost subdomain
     nil
   end
@@ -231,12 +231,12 @@ class Rack::Attack
   # Customize response when request is blocked
   self.blocklisted_responder = lambda do |request|
     # Check if this is a subdomain scanner being blocked
-    matched = request.env['rack.attack.matched']
-    
+    matched = request.env["rack.attack.matched"]
+
     # If blocked due to subdomain scanning, return 404
     if matched == "block-subdomain-scanners"
-      html_content = File.read(Rails.root.join('public', '404.html'))
-      [404, {'Content-Type' => 'text/html'}, [html_content]]
+      html_content = File.read(Rails.root.join("public", "404.html"))
+      [404, {"Content-Type" => "text/html"}, [html_content]]
     else
       # Default forbidden response for other blocks
       [403, {}, ["Forbidden\n"]]

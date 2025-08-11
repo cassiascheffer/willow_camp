@@ -67,9 +67,9 @@ module SecureDomainRedirect
     @author = User.by_domain(request.host).first
 
     if @author.nil?
-      render file: Rails.root.join('public', '404.html'),
-             status: :not_found,
-             layout: false
+      render file: Rails.root.join("public", "404.html"),
+        status: :not_found,
+        layout: false
       return
     end
 
