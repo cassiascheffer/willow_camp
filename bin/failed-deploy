@@ -1,0 +1,15 @@
+#!/bin/bash
+# ABOUTME: Failed deployment notification script that alerts Discord of deployment failures
+# ABOUTME: Called when deployment fails to notify team and provide debugging information
+
+set -e
+
+echo "Sending failed deployment notification..."
+
+# Discord webhook notification
+echo "Sending Discord notification..."
+curl -X POST "${DISCORD_WEBHOOK_URL}" \
+  -H "Content-Type: application/json" \
+  -d "{\"content\": \"🚨 Willow Camp deployment **FAILED** in ${RAILS_ENV:-production} environment\n\n**Branch:** ${BRANCH}\n**Commit:** [${REVISION}](https://github.com/cassiascheffer/willow_camp/commit/${REVISION})\n**Release:** ${RELEASE}\n**Log ID:** ${LOG_ID}"
+
+echo "Failed deployment notification sent!"
