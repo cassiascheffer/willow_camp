@@ -4,9 +4,9 @@ class DomainConstraint
   def matches?(request)
     host = request.host.split(":").first.downcase
 
-    # In local environments (dev/test), be permissive - allow any subdomain if user exists
+    # In local environments (dev/test), be permissive - allow any subdomain
     if Rails.env.local?
-      return true if request.subdomain.present? && User.exists?(subdomain: request.subdomain)
+      return true if request.subdomain.present?
     end
 
     # Allow if it's a subdomain of willow.camp

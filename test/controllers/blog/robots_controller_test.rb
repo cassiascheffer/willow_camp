@@ -38,9 +38,9 @@ module Blog
       assert_match(/Allow: \//, @response.body)
     end
 
-    test "should redirect to root_url when subdomain does not exist" do
+    test "should return 404 when subdomain does not exist" do
       get robots_path(format: :txt), headers: @nonexistent_host
-      assert_redirected_to root_url(subdomain: false)
+      assert_response :not_found
     end
 
     test "should get robots.txt with custom domain" do

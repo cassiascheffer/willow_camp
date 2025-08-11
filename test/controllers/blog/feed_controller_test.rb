@@ -91,9 +91,9 @@ module Blog
       assert json_response["items"].is_a?(Array)
     end
 
-    test "should redirect to root_url when subdomain does not exist" do
+    test "should return 404 when subdomain does not exist" do
       get "/posts/atom", headers: @nonexistent_host
-      assert_redirected_to root_url(subdomain: false)
+      assert_response :not_found
     end
 
     test "should only show published posts" do

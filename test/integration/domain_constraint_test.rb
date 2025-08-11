@@ -48,7 +48,7 @@ class DomainConstraintIntegrationTest < ActionDispatch::IntegrationTest
 
   test "does not route blog paths for non-existent subdomain" do
     get "/", headers: {host: "nonexistent.willow.camp"}
-    assert_redirected_to root_url(subdomain: false)
+    assert_response :not_found
   end
 
   test "does not route blog paths for non-existent custom domain" do
@@ -65,7 +65,7 @@ class DomainConstraintIntegrationTest < ActionDispatch::IntegrationTest
 
   test "handles multi-level subdomains" do
     get "/", headers: {host: "blog.#{@user_with_subdomain.subdomain}.willow.camp"}
-    assert_redirected_to root_url(subdomain: false)
+    assert_response :not_found
   end
 
   test "redirects subdomain to custom domain when user has both" do

@@ -33,9 +33,9 @@ class Blog::PostsControllerTest < ActionDispatch::IntegrationTest
     assert_select "title", text: /#{@custom_domain_user.blog_title}/i
   end
 
-  test "should redirect to main site when user not found" do
+  test "should return 404 when user not found" do
     get posts_url, headers: {host: "nonexistent.willow.camp"}
-    assert_redirected_to root_url(subdomain: false)
+    assert_response :not_found
   end
 
   test "should redirect to custom domain when user has one" do

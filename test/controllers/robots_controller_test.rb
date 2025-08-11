@@ -2,13 +2,13 @@ require "test_helper"
 
 class RobotsControllerTest < ActionDispatch::IntegrationTest
   test "should get robots.txt" do
-    get "/robots.txt"
+    get "/robots.txt", headers: { host: "willow.camp" }
     assert_response :success
     assert_equal "text/plain", response.media_type
   end
 
   test "should set proper cache headers" do
-    get "/robots.txt"
+    get "/robots.txt", headers: { host: "willow.camp" }
     assert_response :success
     assert_not_nil response.headers["Cache-Control"]
     assert_includes response.headers["Cache-Control"], "public"
@@ -16,7 +16,7 @@ class RobotsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should contain expected directives" do
-    get "/robots.txt"
+    get "/robots.txt", headers: { host: "willow.camp" }
     assert_response :success
 
     body = response.body
@@ -28,7 +28,7 @@ class RobotsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should disallow authentication pages" do
-    get "/robots.txt"
+    get "/robots.txt", headers: { host: "willow.camp" }
     assert_response :success
 
     body = response.body
@@ -39,7 +39,7 @@ class RobotsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should disallow admin and system areas" do
-    get "/robots.txt"
+    get "/robots.txt", headers: { host: "willow.camp" }
     assert_response :success
 
     body = response.body

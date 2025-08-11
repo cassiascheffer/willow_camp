@@ -67,7 +67,9 @@ module SecureDomainRedirect
     @author = User.by_domain(request.host).first
 
     if @author.nil?
-      redirect_to root_url(subdomain: false), allow_other_host: true
+      render file: Rails.root.join('public', '404.html'),
+             status: :not_found,
+             layout: false
       return
     end
 

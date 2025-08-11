@@ -4,6 +4,29 @@
 require "middleware/rack_attack_logger"
 
 class Rack::Attack
+  # Helper method to extract subdomain from host
+  def self.extract_subdomain(host)
+    return nil if host.nil? || host.empty?
+    
+    # Remove port if present
+    domain = host.split(":").first.downcase
+    
+    # Check for willow.camp subdomains
+    if domain.ends_with?(".willow.camp")
+      subdomain = domain.sub(".willow.camp", "")
+      return subdomain.presence
+    end
+    
+    # Check for localhost subdomains (for development/test)
+    if domain.ends_with?(".localhost")
+      subdomain = domain.sub(".localhost", "")
+      return subdomain.presence
+    end
+    
+    # Not a willow.camp or localhost subdomain
+    nil
+  end
+
   # Use Rails cache store for tracking throttles
   Rack::Attack.cache.store = Rails.cache
 
@@ -39,6 +62,22 @@ class Rack::Attack
   throttle("password-resets/email", limit: 5, period: 15.minutes) do |req|
     if req.path == "/password_resets" && req.post?
       req.params["email"].to_s.downcase.gsub(/\s+/, "").presence
+    end
+  end
+
+  # Throttle requests to reserved subdomains
+  throttle("reserved-subdomain-scanner", limit: 10, period: 1.minute) do |req|
+    subdomain = extract_subdomain(req.host)
+    if subdomain && ::ReservedWords::RESERVED_WORDS.include?(subdomain)
+      "#{req.ip}/#{req.user_agent}"
+    end
+  end
+
+  # Block bad actors who hit the reserved subdomain throttle limit for 24 hours
+  blocklist("block-subdomain-scanners") do |req|
+    Rack::Attack::Allow2Ban.filter("#{req.ip}/#{req.user_agent}", maxretry: 10, findtime: 1.minute, bantime: 24.hours) do
+      subdomain = extract_subdomain(req.host)
+      subdomain && ::ReservedWords::RESERVED_WORDS.include?(subdomain)
     end
   end
 
@@ -190,8 +229,18 @@ class Rack::Attack
   end
 
   # Customize response when request is blocked
-  self.blocklisted_responder = lambda do |_request|
-    [403, {}, ["Forbidden\n"]]
+  self.blocklisted_responder = lambda do |request|
+    # Check if this is a subdomain scanner being blocked
+    matched = request.env['rack.attack.matched']
+    
+    # If blocked due to subdomain scanning, return 404
+    if matched == "block-subdomain-scanners"
+      html_content = File.read(Rails.root.join('public', '404.html'))
+      [404, {'Content-Type' => 'text/html'}, [html_content]]
+    else
+      # Default forbidden response for other blocks
+      [403, {}, ["Forbidden\n"]]
+    end
   end
 end
 

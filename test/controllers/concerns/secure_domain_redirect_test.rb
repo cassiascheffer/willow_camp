@@ -152,4 +152,37 @@ class SecureDomainRedirectIntegrationTest < ActionDispatch::IntegrationTest
 
     assert_response :success
   end
+
+  test "returns 404 for non-existent subdomain" do
+    # Request to a subdomain that doesn't exist
+    host! "nonexistentblog.willow.camp"
+
+    get posts_path
+
+    assert_response :not_found
+    # Verify the 404 page content is rendered
+    assert_match(/Page Not Found/, response.body)
+    assert_match(/404/, response.body)
+  end
+
+  test "returns 404 for reserved word subdomain" do
+    # Request to a reserved word subdomain (like 'admin')
+    host! "admin.willow.camp"
+
+    get posts_path
+
+    assert_response :not_found
+    assert_match(/Page Not Found/, response.body)
+  end
+
+  test "does not redirect to root for non-existent subdomain" do
+    # Ensure we're not redirecting, but returning 404 directly
+    host! "fakeblog.willow.camp"
+
+    get posts_path
+
+    assert_response :not_found
+    assert_not_equal root_url(subdomain: false), response.location
+    assert_nil response.location
+  end
 end
