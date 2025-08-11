@@ -8,10 +8,9 @@ echo "Running post-deployment tasks..."
 
 # Discord webhook notification
 echo "Sending Discord notification..."
-COMMIT_MESSAGE=$(git log -1 --pretty=format:'%s')
 curl -X POST "${DISCORD_WEBHOOK_URL}" \
   -H "Content-Type: application/json" \
-  -d "{\"content\": \"🏕️ Willow Camp deployed successfully to ${RAILS_ENV:-production} \n\n**Latest commit:** ${COMMIT_MESSAGE}\"}\n\nHappy Camping! ☀️"
+  -d "{\"content\": \"🏕️ Willow Camp deployed successfully to ${RAILS_ENV:-production}\n\n**Latest commit:** [${REVISION}](https://github.com/cassiascheffer/willow_camp/commit/${REVISION})\n\nHappy Camping! ☀️\"}"
 
 # Honeybadger deploy notification
 echo "Notifying Honeybadger of deployment..."
