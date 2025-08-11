@@ -1,5 +1,5 @@
 module ReservedWords
-  RESERVED_WORDS = %w[
+  RESERVED_WORDS = Set.new(%w[
     _dmarc
     _spf
     account
@@ -75,5 +75,5 @@ module ReservedWords
     verify
     webmail
     www
-  ]
+  ])
 end
