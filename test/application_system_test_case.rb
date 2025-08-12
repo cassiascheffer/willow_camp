@@ -10,38 +10,44 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
       url: "http://#{ENV["SELENIUM_HOST"]}:4444"
     }
   else
-    # Determine if we're in CI environment
-    ci_environment = ENV["CI"] == "true" || ENV["GITHUB_ACTIONS"] == "true"
-
     # Register and use Cuprite driver
     Capybara.register_driver(:cuprite) do |app|
-      options = {
-        window_size: [1400, 1400],
-        process_timeout: 30,
-        timeout: 30,
-        headless: true,
-        browser_options: {
-          "no-sandbox": nil,
-          "disable-dev-shm-usage": nil,
-          "disable-features": "PasswordLeakDetection",
-          "disable-extensions": nil,
-          "disable-background-timer-throttling": nil,
-          "disable-backgrounding-occluded-windows": nil,
-          "disable-gpu": nil,
-          "disable-software-rasterizer": nil,
-          "disable-setuid-sandbox": nil
-        }
+      browser_options = {
+        "no-sandbox": nil,
+        "disable-dev-shm-usage": nil,
+        "disable-gpu": nil
       }
 
-      # Add more aggressive settings for CI
-      if ci_environment
-        options[:browser_options]["disable-web-security"] = nil
-        options[:browser_options]["disable-site-isolation-trials"] = nil
-        options[:wait_time] = 30
-        options[:slowmo] = 0.1
+      driver_options = {
+        window_size: [1400, 1400],
+        process_timeout: 60,
+        timeout: 30,
+        headless: true,
+        browser_options: browser_options
+      }
+
+      # Add additional configuration for CI environment
+      if ENV["CI"] == "true" || ENV["GITHUB_ACTIONS"] == "true"
+        browser_options["disable-setuid-sandbox"] = nil
+        browser_options["disable-features"] = "VizDisplayCompositor"
+        browser_options["disable-web-security"] = nil
+        browser_options["disable-site-isolation-trials"] = nil
+
+        # Use explicit Chrome path if available
+        if ENV["CHROME_PATH"] && File.exist?(ENV["CHROME_PATH"])
+          driver_options[:browser_path] = ENV["CHROME_PATH"]
+        elsif File.exist?("/usr/bin/google-chrome")
+          driver_options[:browser_path] = "/usr/bin/google-chrome"
+        end
+
+        # Debug output in CI
+        puts "Cuprite CI Configuration:"
+        puts "  Browser path: #{driver_options[:browser_path]}"
+        puts "  Process timeout: #{driver_options[:process_timeout]}"
+        puts "  Headless: #{driver_options[:headless]}"
       end
 
-      Capybara::Cuprite::Driver.new(app, options)
+      Capybara::Cuprite::Driver.new(app, driver_options)
     end
 
     driven_by :cuprite

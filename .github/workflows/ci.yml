@@ -86,8 +86,11 @@ jobs:
           
       - name: Check Chrome installation
         run: |
+          echo "Checking for Chrome installations..."
           which google-chrome || which chromium || which chromium-browser || true
           google-chrome --version || chromium --version || chromium-browser --version || true
+          echo "Chrome binary path: $(which google-chrome || which google-chrome-stable || which chromium || which chromium-browser)"
+          echo "CHROME_PATH=$(which google-chrome || which google-chrome-stable || which chromium || which chromium-browser)" >> $GITHUB_ENV
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
