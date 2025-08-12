@@ -14,13 +14,18 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
     Capybara.register_driver(:cuprite) do |app|
       Capybara::Cuprite::Driver.new(app,
         window_size: [1400, 1400],
+        process_timeout: ENV["CI"] ? 30 : 10,
+        timeout: 15,
+        headless: ENV["CI"] ? "new" : true,
         browser_options: {
           "no-sandbox": nil,
           "disable-dev-shm-usage": nil,
           "disable-features": "PasswordLeakDetection",
           "disable-extensions": nil,
           "disable-background-timer-throttling": nil,
-          "disable-backgrounding-occluded-windows": nil
+          "disable-backgrounding-occluded-windows": nil,
+          "disable-gpu": ENV["CI"] ? nil : false,
+          "disable-software-rasterizer": ENV["CI"] ? nil : false
         })
     end
 
