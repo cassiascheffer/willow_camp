@@ -10,13 +10,16 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
       url: "http://#{ENV["SELENIUM_HOST"]}:4444"
     }
   else
+    # Determine if we're in CI environment
+    ci_environment = ENV["CI"] == "true" || ENV["GITHUB_ACTIONS"] == "true"
+
     # Register and use Cuprite driver
     Capybara.register_driver(:cuprite) do |app|
-      Capybara::Cuprite::Driver.new(app,
+      options = {
         window_size: [1400, 1400],
-        process_timeout: ENV["CI"] ? 30 : 10,
-        timeout: 15,
-        headless: ENV["CI"] ? "new" : true,
+        process_timeout: 30,
+        timeout: 30,
+        headless: true,
         browser_options: {
           "no-sandbox": nil,
           "disable-dev-shm-usage": nil,
@@ -24,9 +27,21 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
           "disable-extensions": nil,
           "disable-background-timer-throttling": nil,
           "disable-backgrounding-occluded-windows": nil,
-          "disable-gpu": ENV["CI"] ? nil : false,
-          "disable-software-rasterizer": ENV["CI"] ? nil : false
-        })
+          "disable-gpu": nil,
+          "disable-software-rasterizer": nil,
+          "disable-setuid-sandbox": nil
+        }
+      }
+
+      # Add more aggressive settings for CI
+      if ci_environment
+        options[:browser_options]["disable-web-security"] = nil
+        options[:browser_options]["disable-site-isolation-trials"] = nil
+        options[:wait_time] = 30
+        options[:slowmo] = 0.1
+      end
+
+      Capybara::Cuprite::Driver.new(app, options)
     end
 
     driven_by :cuprite

@@ -73,11 +73,21 @@ jobs:
       #   options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
-      - name: Install packages
-        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y build-essential git libpq-dev libyaml-dev pkg-config google-chrome-stable chromium-browser chromium-chromedriver
-
       - name: Checkout code
         uses: actions/checkout@v4
+        
+      - name: Install packages
+        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y build-essential git libpq-dev libyaml-dev pkg-config
+        
+      - name: Install Chrome for testing
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+          
+      - name: Check Chrome installation
+        run: |
+          which google-chrome || which chromium || which chromium-browser || true
+          google-chrome --version || chromium --version || chromium-browser --version || true
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
