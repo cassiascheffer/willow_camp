@@ -1,29 +1,27 @@
 require "test_helper"
 require "capybara/cuprite"
-
-# Set default wait time for Capybara
-Capybara.default_max_wait_time = 5
-
-Capybara.register_driver(:cuprite) do |app|
-  browser_options = {
-    "no-sandbox": nil,
-    "disable-dev-shm-usage": nil,
-    "disable-gpu": nil,
-    "disable-setuid-sandbox": nil
-  }
-
-  Capybara::Cuprite::Driver.new(
-    app,
-    window_size: [1400, 1400],
-    process_timeout: 30,  # How long to wait for Chrome to start
-    timeout: 30,  # Default timeout for commands
-    headless: !ENV["HEADLESS"].in?(%w[n 0 no false]),
-    inspector: ENV["INSPECTOR"].present?,
-    browser_options: browser_options,
-    browser_path: ENV["CHROME_PATH"] || "/usr/bin/google-chrome"
-  )
-end
+require_relative "system/system_helper"
 
 class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
-  driven_by :cuprite
+  include BetterRailsSystemTests
+  include CupriteHelpers
+
+  driven_by Capybara.javascript_driver
+
+  def setup
+    super
+    # Use JS driver always
+
+    # Store original host for cleanup
+    @original_host = Rails.application.default_url_options[:host]
+    # Make urls in mailers contain the correct server host.
+    # This is required for testing links in emails (e.g., via capybara-email).
+    Rails.application.default_url_options[:host] = Capybara.server_host
+  end
+
+  def teardown
+    # Restore original host
+    Rails.application.default_url_options[:host] = @original_host
+    super
+  end
 end
