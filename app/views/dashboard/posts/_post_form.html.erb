@@ -11,53 +11,15 @@
           Auto-save loading...
         </span>
       </div>
-      <% if post.author.social_share_image_enabled? %>
-        <%= form_with(model: post,
-                      url: form_url,
-                      id: form_id,
-                      class: "form-control",
-                      html: { multipart: true },
-                      data: { 
-                        autosave_target: "form",
-                        controller: "social-share-image",
-                        social_share_image_post_id_value: post.id,
-                        social_share_image_favicon_emoji_value: post.author.favicon_emoji,
-                        social_share_image_theme_value: post.author.theme
-                      }) do |form| %>
-          <%= render "form_fields", form: form, post: post %>
-          <%= turbo_frame_tag "post_buttons" do %>
-            <%= render "post_buttons", form: form, post: post %>
-          <% end %>
-          <%= form.hidden_field :social_share_image, value: nil %>
-          <!-- Social Share Image Generator -->
-          <div class="divider">Social Share Image Preview</div>
-          <div class="space-y-4">
-            <canvas id="social-share-canvas" 
-                    width="1200" 
-                    height="627" 
-                    class="border border-base-300 rounded-lg w-full max-w-2xl mx-auto"
-                    style="max-width: 600px; height: auto;"
-                    data-social-share-image-target="canvas">
-            </canvas>
-            <% if post.social_share_image.attached? %>
-              <div class="text-center">
-                <p class="text-sm text-base-content/70 mb-2">Current social share image:</p>
-                <%= image_tag post.social_share_image, class: "mx-auto rounded-lg border border-base-300", style: "max-width: 300px;" %>
-              </div>
-            <% end %>
-          </div>
-        <% end %>
-      <% else %>
-        <%= form_with(model: post,
-                      url: form_url,
-                      id: form_id,
-                      class: "form-control",
-                      html: { multipart: true },
-                      data: { autosave_target: "form" }) do |form| %>
-          <%= render "form_fields", form: form, post: post %>
-          <%= turbo_frame_tag "post_buttons" do %>
-            <%= render "post_buttons", form: form, post: post %>
-          <% end %>
+      <%= form_with(model: post,
+                    url: form_url,
+                    id: form_id,
+                    class: "form-control",
+                    html: { multipart: true },
+                    data: { autosave_target: "form" }) do |form| %>
+        <%= render "form_fields", form: form, post: post %>
+        <%= turbo_frame_tag "post_buttons" do %>
+          <%= render "post_buttons", form: form, post: post %>
         <% end %>
       <% end %>
       <%= turbo_frame_tag "post_actions" do %>
