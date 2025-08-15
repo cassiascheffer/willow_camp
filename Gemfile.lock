@@ -169,7 +169,7 @@ GEM
     heroicons (2.2.0)
       nokogiri
       railties (>= 5.2)
-    honeybadger (6.0.5)
+    honeybadger (6.0.6)
       logger
       ostruct
     htmlbeautifier (1.4.3)
@@ -503,7 +503,7 @@ DEPENDENCIES
   friendly_id
   front_matter_parser
   heroicons (~> 2.2.0)
-  honeybadger (~> 6.0.5)
+  honeybadger (~> 6.0.6)
   htmlbeautifier
   importmap-rails
   jbuilder
