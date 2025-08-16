@@ -15,8 +15,9 @@ export default class extends Controller {
     this.scrollPositions = new Map()
     this.bindEventHandlers()
     this.attachEventListeners()
-    this.startAutoSave()
-    this.setStatus("Auto-save enabled", "info")
+    // Autosave disabled - only manual save (Cmd/Ctrl+S) works
+    // this.startAutoSave()
+    this.setStatus("Autosave temporarily disabled. Use command+s to save.", "warning")
   }
 
   disconnect() {
@@ -65,11 +66,13 @@ export default class extends Controller {
 
   // Auto-save management
   startAutoSave() {
-    if (!this.autoSaveRunning) {
-      this.autoSaveRunning = true;
-      this.clearTimer('autoSaveTimer')
-      this.autoSaveTimer = setInterval(() => this.performAutoSave(), this.intervalValue)
-    }
+    // Autosave disabled - do nothing
+    return;
+    // if (!this.autoSaveRunning) {
+    //   this.autoSaveRunning = true;
+    //   this.clearTimer('autoSaveTimer')
+    //   this.autoSaveTimer = setInterval(() => this.performAutoSave(), this.intervalValue)
+    // }
   }
 
   stopAutoSave() {
@@ -94,7 +97,7 @@ export default class extends Controller {
 
     // Save scroll position before autosave
     this.saveScrollPosition()
-    
+
     this.isAutoSaving = true
     this.abortAutoSave = false
     this.setStatus("Saving...")
@@ -109,8 +112,8 @@ export default class extends Controller {
     this.setStatus("Saving...")
     this.formTarget.requestSubmit()
 
-    // Restart auto-save after brief delay
-    setTimeout(() => this.startAutoSave(), 1000)
+    // Don't restart auto-save since it's disabled
+    // setTimeout(() => this.startAutoSave(), 1000)
   }
 
   // Event handlers
@@ -143,18 +146,20 @@ export default class extends Controller {
 
       if (this.isPublished) {
         this.stopAutoSave()
-        this.setStatus("Saved - Auto-save disabled (published)", "success")
+        this.setStatus("Saved", "success")
       } else {
         this.setStatus("Saved", "success")
-        this.setStatusWithDelay("Last saved at " + new Date().toLocaleString(), 3000, "info")
+        this.setStatusWithDelay("Autosave temporarily disabled due to a bug", 3000, "warning")
       }
     } else {
       this.setStatus("Save failed", "error")
-      this.setStatusWithDelay("Auto-save enabled", 5000, "info")
+      this.setStatusWithDelay("Autosave temporarily disabled due to a bug", 5000, "warning")
     }
   }
 
   handlePublishedChange(event) {
+    // Autosave is disabled, so this handler doesn't need to do anything
+    return;
     // If auto-save is currently in progress, mark it for abortion
     if (this.isAutoSaving) {
       this.abortAutoSave = true
@@ -171,7 +176,8 @@ export default class extends Controller {
 
   handleFormInput() {
     this.formDirty = true
-    this.startAutoSave()
+    // Autosave disabled - don't start autosave on input
+    // this.startAutoSave()
   }
 
   // Helper methods
@@ -227,7 +233,7 @@ export default class extends Controller {
         })
       }
     })
-    
+
     // Also save window scroll position
     this.scrollPositions.set(window, {
       scrollTop: window.scrollY,
@@ -245,7 +251,7 @@ export default class extends Controller {
         element.scrollLeft = position.scrollLeft
       }
     })
-    
+
     // Clear saved positions after restoration
     this.scrollPositions.clear()
   }
