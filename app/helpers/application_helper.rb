@@ -51,4 +51,14 @@ module ApplicationHelper
       {}
     end
   end
+
+  def emoji_to_openmoji_filename(emoji)
+    return "1F3D5" if emoji.blank? # Default camping emoji
+
+    # Convert emoji to hex codepoint(s), excluding variation selectors
+    emoji.codepoints
+      .reject { |cp| cp == 0xFE0F || cp == 0xFE0E } # Skip variation selectors
+      .map { |cp| cp.to_s(16).upcase }
+      .join("-")
+  end
 end

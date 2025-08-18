@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-controller="favicon" data-favicon-emoji-value="<%= @author&.favicon_emoji || "⛺" %>" data-theme="<%= @author&.theme || 'light' %>">
+<html lang="en" data-theme="<%= @author&.theme || 'light' %>">
   <head>
     <title>
       <%= content_for(:title) || blog_title_for(@author) %>
@@ -29,7 +29,11 @@
       <%# JSON feed discovery link %>
       <link type="application/feed+json" rel="alternate" href="<%= posts_json_url(url_options_for(@author).merge(format: :json)) %>" title="<%= blog_title_for(@author) %> JSON Feed">
     <% end %>
-    <!-- Favicon will be set dynamically by JS -->
+    <!-- Favicon from OpenMoji assets -->
+    <% emoji_filename = emoji_to_openmoji_filename(@author&.favicon_emoji) %>
+    <link rel="icon" href="/openmoji-32x32-ico/<%= emoji_filename %>.ico" sizes="32x32">
+    <link rel="icon" href="/openmoji-svg-color/<%= emoji_filename %>.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/openmoji-apple-touch-icon-180x180/<%= emoji_filename %>.png">
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
