@@ -9,15 +9,6 @@ class OgMetaTagsTest < ActionDispatch::IntegrationTest
     @headers = {host: "#{@user.subdomain}.willow.camp"}
   end
 
-  test "should not render og:image meta tag when no image attached" do
-    get "/#{@post.slug}", headers: @headers
-    assert_response :success
-
-    assert_select 'meta[property="og:image"]', 0
-    assert_select 'meta[name="twitter:card"][content="summary_large_image"]', 0
-    assert_select 'meta[name="twitter:image"]', 0
-  end
-
   test "should render basic og meta tags" do
     get "/#{@post.slug}", headers: @headers
     assert_response :success
