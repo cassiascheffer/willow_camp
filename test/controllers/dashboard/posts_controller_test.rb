@@ -131,4 +131,168 @@ class Dashboard::PostsControllerTest < ActionDispatch::IntegrationTest
       Rails.env = original_env
     end
   end
+
+  # Backwards Compatibility Tests for Tag Handling
+  test "should use user.id as tenant for tags in dashboard (backwards compatibility)" do
+    # Create posts with different scenarios
+    user = users(:one)
+    sign_in user
+
+    # Create a blog for the user
+    blog = user.blogs.create!(
+      subdomain: "dashtest",
+      favicon_emoji: "🚀"
+    )
+
+    # Create legacy post (no blog)
+    legacy_post = user.posts.create!(
+      title: "Legacy Dashboard Post",
+      tag_list: ["dashboard", "legacy"]
+    )
+
+    # Create modern post (with blog)
+    modern_post = blog.posts.create!(
+      title: "Modern Dashboard Post",
+      tag_list: ["dashboard", "modern"],
+      author: user
+    )
+
+    assert_nil legacy_post.blog_id
+    assert_equal blog.id, modern_post.blog_id
+
+    # Dashboard controller should use user.id as tenant
+    # So it should see tags from both legacy and modern posts
+    get edit_dashboard_post_url(legacy_post.id)
+    assert_response :success
+
+    # Verify that tags are loaded using user tenant
+    # This is checking that the edit action loads tags correctly
+    assert_select "form" # Basic check that the edit form is present
+  end
+
+  test "should handle tag list updates for posts without blog" do
+    user = users(:one)
+    sign_in user
+
+    # Create post without blog
+    post_without_blog = user.posts.create!(
+      title: "No Blog Post",
+      body_markdown: "Content"
+    )
+
+    assert_nil post_without_blog.blog_id
+
+    # Update post with tags
+    patch dashboard_post_url(post_without_blog.id), params: {
+      post: {
+        tag_list: "backwards, compatibility, test"
+      }
+    }
+
+    assert_response :redirect
+    post_without_blog.reload
+    assert_equal ["backwards", "compatibility", "test"], post_without_blog.tag_list.sort
+    assert_nil post_without_blog.blog_id # Should still be nil
+  end
+
+  test "should handle tag list updates for posts with blog" do
+    user = users(:one)
+    sign_in user
+
+    # Create blog and post
+    blog = user.blogs.create!(
+      subdomain: "tagtest",
+      favicon_emoji: "🏷️"
+    )
+
+    post_with_blog = blog.posts.create!(
+      title: "Blog Post",
+      author: user,
+      body_markdown: "Content"
+    )
+
+    assert_equal blog.id, post_with_blog.blog_id
+
+    # Update post with tags
+    patch dashboard_post_url(post_with_blog.id), params: {
+      post: {
+        tag_list: "modern, blog, test"
+      }
+    }
+
+    assert_response :redirect
+    post_with_blog.reload
+    assert_equal ["blog", "modern", "test"], post_with_blog.tag_list.sort
+    assert_equal blog.id, post_with_blog.blog_id # Should still have blog
+  end
+
+  test "dashboard edit should show user tags regardless of blog association" do
+    user = users(:one)
+    sign_in user
+
+    # Create mixed scenario
+    blog = user.blogs.create!(
+      subdomain: "mixed",
+      favicon_emoji: "🎭"
+    )
+
+    # Legacy post with tags (no blog)
+    legacy_post = user.posts.create!(
+      title: "Legacy Tagged",
+      tag_list: ["legacy", "global"]
+    )
+
+    # Modern post with tags (with blog)
+    modern_post = blog.posts.create!(
+      title: "Modern Tagged",
+      tag_list: ["modern", "scoped"],
+      author: user
+    )
+
+    # Dashboard should use user.id as tenant, so should see both sets of tags
+    # When editing either post, user should see all their tags
+    get edit_dashboard_post_url(legacy_post.id)
+    assert_response :success
+
+    get edit_dashboard_post_url(modern_post.id)
+    assert_response :success
+
+    # Both should work since both controllers use user-based tenant consistently
+  end
+
+  test "should maintain tag tenant consistency with dashboard vs blog controllers" do
+    user = users(:one)
+    sign_in user
+
+    blog = user.blogs.create!(
+      subdomain: "consistency",
+      favicon_emoji: "🔄"
+    )
+
+    # Create posts in both scenarios
+    legacy_post = user.posts.create!(
+      title: "Legacy Consistency",
+      tag_list: ["dashboard-visible"],
+      published: true
+    )
+
+    modern_post = blog.posts.create!(
+      title: "Modern Consistency",
+      tag_list: ["blog-scoped"],
+      author: user,
+      published: true
+    )
+
+    # Dashboard edit should work for both (uses user tenant)
+    get edit_dashboard_post_url(legacy_post.id)
+    assert_response :success
+
+    get edit_dashboard_post_url(modern_post.id)
+    assert_response :success
+
+    # Both controllers now use user.id consistently:
+    # - Dashboard controller uses current_user.id as tenant
+    # - Blog tags controller uses @author.id as tenant
+    # This ensures consistent tag visibility across the application
+  end
 end

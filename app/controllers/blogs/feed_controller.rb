@@ -1,5 +1,5 @@
-module Blog
-  class FeedController < Blog::BaseController
+module Blogs
+  class FeedController < Blogs::BaseController
     # Allow all browsers for feed access (for crawlers, feed readers, etc.)
     allow_browser versions: {chrome: 1, firefox: 1, safari: 1, edge: 1, opera: 1, ie: false}
 

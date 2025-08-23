@@ -1,6 +1,6 @@
 require "test_helper"
 
-module Blog
+module Blogs
   class RobotsControllerTest < ActionDispatch::IntegrationTest
     setup do
       @user_one = users(:one)

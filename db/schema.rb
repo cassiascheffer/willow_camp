@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_26_125526) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_23_121947) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -43,6 +43,26 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_26_125526) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "blogs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.string "subdomain"
+    t.string "title"
+    t.string "slug"
+    t.text "meta_description"
+    t.string "favicon_emoji"
+    t.string "custom_domain"
+    t.string "theme", default: "light"
+    t.text "post_footer_markdown"
+    t.text "post_footer_html"
+    t.boolean "no_index", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["custom_domain"], name: "index_blogs_on_custom_domain", unique: true
+    t.index ["slug"], name: "index_blogs_on_slug", unique: true
+    t.index ["subdomain"], name: "index_blogs_on_subdomain", unique: true
+    t.index ["user_id"], name: "index_blogs_on_user_id"
+  end
+
   create_table "friendly_id_slugs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "slug", null: false
     t.string "sluggable_type", limit: 50
@@ -69,9 +89,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_26_125526) do
     t.string "type"
     t.boolean "has_mermaid_diagrams", default: false, null: false
     t.boolean "featured", default: false
+    t.uuid "blog_id"
     t.index ["author_id"], name: "index_posts_on_author_id_pages_only", where: "((type)::text = 'Page'::text)"
     t.index ["author_id"], name: "index_posts_on_author_uuid"
-    t.index ["slug", "author_id"], name: "index_posts_on_slug_and_author_uuid", unique: true
+    t.index ["blog_id"], name: "index_posts_on_blog_id"
+    t.index ["slug", "blog_id", "author_id"], name: "index_posts_on_slug_blog_id_author_id", unique: true
     t.index ["type"], name: "index_posts_on_type"
   end
 
@@ -152,6 +174,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_26_125526) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "blogs", "users"
+  add_foreign_key "posts", "blogs"
   add_foreign_key "posts", "users", column: "author_id"
   add_foreign_key "taggings", "tags"
   add_foreign_key "user_tokens", "users"

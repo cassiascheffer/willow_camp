@@ -1,12 +1,10 @@
-class User < ApplicationRecord
-  # Devise modules
-  devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable
-
+# ABOUTME: Blog model representing individual blogs in the multi-tenant system
+# ABOUTME: Each blog belongs to a user and contains posts, pages, and configuration
+class Blog < ApplicationRecord
   # Associations
-  has_many :blogs, dependent: :destroy
-  has_many :posts, foreign_key: "author_id", dependent: :destroy, inverse_of: :author
-  has_many :pages, foreign_key: "author_id", dependent: :destroy, inverse_of: :author
-  has_many :tokens, class_name: "UserToken", dependent: :destroy
+  belongs_to :user
+  has_many :posts, dependent: :destroy
+  has_many :pages, dependent: :destroy
 
   # Normalizations
   normalizes :subdomain, with: ->(s) { s.strip.downcase }
@@ -14,6 +12,7 @@ class User < ApplicationRecord
 
   # Callbacks
   before_save :set_post_footer_html
+  after_create_commit :ensure_about_page
 
   # Validations
   validates :subdomain,
@@ -22,9 +21,8 @@ class User < ApplicationRecord
     length: {minimum: 3, maximum: 63},
     exclusion: {in: ::ReservedWords::RESERVED_WORDS},
     allow_blank: true
-  validates :name, presence: true, length: {maximum: 255}, allow_blank: true
-  validates :blog_title, length: {maximum: 255}, allow_blank: true
-  validates :site_meta_description, length: {maximum: 255}, allow_blank: true
+  validates :title, length: {maximum: 255}, allow_blank: true
+  validates :meta_description, length: {maximum: 255}, allow_blank: true
   validates :post_footer_markdown, length: {maximum: 10000}, allow_blank: true
   validates :favicon_emoji,
     presence: true,
@@ -55,13 +53,9 @@ class User < ApplicationRecord
     end
   end
 
-  after_create_commit do
-    pages.create!(title: "About", slug: "about")
-  end
-
   # Tag helper methods
   def all_tags
-    # Get all unique tags used on this user's posts
+    # Get all unique tags used on this blog's posts
     ActsAsTaggableOn::Tag.joins(:taggings)
       .where(taggings: {taggable_type: "Post", taggable_id: posts.pluck(:id)})
       .distinct
@@ -135,6 +129,10 @@ class User < ApplicationRecord
     self.post_footer_html = if post_footer_markdown.present?
       PostMarkdown.new(post_footer_markdown).to_html
     end
+  end
+
+  def ensure_about_page
+    pages.create!(title: "About", slug: "about", author: user)
   end
 
   def custom_domain_format

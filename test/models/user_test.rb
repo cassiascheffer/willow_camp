@@ -97,6 +97,55 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  # Blog Association Tests
+  test "should have many blogs" do
+    assert_respond_to @user, :blogs
+  end
+
+  test "should create and associate blogs" do
+    blog = @user.blogs.create!(
+      subdomain: "myblog",
+      title: "My Blog",
+      favicon_emoji: "🚀"
+    )
+    assert_includes @user.blogs, blog
+    assert_equal @user, blog.user
+  end
+
+  test "should destroy associated blogs when user is destroyed" do
+    user = User.create!(
+      name: "Test User",
+      email: "test_blogs@example.com",
+      password: "password123",
+      password_confirmation: "password123"
+    )
+    user.blogs.create!(
+      subdomain: "testblogdestroy",
+      favicon_emoji: "🎯"
+    )
+
+    assert_difference "Blog.count", -1 do
+      user.destroy
+    end
+  end
+
+  test "can have multiple blogs" do
+    blog1 = @user.blogs.create!(
+      subdomain: "blog1",
+      title: "First Blog",
+      favicon_emoji: "🚀"
+    )
+    blog2 = @user.blogs.create!(
+      subdomain: "blog2",
+      title: "Second Blog",
+      favicon_emoji: "🎯"
+    )
+
+    assert_equal 2, @user.blogs.count
+    assert_includes @user.blogs, blog1
+    assert_includes @user.blogs, blog2
+  end
+
   test "should destroy associated tokens when user is destroyed" do
     user = User.create!(
       name: "Test User",

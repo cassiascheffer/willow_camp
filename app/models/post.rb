@@ -2,12 +2,13 @@
 class Post < ApplicationRecord
   # Utilities
   extend FriendlyId
-  friendly_id :title, use: [:sequentially_slugged, :scoped, :history], scope: :author
+  friendly_id :title, use: [:sequentially_slugged, :scoped, :history], scope: :blog
   acts_as_taggable_on :tags
   acts_as_taggable_tenant :author_id
 
   # Associations
   belongs_to :author, class_name: "User"
+  belongs_to :blog, optional: true
   has_one_attached :social_share_image
 
   # Callbacks
@@ -34,14 +35,22 @@ class Post < ApplicationRecord
   # Class methods
   # Build a new Post from markdown content with frontmatter
   # @param markdown_content [String] Content of markdown file with frontmatter
-  # @param author [User] Author of the post
+  # @param author_or_blog [User, Blog] Author of the post or Blog it belongs to
+  # @param author [User] Optional author when first param is a Blog
   # @return [Post] A new Post instance with attributes set from frontmatter
-  def self.from_markdown(markdown_content, author)
-    return nil unless markdown_content.present? && author.present?
+  def self.from_markdown(markdown_content, author_or_blog, author = nil)
+    return nil unless markdown_content.present? && author_or_blog.present?
 
-    # Use the service to build the post
-    # The service will handle parsing the frontmatter and creating the post
-    service = BuildPostFromMd.new(markdown_content, author)
+    # Maintain backwards compatibility
+    if author_or_blog.is_a?(User)
+      # Old signature: from_markdown(content, author)
+      post = author_or_blog.posts.build
+    else
+      # New signature: from_markdown(content, blog, author)
+      author ||= author_or_blog.user
+      post = author_or_blog.posts.build(author: author)
+    end
+    service = UpdatePostFromMd.new(markdown_content, post)
     service.call
   end
 

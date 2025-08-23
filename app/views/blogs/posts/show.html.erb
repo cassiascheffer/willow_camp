@@ -40,7 +40,7 @@
       </div>
     <% end %>
     <%# Ensure that even if @post is a Page, we render blog/posts/_post %>
-    <% post_partial = "blog/posts/post" %>
+    <% post_partial = "blogs/posts/post" %>
     <%= render partial: post_partial, object: @post %>
   </article>
   <% if @post.tags.any? %>

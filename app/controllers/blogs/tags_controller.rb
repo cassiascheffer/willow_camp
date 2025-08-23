@@ -1,7 +1,8 @@
-class Blog::TagsController < Blog::BaseController
+class Blogs::TagsController < Blogs::BaseController
   before_action :set_tag, only: [:show]
 
   def index
+    # Use author.id as tenant for now, will migrate to blog tenant later
     @tags = ActsAsTaggableOn::Tag.for_tenant(@author.id)
       .joins(:taggings)
       .joins("INNER JOIN posts ON taggings.taggable_id = posts.id AND taggings.taggable_type = 'Post'")
@@ -20,6 +21,7 @@ class Blog::TagsController < Blog::BaseController
   private
 
   def set_tag
+    # Use author.id as tenant for now, will migrate to blog tenant later
     @tag = ActsAsTaggableOn::Tag.for_tenant(@author.id).friendly.find(params[:tag])
   rescue ActiveRecord::RecordNotFound
     redirect_to root_url

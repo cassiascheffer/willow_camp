@@ -1,4 +1,4 @@
-class Blog::SitemapController < Blog::BaseController
+class Blogs::SitemapController < Blogs::BaseController
   # Allow all browsers for sitemap access (for crawlers, search engines, etc.)
   allow_browser versions: {chrome: 1, firefox: 1, safari: 1, edge: 1, opera: 1, ie: false}
 

@@ -59,27 +59,27 @@ Rails.application.routes.draw do
 
   constraints(DomainConstraint.new) do
     # Tags
-    get "/tags", to: "blog/tags#index", as: :tags
-    get "/t/:tag", to: "blog/tags#show", as: :tag
+    get "/tags", to: "blogs/tags#index", as: :tags
+    get "/t/:tag", to: "blogs/tags#show", as: :tag
     # Posts
-    get "/", to: "blog/posts#index", as: :posts
+    get "/", to: "blogs/posts#index", as: :posts
 
     # Feed formats
-    get "/posts/rss", to: "blog/feed#show", defaults: {format: "rss"}, as: :posts_rss
-    get "/posts/atom", to: "blog/feed#show", defaults: {format: "atom"}, as: :posts_atom
-    get "/posts/json", to: "blog/feed#show", defaults: {format: "json"}, as: :posts_json
+    get "/posts/rss", to: "blogs/feed#show", defaults: {format: "rss"}, as: :posts_rss
+    get "/posts/atom", to: "blogs/feed#show", defaults: {format: "atom"}, as: :posts_atom
+    get "/posts/json", to: "blogs/feed#show", defaults: {format: "json"}, as: :posts_json
 
     # Feed subscription page
-    get "/subscribe", to: "blog/feed#subscribe", as: :subscribe
+    get "/subscribe", to: "blogs/feed#subscribe", as: :subscribe
 
     # Sitemap
-    get "/sitemap.:format", to: "blog/sitemap#show", as: :sitemap
+    get "/sitemap.:format", to: "blogs/sitemap#show", as: :sitemap
 
     # Robots.txt
-    get "/robots.:format", to: "blog/robots#show", as: :robots
+    get "/robots.:format", to: "blogs/robots#show", as: :robots
 
     # This catch-all route must come last to avoid matching other specific routes
-    get "/:slug", to: "blog/posts#show", as: :post
+    get "/:slug", to: "blogs/posts#show", as: :post
   end
 
   namespace :api do

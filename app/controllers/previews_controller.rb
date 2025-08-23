@@ -7,7 +7,7 @@ class PreviewsController < ApplicationController
 
   def show
     @author = @post.author
-    render "blog/posts/show"
+    render "blogs/posts/show"
   end
 
   private
