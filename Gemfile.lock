@@ -383,7 +383,7 @@ GEM
       rubocop (>= 1.75.0, < 2.0)
       rubocop-ast (>= 1.38.0, < 2.0)
     ruby-progressbar (1.13.0)
-    scout_apm (5.7.0)
+    scout_apm (5.7.1)
       parser
     securerandom (0.4.1)
     semantic_logger (4.17.0)
@@ -523,7 +523,7 @@ DEPENDENCIES
   rails-controller-testing
   rails_best_practices
   rails_semantic_logger
-  scout_apm (~> 5.7.0)
+  scout_apm (~> 5.7.1)
   solid_cable
   solid_cache
   solid_queue

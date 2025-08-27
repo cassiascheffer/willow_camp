@@ -56,7 +56,7 @@ gem "heroicons", "~> 2.2.0"
 
 # APM and Logs
 gem "honeybadger", "~> 6.0.5"  # For error monitoring
-gem "scout_apm", "~> 5.7.0"    # For performance monitoring
+gem "scout_apm", "~> 5.7.1"    # For performance monitoring
 
 # Rate limiting and security
 gem "rack-attack"
