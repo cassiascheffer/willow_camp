@@ -86,11 +86,13 @@ module Blogs
     end
 
     test "should include pages in sitemap" do
-      # Create a page for user_one
+      # Create a page for user_one's blog
+      blog = @user_one.blogs.where(primary: true).first || @user_one.blogs.create!(subdomain: @user_one.subdomain, title: @user_one.blog_title, primary: true)
       page = Page.create!(
         author: @user_one,
+        blog: blog,
         title: "About Page",
-        slug: "about",
+        slug: "about-page",
         body_markdown: "This is an about page",
         published: true,
         published_at: Time.current
@@ -104,9 +106,11 @@ module Blogs
     end
 
     test "should not include unpublished pages in sitemap" do
-      # Create an unpublished page
+      # Create an unpublished page for user_one's blog
+      blog = @user_one.blogs.where(primary: true).first || @user_one.blogs.create!(subdomain: @user_one.subdomain, title: @user_one.blog_title, primary: true)
       unpublished_page = Page.create!(
         author: @user_one,
+        blog: blog,
         title: "Draft Page",
         slug: "draft",
         body_markdown: "This is a draft",
@@ -227,10 +231,14 @@ module Blogs
       # First check how many posts already exist
       @user_one.posts.published.not_page.count
 
+      # Get or create the blog for user_one
+      blog = @user_one.blogs.where(primary: true).first || @user_one.blogs.create!(subdomain: @user_one.subdomain, title: @user_one.blog_title, primary: true)
+
       # Create enough posts to exceed the limit
       505.times do |i|
         Post.create!(
           author: @user_one,
+          blog: blog,
           title: "Post #{i}",
           slug: "post-#{i}",
           body_markdown: "Content for post #{i}",

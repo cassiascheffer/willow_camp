@@ -2,7 +2,7 @@ class Blogs::PostsController < Blogs::BaseController
   before_action :set_post, only: %i[show]
 
   def index
-    @featured_posts = @author.posts
+    @featured_posts = @blog.posts
       .published
       .not_page
       .where(featured: true)
@@ -10,7 +10,7 @@ class Blogs::PostsController < Blogs::BaseController
       .limit(3)
 
     @pagy, @posts = pagy(
-      @author.posts
+      @blog.posts
         .published
         .not_page
         .order(published_at: :desc)
@@ -29,6 +29,6 @@ class Blogs::PostsController < Blogs::BaseController
   private
 
   def set_post
-    @post = @author.posts.published.find_by(slug: params[:slug])
+    @post = @blog.posts.published.find_by(slug: params[:slug])
   end
 end

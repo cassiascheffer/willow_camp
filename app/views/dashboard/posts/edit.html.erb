@@ -1,6 +1,6 @@
 <% content_for :title, "Editing post" %>
 <%= render "post_form",
            post: @post,
-           form_url: dashboard_post_path(@post.id),
+           form_url: dashboard_post_path(blog_subdomain: current_blog.subdomain, id: @post.id),
            form_id: "edit_post_form",
            submit_text: "Update Post" %>

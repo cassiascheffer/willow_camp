@@ -1,4 +1,4 @@
-class Dashboard::FeaturedPostsController < Dashboard::BaseController
+class Dashboard::FeaturedPostsController < Dashboard::BlogBaseController
   before_action :set_post
 
   def update
@@ -18,7 +18,7 @@ class Dashboard::FeaturedPostsController < Dashboard::BaseController
   private
 
   def set_post
-    @post = current_user.posts.find(params[:id])
+    @post = current_blog.posts.find(params[:id])
   end
 
   def featured_params

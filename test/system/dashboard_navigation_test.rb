@@ -43,8 +43,8 @@ class DashboardNavigationTest < ApplicationSystemTestCase
     # Click on the post row (table row has onclick handler)
     find("tr", text: @post.title).click
 
-    # Should see the edit form (path uses ID not slug)
-    assert_current_path edit_dashboard_post_path(@post.id)
+    # Should see the edit form (path uses blog subdomain and ID)
+    assert_current_path edit_dashboard_post_path(blog_subdomain: @post.blog.subdomain, id: @post.id)
     assert_selector "form"
     assert_selector "textarea[name='post[body_markdown]']"
     assert_field "post[body_markdown]", with: @post.body_markdown
@@ -58,7 +58,7 @@ class DashboardNavigationTest < ApplicationSystemTestCase
     click_link "Tags"
 
     # Should see the tags page
-    assert_current_path dashboard_tags_path
+    assert_current_path blog_dashboard_tags_path(@user.blogs.first.subdomain)
     assert_text "Tags"
   end
 
@@ -70,7 +70,7 @@ class DashboardNavigationTest < ApplicationSystemTestCase
     click_link "Settings"
 
     # Should see the settings page
-    assert_current_path dashboard_settings_path
+    assert_current_path blog_dashboard_settings_path(@user.blogs.first.subdomain)
     assert_text "Settings"
     assert_text "Account Settings"
   end

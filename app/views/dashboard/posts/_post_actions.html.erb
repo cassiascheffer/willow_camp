@@ -1,4 +1,4 @@
-<div class="mt-4" data-controller="post-delete post-actions" data-post-delete-url-value="<%= dashboard_post_path(post.id) %>">
+<div class="mt-4" data-controller="post-delete post-actions" data-post-delete-url-value="<%= dashboard_post_path(blog_subdomain: current_blog.subdomain, id: post.id) %>">
   <!-- Back to Dashboard - Left on large screens, bottom on mobile -->
   <div class="lg:flex lg:justify-between">
     <div class="order-2 lg:order-1 mt-4 lg:mt-0">
@@ -17,7 +17,7 @@
           <li>
             <% if post.published? %>
               <%= link_to "View post",
-                          post_url(post.slug, subdomain: post.author.subdomain),
+                          post_url(post.slug, subdomain: current_blog.subdomain),
                           target: "_blank",
                           class: "" %>
             <% else %>
@@ -30,7 +30,7 @@
           <% if post.published? %>
             <li>
               <%= button_to "Unpublish",
-                            dashboard_post_path(post),
+                            dashboard_post_path(blog_subdomain: current_blog.subdomain, id: post),
                             method: :patch,
                             params: { post: { published: false } },
                             form: { 

@@ -2,8 +2,16 @@ module Dashboard
   class TagsController < BaseController
     def index
       @user = current_user
-      # For now, just get all tags without pagination
-      @tags = @user.all_tags_with_published_and_draft_counts
+
+      if params[:blog_subdomain].present?
+        @blog = @user.blogs.find_by(subdomain: params[:blog_subdomain])
+        redirect_to dashboard_tags_path, alert: "Blog not found" unless @blog
+        # Get tags for this specific blog
+        @tags = @blog.all_tags_with_published_and_draft_counts
+      else
+        # For now, just get all tags without pagination
+        @tags = @user.all_tags_with_published_and_draft_counts
+      end
     end
 
     def update

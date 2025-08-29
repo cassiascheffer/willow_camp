@@ -58,6 +58,16 @@ custom_domain_no_title:
   created_at: <%= 1.week.ago %>
   updated_at: <%= 1.day.ago %>
 
+test_user_no_blog:
+  id: "77777777-7777-7777-7777-777777777777"
+  email: testuser@example.com
+  encrypted_password: "$2a$12$dapdHZiOTxAL8OT9yNI6e.hhTjRhWgXq7kx737t/xf8tBfQbMD2bi"
+  name: "Test User No Blog"
+  theme: "light"
+  slug: "test-user-no-blog"
+  created_at: <%= 1.week.ago %>
+  updated_at: <%= 1.day.ago %>
+
 enumerator_dev:
   id: "66666666-6666-6666-6666-666666666666"
   email: enumerator@example.com

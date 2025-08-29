@@ -12,9 +12,9 @@ class DomainConstraint
     # Allow if it's a subdomain of willow.camp
     return true if host.ends_with?(".willow.camp") && request.subdomain.present?
 
-    # Allow if it's a custom domain (not willow.camp and has a user)
+    # Allow if it's a custom domain (not willow.camp and has a blog)
     if !host.ends_with?(".willow.camp")
-      return User.by_domain(host).exists?
+      return Blog.by_domain(host).exists?
     end
 
     false
@@ -41,18 +41,26 @@ Rails.application.routes.draw do
     }
 
   get "dashboard" => "dashboard#show", :as => :dashboard
+  get "dashboard/:blog_subdomain" => "dashboard#show", :as => :blog_dashboard
+  get "dashboard/:blog_subdomain/tags" => "dashboard/tags#index", :as => :blog_dashboard_tags
+  get "dashboard/:blog_subdomain/settings" => "dashboard/settings#show", :as => :blog_dashboard_settings
   namespace :dashboard do
     namespace :settings do
       resources :about_pages, param: :slug, path: :pages
     end
     resource :settings, only: %i[show]
-    resources :posts, only: %i[edit update destroy]
-    resources :featured_posts, only: %i[update]
-    resources :untitled_posts, only: %i[create]
     resources :users, only: %i[edit update]
     resources :tokens, only: %i[create destroy]
     resource :subdomain, only: %i[update]
     resources :tags, only: %i[index update destroy]
+    resources :blogs, only: %i[create]
+
+    # Blog-scoped resources
+    scope "blogs/:blog_subdomain" do
+      resources :posts, only: %i[edit update destroy]
+      resources :featured_posts, only: %i[update]
+      resources :untitled_posts, only: %i[create]
+    end
   end
 
   resources :previews, only: %i[show]

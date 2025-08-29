@@ -3,24 +3,25 @@ require "test_helper"
 class Dashboard::TagsControllerTest < ActionDispatch::IntegrationTest
   setup do
     @user = users(:one)
+    @blog = blogs(:one)
     sign_in @user
   end
 
   test "should get index" do
-    get dashboard_tags_url
+    get blog_dashboard_tags_url(blog_subdomain: @blog.subdomain)
     assert_response :success
   end
 
   test "index shows all tags with counts including drafts" do
-    published_post = @user.posts.create!(title: "Published", body_markdown: "Content", published: true)
+    published_post = @blog.posts.create!(author: @user, title: "Published", body_markdown: "Content", published: true)
     published_post.tag_list = "ruby, rails"
     published_post.save!
 
-    draft_post = @user.posts.create!(title: "Draft", body_markdown: "Content", published: false)
+    draft_post = @blog.posts.create!(author: @user, title: "Draft", body_markdown: "Content", published: false)
     draft_post.tag_list = "ruby, javascript"
     draft_post.save!
 
-    get dashboard_tags_url
+    get blog_dashboard_tags_url(blog_subdomain: @blog.subdomain)
 
     assert_response :success
     assert_select "button", text: "ruby"
@@ -32,7 +33,7 @@ class Dashboard::TagsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "index shows empty state when no tags exist" do
-    get dashboard_tags_url
+    get blog_dashboard_tags_url(blog_subdomain: @blog.subdomain)
 
     assert_response :success
     assert_select ".empty-state"
@@ -40,9 +41,9 @@ class Dashboard::TagsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "index assigns all_tags_with_counts to @tags" do
-    @user.posts.create!(title: "Test Post", body_markdown: "Content", published: false, tag_list: "test-tag")
+    @blog.posts.create!(author: @user, title: "Test Post", body_markdown: "Content", published: false, tag_list: "test-tag")
 
-    get dashboard_tags_url
+    get blog_dashboard_tags_url(blog_subdomain: @blog.subdomain)
 
     assert_response :success
     # Verify the view shows the tag from the draft post
@@ -51,9 +52,9 @@ class Dashboard::TagsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "index table header shows separate columns for Published, Drafts, and Total" do
-    @user.posts.create!(title: "Test Post", body_markdown: "Content", published: false, tag_list: "test-tag")
+    @blog.posts.create!(author: @user, title: "Test Post", body_markdown: "Content", published: false, tag_list: "test-tag")
 
-    get dashboard_tags_url
+    get blog_dashboard_tags_url(blog_subdomain: @blog.subdomain)
 
     assert_response :success
     assert_select "th", text: "Published"
@@ -62,7 +63,7 @@ class Dashboard::TagsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update tag name successfully" do
-    post = @user.posts.create!(title: "Test Post", body_markdown: "Content", published: true)
+    post = @blog.posts.create!(author: @user, title: "Test Post", body_markdown: "Content", published: true)
     post.tag_list = "oldtag"
     post.save!
 
@@ -82,7 +83,7 @@ class Dashboard::TagsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should return error response for invalid tag update" do
-    post = @user.posts.create!(title: "Test Post", body_markdown: "Content", published: true)
+    post = @blog.posts.create!(author: @user, title: "Test Post", body_markdown: "Content", published: true)
     post.tag_list = "validtag"
     post.save!
 
@@ -98,11 +99,11 @@ class Dashboard::TagsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update tag used by multiple posts" do
-    post1 = @user.posts.create!(title: "Post 1", body_markdown: "Content", published: true)
+    post1 = @blog.posts.create!(author: @user, title: "Post 1", body_markdown: "Content", published: true)
     post1.tag_list = "shared, unique1"
     post1.save!
 
-    post2 = @user.posts.create!(title: "Post 2", body_markdown: "Content", published: false)
+    post2 = @blog.posts.create!(author: @user, title: "Post 2", body_markdown: "Content", published: false)
     post2.tag_list = "shared, unique2"
     post2.save!
 
@@ -124,7 +125,7 @@ class Dashboard::TagsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should require authentication for update" do
-    post = @user.posts.create!(title: "Test Post", body_markdown: "Content", published: true)
+    post = @blog.posts.create!(author: @user, title: "Test Post", body_markdown: "Content", published: true)
     post.tag_list = "testtag"
     post.save!
 
@@ -139,7 +140,8 @@ class Dashboard::TagsControllerTest < ActionDispatch::IntegrationTest
 
   test "should only allow updating tags belonging to current user's posts" do
     other_user = users(:two)
-    other_post = other_user.posts.create!(title: "Other Post", body_markdown: "Content", published: true)
+    other_blog = blogs(:two)
+    other_post = other_blog.posts.create!(author: other_user, title: "Other Post", body_markdown: "Content", published: true)
     other_post.tag_list = "othertag"
     other_post.save!
 
@@ -151,7 +153,7 @@ class Dashboard::TagsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should delete tag successfully" do
-    post = @user.posts.create!(title: "Test Post", body_markdown: "Content", published: true)
+    post = @blog.posts.create!(author: @user, title: "Test Post", body_markdown: "Content", published: true)
     post.tag_list = "deleteme"
     post.save!
 
@@ -166,7 +168,8 @@ class Dashboard::TagsControllerTest < ActionDispatch::IntegrationTest
 
   test "should only allow deleting tags belonging to current user's posts" do
     other_user = users(:two)
-    other_post = other_user.posts.create!(title: "Other Post", body_markdown: "Content", published: true)
+    other_blog = blogs(:two)
+    other_post = other_blog.posts.create!(author: other_user, title: "Other Post", body_markdown: "Content", published: true)
     other_post.tag_list = "othertag"
     other_post.save!
 
@@ -178,7 +181,7 @@ class Dashboard::TagsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should require authentication for delete" do
-    post = @user.posts.create!(title: "Test Post", body_markdown: "Content", published: true)
+    post = @blog.posts.create!(author: @user, title: "Test Post", body_markdown: "Content", published: true)
     post.tag_list = "testtag"
     post.save!
 

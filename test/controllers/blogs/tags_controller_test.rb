@@ -93,41 +93,6 @@ class Blogs::TagsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  # Backwards Compatibility Tests
-  test "should use user tenant consistently" do
-    # Create a user without any blogs
-    legacy_user = User.create!(
-      email: "legacy@example.com",
-      password: "password123",
-      password_confirmation: "password123",
-      subdomain: "legacy",
-      name: "Legacy User",
-      favicon_emoji: "📝"
-    )
-
-    # Create a post directly on user (no blog)
-    legacy_post = legacy_user.posts.create!(
-      title: "Legacy Post",
-      body_markdown: "Legacy content",
-      tag_list: ["legacy", "backwards"],
-      published: true
-    )
-
-    assert_nil legacy_post.blog_id
-    assert legacy_user.blogs.empty?
-
-    # Verify tags were created with user tenant
-    legacy_post.reload
-    assert legacy_post.tags.any?, "Post should have tags"
-
-    tag = legacy_post.tags.first
-    tagging = tag.taggings.where(taggable: legacy_post).first
-    assert_equal legacy_user.id, tagging.tenant
-
-    # Tags controller should use user.id as tenant
-    get tags_url, headers: {host: "legacy.willow.camp"}
-    assert_response :success
-  end
 
   test "should use user tenant even when user has blogs" do
     # Verify that we consistently use user.id as tenant (even when blogs exist)
@@ -143,77 +108,5 @@ class Blogs::TagsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  test "should handle mixed post scenarios with consistent user tenant" do
-    # User with both legacy posts (no blog_id) and modern posts (with blog_id)
-    user = users(:one)
-    blog = user.blogs.first || user.blogs.create!(
-      subdomain: user.subdomain,
-      favicon_emoji: "🚀"
-    )
 
-    # Create legacy post (no blog)
-    legacy_post = user.posts.create!(
-      title: "Legacy Mixed Post",
-      tag_list: ["legacy", "mixed"],
-      published: true
-    )
-
-    # Create modern post (with blog)
-    modern_post = blog.posts.create!(
-      title: "Modern Mixed Post",
-      tag_list: ["modern", "mixed"],
-      author: user,
-      published: true
-    )
-
-    assert_nil legacy_post.blog_id
-    assert_equal blog.id, modern_post.blog_id
-
-    # Both posts should use user.id as tenant, so both should be visible
-    legacy_tagging = legacy_post.tags.first.taggings.where(taggable: legacy_post).first
-    modern_tagging = modern_post.tags.first.taggings.where(taggable: modern_post).first
-    assert_equal user.id, legacy_tagging.tenant
-    assert_equal user.id, modern_tagging.tenant
-
-    get tags_url, headers: {host: "#{user.subdomain}.willow.camp"}
-    assert_response :success
-  end
-
-  test "should maintain consistent user tenant across scenarios" do
-    # Verify tenant_id logic in set_tag method uses user.id consistently
-    user = users(:one)
-
-    # Test case where user has blog - should still use user.id as tenant
-    blog = user.blogs.first
-    assert_not_nil blog, "User should have a blog from setup"
-
-    tag_with_blog = @post.tags.first
-    get tag_url(tag_with_blog.slug), headers: {host: "#{user.subdomain}.willow.camp"}
-    assert_response :success
-
-    # Create user without blog - should also use user.id
-    legacy_user = User.create!(
-      email: "legacy2@example.com",
-      password: "password123",
-      password_confirmation: "password123",
-      subdomain: "legacy2",
-      name: "Legacy User 2",
-      favicon_emoji: "📚"
-    )
-
-    legacy_post = legacy_user.posts.create!(
-      title: "Legacy Tagged",
-      tag_list: ["legacy-tenant"],
-      published: true
-    )
-
-    # Verify tenant is user.id
-    tag = legacy_post.tags.first
-    tagging = tag.taggings.where(taggable: legacy_post).first
-    assert_equal legacy_user.id, tagging.tenant
-
-    # Test the tags index
-    get tags_url, headers: {host: "legacy2.willow.camp"}
-    assert_response :success
-  end
 end

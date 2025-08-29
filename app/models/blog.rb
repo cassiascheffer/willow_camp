@@ -35,6 +35,7 @@ class Blog < ApplicationRecord
     uniqueness: true,
     allow_blank: true
   validate :custom_domain_format
+  validates :primary, inclusion: {in: [true, false]}
 
   # Scopes
   scope :by_domain, ->(domain) do

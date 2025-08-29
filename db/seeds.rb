@@ -10,21 +10,30 @@
 
 # rubocop:disable Rails/Output
 User.destroy_all
+Blog.destroy_all
 
 users = [
-  {email: "winter@acorn.ca", password: "winter", subdomain: "winter", name: "Winter Solstice"},
-  {email: "willow@acorn.ca", password: "willow", subdomain: "willow", name: "Will-o-the-Whisp"}
+  {email: "winter@acorn.ca", password: "winter", subdomain: "winter", name: "Winter Solstice", blog_title: "Winter's Tales"},
+  {email: "willow@acorn.ca", password: "willow", subdomain: "willow", name: "Will-o-the-Whisp", blog_title: "Willow's Whispers"}
 ]
 
-users.each do |user|
-  user = User.find_or_create_by!(email: user[:email]) do |u|
-    u.password = user[:password]
-    u.subdomain = user[:subdomain]
+users.each do |user_data|
+  user = User.find_or_create_by!(email: user_data[:email]) do |u|
+    u.password = user_data[:password]
+    u.name = user_data[:name]
   end
-  puts "Created user: #{user.email} with subdomain: #{user.subdomain}"
+  puts "Created user: #{user.email}"
+
+  # Create primary blog for the user
+  blog = user.blogs.find_or_create_by!(subdomain: user_data[:subdomain]) do |b|
+    b.title = user_data[:blog_title]
+    b.primary = true
+    b.favicon_emoji = "📝"
+  end
+  puts "Created blog: #{blog.title} with subdomain: #{blog.subdomain}"
 
   100.times do |i|
-    user.posts.create! do |post|
+    blog.posts.create! do |post|
       post.title = Faker::Books::Lovecraft.tome
       post.body_markdown = Faker::Markdown.sandwich(sentences: 6, repeat: 3)
       post.published = Faker::Boolean.boolean
@@ -32,11 +41,12 @@ users.each do |user|
       post.tag_list = ["dogs", "cats", "fun!"]
       post.featured = i < 3 # First 3 posts are featured
       post.meta_description = Faker::Lorem.sentence(word_count: 12, supplemental: true, random_words_to_add: 8) if Faker::Boolean.boolean(true_ratio: 0.7)
+      post.author = user
     end
     print "."
   end
   puts ""
-  puts "Created 100 posts for user: #{user.email} (3 featured)"
+  puts "Created 100 posts for blog: #{blog.title} (3 featured)"
 end
 
 # rubocop:enable Rails/Output

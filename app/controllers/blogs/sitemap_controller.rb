@@ -4,12 +4,12 @@ class Blogs::SitemapController < Blogs::BaseController
 
   def show
     # Limit posts to most recent 500 to prevent performance issues
-    @posts = @author.posts.published.not_page.order(published_at: :desc).limit(500)
-    @pages = @author.pages.published.order(published_at: :desc)
+    @posts = @blog.posts.published.not_page.order(published_at: :desc).limit(500)
+    @pages = @blog.pages.published.order(published_at: :desc)
 
     # Get tags with their last modified dates (top 50 most used)
     # First get the top tags
-    top_tags = @author.posts.published.not_page.tag_counts.limit(50)
+    top_tags = @blog.posts.published.not_page.tag_counts.limit(50)
 
     # Then get last modified dates for all tags in one query
     tag_names = top_tags.map(&:name)
@@ -17,7 +17,7 @@ class Blogs::SitemapController < Blogs::BaseController
 
     if tag_names.any?
       # Get all posts with these tags and their update times
-      tag_updates = @author.posts.published.not_page
+      tag_updates = @blog.posts.published.not_page
         .joins(:taggings)
         .joins("INNER JOIN tags ON tags.id = taggings.tag_id")
         .where(tags: {name: tag_names})

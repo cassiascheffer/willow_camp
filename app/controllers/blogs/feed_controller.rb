@@ -4,7 +4,7 @@ module Blogs
     allow_browser versions: {chrome: 1, firefox: 1, safari: 1, edge: 1, opera: 1, ie: false}
 
     def show
-      @posts = @author.posts.published
+      @posts = @blog.posts.published
         .order(published_at: :desc, created_at: :desc)
         .limit(20)
 

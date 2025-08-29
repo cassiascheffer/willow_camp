@@ -26,9 +26,15 @@
           <%= heroicon "bars-3", options: { class: "h-6 w-6" } %>
         </summary>
         <div class="pb-4 space-y-2">
-          <%= link_to "Posts", dashboard_path, class: "block link link-hover font-medium py-2 #{current_page?(dashboard_path) ? 'text-primary' : ''}" %>
-          <%= link_to "Tags", dashboard_tags_path, class: "block link link-hover font-medium py-2 #{current_page?(dashboard_tags_path) ? 'text-primary' : ''}" %>
-          <%= link_to "Settings", dashboard_settings_path, class: "block link link-hover font-medium py-2 #{current_page?(dashboard_settings_path) ? 'text-primary' : ''}" %>
+          <% if @blog %>
+            <%= link_to "Posts", blog_dashboard_path(@blog.subdomain), class: "block link link-hover font-medium py-2 #{current_page?(blog_dashboard_path(@blog.subdomain)) ? 'text-primary' : ''}" %>
+            <%= link_to "Tags", blog_dashboard_tags_path(@blog.subdomain), class: "block link link-hover font-medium py-2 #{current_page?(blog_dashboard_tags_path(@blog.subdomain)) ? 'text-primary' : ''}" %>
+            <%= link_to "Settings", blog_dashboard_settings_path(@blog.subdomain), class: "block link link-hover font-medium py-2 #{current_page?(blog_dashboard_settings_path(@blog.subdomain)) ? 'text-primary' : ''}" %>
+          <% else %>
+            <%= link_to "Posts", dashboard_path, class: "block link link-hover font-medium py-2 #{current_page?(dashboard_path) ? 'text-primary' : ''}" %>
+            <%= link_to "Tags", dashboard_tags_path, class: "block link link-hover font-medium py-2 #{current_page?(dashboard_tags_path) ? 'text-primary' : ''}" %>
+            <%= link_to "Settings", dashboard_settings_path, class: "block link link-hover font-medium py-2 #{current_page?(dashboard_settings_path) ? 'text-primary' : ''}" %>
+          <% end %>
           <hr class="my-2">
           <%= link_to 'Logout', destroy_user_session_path, data: { turbo_method: :delete }, class: 'block link link-hover font-medium py-2', role: 'button', tabindex: '0' %>
         </div>
@@ -43,15 +49,63 @@
     </nav>
     <main class="max-w-6xl mx-auto p-4" aria-label="Dashboard Content">
       <header aria-label="Dashboard Header" class="flex justify-between items-center mb-6">
-        <div role="tablist" class="tabs tabs-boxed hidden lg:flex">
-          <%= link_to "Posts", dashboard_path, class: "tab #{current_page?(dashboard_path) ? 'tab-active' : ''}" %>
-          <%= link_to "Tags", dashboard_tags_path, class: "tab #{current_page?(dashboard_tags_path) ? 'tab-active' : ''}" %>
-          <%= link_to "Settings", dashboard_settings_path, class: "tab #{current_page?(dashboard_settings_path) ? 'tab-active' : ''}" %>
+        <div class="flex items-center gap-4">
+          <div role="tablist" class="tabs tabs-boxed hidden lg:flex">
+            <% if @blog %>
+              <%= link_to "Posts", blog_dashboard_path(@blog.subdomain), class: "tab #{current_page?(blog_dashboard_path(@blog.subdomain)) ? 'tab-active' : ''}" %>
+              <%= link_to "Tags", blog_dashboard_tags_path(@blog.subdomain), class: "tab #{current_page?(blog_dashboard_tags_path(@blog.subdomain)) ? 'tab-active' : ''}" %>
+              <%= link_to "Settings", blog_dashboard_settings_path(@blog.subdomain), class: "tab #{current_page?(blog_dashboard_settings_path(@blog.subdomain)) ? 'tab-active' : ''}" %>
+            <% else %>
+              <%= link_to "Posts", dashboard_path, class: "tab #{current_page?(dashboard_path) ? 'tab-active' : ''}" %>
+              <%= link_to "Tags", dashboard_tags_path, class: "tab #{current_page?(dashboard_tags_path) ? 'tab-active' : ''}" %>
+              <%= link_to "Settings", dashboard_settings_path, class: "tab #{current_page?(dashboard_settings_path) ? 'tab-active' : ''}" %>
+            <% end %>
+          </div>
+          <!-- Blog Switcher Dropdown -->
+          <div class="dropdown dropdown-end">
+            <div tabindex="0" role="button" class="btn btn-sm btn-outline" aria-label="Switch blog">
+              <span class="hidden sm:inline"><%= @blog&.title || @blog&.subdomain || "Select Blog" %></span>
+              <span class="sm:hidden">Blog</span>
+              <%= heroicon "chevron-down", variant: :mini, options: { class: "h-4 w-4" } %>
+            </div>
+            <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-64 p-2 shadow-lg border">
+              <li class="menu-title">
+                <span>Your Blogs</span>
+              </li>
+              <% current_user.blogs.order(:title).each do |blog| %>
+                <li>
+                  <% if blog == @blog %>
+                    <span class="flex items-center justify-between text-primary">
+                      <div>
+                        <div class="font-medium"><%= blog.title || blog.subdomain %></div>
+                        <div class="text-xs opacity-70"><%= blog.subdomain %>.willow.camp</div>
+                      </div>
+                      <%= heroicon "check", variant: :mini, options: { class: "h-4 w-4" } %>
+                    </span>
+                  <% else %>
+                    <a href="<%= blog_dashboard_path(blog.subdomain) %>" class="flex items-center justify-between">
+                      <div>
+                        <div class="font-medium"><%= blog.title || blog.subdomain %></div>
+                        <div class="text-xs opacity-70"><%= blog.subdomain %>.willow.camp</div>
+                      </div>
+                    </a>
+                  <% end %>
+                </li>
+              <% end %>
+              <div class="divider my-2"></div>
+              <li>
+                <%= link_to dashboard_path(new_blog: true), class: "text-primary flex items-center gap-2" do %>
+                  <%= heroicon "plus", variant: :mini, options: { class: "h-4 w-4" } %>
+                  Start a new blog
+                <% end %>
+              </li>
+            </ul>
+          </div>
         </div>
         <div class="flex gap-2">
-          <% if @user&.subdomain.present? %>
-            <%= button_to "New Post", dashboard_untitled_posts_path, method: :post, class: "btn btn-sm btn-primary" %>
-            <a href="<%= posts_url(subdomain: @user.subdomain) %>" class="btn btn-sm btn-outline" target="_blank">View Site</a>
+          <% if @blog&.subdomain.present? %>
+            <%= button_to "New Post", dashboard_untitled_posts_path(blog_subdomain: @blog.subdomain), method: :post, class: "btn btn-sm btn-primary" %>
+            <a href="<%= posts_url(subdomain: @blog.subdomain) %>" class="btn btn-sm btn-outline" target="_blank">View Site</a>
           <% end %>
         </div>
       </header>

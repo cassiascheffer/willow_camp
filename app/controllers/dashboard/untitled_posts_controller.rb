@@ -1,10 +1,11 @@
-class Dashboard::UntitledPostsController < Dashboard::BaseController
+class Dashboard::UntitledPostsController < Dashboard::BlogBaseController
   def create
-    @post = current_user.posts.create!(
+    @post = current_blog.posts.create!(
       title: "Untitled",
-      published: false
+      published: false,
+      author: current_user
     )
 
-    redirect_to edit_dashboard_post_path(@post.id)
+    redirect_to edit_dashboard_post_path(blog_subdomain: current_blog.subdomain, id: @post.id)
   end
 end

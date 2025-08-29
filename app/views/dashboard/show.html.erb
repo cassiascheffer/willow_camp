@@ -1,18 +1,49 @@
 <div class="w-full">
-  <% if @posts.present? %>
+  <% if @new_blog %>
+    <section class="bg-base-200 rounded-lg p-12" aria-label="Create New Blog">
+      <div class="max-w-md mx-auto text-center">
+        <h2 class="text-2xl font-bold mb-6">Start a New Blog</h2>
+        <%= form_with model: [@user, @new_blog], url: dashboard_blogs_path, method: :post, local: true, class: "space-y-4", data: { controller: "domain-downcase", action: "submit->domain-downcase#submit" } do |form| %>
+          <%= form.hidden_field :primary, value: false %>
+          <div class="form-control">
+            <%= form.label :subdomain, "Choose a subdomain", class: "label" %>
+            <div class="join">
+              <%= form.text_field :subdomain,
+                    placeholder: "myblog",
+                    class: "input input-bordered join-item flex-1",
+                    required: true,
+                    pattern: "[a-z0-9]+",
+                    minlength: 3,
+                    maxlength: 63,
+                    autocapitalize: "off",
+                    data: { domain_downcase_target: "subdomain", action: "input->domain-downcase#downcaseInput" } %>
+              <span class="btn btn-disabled join-item">.willow.camp</span>
+            </div>
+            <div class="label pb-4">
+              <span class="label-text-alt text-sm">3-63 characters, letters and numbers only</span>
+            </div>
+          </div>
+          <div class="flex gap-2">
+            <%= link_to "Cancel", dashboard_path, class: "btn btn-outline flex-1" %>
+            <%= form.submit "Create Blog", class: "btn btn-primary flex-1" %>
+          </div>
+        <% end %>
+      </div>
+    </section>
+  <% elsif @posts.present? %>
     <%= render partial: 'dashboard/post_list_mobile' %>
     <%= render partial: 'dashboard/post_list_desktop' %>
   <% else %>
     <section class="empty-state text-center bg-base-200 rounded-lg p-12" aria-label="No Posts">
-      <% if @user.subdomain.blank? %>
+      <% if @user.blogs.empty? %>
         <div class="max-w-md mx-auto">
-          <%= form_with model: @user, url: dashboard_subdomain_path, method: :patch, local: true, class: "space-y-4", data: { controller: "domain-downcase", action: "submit->domain-downcase#submit" } do |form| %>
+          <%= form_with model: [@user, Blog.new], url: dashboard_blogs_path, method: :post, local: true, class: "space-y-4", data: { controller: "domain-downcase", action: "submit->domain-downcase#submit" } do |form| %>
+            <%= form.hidden_field :primary, value: true %>
             <div class="form-control">
               <%= form.label :subdomain, "Choose a subdomain to get started", class: "label" %>
               <div class="join">
                 <%= form.text_field :subdomain,
                       placeholder: "yourname",
-                      value: @user.subdomain,
                       class: "input input-bordered join-item flex-1",
                       required: true,
                       pattern: "[a-z0-9]+",
@@ -32,9 +63,11 @@
       <% else %>
         <p class="text-xl font-bold mb-2">No posts yet</p>
         <p class="text-base-content mb-8">Create your first blog post to get started</p>
-        <%= button_to "Create First Post", dashboard_untitled_posts_path, method: :post, class: "btn btn-primary" %>
+        <% if @blog %>
+          <%= button_to "Create First Post", dashboard_untitled_posts_path(blog_subdomain: @blog.subdomain), method: :post, class: "btn btn-primary" %>
+        <% end %>
       <% end %>
     </section>
   <% end %>
-  <%== pagy_nav(@pagy) if @pagy.pages > 1 %>
+  <%== pagy_nav(@pagy) if !@new_blog && (@pagy&.pages || 0) > 1 %>
 </div>

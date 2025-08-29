@@ -130,6 +130,8 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "can have multiple blogs" do
+    initial_count = @user.blogs.count
+
     blog1 = @user.blogs.create!(
       subdomain: "blog1",
       title: "First Blog",
@@ -141,7 +143,7 @@ class UserTest < ActiveSupport::TestCase
       favicon_emoji: "🎯"
     )
 
-    assert_equal 2, @user.blogs.count
+    assert_equal initial_count + 2, @user.blogs.count
     assert_includes @user.blogs, blog1
     assert_includes @user.blogs, blog2
   end
