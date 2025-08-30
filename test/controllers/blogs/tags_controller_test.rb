@@ -93,7 +93,6 @@ class Blogs::TagsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-
   test "should use user tenant even when user has blogs" do
     # Verify that we consistently use user.id as tenant (even when blogs exist)
     get tags_url, headers: {host: "#{@user.subdomain}.willow.camp"}
@@ -107,6 +106,4 @@ class Blogs::TagsControllerTest < ActionDispatch::IntegrationTest
     get tag_url(@tag.slug), headers: {host: "#{@user.subdomain}.willow.camp"}
     assert_response :success
   end
-
-
 end

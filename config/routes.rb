@@ -41,6 +41,7 @@ Rails.application.routes.draw do
     }
 
   get "dashboard" => "dashboard#show", :as => :dashboard
+  get "dashboard/security" => "dashboard/security#show", :as => :dashboard_security
   get "dashboard/:blog_subdomain" => "dashboard#show", :as => :blog_dashboard
   get "dashboard/:blog_subdomain/tags" => "dashboard/tags#index", :as => :blog_dashboard_tags
   get "dashboard/:blog_subdomain/settings" => "dashboard/settings#show", :as => :blog_dashboard_settings

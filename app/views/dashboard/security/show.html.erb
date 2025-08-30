@@ -1,0 +1,23 @@
+<main aria-label="Security Settings" class="container lg:w-3/4 mx-auto">
+  <section aria-label="Password" class="mb-8">
+    <h1 class="text-3xl font-bold mb-4">Password</h1>
+    <div class="card p-4">
+      <%= render "password_form", user: @user %>
+    </div>
+  </section>
+  
+  <section aria-label="API Tokens" class="space-y-6">
+    <h2 class="text-2xl font-semibold">API Tokens</h2>
+    <div class="mb-4">
+      <%= link_to "View API Documentation", documentation_url, class: "link link-primary", target: "_blank" %>
+    </div>
+    <div class="card p-4">
+      <h3 class="text-xl font-medium mb-2">Create New Token</h3>
+      <%= render "dashboard/settings/token_form", token: @token %>
+    </div>
+    <div class="card p-4">
+      <h3 class="text-xl font-medium mb-2">Your Tokens</h3>
+      <%= render "dashboard/settings/token_list", tokens: @tokens %>
+    </div>
+  </section>
+</main>

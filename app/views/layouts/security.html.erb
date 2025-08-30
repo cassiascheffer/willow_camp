@@ -26,57 +26,24 @@
           <%= heroicon "bars-3", options: { class: "h-6 w-6" } %>
         </summary>
         <div class="pb-4 space-y-2">
-          <% if @blog %>
-            <%= link_to "Posts", blog_dashboard_path(@blog.subdomain), class: "block link link-hover font-medium py-2 #{current_page?(blog_dashboard_path(@blog.subdomain)) ? 'text-primary' : ''}" %>
-            <%= link_to "Tags", blog_dashboard_tags_path(@blog.subdomain), class: "block link link-hover font-medium py-2 #{current_page?(blog_dashboard_tags_path(@blog.subdomain)) ? 'text-primary' : ''}" %>
-          <% else %>
-            <%= link_to "Posts", dashboard_path, class: "block link link-hover font-medium py-2 #{current_page?(dashboard_path) ? 'text-primary' : ''}" %>
-            <%= link_to "Tags", dashboard_tags_path, class: "block link link-hover font-medium py-2 #{current_page?(dashboard_tags_path) ? 'text-primary' : ''}" %>
-          <% end %>
           <hr class="my-2">
           <div class="flex items-center justify-between">
-            <%= link_to dashboard_settings_path, class: 'link link-hover font-medium py-2', title: 'Settings' do %>
-              <%= heroicon "cog-6-tooth", options: { class: "h-5 w-5" } %>
-            <% end %>
             <details class="dropdown dropdown-end">
               <summary class="link link-hover font-medium py-2 cursor-pointer" title="Account">
                 <%= heroicon "user-circle", options: { class: "h-5 w-5" } %>
               </summary>
               <ul class="dropdown-content menu bg-base-100 rounded-box z-[1] w-64 p-2 shadow-lg border mt-2">
-                <% if @blog %>
-                  <li class="pointer-events-none">
-                    <div class="flex items-center gap-3 bg-base-200 rounded-lg px-3 py-2 mb-2">
-                      <% emoji_filename = emoji_to_openmoji_filename(@blog.favicon_emoji) %>
-                      <img src="/openmoji-svg-color/<%= emoji_filename %>.svg" alt="<%= @blog.favicon_emoji %>" class="w-8 h-8">
-                      <div>
-                        <div class="font-semibold"><%= @blog.title || @blog.subdomain %></div>
-                        <div class="text-xs opacity-70"><%= @blog.subdomain %>.willow.camp</div>
-                      </div>
-                    </div>
-                  </li>
-                  <div class="divider my-1"></div>
-                <% end %>
                 <li class="menu-title">
                   <span>Your Blogs</span>
                 </li>
                 <% current_user.blogs.order(:title).each do |blog| %>
                   <li>
-                    <% if blog == @blog %>
-                      <span class="flex items-center justify-between text-primary">
-                        <div>
-                          <div class="font-medium"><%= blog.title || blog.subdomain %></div>
-                          <div class="text-xs opacity-70"><%= blog.subdomain %>.willow.camp</div>
-                        </div>
-                        <%= heroicon "check", variant: :mini, options: { class: "h-4 w-4" } %>
-                      </span>
-                    <% else %>
-                      <a href="<%= blog_dashboard_path(blog.subdomain) %>" class="flex items-center justify-between">
-                        <div>
-                          <div class="font-medium"><%= blog.title || blog.subdomain %></div>
-                          <div class="text-xs opacity-70"><%= blog.subdomain %>.willow.camp</div>
-                        </div>
-                      </a>
-                    <% end %>
+                    <a href="<%= blog_dashboard_path(blog.subdomain) %>" class="flex items-center justify-between">
+                      <div>
+                        <div class="font-medium"><%= blog.title || blog.subdomain %></div>
+                        <div class="text-xs opacity-70"><%= blog.subdomain %>.willow.camp</div>
+                      </div>
+                    </a>
                   </li>
                 <% end %>
                 <div class="divider my-1"></div>
@@ -107,48 +74,22 @@
       <div class="hidden lg:flex lg:items-center lg:justify-between py-4">
         <a class="text-xl font-bold hover:text-primary transition-colors" href="<%= dashboard_path %>"><%= blog_title_for(@user) %></a>
         <div class="flex items-center space-x-4">
-          <%= link_to dashboard_settings_path, class: 'link link-hover', title: 'Settings' do %>
-            <%= heroicon "cog-6-tooth", options: { class: "h-5 w-5" } %>
-          <% end %>
           <div class="dropdown dropdown-end">
             <div tabindex="0" role="button" class="link link-hover" title="Account">
               <%= heroicon "user-circle", options: { class: "h-5 w-5" } %>
             </div>
             <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-64 p-2 shadow-lg border mt-2">
-              <% if @blog %>
-                <li class="pointer-events-none">
-                  <div class="flex items-center gap-3 bg-base-200 rounded-lg px-3 py-2 mb-2">
-                    <% emoji_filename = emoji_to_openmoji_filename(@blog.favicon_emoji) %>
-                    <img src="/openmoji-svg-color/<%= emoji_filename %>.svg" alt="<%= @blog.favicon_emoji %>" class="w-8 h-8">
-                    <div>
-                      <div class="font-semibold"><%= @blog.title || @blog.subdomain %></div>
-                      <div class="text-xs opacity-70"><%= @blog.subdomain %>.willow.camp</div>
-                    </div>
-                  </div>
-                </li>
-                <div class="divider my-1"></div>
-              <% end %>
               <li class="menu-title">
                 <span>Your Blogs</span>
               </li>
               <% current_user.blogs.order(:title).each do |blog| %>
                 <li>
-                  <% if blog == @blog %>
-                    <span class="flex items-center justify-between text-primary">
-                      <div>
-                        <div class="font-medium"><%= blog.title || blog.subdomain %></div>
-                        <div class="text-xs opacity-70"><%= blog.subdomain %>.willow.camp</div>
-                      </div>
-                      <%= heroicon "check", variant: :mini, options: { class: "h-4 w-4" } %>
-                    </span>
-                  <% else %>
-                    <a href="<%= blog_dashboard_path(blog.subdomain) %>" class="flex items-center justify-between">
-                      <div>
-                        <div class="font-medium"><%= blog.title || blog.subdomain %></div>
-                        <div class="text-xs opacity-70"><%= blog.subdomain %>.willow.camp</div>
-                      </div>
-                    </a>
-                  <% end %>
+                  <a href="<%= blog_dashboard_path(blog.subdomain) %>" class="flex items-center justify-between">
+                    <div>
+                      <div class="font-medium"><%= blog.title || blog.subdomain %></div>
+                      <div class="text-xs opacity-70"><%= blog.subdomain %>.willow.camp</div>
+                    </div>
+                  </a>
                 </li>
               <% end %>
               <div class="divider my-1"></div>
@@ -175,23 +116,14 @@
         </div>
       </div>
     </nav>
-    <main class="max-w-6xl mx-auto p-4" aria-label="Dashboard Content">
-      <header aria-label="Dashboard Header" class="flex justify-between items-center mb-6">
+    <main class="max-w-6xl mx-auto p-4" aria-label="Security Content">
+      <header aria-label="Security Header" class="flex justify-between items-center mb-6">
         <div class="flex items-center gap-4">
-          <div role="tablist" class="tabs tabs-boxed hidden lg:flex">
-            <% if @blog %>
-              <%= link_to "Posts", blog_dashboard_path(@blog.subdomain), class: "tab #{current_page?(blog_dashboard_path(@blog.subdomain)) ? 'tab-active' : ''}" %>
-              <%= link_to "Tags", blog_dashboard_tags_path(@blog.subdomain), class: "tab #{current_page?(blog_dashboard_tags_path(@blog.subdomain)) ? 'tab-active' : ''}" %>
-            <% else %>
-              <%= link_to "Posts", dashboard_path, class: "tab #{current_page?(dashboard_path) ? 'tab-active' : ''}" %>
-              <%= link_to "Tags", dashboard_tags_path, class: "tab #{current_page?(dashboard_tags_path) ? 'tab-active' : ''}" %>
+          <% if @last_viewed_blog %>
+            <%= link_to blog_dashboard_path(@last_viewed_blog.subdomain), class: "flex items-center gap-2 link link-hover text-sm" do %>
+              <%= heroicon "arrow-left", variant: :mini, options: { class: "h-4 w-4" } %>
+              Back to <%= @last_viewed_blog.title || @last_viewed_blog.subdomain %>
             <% end %>
-          </div>
-        </div>
-        <div class="flex gap-2">
-          <% if @blog&.subdomain.present? %>
-            <%= button_to "New Post", dashboard_untitled_posts_path(blog_subdomain: @blog.subdomain), method: :post, class: "btn btn-sm btn-primary" %>
-            <a href="<%= posts_url(subdomain: @blog.subdomain) %>" class="btn btn-sm btn-outline" target="_blank">View Site</a>
           <% end %>
         </div>
       </header>

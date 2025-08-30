@@ -11,6 +11,9 @@ class DashboardController < Dashboard::BaseController
       @blog = @user.blogs.find_by(primary: true) || @user.blogs.first
     end
 
+    # Store the last viewed blog in session for breadcrumb navigation
+    session[:last_viewed_blog_id] = @blog&.id if @blog
+
     # Handle new blog form display
     @new_blog = Blog.new(user: @user, primary: false) if params[:new_blog].present?
 
