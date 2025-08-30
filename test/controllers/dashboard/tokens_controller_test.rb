@@ -15,7 +15,7 @@ class Dashboard::TokensControllerTest < ActionDispatch::IntegrationTest
       post dashboard_tokens_path, params: @token_params
     end
 
-    assert_redirected_to dashboard_settings_path
+    assert_redirected_to dashboard_user_settings_path
     assert_equal "Token created successfully", flash[:notice]
   end
 
@@ -26,7 +26,7 @@ class Dashboard::TokensControllerTest < ActionDispatch::IntegrationTest
       post dashboard_tokens_path, params: invalid_params
     end
 
-    assert_redirected_to dashboard_settings_path
+    assert_redirected_to dashboard_user_settings_path
     assert_equal "There were errors creating the token", flash[:alert]
   end
 
@@ -81,7 +81,7 @@ class Dashboard::TokensControllerTest < ActionDispatch::IntegrationTest
       post dashboard_tokens_path, params: invalid_params
     end
 
-    assert_redirected_to dashboard_settings_path
+    assert_redirected_to dashboard_user_settings_path
     assert_equal "There were errors creating the token", flash[:alert]
   end
 end

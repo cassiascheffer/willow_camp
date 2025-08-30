@@ -69,10 +69,10 @@ class DashboardNavigationTest < ApplicationSystemTestCase
     # Click on settings link
     click_link "Settings"
 
-    # Should see the settings page
+    # Should see the blog settings page
     assert_current_path blog_dashboard_settings_path(@user.blogs.first.subdomain)
     assert_text "Settings"
-    assert_text "Account Settings"
+    assert_text "Blog Settings"
   end
 
   private

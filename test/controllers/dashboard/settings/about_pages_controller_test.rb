@@ -20,7 +20,7 @@ class Dashboard::Settings::AboutPagesControllerTest < ActionDispatch::Integratio
       }
     end
 
-    assert_redirected_to dashboard_settings_path
+    assert_redirected_to blog_dashboard_settings_path(@blog.subdomain)
     assert_equal "Created!", flash[:notice]
 
     # Find the page by title and blog
@@ -71,7 +71,7 @@ class Dashboard::Settings::AboutPagesControllerTest < ActionDispatch::Integratio
       }
     }
 
-    assert_redirected_to dashboard_settings_path
+    assert_redirected_to blog_dashboard_settings_path(@blog.subdomain)
     assert_equal "Updated!", flash[:notice]
 
     @page.reload
@@ -110,7 +110,7 @@ class Dashboard::Settings::AboutPagesControllerTest < ActionDispatch::Integratio
       delete dashboard_settings_about_page_url(blog_subdomain: @blog.subdomain, slug: @page.slug)
     end
 
-    assert_redirected_to dashboard_settings_path
+    assert_redirected_to blog_dashboard_settings_path(@blog.subdomain)
     assert_equal "Page was successfully deleted.", flash[:notice]
   end
 
@@ -126,13 +126,13 @@ class Dashboard::Settings::AboutPagesControllerTest < ActionDispatch::Integratio
     # Now test deleting the actual about page - should recreate it (net change 0)
     about_page = @blog.pages.find_by(slug: "about")
     assert_not_nil about_page, "Blog should have an about page"
-    
+
     assert_difference("Page.count", 0) do
       delete dashboard_settings_about_page_url(blog_subdomain: @blog.subdomain, slug: "about"), as: :turbo_stream
     end
-    
+
     # Check that a new about page was recreated
-    new_about = @blog.pages.find_by(slug: "about") 
+    new_about = @blog.pages.find_by(slug: "about")
     assert_not_nil new_about
     assert_equal "About", new_about.title
   end
@@ -150,7 +150,7 @@ class Dashboard::Settings::AboutPagesControllerTest < ActionDispatch::Integratio
     # Rails handles RecordNotFound and returns a 404
     # Create a blog for the other user first
     other_blog = other_user.blogs.create!(subdomain: "otherblog", title: "Other Blog")
-    
+
     patch dashboard_settings_about_page_url(blog_subdomain: other_blog.subdomain, slug: @page.slug), params: {
       page: {title: "Hacked!"}
     }

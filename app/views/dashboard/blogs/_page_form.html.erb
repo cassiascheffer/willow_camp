@@ -1,0 +1,46 @@
+<%= turbo_frame_tag "about-page-form" do %>
+  <%= form_with(model: page, url: (page.persisted? && page.slug.present?) ? dashboard_settings_about_page_path(blog_subdomain: @blog.subdomain, slug: page.slug) : dashboard_settings_about_pages_path(blog_subdomain: @blog.subdomain), local: false, class: "space-y-4", data: { turbo_frame: "about-page-form" }) do |form| %>
+    <% if page.errors.any? %>
+      <div id="error_explanation" class="alert alert-error">
+        <h2><%= pluralize(page.errors.count, "error") %> prohibited this page from being saved:</h2>
+        <ul>
+          <% page.errors.each do |error| %>
+            <li><%= error.full_message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+    <div class="form-control w-full mb-4">
+      <%= form.label :body, class: "label" %>
+      <%= form.marksmith :body_markdown,
+          enable_file_uploads: false,
+          class: "textarea textarea-bordered w-full" %>
+    </div>
+    <div class="flex flex-col lg:flex-row lg:gap-4 lg:items-end mb-4">
+      <div class="form-control w-full lg:w-auto mb-4 lg:mb-0">
+        <%= form.label :published, class: "label" %>
+        <div class="flex items-center h-12">
+          <%= form.check_box :published, class: "checkbox checkbox-primary" %>
+        </div>
+      </div>
+    </div>
+    <div class="form-control w-full mb-4">
+      <%= form.hidden_field :title, value: "About" %>
+    </div>
+    <div class="form-control w-full mb-4">
+      <%= form.hidden_field :slug %>
+    </div>
+    <div class="form-control mt-6">
+      <div class="flex flex-col lg:flex-row gap-2">
+        <%= form.submit "Save", class: "btn btn-primary w-full lg:w-auto" %>
+        <% if page.persisted? && page.slug.present? %>
+          <%= button_to dashboard_settings_about_page_path(blog_subdomain: @blog.subdomain, slug: page.slug), method: :delete,
+                form: { data: { turbo_confirm: "Are you sure you want to delete this page?", turbo_frame: "about-page-form" } },
+                class: "btn btn-error w-full lg:w-auto" do %>
+            Delete Page
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+<% end %>

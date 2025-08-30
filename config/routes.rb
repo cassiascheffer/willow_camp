@@ -42,12 +42,10 @@ Rails.application.routes.draw do
 
   get "dashboard" => "dashboard#show", :as => :dashboard
   get "dashboard/security" => "dashboard/security#show", :as => :dashboard_security
-  get "dashboard/:blog_subdomain" => "dashboard#show", :as => :blog_dashboard
-  get "dashboard/:blog_subdomain/tags" => "dashboard/tags#index", :as => :blog_dashboard_tags
-  get "dashboard/:blog_subdomain/settings" => "dashboard/settings#show", :as => :blog_dashboard_settings
-  patch "dashboard/:blog_subdomain/settings" => "dashboard/settings#update"
+
   namespace :dashboard do
-    resource :settings, only: %i[show]
+    get "user/settings" => "users#show", :as => :user_settings
+    patch "user/settings" => "users#update"
     resources :users, only: %i[edit update]
     resources :tokens, only: %i[create destroy]
     resource :subdomain, only: %i[update]
@@ -64,6 +62,12 @@ Rails.application.routes.draw do
       end
     end
   end
+
+  # Blog routes with :blog_subdomain parameter (must come after specific routes)
+  get "dashboard/:blog_subdomain" => "dashboard#show", :as => :blog_dashboard
+  get "dashboard/:blog_subdomain/tags" => "dashboard/tags#index", :as => :blog_dashboard_tags
+  get "dashboard/:blog_subdomain/settings" => "dashboard/blogs#show", :as => :blog_dashboard_settings
+  patch "dashboard/:blog_subdomain/settings" => "dashboard/blogs#update"
 
   resources :previews, only: %i[show]
 

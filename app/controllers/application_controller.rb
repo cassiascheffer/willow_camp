@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
 
   before_action do
     Honeybadger.context({
-      user_subdomain: current_user&.subdomain,
+      user_id: current_user&.id,
       current_host: request.host,
       remote_ip: request.remote_ip,
       user_agent: request.user_agent

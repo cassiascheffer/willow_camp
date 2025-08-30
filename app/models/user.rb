@@ -55,7 +55,6 @@ class User < ApplicationRecord
     end
   end
 
-
   # Tag helper methods
   def all_tags
     # Get all unique tags used on this user's posts
