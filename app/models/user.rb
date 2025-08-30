@@ -55,9 +55,6 @@ class User < ApplicationRecord
     end
   end
 
-  after_create_commit do
-    pages.create!(title: "About", slug: "about")
-  end
 
   # Tag helper methods
   def all_tags

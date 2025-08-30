@@ -133,7 +133,7 @@ class Blog < ApplicationRecord
   end
 
   def ensure_about_page
-    pages.create!(title: "About", slug: "about", author: user)
+    pages.create!(title: "About", slug: "about")
   end
 
   def custom_domain_format

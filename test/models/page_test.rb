@@ -5,8 +5,13 @@ require "test_helper"
 class PageTest < ActiveSupport::TestCase
   def setup
     @user = users(:one)
+    @blog = Blog.create!(
+      user: @user,
+      subdomain: "testblog#{SecureRandom.hex(4)}",
+      favicon_emoji: "🚀"
+    )
     @page = Page.new(
-      author: @user,
+      blog: @blog,
       title: "About",
       body_markdown: "About page content"
     )
@@ -23,6 +28,8 @@ class PageTest < ActiveSupport::TestCase
 
   test "should belong to author" do
     assert_respond_to @page, :author
+    # Author is set automatically from blog during validation
+    @page.valid?
     assert_equal @user, @page.author
   end
 
@@ -35,14 +42,13 @@ class PageTest < ActiveSupport::TestCase
   test "should be associated with blog when created through blog" do
     blog = Blog.create!(
       user: @user,
-      subdomain: "testblog",
+      subdomain: "anotherblog#{SecureRandom.hex(4)}",
       favicon_emoji: "🚀"
     )
 
     page = blog.pages.create!(
       title: "Custom Page",
-      body_markdown: "Custom content",
-      author: @user
+      body_markdown: "Custom content"
     )
 
     assert_equal blog, page.blog

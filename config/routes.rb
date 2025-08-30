@@ -47,9 +47,6 @@ Rails.application.routes.draw do
   get "dashboard/:blog_subdomain/settings" => "dashboard/settings#show", :as => :blog_dashboard_settings
   patch "dashboard/:blog_subdomain/settings" => "dashboard/settings#update"
   namespace :dashboard do
-    namespace :settings do
-      resources :about_pages, param: :slug, path: :pages
-    end
     resource :settings, only: %i[show]
     resources :users, only: %i[edit update]
     resources :tokens, only: %i[create destroy]
@@ -62,6 +59,9 @@ Rails.application.routes.draw do
       resources :posts, only: %i[edit update destroy]
       resources :featured_posts, only: %i[update]
       resources :untitled_posts, only: %i[create]
+      namespace :settings do
+        resources :about_pages, param: :slug, path: :pages
+      end
     end
   end
 

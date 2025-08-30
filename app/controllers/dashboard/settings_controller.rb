@@ -5,10 +5,10 @@ module Dashboard
 
       if params[:blog_subdomain].present?
         redirect_to dashboard_settings_path, alert: "Blog not found" unless @blog
-        @about_page = @blog.pages.find_or_create_by(title: "About", slug: "about", author: @user)
+        @about_page = @blog.pages.find_or_create_by(title: "About", slug: "about")
       else
         @tokens = @user.tokens.order(created_at: :desc)
-        @about_page = @user.pages.find_or_create_by(title: "About", slug: "about")
+        @about_page = nil # No user-level about page anymore
         @token = UserToken.new
       end
     end
@@ -22,7 +22,7 @@ module Dashboard
         if @blog.update(blog_params)
           redirect_to blog_dashboard_settings_path(@blog.subdomain), notice: "Blog settings updated successfully"
         else
-          @about_page = @blog.pages.find_or_create_by(title: "About", slug: "about", author: @user)
+          @about_page = @blog.pages.find_or_create_by(title: "About", slug: "about")
           render :show, status: :unprocessable_entity
         end
       else

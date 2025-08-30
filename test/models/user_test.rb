@@ -90,9 +90,8 @@ class UserTest < ActiveSupport::TestCase
     )
     user.posts.create!(title: "Test Post", body_markdown: "Lorem ipsum")
 
-    # User creation automatically creates a page (which inherits from Post)
-    # So destroying the user will destroy both the manual post and the auto-created page
-    assert_difference "Post.count", -2 do
+    # Users no longer auto-create pages, so only the manual post is destroyed
+    assert_difference "Post.count", -1 do
       user.destroy
     end
   end
@@ -261,7 +260,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal @custom_domain_user, found_user
   end
 
-  test "should create about page when user is created" do
+  test "should not create about page when user is created" do
     user = User.create!(
       name: "Test User",
       email: "test_about@example.com",
@@ -270,9 +269,8 @@ class UserTest < ActiveSupport::TestCase
       subdomain: "testabout"
     )
 
+    # About pages are now created at the blog level, not user level
     about_page = user.pages.find_by(slug: "about")
-    assert_not_nil about_page
-    assert_equal "About", about_page.title
-    assert_equal "about", about_page.slug
+    assert_nil about_page
   end
 end
