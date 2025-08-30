@@ -1,3 +1,6 @@
+// ABOUTME: Controller to handle theme selection dropdowns and immediate preview
+// ABOUTME: Updates form fields, applies theme preview, and auto-submits form
+
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
@@ -7,26 +10,19 @@ export default class extends Controller {
     const button = event.currentTarget
     const theme = button.dataset.themeValue
 
-    // Update hidden field
     this.hiddenFieldTarget.value = theme
 
-    // Update dropdown button
     this.buttonPreviewTarget.setAttribute('data-theme', theme)
     this.buttonTextTarget.textContent = theme
 
-
-
-    // Update checkmarks
     this.clearCheckmarks()
     this.addCheckmarkTo(button)
 
-    // Close dropdown
     this.dropdownButtonTarget.blur()
 
-    // Apply theme immediately for preview
     document.documentElement.setAttribute('data-theme', theme)
+    sessionStorage.setItem('current-theme', theme)
 
-    // Auto-submit the form with Turbo
     this.element.closest('form').requestSubmit()
   }
 

@@ -4,7 +4,6 @@ module Dashboard
       @user = current_user
 
       if params[:blog_subdomain].present?
-        @blog = @user.blogs.find_by(subdomain: params[:blog_subdomain])
         redirect_to dashboard_settings_path, alert: "Blog not found" unless @blog
         @about_page = @blog.pages.find_or_create_by(title: "About", slug: "about", author: @user)
       else
@@ -18,7 +17,6 @@ module Dashboard
       @user = current_user
 
       if params[:blog_subdomain].present?
-        @blog = @user.blogs.find_by(subdomain: params[:blog_subdomain])
         redirect_to dashboard_settings_path, alert: "Blog not found" unless @blog
 
         if @blog.update(blog_params)

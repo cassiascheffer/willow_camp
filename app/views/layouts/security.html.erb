@@ -7,6 +7,7 @@
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
+    <meta name="current-theme" content="<%= @last_viewed_blog&.theme || 'light' %>">
     <%= yield :head %>
     <!-- Favicon from OpenMoji assets -->
     <% emoji_filename = emoji_to_openmoji_filename(@last_viewed_blog&.favicon_emoji || '🏕️') %>
