@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="<%= @author&.theme || 'light' %>">
+<html lang="en" data-theme="<%= @blog&.theme || 'light' %>">
   <head>
     <title>
       <%= content_for(:title) || blog_title_for(@author) %>
@@ -37,7 +37,7 @@
       <link type="application/feed+json" rel="alternate" href="<%= posts_json_url(url_options_for(@author).merge(format: :json)) %>" title="<%= blog_title_for(@author) %> JSON Feed">
     <% end %>
     <!-- Favicon from OpenMoji assets -->
-    <% emoji_filename = emoji_to_openmoji_filename(@author&.favicon_emoji) %>
+    <% emoji_filename = emoji_to_openmoji_filename(@blog&.favicon_emoji || '🏕️') %>
     <link rel="icon" href="/openmoji-32x32-ico/<%= emoji_filename %>.ico" sizes="32x32">
     <link rel="icon" href="/openmoji-svg-color/<%= emoji_filename %>.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/openmoji-apple-touch-icon-180x180/<%= emoji_filename %>.png">

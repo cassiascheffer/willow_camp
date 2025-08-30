@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-theme="<%= @author&.theme || 'light' %>">
+<html data-theme="<%= @last_viewed_blog&.theme || 'light' %>">
   <head>
     <title><%= content_for(:title) || "willow.camp" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -9,7 +9,7 @@
     <%= csp_meta_tag %>
     <%= yield :head %>
     <!-- Favicon from OpenMoji assets -->
-    <% emoji_filename = emoji_to_openmoji_filename(@author&.favicon_emoji) %>
+    <% emoji_filename = emoji_to_openmoji_filename(@last_viewed_blog&.favicon_emoji || '🏕️') %>
     <link rel="icon" href="/openmoji-32x32-ico/<%= emoji_filename %>.ico" sizes="32x32">
     <link rel="icon" href="/openmoji-svg-color/<%= emoji_filename %>.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/openmoji-apple-touch-icon-180x180/<%= emoji_filename %>.png">
@@ -17,7 +17,7 @@
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
-  <body class="font-mono" data-controller="theme" data-theme-theme-value="<%= @author&.theme || 'light' %>">
+  <body class="font-mono" data-controller="theme" data-theme-theme-value="<%= @last_viewed_blog&.theme || 'light' %>">
     <nav class="bg-base-100 shadow-md w-full px-8" aria-label="Main Navigation">
       <!-- Mobile menu with details/summary -->
       <details class="lg:hidden">

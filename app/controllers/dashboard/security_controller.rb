@@ -3,13 +3,13 @@
 
 module Dashboard
   class SecurityController < Dashboard::BaseController
-    layout 'security'
-    
+    layout "security"
+
     def show
       @user = current_user
       @tokens = @user.tokens.order(created_at: :desc)
       @token = UserToken.new
-      
+
       # Get the last viewed blog for breadcrumb navigation
       if session[:last_viewed_blog_id]
         @last_viewed_blog = @user.blogs.find_by(id: session[:last_viewed_blog_id])

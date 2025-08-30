@@ -11,7 +11,7 @@ export default class extends Controller {
   }
 
   updatePreview() {
-    const emoji = this.inputTarget.value || "🏕"
+    const emoji = this.inputTarget.value || "🏕️"
     
     // First try to get hexcode from data attribute (set by emoji-choices controller)
     // Otherwise use a simple fallback conversion

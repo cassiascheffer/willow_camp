@@ -1,15 +1,15 @@
-  <main aria-label="Account Settings" class="container lg:w-3/4 mx-auto">
-  <section aria-label="Account Details" class="mb-8">
-    <h1 class="text-3xl font-bold mb-4">Account Settings</h1>
+  <main aria-label="Blog Settings" class="container lg:w-3/4 mx-auto">
+  <section aria-label="Blog Details" class="mb-8">
+    <h1 class="text-3xl font-bold mb-4">Blog Settings</h1>
     <div class="card p-4">
-      <%= render "user_form", user: @user %>
+      <%= render "blog_form", blog: @blog %>
     </div>
   </section>
   <section aria-label="About Page" class="mb-8">
     <h1 class="text-3xl font-bold mb-4">About Page</h1>
     <div class="card p-4">
       <p class="text-zinc-500 text-sm pb-2">
-        The About page will show up on the top nav next to the RSS link.
+        The About page will show up on the top nav next to the RSS link for this blog.
       </p>
       <%= render "page_form", page: @about_page %>
     </div>
@@ -18,23 +18,9 @@
     <h1 class="text-3xl font-bold mb-4">Post Footer</h1>
     <div class="card p-4">
       <p class="text-zinc-500 text-sm pb-2">
-        This footer will appear at the bottom of every blog post.
+        This footer will appear at the bottom of every blog post on this blog.
       </p>
-      <%= render "footer_form", user: @user %>
-    </div>
-  </section>
-  <section aria-label="API Tokens" class="space-y-6">
-    <h2 class="text-2xl font-semibold">API Tokens</h2>
-    <div class="mb-4">
-      <%= link_to "View API Documentation", documentation_url, class: "link link-primary", target: "_blank" %>
-    </div>
-    <div class="card p-4">
-      <h3 class="text-xl font-medium mb-2">Create New Token</h3>
-      <%= render "token_form", token: @token %>
-    </div>
-    <div class="card p-4">
-      <h3 class="text-xl font-medium mb-2">Your Tokens</h3>
-      <%= render "token_list", tokens: @tokens %>
+      <%= render "footer_form", blog: @blog %>
     </div>
   </section>
 </main>

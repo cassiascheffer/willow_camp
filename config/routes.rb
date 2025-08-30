@@ -45,6 +45,7 @@ Rails.application.routes.draw do
   get "dashboard/:blog_subdomain" => "dashboard#show", :as => :blog_dashboard
   get "dashboard/:blog_subdomain/tags" => "dashboard/tags#index", :as => :blog_dashboard_tags
   get "dashboard/:blog_subdomain/settings" => "dashboard/settings#show", :as => :blog_dashboard_settings
+  patch "dashboard/:blog_subdomain/settings" => "dashboard/settings#update"
   namespace :dashboard do
     namespace :settings do
       resources :about_pages, param: :slug, path: :pages

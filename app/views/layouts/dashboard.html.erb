@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-theme="<%= @author&.theme || 'light' %>">
+<html data-theme="<%= @blog&.theme || 'light' %>">
   <head>
     <title><%= content_for(:title) || "willow.camp" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -9,7 +9,7 @@
     <%= csp_meta_tag %>
     <%= yield :head %>
     <!-- Favicon from OpenMoji assets -->
-    <% emoji_filename = emoji_to_openmoji_filename(@author&.favicon_emoji) %>
+    <% emoji_filename = emoji_to_openmoji_filename(@blog&.favicon_emoji || '🏕️') %>
     <link rel="icon" href="/openmoji-32x32-ico/<%= emoji_filename %>.ico" sizes="32x32">
     <link rel="icon" href="/openmoji-svg-color/<%= emoji_filename %>.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/openmoji-apple-touch-icon-180x180/<%= emoji_filename %>.png">
@@ -17,7 +17,7 @@
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
-  <body class="font-mono" data-controller="theme" data-theme-theme-value="<%= @author&.theme || 'light' %>">
+  <body class="font-mono" data-controller="theme" data-theme-theme-value="<%= @blog&.theme || 'light' %>">
     <nav class="bg-base-100 shadow-md w-full px-8" aria-label="Main Navigation">
       <!-- Mobile menu with details/summary -->
       <details class="lg:hidden">
@@ -35,8 +35,14 @@
           <% end %>
           <hr class="my-2">
           <div class="flex items-center justify-between">
-            <%= link_to dashboard_settings_path, class: 'link link-hover font-medium py-2', title: 'Settings' do %>
-              <%= heroicon "cog-6-tooth", options: { class: "h-5 w-5" } %>
+            <% if @blog %>
+              <%= link_to blog_dashboard_settings_path(@blog.subdomain), class: 'link link-hover font-medium py-2', title: 'Settings' do %>
+                <%= heroicon "cog-6-tooth", options: { class: "h-5 w-5" } %>
+              <% end %>
+            <% else %>
+              <%= link_to dashboard_settings_path, class: 'link link-hover font-medium py-2', title: 'Settings' do %>
+                <%= heroicon "cog-6-tooth", options: { class: "h-5 w-5" } %>
+              <% end %>
             <% end %>
             <details class="dropdown dropdown-end">
               <summary class="link link-hover font-medium py-2 cursor-pointer" title="Account">
@@ -107,8 +113,14 @@
       <div class="hidden lg:flex lg:items-center lg:justify-between py-4">
         <a class="text-xl font-bold hover:text-primary transition-colors" href="<%= dashboard_path %>"><%= blog_title_for(@user) %></a>
         <div class="flex items-center space-x-4">
-          <%= link_to dashboard_settings_path, class: 'link link-hover', title: 'Settings' do %>
-            <%= heroicon "cog-6-tooth", options: { class: "h-5 w-5" } %>
+          <% if @blog %>
+            <%= link_to blog_dashboard_settings_path(@blog.subdomain), class: 'link link-hover', title: 'Settings' do %>
+              <%= heroicon "cog-6-tooth", options: { class: "h-5 w-5" } %>
+            <% end %>
+          <% else %>
+            <%= link_to dashboard_settings_path, class: 'link link-hover', title: 'Settings' do %>
+              <%= heroicon "cog-6-tooth", options: { class: "h-5 w-5" } %>
+            <% end %>
           <% end %>
           <div class="dropdown dropdown-end">
             <div tabindex="0" role="button" class="link link-hover" title="Account">
