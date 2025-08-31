@@ -36,6 +36,7 @@ class Blog < ApplicationRecord
     allow_blank: true
   validate :custom_domain_format
   validates :primary, inclusion: {in: [true, false]}
+  validate :only_one_primary_per_user
 
   # Scopes
   scope :by_domain, ->(domain) do
@@ -144,6 +145,15 @@ class Blog < ApplicationRecord
     control_chars = domain_to_check.match?(/[[:cntrl:]]/)
     if double_dots || control_chars || !PublicSuffix.valid?(domain_to_check)
       errors.add(:custom_domain, "must be a valid domain name")
+    end
+  end
+
+  def only_one_primary_per_user
+    return unless primary?
+    
+    existing_primary = user.blogs.where(primary: true).where.not(id: id)
+    if existing_primary.exists?
+      errors.add(:primary, "can only have one primary blog per user")
     end
   end
 end

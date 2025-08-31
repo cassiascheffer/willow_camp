@@ -81,9 +81,13 @@ After successful migration, update the codebase:
 
 ## Recommended Fixes
 
-### High Priority
-1. **Add primary field**: Update rake task to set `primary: true` for first blog
-2. **Tag tenant update**: Ensure Post model is updated to use `blog_id` as tenant after migration
+### ✅ Completed
+1. **Add primary field**: Updated rake task to set `primary: true` for first blog (line 47 in migrate_users_to_blogs.rake)
+2. **Rails validation**: Added `only_one_primary_per_user` validation to Blog model
+3. **Database constraint**: Added unique partial index on `[user_id, primary]` where `primary = true` (migration 20250831122011)
+
+### Still Needed
+1. **Tag tenant update**: Ensure Post model is updated to use `blog_id` as tenant after migration
 
 ### Medium Priority
 1. **Validation**: Add model validation to ensure only one primary blog per user

@@ -44,6 +44,7 @@ namespace :data do
             post_footer_markdown: user.post_footer_markdown,
             post_footer_html: user.post_footer_html,
             no_index: user.no_index,
+            primary: true,  # First blog for user is always primary
             created_at: Time.current,
             updated_at: Time.current
           }])
