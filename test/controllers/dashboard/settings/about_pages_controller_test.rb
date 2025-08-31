@@ -20,7 +20,7 @@ class Dashboard::Settings::AboutPagesControllerTest < ActionDispatch::Integratio
       }
     end
 
-    assert_redirected_to blog_dashboard_settings_path(@blog.subdomain)
+    assert_redirected_to dashboard_blog_settings_path(@blog.subdomain)
     assert_equal "Created!", flash[:notice]
 
     # Find the page by title and blog
@@ -71,7 +71,7 @@ class Dashboard::Settings::AboutPagesControllerTest < ActionDispatch::Integratio
       }
     }
 
-    assert_redirected_to blog_dashboard_settings_path(@blog.subdomain)
+    assert_redirected_to dashboard_blog_settings_path(@blog.subdomain)
     assert_equal "Updated!", flash[:notice]
 
     @page.reload
@@ -110,7 +110,7 @@ class Dashboard::Settings::AboutPagesControllerTest < ActionDispatch::Integratio
       delete dashboard_settings_about_page_url(blog_subdomain: @blog.subdomain, slug: @page.slug)
     end
 
-    assert_redirected_to blog_dashboard_settings_path(@blog.subdomain)
+    assert_redirected_to dashboard_blog_settings_path(@blog.subdomain)
     assert_equal "Page was successfully deleted.", flash[:notice]
   end
 

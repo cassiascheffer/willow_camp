@@ -5,7 +5,7 @@ module Dashboard
   class SecurityController < Dashboard::BaseController
     layout "security"
 
-    def show
+    def edit
       @user = current_user
       @tokens = @user.tokens.order(created_at: :desc)
       @token = UserToken.new

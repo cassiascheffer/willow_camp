@@ -58,7 +58,7 @@ class DashboardNavigationTest < ApplicationSystemTestCase
     click_link "Tags"
 
     # Should see the tags page
-    assert_current_path blog_dashboard_tags_path(@user.blogs.first.subdomain)
+    assert_current_path dashboard_blog_tags_path(@user.blogs.first.subdomain)
     assert_text "Tags"
   end
 
@@ -70,7 +70,7 @@ class DashboardNavigationTest < ApplicationSystemTestCase
     click_link "Settings"
 
     # Should see the blog settings page
-    assert_current_path blog_dashboard_settings_path(@user.blogs.first.subdomain)
+    assert_current_path dashboard_blog_settings_path(@user.blogs.first.subdomain)
     assert_text "Settings"
     assert_text "Blog Settings"
   end

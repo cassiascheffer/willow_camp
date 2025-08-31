@@ -39,7 +39,7 @@
                 </li>
                 <% current_user.blogs.order(:title).each do |blog| %>
                   <li>
-                    <a href="<%= blog_dashboard_path(blog.subdomain) %>" class="flex items-center justify-between">
+                    <a href="<%= dashboard_blog_path(blog.subdomain) %>" class="flex items-center justify-between">
                       <div>
                         <div class="font-medium"><%= blog.title || blog.subdomain %></div>
                         <div class="text-xs opacity-70"><%= blog.subdomain %>.willow.camp</div>
@@ -85,7 +85,7 @@
               </li>
               <% current_user.blogs.order(:title).each do |blog| %>
                 <li>
-                  <a href="<%= blog_dashboard_path(blog.subdomain) %>" class="flex items-center justify-between">
+                  <a href="<%= dashboard_blog_path(blog.subdomain) %>" class="flex items-center justify-between">
                     <div>
                       <div class="font-medium"><%= blog.title || blog.subdomain %></div>
                       <div class="text-xs opacity-70"><%= blog.subdomain %>.willow.camp</div>
@@ -121,7 +121,7 @@
       <header aria-label="Security Header" class="flex justify-between items-center mb-6">
         <div class="flex items-center gap-4">
           <% if @last_viewed_blog %>
-            <%= link_to blog_dashboard_path(@last_viewed_blog.subdomain), class: "flex items-center gap-2 link link-hover text-sm" do %>
+            <%= link_to dashboard_blog_path(@last_viewed_blog.subdomain), class: "flex items-center gap-2 link link-hover text-sm" do %>
               <%= heroicon "arrow-left", variant: :mini, options: { class: "h-4 w-4" } %>
               Back to <%= @last_viewed_blog.title || @last_viewed_blog.subdomain %>
             <% end %>

@@ -8,7 +8,7 @@ class Dashboard::TagsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should get index" do
-    get blog_dashboard_tags_url(blog_subdomain: @blog.subdomain)
+    get dashboard_blog_tags_url(blog_subdomain: @blog.subdomain)
     assert_response :success
   end
 
@@ -21,7 +21,7 @@ class Dashboard::TagsControllerTest < ActionDispatch::IntegrationTest
     draft_post.tag_list = "ruby, javascript"
     draft_post.save!
 
-    get blog_dashboard_tags_url(blog_subdomain: @blog.subdomain)
+    get dashboard_blog_tags_url(blog_subdomain: @blog.subdomain)
 
     assert_response :success
     assert_select "button", text: "ruby"
@@ -33,7 +33,7 @@ class Dashboard::TagsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "index shows empty state when no tags exist" do
-    get blog_dashboard_tags_url(blog_subdomain: @blog.subdomain)
+    get dashboard_blog_tags_url(blog_subdomain: @blog.subdomain)
 
     assert_response :success
     assert_select ".empty-state"
@@ -43,7 +43,7 @@ class Dashboard::TagsControllerTest < ActionDispatch::IntegrationTest
   test "index assigns all_tags_with_counts to @tags" do
     @blog.posts.create!(author: @user, title: "Test Post", body_markdown: "Content", published: false, tag_list: "test-tag")
 
-    get blog_dashboard_tags_url(blog_subdomain: @blog.subdomain)
+    get dashboard_blog_tags_url(blog_subdomain: @blog.subdomain)
 
     assert_response :success
     # Verify the view shows the tag from the draft post
@@ -54,7 +54,7 @@ class Dashboard::TagsControllerTest < ActionDispatch::IntegrationTest
   test "index table header shows separate columns for Published, Drafts, and Total" do
     @blog.posts.create!(author: @user, title: "Test Post", body_markdown: "Content", published: false, tag_list: "test-tag")
 
-    get blog_dashboard_tags_url(blog_subdomain: @blog.subdomain)
+    get dashboard_blog_tags_url(blog_subdomain: @blog.subdomain)
 
     assert_response :success
     assert_select "th", text: "Published"
@@ -69,7 +69,7 @@ class Dashboard::TagsControllerTest < ActionDispatch::IntegrationTest
 
     tag = ActsAsTaggableOn::Tag.find_by(name: "oldtag")
 
-    patch dashboard_tag_url(tag), params: {tag: {name: "newtag"}}, as: :turbo_stream
+    patch dashboard_tag_url(blog_subdomain: @blog.subdomain, id: tag), params: {tag: {name: "newtag"}}, as: :turbo_stream
 
     assert_response :success
     assert_equal "text/vnd.turbo-stream.html", @response.media_type
@@ -89,7 +89,7 @@ class Dashboard::TagsControllerTest < ActionDispatch::IntegrationTest
 
     tag = ActsAsTaggableOn::Tag.find_by(name: "validtag")
 
-    patch dashboard_tag_url(tag), params: {tag: {name: ""}}, as: :turbo_stream
+    patch dashboard_tag_url(blog_subdomain: @blog.subdomain, id: tag), params: {tag: {name: ""}}, as: :turbo_stream
 
     assert_response :success
     assert_equal "text/vnd.turbo-stream.html", @response.media_type
@@ -109,7 +109,7 @@ class Dashboard::TagsControllerTest < ActionDispatch::IntegrationTest
 
     tag = ActsAsTaggableOn::Tag.find_by(name: "shared")
 
-    patch dashboard_tag_url(tag), params: {tag: {name: "updated-shared"}}, as: :turbo_stream
+    patch dashboard_tag_url(blog_subdomain: @blog.subdomain, id: tag), params: {tag: {name: "updated-shared"}}, as: :turbo_stream
 
     assert_response :success
 
@@ -133,7 +133,7 @@ class Dashboard::TagsControllerTest < ActionDispatch::IntegrationTest
 
     sign_out @user
 
-    patch dashboard_tag_url(tag), params: {tag: {name: "newtag"}}
+    patch dashboard_tag_url(blog_subdomain: @blog.subdomain, id: tag), params: {tag: {name: "newtag"}}
 
     assert_redirected_to new_user_session_path
   end
@@ -147,7 +147,7 @@ class Dashboard::TagsControllerTest < ActionDispatch::IntegrationTest
 
     other_tag = ActsAsTaggableOn::Tag.find_by(name: "othertag")
 
-    patch dashboard_tag_url(other_tag), params: {tag: {name: "hacked"}}, as: :turbo_stream
+    patch dashboard_tag_url(blog_subdomain: @blog.subdomain, id: other_tag), params: {tag: {name: "hacked"}}, as: :turbo_stream
 
     assert_response :not_found
   end
@@ -159,7 +159,7 @@ class Dashboard::TagsControllerTest < ActionDispatch::IntegrationTest
 
     tag = ActsAsTaggableOn::Tag.find_by(name: "deleteme")
 
-    delete dashboard_tag_url(tag), as: :turbo_stream
+    delete dashboard_tag_url(blog_subdomain: @blog.subdomain, id: tag), as: :turbo_stream
 
     assert_response :success
     assert_equal "text/vnd.turbo-stream.html", @response.media_type
@@ -175,7 +175,7 @@ class Dashboard::TagsControllerTest < ActionDispatch::IntegrationTest
 
     other_tag = ActsAsTaggableOn::Tag.find_by(name: "othertag")
 
-    delete dashboard_tag_url(other_tag), as: :turbo_stream
+    delete dashboard_tag_url(blog_subdomain: @blog.subdomain, id: other_tag), as: :turbo_stream
 
     assert_response :not_found
   end
@@ -189,7 +189,7 @@ class Dashboard::TagsControllerTest < ActionDispatch::IntegrationTest
 
     sign_out @user
 
-    delete dashboard_tag_url(tag)
+    delete dashboard_tag_url(blog_subdomain: @blog.subdomain, id: tag)
 
     assert_redirected_to new_user_session_path
   end

@@ -61,4 +61,12 @@ module ApplicationHelper
       .map { |cp| cp.to_s(16).upcase }
       .join("-")
   end
+
+  def blog_nav_title(blog)
+    blog ? (blog.title.presence || blog.subdomain) : "willow.camp"
+  end
+
+  def blog_nav_path(blog)
+    blog ? dashboard_blog_path(blog.subdomain) : dashboard_path
+  end
 end

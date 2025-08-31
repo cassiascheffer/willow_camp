@@ -23,13 +23,13 @@
       <!-- Mobile menu with details/summary -->
       <details class="lg:hidden">
         <summary class="py-4 flex items-center justify-between cursor-pointer">
-          <a class="text-xl font-bold hover:text-primary transition-colors" href="<%= dashboard_path %>"><%= blog_title_for(@user) %></a>
+          <a class="text-xl font-bold hover:text-primary transition-colors" href="<%= blog_nav_path(@blog) %>"><%= blog_nav_title(@blog) %></a>
           <%= heroicon "bars-3", options: { class: "h-6 w-6" } %>
         </summary>
         <div class="pb-4 space-y-2">
           <% if @blog %>
-            <%= link_to "Posts", blog_dashboard_path(@blog.subdomain), class: "block link link-hover font-medium py-2 #{current_page?(blog_dashboard_path(@blog.subdomain)) ? 'text-primary' : ''}" %>
-            <%= link_to "Tags", blog_dashboard_tags_path(@blog.subdomain), class: "block link link-hover font-medium py-2 #{current_page?(blog_dashboard_tags_path(@blog.subdomain)) ? 'text-primary' : ''}" %>
+            <%= link_to "Posts", dashboard_blog_path(@blog.subdomain), class: "block link link-hover font-medium py-2 #{current_page?(dashboard_blog_path(@blog.subdomain)) ? 'text-primary' : ''}" %>
+            <%= link_to "Tags", dashboard_blog_tags_path(@blog.subdomain), class: "block link link-hover font-medium py-2 #{current_page?(dashboard_blog_tags_path(@blog.subdomain)) ? 'text-primary' : ''}" %>
           <% else %>
             <%= link_to "Posts", dashboard_path, class: "block link link-hover font-medium py-2 #{current_page?(dashboard_path) ? 'text-primary' : ''}" %>
             <%= link_to "Tags", dashboard_tags_path, class: "block link link-hover font-medium py-2 #{current_page?(dashboard_tags_path) ? 'text-primary' : ''}" %>
@@ -37,7 +37,7 @@
           <hr class="my-2">
           <div class="flex items-center justify-between">
             <% if @blog %>
-              <%= link_to blog_dashboard_settings_path(@blog.subdomain), class: 'link link-hover font-medium py-2', title: 'Settings' do %>
+              <%= link_to dashboard_blog_settings_path(@blog.subdomain), class: 'link link-hover font-medium py-2', title: 'Settings' do %>
                 <%= heroicon "cog-6-tooth", options: { class: "h-5 w-5" } %>
               <% end %>
             <% else %>
@@ -77,7 +77,7 @@
                         <%= heroicon "check", variant: :mini, options: { class: "h-4 w-4" } %>
                       </span>
                     <% else %>
-                      <a href="<%= blog_dashboard_path(blog.subdomain) %>" class="flex items-center justify-between">
+                      <a href="<%= dashboard_blog_path(blog.subdomain) %>" class="flex items-center justify-between">
                         <div>
                           <div class="font-medium"><%= blog.title || blog.subdomain %></div>
                           <div class="text-xs opacity-70"><%= blog.subdomain %>.willow.camp</div>
@@ -112,10 +112,10 @@
       </details>
       <!-- Desktop menu -->
       <div class="hidden lg:flex lg:items-center lg:justify-between py-4">
-        <a class="text-xl font-bold hover:text-primary transition-colors" href="<%= dashboard_path %>"><%= blog_title_for(@user) %></a>
+        <a class="text-xl font-bold hover:text-primary transition-colors" href="<%= blog_nav_path(@blog) %>"><%= blog_nav_title(@blog) %></a>
         <div class="flex items-center space-x-4">
           <% if @blog %>
-            <%= link_to blog_dashboard_settings_path(@blog.subdomain), class: 'link link-hover', title: 'Settings' do %>
+            <%= link_to dashboard_blog_settings_path(@blog.subdomain), class: 'link link-hover', title: 'Settings' do %>
               <%= heroicon "cog-6-tooth", options: { class: "h-5 w-5" } %>
             <% end %>
           <% else %>
@@ -155,7 +155,7 @@
                       <%= heroicon "check", variant: :mini, options: { class: "h-4 w-4" } %>
                     </span>
                   <% else %>
-                    <a href="<%= blog_dashboard_path(blog.subdomain) %>" class="flex items-center justify-between">
+                    <a href="<%= dashboard_blog_path(blog.subdomain) %>" class="flex items-center justify-between">
                       <div>
                         <div class="font-medium"><%= blog.title || blog.subdomain %></div>
                         <div class="text-xs opacity-70"><%= blog.subdomain %>.willow.camp</div>
@@ -193,8 +193,8 @@
         <div class="flex items-center gap-4">
           <div role="tablist" class="tabs tabs-boxed hidden lg:flex">
             <% if @blog %>
-              <%= link_to "Posts", blog_dashboard_path(@blog.subdomain), class: "tab #{current_page?(blog_dashboard_path(@blog.subdomain)) ? 'tab-active' : ''}" %>
-              <%= link_to "Tags", blog_dashboard_tags_path(@blog.subdomain), class: "tab #{current_page?(blog_dashboard_tags_path(@blog.subdomain)) ? 'tab-active' : ''}" %>
+              <%= link_to "Posts", dashboard_blog_path(@blog.subdomain), class: "tab #{current_page?(dashboard_blog_path(@blog.subdomain)) ? 'tab-active' : ''}" %>
+              <%= link_to "Tags", dashboard_blog_tags_path(@blog.subdomain), class: "tab #{current_page?(dashboard_blog_tags_path(@blog.subdomain)) ? 'tab-active' : ''}" %>
             <% else %>
               <%= link_to "Posts", dashboard_path, class: "tab #{current_page?(dashboard_path) ? 'tab-active' : ''}" %>
               <%= link_to "Tags", dashboard_tags_path, class: "tab #{current_page?(dashboard_tags_path) ? 'tab-active' : ''}" %>

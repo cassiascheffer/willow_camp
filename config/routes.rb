@@ -41,7 +41,7 @@ Rails.application.routes.draw do
     }
 
   get "dashboard" => "dashboard#show", :as => :dashboard
-  get "dashboard/security" => "dashboard/security#show", :as => :dashboard_security
+  get "dashboard/security" => "dashboard/security#edit", :as => :dashboard_security
 
   namespace :dashboard do
     get "user/settings" => "users#show", :as => :user_settings
@@ -49,25 +49,25 @@ Rails.application.routes.draw do
     resources :users, only: %i[edit update]
     resources :tokens, only: %i[create destroy]
     resource :subdomain, only: %i[update]
-    resources :tags, only: %i[index update destroy]
     resources :blogs, only: %i[create]
 
-    # Blog-scoped resources
-    scope "blogs/:blog_subdomain" do
+    # Blog-scoped resources under :blog_subdomain
+    scope ":blog_subdomain" do
+      get "/" => "/dashboard#show", :as => :blog
+      get "tags" => "tags#index", :as => :blog_tags
+      get "settings" => "blogs#edit", :as => :blog_settings
+      patch "settings" => "blogs#update"
+
       resources :posts, only: %i[edit update destroy]
       resources :featured_posts, only: %i[update]
       resources :untitled_posts, only: %i[create]
+      resources :tags, only: %i[update destroy]
+
       namespace :settings do
         resources :about_pages, param: :slug, path: :pages
       end
     end
   end
-
-  # Blog routes with :blog_subdomain parameter (must come after specific routes)
-  get "dashboard/:blog_subdomain" => "dashboard#show", :as => :blog_dashboard
-  get "dashboard/:blog_subdomain/tags" => "dashboard/tags#index", :as => :blog_dashboard_tags
-  get "dashboard/:blog_subdomain/settings" => "dashboard/blogs#show", :as => :blog_dashboard_settings
-  patch "dashboard/:blog_subdomain/settings" => "dashboard/blogs#update"
 
   resources :previews, only: %i[show]
 

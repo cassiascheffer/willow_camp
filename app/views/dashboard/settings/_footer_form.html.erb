@@ -1,5 +1,5 @@
 <%= turbo_frame_tag "footer_form" do %>
-  <%= form_with(model: [@blog], url: blog_dashboard_settings_path(@blog.subdomain), method: :patch, id: "#{dom_id(blog)}_footer", class: "form-control", data: { turbo_frame: "footer_form" }) do |form| %>
+  <%= form_with(model: [@blog], url: dashboard_blog_settings_path(@blog.subdomain), method: :patch, id: "#{dom_id(blog)}_footer", class: "form-control", data: { turbo_frame: "footer_form" }) do |form| %>
     <% if blog.errors.any? %>
       <div id="error_explanation" class="alert alert-error">
         <h2><%= pluralize(blog.errors.count, "error") %> prohibited this blog from being saved:</h2>

@@ -1,4 +1,4 @@
-<div class="card bg-base-100 shadow-md" id="tag_<%= tag.id %>" data-controller="inline-edit tag-delete" data-inline-edit-url-value="<%= dashboard_tag_path(tag.id) %>" data-tag-delete-url-value="<%= dashboard_tag_path(tag.id) %>">
+<div class="card bg-base-100 shadow-md" id="tag_<%= tag.id %>" data-controller="inline-edit tag-delete" data-inline-edit-url-value="<%= dashboard_tag_path(blog_subdomain: @blog.subdomain, id: tag.id) %>" data-tag-delete-url-value="<%= dashboard_tag_path(blog_subdomain: @blog.subdomain, id: tag.id) %>">
   <div class="card-body">
     <div class="flex items-center justify-between mb-3">
       <div data-inline-edit-target="display" class="flex-1">

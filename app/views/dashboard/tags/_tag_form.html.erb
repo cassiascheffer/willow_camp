@@ -1,5 +1,5 @@
 <div id="tag_<%= tag.id %>_form" data-inline-edit-target="form" hidden>
-  <%= form_with model: tag, url: dashboard_tag_path(tag.id), method: :patch, local: false, scope: :tag, data: { turbo_frame: "tag_#{tag.id}" } do |form| %>
+  <%= form_with model: tag, url: dashboard_tag_path(blog_subdomain: @blog.subdomain, id: tag.id), method: :patch, local: false, scope: :tag, data: { turbo_frame: "tag_#{tag.id}" } do |form| %>
     <div class="flex items-center gap-2">
       <%= form.text_field :name, 
           value: tag.name,
