@@ -59,7 +59,7 @@
   <% if show_post_footer?(@post) %>
     <footer class="mt-8 pt-6 border-t border-base-300">
       <div class="prose prose-sm max-w-none">
-        <%= sanitize(@post.author.post_footer_html, tags: %w(table th tr td span) + ActionView::Helpers::SanitizeHelper.sanitizer_vendor.safe_list_sanitizer.allowed_tags.to_a, attributes: %w(class) + ActionView::Helpers::SanitizeHelper.sanitizer_vendor.safe_list_sanitizer.allowed_attributes.to_a) %>
+        <%= sanitize(@post.blog.post_footer_html, tags: %w(table th tr td span) + ActionView::Helpers::SanitizeHelper.sanitizer_vendor.safe_list_sanitizer.allowed_tags.to_a, attributes: %w(class) + ActionView::Helpers::SanitizeHelper.sanitizer_vendor.safe_list_sanitizer.allowed_attributes.to_a) %>
       </div>
     </footer>
   <% end %>
