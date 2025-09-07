@@ -87,12 +87,14 @@
                   </li>
                 <% end %>
                 <div class="divider my-1"></div>
-                <li>
-                  <%= link_to dashboard_path(new_blog: true), class: "flex items-center gap-2" do %>
-                    <%= heroicon "plus", variant: :mini, options: { class: "h-4 w-4" } %>
-                    Add another blog
-                  <% end %>
-                </li>
+                <% if current_user.blogs_count < 2 %>
+                  <li>
+                    <%= link_to dashboard_path(new_blog: true), class: "flex items-center gap-2" do %>
+                      <%= heroicon "plus", variant: :mini, options: { class: "h-4 w-4" } %>
+                      Add another blog
+                    <% end %>
+                  </li>
+                <% end %>
                 <li>
                   <%= link_to dashboard_security_path, class: 'flex items-center gap-2' do %>
                     <%= heroicon "lock-closed", variant: :mini, options: { class: "h-4 w-4" } %>
@@ -165,12 +167,14 @@
                 </li>
               <% end %>
               <div class="divider my-1"></div>
-              <li>
-                <%= link_to dashboard_path(new_blog: true), class: "flex items-center gap-2" do %>
-                  <%= heroicon "plus", variant: :mini, options: { class: "h-4 w-4" } %>
-                  Add another blog
-                <% end %>
-              </li>
+              <% if current_user.blogs_count < 2 %>
+                <li>
+                  <%= link_to dashboard_path(new_blog: true), class: "flex items-center gap-2" do %>
+                    <%= heroicon "plus", variant: :mini, options: { class: "h-4 w-4" } %>
+                    Add another blog
+                  <% end %>
+                </li>
+              <% end %>
               <li>
                 <%= link_to dashboard_security_path, class: 'flex items-center gap-2' do %>
                   <%= heroicon "lock-closed", variant: :mini, options: { class: "h-4 w-4" } %>

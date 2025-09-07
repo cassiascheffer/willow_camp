@@ -2,7 +2,7 @@
 # ABOUTME: Each blog belongs to a user and contains posts, pages, and configuration
 class Blog < ApplicationRecord
   # Associations
-  belongs_to :user
+  belongs_to :user, counter_cache: :blogs_count
   has_many :posts, dependent: :destroy
   has_many :pages, dependent: :destroy
 
@@ -37,6 +37,7 @@ class Blog < ApplicationRecord
   validate :custom_domain_format
   validates :primary, inclusion: {in: [true, false]}
   validate :only_one_primary_per_user
+  validate :user_blog_limit
 
   # Scopes
   scope :by_domain, ->(domain) do
@@ -154,6 +155,15 @@ class Blog < ApplicationRecord
     existing_primary = user.blogs.where(primary: true).where.not(id: id)
     if existing_primary.exists?
       errors.add(:primary, "can only have one primary blog per user")
+    end
+  end
+
+  def user_blog_limit
+    return unless user
+
+    if new_record? && user.blogs_count >= 2
+      errors.add(:base, "User cannot have more than 2 blogs")
+      nil
     end
   end
 end

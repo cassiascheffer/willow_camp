@@ -129,22 +129,23 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "can have multiple blogs" do
-    initial_count = @user.blogs.count
+    user = users(:test_user_no_blog)
+    initial_count = user.blogs.count
 
-    blog1 = @user.blogs.create!(
+    blog1 = user.blogs.create!(
       subdomain: "blog1",
       title: "First Blog",
       favicon_emoji: "🚀"
     )
-    blog2 = @user.blogs.create!(
+    blog2 = user.blogs.create!(
       subdomain: "blog2",
       title: "Second Blog",
       favicon_emoji: "🎯"
     )
 
-    assert_equal initial_count + 2, @user.blogs.count
-    assert_includes @user.blogs, blog1
-    assert_includes @user.blogs, blog2
+    assert_equal initial_count + 2, user.blogs.count
+    assert_includes user.blogs, blog1
+    assert_includes user.blogs, blog2
   end
 
   test "should destroy associated tokens when user is destroyed" do

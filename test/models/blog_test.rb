@@ -4,7 +4,7 @@ require "test_helper"
 
 class BlogTest < ActiveSupport::TestCase
   def setup
-    @user = users(:one)
+    @user = users(:test_user_no_blog)
 
     @blog = Blog.new(
       user: @user,
@@ -432,5 +432,71 @@ class BlogTest < ActiveSupport::TestCase
     assert_equal 1, ruby_tag.published_count
     assert_equal 1, ruby_tag.draft_count
     assert_equal 2, ruby_tag.taggings_count
+  end
+
+  # Blog Limit Tests
+  test "user can create up to 2 blogs" do
+    @blog.save! # First blog
+
+    second_blog = Blog.new(
+      user: @user,
+      subdomain: "secondblog",
+      favicon_emoji: "🎯"
+    )
+    assert second_blog.valid?
+    assert second_blog.save!
+  end
+
+  test "user cannot create more than 2 blogs" do
+    @blog.save! # First blog
+
+    # Create second blog
+    Blog.create!(
+      user: @user,
+      subdomain: "secondblog",
+      favicon_emoji: "🎯"
+    )
+
+    # Third blog should be invalid
+    third_blog = Blog.new(
+      user: @user,
+      subdomain: "thirdblog",
+      favicon_emoji: "⭐"
+    )
+    assert_not third_blog.valid?
+    assert_includes third_blog.errors[:base], "User cannot have more than 2 blogs"
+  end
+
+  test "blog limit validation does not affect existing blogs" do
+    @blog.save! # First blog
+
+    # Create second blog
+    second_blog = Blog.create!(
+      user: @user,
+      subdomain: "secondblog",
+      favicon_emoji: "🎯"
+    )
+
+    # Updating existing blogs should still work
+    @blog.title = "Updated Title"
+    assert @blog.valid?
+    assert @blog.save!
+
+    second_blog.title = "Another Updated Title"
+    assert second_blog.valid?
+    assert second_blog.save!
+  end
+
+  test "blog limit validation is per user" do
+    @blog.save! # First blog for @user
+
+    other_user = users(:two)
+    other_user_blog = Blog.new(
+      user: other_user,
+      subdomain: "otheruserblog",
+      favicon_emoji: "🌟"
+    )
+    assert other_user_blog.valid?
+    assert other_user_blog.save!
   end
 end

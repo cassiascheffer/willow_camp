@@ -4,7 +4,7 @@ require "test_helper"
 
 class PageTest < ActiveSupport::TestCase
   def setup
-    @user = users(:one)
+    @user = users(:test_user_no_blog)
     @blog = Blog.create!(
       user: @user,
       subdomain: "testblog#{SecureRandom.hex(4)}",
@@ -56,8 +56,9 @@ class PageTest < ActiveSupport::TestCase
   end
 
   test "blog automatically creates about page on creation" do
+    user = users(:custom_domain_no_title)
     blog = Blog.create!(
-      user: @user,
+      user: user,
       subdomain: "autoblog",
       favicon_emoji: "🎯"
     )
@@ -69,13 +70,14 @@ class PageTest < ActiveSupport::TestCase
   end
 
   test "should use blog scope for friendly_id like posts" do
+    user = users(:custom_domain_no_title)
     blog1 = Blog.create!(
-      user: @user,
+      user: user,
       subdomain: "blog1",
       favicon_emoji: "🚀"
     )
     blog2 = Blog.create!(
-      user: @user,
+      user: user,
       subdomain: "blog2",
       favicon_emoji: "🎯"
     )

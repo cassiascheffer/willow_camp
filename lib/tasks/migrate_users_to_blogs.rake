@@ -134,6 +134,11 @@ namespace :data do
           end
         end
 
+        # Reset counter cache for blogs_count
+        unless dry_run
+          User.reset_counters(user.id, :blogs)
+        end
+
         success_count += 1
       end
     rescue => e

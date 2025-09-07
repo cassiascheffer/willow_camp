@@ -183,7 +183,7 @@ class PostTest < ActiveSupport::TestCase
   end
 
   test "should use blog scope for friendly_id" do
-    user = users(:one)
+    user = users(:test_user_no_blog)
     blog1 = Blog.create!(
       user: user,
       subdomain: "blog1",

@@ -99,6 +99,7 @@ class Blogs::TagsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
 
     # The @user should have a blog from setup
+    @user.reload
     assert @user.blogs.any?
     assert_not_nil @post.blog_id
 

@@ -101,4 +101,67 @@ class Dashboard::BlogsControllerTest < ActionDispatch::IntegrationTest
     @blog.reload
     assert_not_equal "Hacked Blog", @blog.title
   end
+
+  test "should create blog when user has none" do
+    sign_in(@user)
+    # Clear existing blogs
+    @user.blogs.destroy_all
+
+    assert_difference("Blog.count", 1) do
+      post dashboard_blogs_path, params: {
+        blog: {
+          title: "New Blog",
+          subdomain: "newblog",
+          favicon_emoji: "🌟"
+        }
+      }
+    end
+
+    assert_redirected_to dashboard_blog_path("newblog")
+    follow_redirect!
+    assert_match(/Blog created successfully/, response.body)
+  end
+
+  test "should create second blog when user has one" do
+    sign_in(@user)
+    # User already has one blog (@blog)
+
+    assert_difference("Blog.count", 1) do
+      post dashboard_blogs_path, params: {
+        blog: {
+          title: "Second Blog",
+          subdomain: "secondblog",
+          favicon_emoji: "🎯"
+        }
+      }
+    end
+
+    assert_redirected_to dashboard_blog_path("secondblog")
+    follow_redirect!
+    assert_match(/Blog created successfully/, response.body)
+  end
+
+  test "should not create third blog when user already has two" do
+    sign_in(@user)
+    # Create a second blog first
+    @user.blogs.create!(
+      subdomain: "secondblog",
+      title: "Second Blog",
+      favicon_emoji: "🎯"
+    )
+
+    assert_no_difference("Blog.count") do
+      post dashboard_blogs_path, params: {
+        blog: {
+          title: "Third Blog",
+          subdomain: "thirdblog",
+          favicon_emoji: "⭐"
+        }
+      }
+    end
+
+    assert_redirected_to dashboard_path
+    follow_redirect!
+    assert_match(/User cannot have more than 2 blogs/, response.body)
+  end
 end
