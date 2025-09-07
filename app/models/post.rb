@@ -4,7 +4,7 @@ class Post < ApplicationRecord
   extend FriendlyId
   friendly_id :title, use: [:sequentially_slugged, :scoped, :history], scope: :blog
   acts_as_taggable_on :tags
-  acts_as_taggable_tenant :author_id
+  acts_as_taggable_tenant :blog_id
 
   # Associations
   belongs_to :author, class_name: "User"
