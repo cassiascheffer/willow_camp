@@ -150,7 +150,7 @@ class Blog < ApplicationRecord
 
   def only_one_primary_per_user
     return unless primary?
-    
+
     existing_primary = user.blogs.where(primary: true).where.not(id: id)
     if existing_primary.exists?
       errors.add(:primary, "can only have one primary blog per user")

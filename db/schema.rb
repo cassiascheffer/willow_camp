@@ -145,8 +145,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_31_122011) do
     t.string "subdomain"
     t.string "name"
     t.string "blog_title"
-    t.string "token"
-    t.datetime "token_expires_at", precision: nil
     t.string "slug"
     t.text "site_meta_description"
     t.string "favicon_emoji"
