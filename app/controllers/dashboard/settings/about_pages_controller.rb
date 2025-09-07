@@ -2,10 +2,10 @@ class Dashboard::Settings::AboutPagesController < Dashboard::BaseController
   before_action :set_page, only: [:update, :destroy]
 
   def create
-    @page = current_user.pages.new(page_params)
+    @page = @blog.pages.new(page_params)
     if @page.save
       respond_to do |format|
-        format.html { redirect_to dashboard_settings_path, notice: "Created!" }
+        format.html { redirect_to dashboard_blog_settings_path(@blog.subdomain), notice: "Created!" }
         format.turbo_stream {
           flash.now[:notice] = "You now have an about page. Nice!"
         }
@@ -21,7 +21,7 @@ class Dashboard::Settings::AboutPagesController < Dashboard::BaseController
   def update
     if @page.update(page_params)
       respond_to do |format|
-        format.html { redirect_to dashboard_settings_path, notice: "Updated!" }
+        format.html { redirect_to dashboard_blog_settings_path(@blog.subdomain), notice: "Updated!" }
         format.turbo_stream {
           flash.now[:notice] = "Updated!"
         }
@@ -35,12 +35,14 @@ class Dashboard::Settings::AboutPagesController < Dashboard::BaseController
   end
 
   def destroy
+    @page.slug
     @page.destroy
     respond_to do |format|
-      format.html { redirect_to dashboard_settings_path, notice: "Page was successfully deleted." }
+      format.html { redirect_to dashboard_blog_settings_path(@blog.subdomain), notice: "Page was successfully deleted." }
       format.turbo_stream {
         flash.now[:notice] = "Page was successfully deleted."
-        @about_page = current_user.pages.find_or_create_by(title: "About", slug: "about")
+        # Always set @about_page - recreate if about page was deleted, otherwise find existing
+        @about_page = @blog.pages.find_or_create_by(title: "About", slug: "about")
       }
     end
   end
@@ -48,7 +50,7 @@ class Dashboard::Settings::AboutPagesController < Dashboard::BaseController
   private
 
   def set_page
-    @page = current_user.pages.find_by!(slug: params[:slug], author_id: current_user.id)
+    @page = @blog.pages.find_by!(slug: params[:slug])
   end
 
   def page_params

@@ -1,0 +1,12 @@
+<main aria-label="User Settings" class="container lg:w-3/4 mx-auto">
+  <section aria-label="API Tokens" class="mb-8">
+    <h1 class="text-3xl font-bold mb-4">API Tokens</h1>
+    <div class="card p-4">
+      <p class="text-zinc-500 text-sm pb-2">
+        API tokens allow you to access your blog content programmatically. Keep these secure and don't share them.
+      </p>
+      <%= render "dashboard/settings/token_form", token: @token %>
+      <%= render "dashboard/settings/token_list", tokens: @tokens %>
+    </div>
+  </section>
+</main>

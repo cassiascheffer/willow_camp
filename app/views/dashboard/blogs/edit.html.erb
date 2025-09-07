@@ -1,0 +1,17 @@
+  <main aria-label="Blog Settings" class="container lg:w-3/4 mx-auto">
+  <section aria-label="Blog Details" class="mb-8">
+    <h1 class="text-3xl font-bold mb-4">Blog Settings</h1>
+    <div class="card p-4">
+      <%= render "blog_form", blog: @blog %>
+    </div>
+  </section>
+  <section aria-label="About Page" class="mb-8">
+    <h1 class="text-3xl font-bold mb-4">About Page</h1>
+    <div class="card p-4">
+      <p class="text-zinc-500 text-sm pb-2">
+        The About page will show up on the top nav next to the RSS link for this blog.
+      </p>
+      <%= render "page_form", page: @about_page %>
+    </div>
+  </section>
+</main>

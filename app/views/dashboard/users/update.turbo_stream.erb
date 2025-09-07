@@ -1,6 +1,3 @@
 <%= turbo_stream.update "flash-messages" do %>
   <%= render 'shared/flash_messages' %>
 <% end %>
-<%= turbo_stream.replace "user_form" do %>
-  <%= render "dashboard/settings/user_form", user: @user %>
-<% end %>

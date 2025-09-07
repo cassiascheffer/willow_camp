@@ -8,84 +8,61 @@ class Dashboard::UsersControllerTest < ActionDispatch::IntegrationTest
     sign_in @user
   end
 
-  test "should patch update and respond with turbo stream" do
+  test "should get user settings page" do
+    get dashboard_user_settings_path
+    assert_response :success
+    assert_not_nil assigns(:user)
+    assert_not_nil assigns(:tokens)
+    assert_not_nil assigns(:token)
+  end
+
+  test "should patch update user profile and respond with turbo stream" do
     patch dashboard_user_url(@user), params: {user: {name: "Updated Name"}}, headers: {"Accept" => "text/vnd.turbo-stream.html"}
     assert_response :success
     assert_equal "text/vnd.turbo-stream.html; charset=utf-8", @response.content_type
   end
 
-  test "should update user with custom domain" do
+  test "should update user name" do
     patch dashboard_user_url(@user), params: {
       user: {
-        name: "Updated Name",
-        custom_domain: "newdomain.com"
+        name: "Updated Name"
       }
     }
     assert_response :redirect
     @user.reload
-    assert_equal "newdomain.com", @user.custom_domain
+    assert_equal "Updated Name", @user.name
   end
 
-  test "should update user with blank custom domain" do
-    @user.update!(custom_domain: "olddomain.com")
-
+  test "should update user email" do
     patch dashboard_user_url(@user), params: {
       user: {
-        custom_domain: ""
+        email: "newemail@example.com"
       }
     }
     assert_response :redirect
     @user.reload
-    assert_nil @user.custom_domain
+    assert_equal "newemail@example.com", @user.email
   end
 
-  test "should reject invalid custom domain format" do
+  test "should update user password" do
     patch dashboard_user_url(@user), params: {
       user: {
-        custom_domain: "invalid-domain"
+        password: "newpassword123",
+        password_confirmation: "newpassword123"
       }
     }
-    assert_response :redirect # Should redirect back with validation errors
-    @user.reload
-    assert_nil @user.custom_domain
+    assert_response :redirect
+    assert @user.reload.valid_password?("newpassword123")
   end
 
-  test "should reject duplicate custom domain" do
-    other_user = users(:custom_domain_user)
-
+  test "should not update with invalid email" do
     patch dashboard_user_url(@user), params: {
       user: {
-        custom_domain: other_user.custom_domain
-      }
-    }
-    assert_response :redirect # Should redirect back with validation errors
-    @user.reload
-    assert_nil @user.custom_domain
-  end
-
-  test "should allow updating other fields when custom domain is invalid" do
-    patch dashboard_user_url(@user), params: {
-      user: {
-        name: "New Name",
-        custom_domain: "invalid"
-      }
-    }
-    assert_response :redirect # Should redirect back with validation errors
-    # Name should not be updated when validation fails
-    @user.reload
-    assert_not_equal "New Name", @user.name
-  end
-
-  test "should update subdomain and custom domain together" do
-    patch dashboard_user_url(@user), params: {
-      user: {
-        subdomain: "newsubdomain",
-        custom_domain: "newdomain.com"
+        email: "invalid-email"
       }
     }
     assert_response :redirect
     @user.reload
-    assert_equal "newsubdomain", @user.subdomain
-    assert_equal "newdomain.com", @user.custom_domain
+    assert_not_equal "invalid-email", @user.email
   end
 end

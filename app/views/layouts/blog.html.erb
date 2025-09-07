@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="<%= @author&.theme || 'light' %>">
+<html lang="en" data-theme="<%= @blog&.theme || 'light' %>">
   <head>
     <title>
       <%= content_for(:title) || blog_title_for(@author) %>
@@ -9,6 +9,7 @@
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
+    <meta name="current-theme" content="<%= @blog&.theme || 'light' %>">
     <!-- Open Graph meta tags for social media sharing -->
     <meta property="og:title" content="<%= content_for(:og_title) || content_for(:title) || blog_title_for(@author) %>">
     <meta property="og:description" content="<%= content_for(:og_description) || content_for(:description) || "A blog powered by willow.camp" %>">
@@ -37,7 +38,7 @@
       <link type="application/feed+json" rel="alternate" href="<%= posts_json_url(url_options_for(@author).merge(format: :json)) %>" title="<%= blog_title_for(@author) %> JSON Feed">
     <% end %>
     <!-- Favicon from OpenMoji assets -->
-    <% emoji_filename = emoji_to_openmoji_filename(@author&.favicon_emoji) %>
+    <% emoji_filename = emoji_to_openmoji_filename(@blog&.favicon_emoji || '🏕️') %>
     <link rel="icon" href="/openmoji-32x32-ico/<%= emoji_filename %>.ico" sizes="32x32">
     <link rel="icon" href="/openmoji-svg-color/<%= emoji_filename %>.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/openmoji-apple-touch-icon-180x180/<%= emoji_filename %>.png">
@@ -58,8 +59,8 @@
           <span class="sr-only">Open menu</span>
         </summary>
         <nav id="mobile-nav" class="pb-4 space-y-2" aria-label="Mobile navigation menu" data-mobile-menu-target="nav">
-          <% if @author.pages.present? %>
-            <% @author.pages.each do |page| %>
+          <% if @blog&.pages&.present? %>
+            <% @blog.pages.published.each do |page| %>
               <a href="<%= post_path(page) %>" class="block link link-hover font-medium py-2" aria-label="<%= page.title %>">
                 <%= page.title %>
               </a>
@@ -76,8 +77,8 @@
           <%= blog_title_for(@author) %>
         </a>
         <nav id="navigation" class="space-x-4" aria-label="Main navigation">
-          <% if @author.pages.present? %>
-            <% @author.pages.each do |page| %>
+          <% if @blog&.pages&.present? %>
+            <% @blog.pages.published.each do |page| %>
               <a href="<%= post_path(page) %>" class="link link-hover font-medium" aria-label="<%= page.title %>">
                 <%= page.title %>
               </a>

@@ -3,11 +3,11 @@ module SecureDomainRedirect
 
   private
 
-  def secure_redirect_to_custom_domain(author, current_host, current_path)
-    return false unless author&.should_redirect_to_custom_domain?(current_host)
+  def secure_redirect_to_custom_domain(blog, current_host, current_path)
+    return false unless blog&.should_redirect_to_custom_domain?(current_host)
 
     # Additional security validation
-    custom_domain = author.custom_domain
+    custom_domain = blog.custom_domain
     return false unless valid_redirect_domain?(custom_domain)
 
     # Construct secure redirect URL
@@ -64,17 +64,19 @@ module SecureDomainRedirect
   end
 
   def set_author_with_secure_redirect
-    @author = User.by_domain(request.host).first
+    @blog = Blog.by_domain(request.host).first
 
-    if @author.nil?
+    if @blog.nil?
       render file: Rails.root.join("public", "404.html"),
         status: :not_found,
         layout: false
       return
     end
 
+    @author = @blog.user
+
     # Use secure redirect method
-    if secure_redirect_to_custom_domain(@author, request.host, request.fullpath)
+    if secure_redirect_to_custom_domain(@blog, request.host, request.fullpath)
       nil
     end
   end

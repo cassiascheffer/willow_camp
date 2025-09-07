@@ -1,0 +1,69 @@
+<% content_for :title, @post.title %>
+<% content_for :og_title, @post.title %>
+<% content_for :og_description, @post.meta_description.presence || truncate(strip_tags(@post.body_html), length: 160) %>
+<% content_for :og_type, "article" %>
+<% if @post.author.social_share_image_enabled? && @post.social_share_image.attached? %>
+  <% content_for :og_image do %>
+    <meta property="og:image" content="<%= rails_blob_url(@post.social_share_image, host: request.host_with_port, protocol: request.protocol.chomp(':')) %>">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="627">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="<%= rails_blob_url(@post.social_share_image, host: request.host_with_port, protocol: request.protocol.chomp(':')) %>">
+  <% end %>
+<% else %>
+<% end %>
+<% content_for :head do %>
+  <% if @post.meta_description.present? %>
+    <meta name="description" content="<%= @post.meta_description %>">
+  <% end %>
+  <!-- Article-specific Open Graph meta tags -->
+  <% unless @post.draft? %>
+    <meta property="article:published_time" content="<%= @post.published_at.iso8601 %>">
+  <% end %>
+  <meta property="article:author" content="<%= @post.author_name %>">
+  <% @post.tags.each do |tag| %>
+    <meta property="article:tag" content="<%= tag.name %>">
+  <% end %>
+<% end %>
+<div class="">
+  <% if notice.present? %>
+    <div role="alert" aria-live="polite" class="alert alert-success" id="notice"><%= notice %></div>
+  <% end %>
+  <article>
+    <h1 class="text-3xl font-bold mb-6"><%= @post.title %></h1>
+    <% if @post.draft? %>
+      <div class="badge badge-soft badge-info mb-4">Draft</div>
+    <% else %>
+      <div class="mb-6">
+        <p class="font-medium"><%= @post.author_name %></p>
+        <p class="text-sm text-base-content/60">Published on <%= @post.published_at.strftime("%B %d, %Y") %></p>
+      </div>
+    <% end %>
+    <%# Ensure that even if @post is a Page, we render blog/posts/_post %>
+    <% post_partial = "blogs/posts/post" %>
+    <%= render partial: post_partial, object: @post %>
+  </article>
+  <% if @post.tags.any? %>
+    <nav class="text-sm text-base-content/70 my-8" aria-label="Post tags" role="navigation">
+      <span class="sr-only">This post is tagged with:</span>
+      <span aria-hidden="true">Tagged:</span>
+      <ul class="inline-flex flex-wrap gap-2 ml-2" role="list">
+        <% @post.tags.each do |tag| %>
+          <li>
+            <%= link_to tag.name, tag_path(tag.slug), class: "badge badge-ghost badge-sm hover:badge-primary", aria: { label: "View all posts tagged with #{tag.name}" } %>
+          </li>
+        <% end %>
+      </ul>
+    </nav>
+  <% end %>
+  <% if show_post_footer?(@post) %>
+    <footer class="mt-8 pt-6 border-t border-base-300">
+      <div class="prose prose-sm max-w-none">
+        <%= sanitize(@post.blog.post_footer_html, tags: %w(table th tr td span) + ActionView::Helpers::SanitizeHelper.sanitizer_vendor.safe_list_sanitizer.allowed_tags.to_a, attributes: %w(class) + ActionView::Helpers::SanitizeHelper.sanitizer_vendor.safe_list_sanitizer.allowed_attributes.to_a) %>
+      </div>
+    </footer>
+  <% end %>
+  <div class="mt-8 border-t border-base-300 pt-6">
+    <%= link_to "Back to posts", posts_path, class: "btn btn-ghost btn-sm" %>
+  </div>
+</div>

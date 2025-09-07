@@ -1,4 +1,4 @@
-class Dashboard::PostsController < Dashboard::BaseController
+class Dashboard::PostsController < Dashboard::BlogBaseController
   before_action :set_post, only: %i[edit update destroy]
   before_action :authorize_user!, only: %i[edit update destroy]
 
@@ -15,7 +15,7 @@ class Dashboard::PostsController < Dashboard::BaseController
     if @post.update(post_params)
       respond_to do |format|
         format.html {
-          redirect_to edit_dashboard_post_path(@post.id)
+          redirect_to edit_dashboard_post_path(blog_subdomain: current_blog.subdomain, id: @post.id)
         }
         format.turbo_stream {
           render :update, status: :ok
@@ -43,7 +43,7 @@ class Dashboard::PostsController < Dashboard::BaseController
   private
 
   def set_post
-    @post = current_user.posts.find(params[:id])
+    @post = current_blog.posts.find(params[:id])
   end
 
   def authorize_user!
@@ -56,8 +56,8 @@ class Dashboard::PostsController < Dashboard::BaseController
       :published_at, :meta_description, :featured
     ]
 
-    # Only allow social_share_image parameter for users with the feature enabled
-    permitted_params << :social_share_image if current_user.social_share_image_enabled?
+    # Only allow social_share_image parameter for blogs with the feature enabled
+    permitted_params << :social_share_image if current_blog.social_share_image_enabled?
 
     params.require(:post).permit(permitted_params)
   end

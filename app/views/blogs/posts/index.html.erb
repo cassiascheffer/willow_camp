@@ -1,0 +1,41 @@
+<% content_for :title, "#{blog_title_for(@author)} | Posts" %>
+<% content_for :og_title, "#{blog_title_for(@author)} | Posts" %>
+<% content_for :og_description, @author&.site_meta_description || "Latest posts from #{blog_title_for(@author)}" %>
+<% content_for :og_type, "website" %>
+<% content_for :head do %>
+  <% if @author&.site_meta_description.present? %>
+    <meta name="description" content="<%= @author.site_meta_description %>">
+  <% end %>
+<% end %>
+<% if notice.present? %>
+  <div role="alert" aria-live="polite" class="alert alert-success" id="notice"><%= notice %></div>
+<% end %>
+<% if alert.present? %>
+  <div role="alert" aria-live="assertive" class="alert alert-error" id="alert"><%= alert %></div>
+<% end %>
+<% cache [@author, @featured_posts] do %>
+  <% if @featured_posts.any? %>
+    <div class="card bg-base-100 shadow-sm mb-8">
+      <div class="card-body">
+        <h2 class="card-title text-2xl">Featured</h2>
+        <div class="space-y-2">
+          <%= render partial: 'blogs/posts/featured_post_row', collection: @featured_posts %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+<% end %>
+<div id="posts" class="space-y-8">
+  <% if @posts.any? %>
+    <div class="posts-list space-y-2">
+      <%= render partial: 'blogs/posts/post_row', collection: @posts, cached: true %>
+    </div>
+  <% else %>
+    <div class="text-center py-8">
+      <p class="text-xl text-base-content/60">No posts yet!</p>
+    </div>
+  <% end %>
+  <nav aria-label="Posts pagination" role="navigation">
+    <%== pagy_nav(@pagy) if @pagy.pages > 1 %>
+  </nav>
+</div>

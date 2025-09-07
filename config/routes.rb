@@ -12,9 +12,9 @@ class DomainConstraint
     # Allow if it's a subdomain of willow.camp
     return true if host.ends_with?(".willow.camp") && request.subdomain.present?
 
-    # Allow if it's a custom domain (not willow.camp and has a user)
+    # Allow if it's a custom domain (not willow.camp and has a blog)
     if !host.ends_with?(".willow.camp")
-      return User.by_domain(host).exists?
+      return Blog.by_domain(host).exists?
     end
 
     false
@@ -41,45 +41,59 @@ Rails.application.routes.draw do
     }
 
   get "dashboard" => "dashboard#show", :as => :dashboard
+  get "dashboard/security" => "dashboard/security#edit", :as => :dashboard_security
+
   namespace :dashboard do
-    namespace :settings do
-      resources :about_pages, param: :slug, path: :pages
-    end
-    resource :settings, only: %i[show]
-    resources :posts, only: %i[edit update destroy]
-    resources :featured_posts, only: %i[update]
-    resources :untitled_posts, only: %i[create]
+    get "user/settings" => "users#show", :as => :user_settings
+    patch "user/settings" => "users#update"
     resources :users, only: %i[edit update]
     resources :tokens, only: %i[create destroy]
     resource :subdomain, only: %i[update]
-    resources :tags, only: %i[index update destroy]
+    resources :blogs, only: %i[create]
+
+    # Blog-scoped resources under :blog_subdomain
+    scope ":blog_subdomain" do
+      get "/" => "/dashboard#show", :as => :blog
+      get "tags" => "tags#index", :as => :blog_tags
+      get "settings" => "blogs#edit", :as => :blog_settings
+      patch "settings" => "blogs#update"
+
+      resources :posts, only: %i[edit update destroy]
+      resources :featured_posts, only: %i[update]
+      resources :untitled_posts, only: %i[create]
+      resources :tags, only: %i[update destroy]
+
+      namespace :settings do
+        resources :about_pages, param: :slug, path: :pages
+      end
+    end
   end
 
   resources :previews, only: %i[show]
 
   constraints(DomainConstraint.new) do
     # Tags
-    get "/tags", to: "blog/tags#index", as: :tags
-    get "/t/:tag", to: "blog/tags#show", as: :tag
+    get "/tags", to: "blogs/tags#index", as: :tags
+    get "/t/:tag", to: "blogs/tags#show", as: :tag
     # Posts
-    get "/", to: "blog/posts#index", as: :posts
+    get "/", to: "blogs/posts#index", as: :posts
 
     # Feed formats
-    get "/posts/rss", to: "blog/feed#show", defaults: {format: "rss"}, as: :posts_rss
-    get "/posts/atom", to: "blog/feed#show", defaults: {format: "atom"}, as: :posts_atom
-    get "/posts/json", to: "blog/feed#show", defaults: {format: "json"}, as: :posts_json
+    get "/posts/rss", to: "blogs/feed#show", defaults: {format: "rss"}, as: :posts_rss
+    get "/posts/atom", to: "blogs/feed#show", defaults: {format: "atom"}, as: :posts_atom
+    get "/posts/json", to: "blogs/feed#show", defaults: {format: "json"}, as: :posts_json
 
     # Feed subscription page
-    get "/subscribe", to: "blog/feed#subscribe", as: :subscribe
+    get "/subscribe", to: "blogs/feed#subscribe", as: :subscribe
 
     # Sitemap
-    get "/sitemap.:format", to: "blog/sitemap#show", as: :sitemap
+    get "/sitemap.:format", to: "blogs/sitemap#show", as: :sitemap
 
     # Robots.txt
-    get "/robots.:format", to: "blog/robots#show", as: :robots
+    get "/robots.:format", to: "blogs/robots#show", as: :robots
 
     # This catch-all route must come last to avoid matching other specific routes
-    get "/:slug", to: "blog/posts#show", as: :post
+    get "/:slug", to: "blogs/posts#show", as: :post
   end
 
   namespace :api do

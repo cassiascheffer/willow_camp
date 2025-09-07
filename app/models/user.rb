@@ -3,6 +3,7 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable
 
   # Associations
+  has_many :blogs, dependent: :destroy
   has_many :posts, foreign_key: "author_id", dependent: :destroy, inverse_of: :author
   has_many :pages, foreign_key: "author_id", dependent: :destroy, inverse_of: :author
   has_many :tokens, class_name: "UserToken", dependent: :destroy
@@ -52,10 +53,6 @@ class User < ApplicationRecord
     else
       where(custom_domain: normalized_domain)
     end
-  end
-
-  after_create_commit do
-    pages.create!(title: "About", slug: "about")
   end
 
   # Tag helper methods

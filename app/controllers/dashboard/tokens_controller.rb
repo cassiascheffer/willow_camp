@@ -11,7 +11,7 @@ class Dashboard::TokensController < Dashboard::BaseController
         end
         format.html do
           flash[:notice] = "Token created successfully"
-          redirect_to dashboard_settings_path
+          redirect_to dashboard_user_settings_path
         end
       end
     else
@@ -21,7 +21,7 @@ class Dashboard::TokensController < Dashboard::BaseController
         end
         format.html do
           flash[:alert] = "There were errors creating the token"
-          redirect_to dashboard_settings_path
+          redirect_to dashboard_user_settings_path
         end
       end
     end
@@ -32,11 +32,11 @@ class Dashboard::TokensController < Dashboard::BaseController
       flash[:notice] = "Token deleted successfully"
       respond_to do |format|
         format.turbo_stream
-        format.html { redirect_to dashboard_settings_path }
+        format.html { redirect_to dashboard_user_settings_path }
       end
     else
       flash[:alert] = "Failed to delete token"
-      redirect_to dashboard_settings_path
+      redirect_to dashboard_user_settings_path
     end
   end
 

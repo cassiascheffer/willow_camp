@@ -12,7 +12,15 @@ class Api::PostsController < Api::BaseController
   end
 
   def create
-    @post = @current_user.posts.build
+    # For backwards compatibility, use the user's primary blog or first blog
+    blog = @current_user.blogs.find_by(primary: true) || @current_user.blogs.first
+
+    if blog.nil?
+      render json: {error: "No blog found. Please create a blog first."}, status: :unprocessable_content
+      return
+    end
+
+    @post = blog.posts.build(author: @current_user)
     @post = UpdatePostFromMd.new(post_params[:markdown], @post).call
 
     if @post.save

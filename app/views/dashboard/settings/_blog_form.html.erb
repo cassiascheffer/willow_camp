@@ -1,0 +1,67 @@
+<%= turbo_frame_tag "blog_form" do %>
+  <%= form_with(model: [@blog], url: dashboard_blog_settings_path(@blog.subdomain), method: :patch, id: dom_id(blog), class: "form-control", data: { turbo_frame: "blog_form", controller: "domain-downcase", action: "submit->domain-downcase#submit" }) do |form| %>
+    <% if blog.errors.any? %>
+      <div id="error_explanation" class="alert alert-error">
+        <h2><%= pluralize(blog.errors.count, "error") %> prohibited this blog from being saved:</h2>
+        <ul>
+          <% blog.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+      <div class="form-control w-full">
+        <%= form.label :title, "Blog Title", class: "label" %>
+        <%= form.text_field :title, required: false, class: "input input-bordered w-full" %>
+      </div>
+      <div class="form-control w-full" data-controller="emoji-choices favicon-preview">
+        <%= form.label :favicon_emoji, class: "label" %>
+        <%= form.hidden_field :favicon_emoji, data: { "emoji-choices-target": "input", "favicon-preview-target": "input", action: "input->favicon-preview#updatePreview" } %>
+        <select data-emoji-choices-target="select" class="w-full"></select>
+        <div class="text-xs text-gray-500 mt-1">Search and select an emoji for your blog's favicon</div>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+      <div class="form-control w-full">
+        <%= form.label :subdomain, class: "label" %>
+        <%= form.text_field :subdomain, required: true, class: "input input-bordered w-full", autocapitalize: "off", data: { domain_downcase_target: "subdomain", action: "input->domain-downcase#downcaseInput" } %>
+        <div class="text-xs text-gray-500 mt-1">Your blog will be available at <%= blog.subdomain %>.willow.camp</div>
+      </div>
+      <div class="form-control w-full">
+        <%= form.label :custom_domain, "Custom Domain (optional)", class: "label" %>
+        <%= form.text_field :custom_domain, required: false, placeholder: "myblog.com", class: "input input-bordered w-full", autocapitalize: "off", data: { domain_downcase_target: "customDomain", action: "input->domain-downcase#downcaseInput" } %>
+        <div class="text-xs text-gray-500 mt-1">
+          Use your own domain instead of a subdomain. After saving, add a CNAME record in your DNS settings:<br>
+          <strong>Name:</strong> @ (or your domain) → <strong>Value:</strong>
+          <pre><%= blog.subdomain %>.willow.camp</pre>
+          <br>
+          SSL certificates will be automatically provisioned.
+        </div>
+      </div>
+    </div>
+    <div class="mb-6">
+      <%= render "dashboard/settings/blog_theme_selector", form: form, blog: blog %>
+    </div>
+    <div class="form-control w-full mb-4">
+      <%= form.label :meta_description, "Site Meta Description", class: "label" %>
+      <%= form.text_area :meta_description, required: false, 'aria-describedby': "site_meta_description_help", maxlength: 255, class: "textarea textarea-bordered w-full" %>
+      <div id="site_meta_description_help" class="text-xs text-gray-500 mt-2">Used for SEO on index pages of your blog</div>
+    </div>
+    <div class="form-control w-full mb-4">
+      <%= form.label :post_footer_markdown, "Post Footer", class: "label" %>
+      <%= form.text_area :post_footer_markdown, required: false, maxlength: 10000, class: "textarea textarea-bordered w-full", rows: 4 %>
+      <div class="text-xs text-gray-500 mt-1">Optional footer content that appears at the end of each blog post (Markdown supported)</div>
+    </div>
+    <div class="form-control mb-4">
+      <label class="label cursor-pointer">
+        <%= form.check_box :no_index, class: "checkbox" %>
+        <span class="label-text">Tell search engines to not index my site</span>
+      </label>
+      <div class="text-xs text-gray-500 mt-1">When checked, search engines will be instructed not to crawl or index your blog</div>
+    </div>
+    <div class="form-control w-full mt-6">
+      <%= form.submit "Update blog settings", class: "btn btn-primary w-full" %>
+    </div>
+  <% end %>
+<% end %>

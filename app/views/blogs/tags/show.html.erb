@@ -1,0 +1,26 @@
+<div class="max-w-3xl mx-auto">
+  <% if notice.present? %>
+    <div role="alert" aria-live="polite" class="alert alert-success" id="notice"><%= notice %></div>
+  <% end %>
+  <% if alert.present? %>
+    <div role="alert" aria-live="assertive" class="alert alert-error" id="alert"><%= alert %></div>
+  <% end %>
+  <div class="flex justify-between items-center mb-10">
+    <h1 class="text-3xl font-bold">Posts tagged with <%= @tag %></h1>
+  </div>
+  <div id="posts" class="space-y-8">
+    <% if @posts.any? %>
+      <div class="posts-list space-y-2">
+        <%= render partial: 'blogs/posts/post_row', collection: @posts %>
+      </div>
+    <% else %>
+      <div class="text-center py-8">
+        <p class="text-xl text-base-content/60">No posts found</p>
+      </div>
+    <% end %>
+    <%= link_to "All Tags", tags_path, class: "btn btn-outline btn-sm" %>
+    <nav aria-label="Tagged posts pagination" role="navigation">
+      <%== pagy_nav(@pagy) if @pagy.pages > 1 %>
+    </nav>
+  </div>
+</div>

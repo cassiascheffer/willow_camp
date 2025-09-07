@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-theme="<%= @author&.theme || 'light' %>">
+<html data-theme="<%= @blog&.theme || 'light' %>">
   <head>
     <title><%= content_for(:title) || "willow.camp" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -7,9 +7,10 @@
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
+    <meta name="current-theme" content="<%= @blog&.theme || 'light' %>">
     <%= yield :head %>
     <!-- Favicon from OpenMoji assets -->
-    <% emoji_filename = emoji_to_openmoji_filename(@author&.favicon_emoji) %>
+    <% emoji_filename = emoji_to_openmoji_filename(@blog&.favicon_emoji || '🏕️') %>
     <link rel="icon" href="/openmoji-32x32-ico/<%= emoji_filename %>.ico" sizes="32x32">
     <link rel="icon" href="/openmoji-svg-color/<%= emoji_filename %>.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/openmoji-apple-touch-icon-180x180/<%= emoji_filename %>.png">
@@ -17,41 +18,197 @@
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
-  <body class="font-mono" data-controller="theme" data-theme-theme-value="<%= @author&.theme || 'light' %>">
+  <body class="font-mono" data-controller="theme" data-theme-theme-value="<%= @blog&.theme || 'light' %>">
     <nav class="bg-base-100 shadow-md w-full px-8" aria-label="Main Navigation">
       <!-- Mobile menu with details/summary -->
       <details class="lg:hidden">
         <summary class="py-4 flex items-center justify-between cursor-pointer">
-          <a class="text-xl font-bold hover:text-primary transition-colors" href="<%= dashboard_path %>"><%= blog_title_for(@user) %></a>
+          <a class="text-xl font-bold hover:text-primary transition-colors" href="<%= blog_nav_path(@blog) %>"><%= blog_nav_title(@blog) %></a>
           <%= heroicon "bars-3", options: { class: "h-6 w-6" } %>
         </summary>
         <div class="pb-4 space-y-2">
-          <%= link_to "Posts", dashboard_path, class: "block link link-hover font-medium py-2 #{current_page?(dashboard_path) ? 'text-primary' : ''}" %>
-          <%= link_to "Tags", dashboard_tags_path, class: "block link link-hover font-medium py-2 #{current_page?(dashboard_tags_path) ? 'text-primary' : ''}" %>
-          <%= link_to "Settings", dashboard_settings_path, class: "block link link-hover font-medium py-2 #{current_page?(dashboard_settings_path) ? 'text-primary' : ''}" %>
+          <% if @blog %>
+            <%= link_to "Posts", dashboard_blog_path(@blog.subdomain), class: "block link link-hover font-medium py-2 #{current_page?(dashboard_blog_path(@blog.subdomain)) ? 'text-primary' : ''}" %>
+            <%= link_to "Tags", dashboard_blog_tags_path(@blog.subdomain), class: "block link link-hover font-medium py-2 #{current_page?(dashboard_blog_tags_path(@blog.subdomain)) ? 'text-primary' : ''}" %>
+          <% else %>
+            <%= link_to "Posts", dashboard_path, class: "block link link-hover font-medium py-2 #{current_page?(dashboard_path) ? 'text-primary' : ''}" %>
+            <%= link_to "Tags", dashboard_tags_path, class: "block link link-hover font-medium py-2 #{current_page?(dashboard_tags_path) ? 'text-primary' : ''}" %>
+          <% end %>
           <hr class="my-2">
-          <%= link_to 'Logout', destroy_user_session_path, data: { turbo_method: :delete }, class: 'block link link-hover font-medium py-2', role: 'button', tabindex: '0' %>
+          <div class="flex items-center justify-between">
+            <% if @blog %>
+              <%= link_to dashboard_blog_settings_path(@blog.subdomain), class: 'link link-hover font-medium py-2', title: 'Settings' do %>
+                <%= heroicon "cog-6-tooth", options: { class: "h-5 w-5" } %>
+              <% end %>
+            <% else %>
+              <%= link_to dashboard_user_settings_path, class: 'link link-hover font-medium py-2', title: 'Settings' do %>
+                <%= heroicon "cog-6-tooth", options: { class: "h-5 w-5" } %>
+              <% end %>
+            <% end %>
+            <details class="dropdown dropdown-end">
+              <summary class="link link-hover font-medium py-2 cursor-pointer" title="Account">
+                <%= heroicon "user-circle", options: { class: "h-5 w-5" } %>
+              </summary>
+              <ul class="dropdown-content menu bg-base-100 rounded-box z-[1] w-64 p-2 shadow-lg border mt-2">
+                <% if @blog %>
+                  <li class="pointer-events-none">
+                    <div class="flex items-center gap-3 bg-base-200 rounded-lg px-3 py-2 mb-2">
+                      <% emoji_filename = emoji_to_openmoji_filename(@blog.favicon_emoji) %>
+                      <img src="/openmoji-svg-color/<%= emoji_filename %>.svg" alt="<%= @blog.favicon_emoji %>" class="w-8 h-8">
+                      <div>
+                        <div class="font-semibold"><%= @blog.title || @blog.subdomain %></div>
+                        <div class="text-xs opacity-70"><%= @blog.subdomain %>.willow.camp</div>
+                      </div>
+                    </div>
+                  </li>
+                  <div class="divider my-1"></div>
+                <% end %>
+                <li class="menu-title">
+                  <span>Your Blogs</span>
+                </li>
+                <% current_user.blogs.order(:title).each do |blog| %>
+                  <li>
+                    <% if blog == @blog %>
+                      <span class="flex items-center justify-between text-primary">
+                        <div>
+                          <div class="font-medium"><%= blog.title || blog.subdomain %></div>
+                          <div class="text-xs opacity-70"><%= blog.subdomain %>.willow.camp</div>
+                        </div>
+                        <%= heroicon "check", variant: :mini, options: { class: "h-4 w-4" } %>
+                      </span>
+                    <% else %>
+                      <a href="<%= dashboard_blog_path(blog.subdomain) %>" class="flex items-center justify-between">
+                        <div>
+                          <div class="font-medium"><%= blog.title || blog.subdomain %></div>
+                          <div class="text-xs opacity-70"><%= blog.subdomain %>.willow.camp</div>
+                        </div>
+                      </a>
+                    <% end %>
+                  </li>
+                <% end %>
+                <div class="divider my-1"></div>
+                <% if current_user.blogs_count < 2 %>
+                  <li>
+                    <%= link_to dashboard_path(new_blog: true), class: "flex items-center gap-2" do %>
+                      <%= heroicon "plus", variant: :mini, options: { class: "h-4 w-4" } %>
+                      Add another blog
+                    <% end %>
+                  </li>
+                <% end %>
+                <li>
+                  <%= link_to dashboard_security_path, class: 'flex items-center gap-2' do %>
+                    <%= heroicon "lock-closed", variant: :mini, options: { class: "h-4 w-4" } %>
+                    Security
+                  <% end %>
+                </li>
+                <li>
+                  <%= link_to destroy_user_session_path, data: { turbo_method: :delete }, class: 'flex items-center gap-2' do %>
+                    <%= heroicon "arrow-left-start-on-rectangle", variant: :mini, options: { class: "h-4 w-4" } %>
+                    Log out
+                  <% end %>
+                </li>
+              </ul>
+            </details>
+          </div>
         </div>
       </details>
       <!-- Desktop menu -->
       <div class="hidden lg:flex lg:items-center lg:justify-between py-4">
-        <a class="text-xl font-bold hover:text-primary transition-colors" href="<%= dashboard_path %>"><%= blog_title_for(@user) %></a>
-        <div class="space-x-4">
-          <%= link_to 'Logout', destroy_user_session_path, data: { turbo_method: :delete }, class: 'link link-hover font-medium', role: 'button', tabindex: '0' %>
+        <a class="text-xl font-bold hover:text-primary transition-colors" href="<%= blog_nav_path(@blog) %>"><%= blog_nav_title(@blog) %></a>
+        <div class="flex items-center space-x-4">
+          <% if @blog %>
+            <%= link_to dashboard_blog_settings_path(@blog.subdomain), class: 'link link-hover', title: 'Settings' do %>
+              <%= heroicon "cog-6-tooth", options: { class: "h-5 w-5" } %>
+            <% end %>
+          <% else %>
+            <%= link_to dashboard_user_settings_path, class: 'link link-hover', title: 'Settings' do %>
+              <%= heroicon "cog-6-tooth", options: { class: "h-5 w-5" } %>
+            <% end %>
+          <% end %>
+          <div class="dropdown dropdown-end">
+            <div tabindex="0" role="button" class="link link-hover" title="Account">
+              <%= heroicon "user-circle", options: { class: "h-5 w-5" } %>
+            </div>
+            <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-64 p-2 shadow-lg border mt-2">
+              <% if @blog %>
+                <li class="pointer-events-none">
+                  <div class="flex items-center gap-3 bg-base-200 rounded-lg px-3 py-2 mb-2">
+                    <% emoji_filename = emoji_to_openmoji_filename(@blog.favicon_emoji) %>
+                    <img src="/openmoji-svg-color/<%= emoji_filename %>.svg" alt="<%= @blog.favicon_emoji %>" class="w-8 h-8">
+                    <div>
+                      <div class="font-semibold"><%= @blog.title || @blog.subdomain %></div>
+                      <div class="text-xs opacity-70"><%= @blog.subdomain %>.willow.camp</div>
+                    </div>
+                  </div>
+                </li>
+                <div class="divider my-1"></div>
+              <% end %>
+              <li class="menu-title">
+                <span>Your Blogs</span>
+              </li>
+              <% current_user.blogs.order(:title).each do |blog| %>
+                <li>
+                  <% if blog == @blog %>
+                    <span class="flex items-center justify-between text-primary">
+                      <div>
+                        <div class="font-medium"><%= blog.title || blog.subdomain %></div>
+                        <div class="text-xs opacity-70"><%= blog.subdomain %>.willow.camp</div>
+                      </div>
+                      <%= heroicon "check", variant: :mini, options: { class: "h-4 w-4" } %>
+                    </span>
+                  <% else %>
+                    <a href="<%= dashboard_blog_path(blog.subdomain) %>" class="flex items-center justify-between">
+                      <div>
+                        <div class="font-medium"><%= blog.title || blog.subdomain %></div>
+                        <div class="text-xs opacity-70"><%= blog.subdomain %>.willow.camp</div>
+                      </div>
+                    </a>
+                  <% end %>
+                </li>
+              <% end %>
+              <div class="divider my-1"></div>
+              <% if current_user.blogs_count < 2 %>
+                <li>
+                  <%= link_to dashboard_path(new_blog: true), class: "flex items-center gap-2" do %>
+                    <%= heroicon "plus", variant: :mini, options: { class: "h-4 w-4" } %>
+                    Add another blog
+                  <% end %>
+                </li>
+              <% end %>
+              <li>
+                <%= link_to dashboard_security_path, class: 'flex items-center gap-2' do %>
+                  <%= heroicon "lock-closed", variant: :mini, options: { class: "h-4 w-4" } %>
+                  Security
+                <% end %>
+              </li>
+              <li>
+                <%= link_to destroy_user_session_path, data: { turbo_method: :delete }, class: 'flex items-center gap-2' do %>
+                  <%= heroicon "arrow-left-start-on-rectangle", variant: :mini, options: { class: "h-4 w-4" } %>
+                  Log out
+                <% end %>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </nav>
     <main class="max-w-6xl mx-auto p-4" aria-label="Dashboard Content">
       <header aria-label="Dashboard Header" class="flex justify-between items-center mb-6">
-        <div role="tablist" class="tabs tabs-boxed hidden lg:flex">
-          <%= link_to "Posts", dashboard_path, class: "tab #{current_page?(dashboard_path) ? 'tab-active' : ''}" %>
-          <%= link_to "Tags", dashboard_tags_path, class: "tab #{current_page?(dashboard_tags_path) ? 'tab-active' : ''}" %>
-          <%= link_to "Settings", dashboard_settings_path, class: "tab #{current_page?(dashboard_settings_path) ? 'tab-active' : ''}" %>
+        <div class="flex items-center gap-4">
+          <div role="tablist" class="tabs tabs-boxed hidden lg:flex">
+            <% if @blog %>
+              <%= link_to "Posts", dashboard_blog_path(@blog.subdomain), class: "tab #{current_page?(dashboard_blog_path(@blog.subdomain)) ? 'tab-active' : ''}" %>
+              <%= link_to "Tags", dashboard_blog_tags_path(@blog.subdomain), class: "tab #{current_page?(dashboard_blog_tags_path(@blog.subdomain)) ? 'tab-active' : ''}" %>
+            <% else %>
+              <%= link_to "Posts", dashboard_path, class: "tab #{current_page?(dashboard_path) ? 'tab-active' : ''}" %>
+              <%= link_to "Tags", dashboard_tags_path, class: "tab #{current_page?(dashboard_tags_path) ? 'tab-active' : ''}" %>
+            <% end %>
+          </div>
         </div>
         <div class="flex gap-2">
-          <% if @user&.subdomain.present? %>
-            <%= button_to "New Post", dashboard_untitled_posts_path, method: :post, class: "btn btn-sm btn-primary" %>
-            <a href="<%= posts_url(subdomain: @user.subdomain) %>" class="btn btn-sm btn-outline" target="_blank">View Site</a>
+          <% if @blog&.subdomain.present? %>
+            <%= button_to "New Post", dashboard_untitled_posts_path(blog_subdomain: @blog.subdomain), method: :post, class: "btn btn-sm btn-primary" %>
+            <a href="<%= posts_url(subdomain: @blog.subdomain) %>" class="btn btn-sm btn-outline" target="_blank">View Site</a>
           <% end %>
         </div>
       </header>

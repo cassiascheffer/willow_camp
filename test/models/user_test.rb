@@ -90,11 +90,62 @@ class UserTest < ActiveSupport::TestCase
     )
     user.posts.create!(title: "Test Post", body_markdown: "Lorem ipsum")
 
-    # User creation automatically creates a page (which inherits from Post)
-    # So destroying the user will destroy both the manual post and the auto-created page
-    assert_difference "Post.count", -2 do
+    # Users no longer auto-create pages, so only the manual post is destroyed
+    assert_difference "Post.count", -1 do
       user.destroy
     end
+  end
+
+  # Blog Association Tests
+  test "should have many blogs" do
+    assert_respond_to @user, :blogs
+  end
+
+  test "should create and associate blogs" do
+    blog = @user.blogs.create!(
+      subdomain: "myblog",
+      title: "My Blog",
+      favicon_emoji: "🚀"
+    )
+    assert_includes @user.blogs, blog
+    assert_equal @user, blog.user
+  end
+
+  test "should destroy associated blogs when user is destroyed" do
+    user = User.create!(
+      name: "Test User",
+      email: "test_blogs@example.com",
+      password: "password123",
+      password_confirmation: "password123"
+    )
+    user.blogs.create!(
+      subdomain: "testblogdestroy",
+      favicon_emoji: "🎯"
+    )
+
+    assert_difference "Blog.count", -1 do
+      user.destroy
+    end
+  end
+
+  test "can have multiple blogs" do
+    user = users(:test_user_no_blog)
+    initial_count = user.blogs.count
+
+    blog1 = user.blogs.create!(
+      subdomain: "blog1",
+      title: "First Blog",
+      favicon_emoji: "🚀"
+    )
+    blog2 = user.blogs.create!(
+      subdomain: "blog2",
+      title: "Second Blog",
+      favicon_emoji: "🎯"
+    )
+
+    assert_equal initial_count + 2, user.blogs.count
+    assert_includes user.blogs, blog1
+    assert_includes user.blogs, blog2
   end
 
   test "should destroy associated tokens when user is destroyed" do
@@ -210,7 +261,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal @custom_domain_user, found_user
   end
 
-  test "should create about page when user is created" do
+  test "should not create about page when user is created" do
     user = User.create!(
       name: "Test User",
       email: "test_about@example.com",
@@ -219,9 +270,8 @@ class UserTest < ActiveSupport::TestCase
       subdomain: "testabout"
     )
 
+    # About pages are now created at the blog level, not user level
     about_page = user.pages.find_by(slug: "about")
-    assert_not_nil about_page
-    assert_equal "About", about_page.title
-    assert_equal "about", about_page.slug
+    assert_nil about_page
   end
 end

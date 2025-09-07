@@ -7,6 +7,7 @@ one:
   blog_title: "One's Blog"
   theme: "light"
   slug: "user-one"
+  blogs_count: 1
   created_at: <%= 1.week.ago %>
   updated_at: <%= 1.day.ago %>
 
@@ -19,6 +20,7 @@ two:
   blog_title: "Two's Blog"
   theme: "light"
   slug: "user-two"
+  blogs_count: 1
   created_at: <%= 1.week.ago %>
   updated_at: <%= 1.day.ago %>
 
@@ -32,6 +34,7 @@ custom_domain_user:
   blog_title: "My Custom Blog"
   theme: "light"
   slug: "custom-domain-user"
+  blogs_count: 1
   created_at: <%= 1.week.ago %>
   updated_at: <%= 1.day.ago %>
 
@@ -43,6 +46,7 @@ no_blog_title:
   name: "No Blog Title User"
   theme: "light"
   slug: "no-blog-title-user"
+  blogs_count: 1
   created_at: <%= 1.week.ago %>
   updated_at: <%= 1.day.ago %>
 
@@ -55,6 +59,18 @@ custom_domain_no_title:
   name: "Custom No Title User"
   theme: "light"
   slug: "custom-no-title-user"
+  blogs_count: 0
+  created_at: <%= 1.week.ago %>
+  updated_at: <%= 1.day.ago %>
+
+test_user_no_blog:
+  id: "77777777-7777-7777-7777-777777777777"
+  email: testuser@example.com
+  encrypted_password: "$2a$12$dapdHZiOTxAL8OT9yNI6e.hhTjRhWgXq7kx737t/xf8tBfQbMD2bi"
+  name: "Test User No Blog"
+  theme: "light"
+  slug: "test-user-no-blog"
+  blogs_count: 0
   created_at: <%= 1.week.ago %>
   updated_at: <%= 1.day.ago %>
 
@@ -68,5 +84,6 @@ enumerator_dev:
   blog_title: "Enumerator Blog"
   theme: "light"
   slug: "enumerator-user"
+  blogs_count: 1
   created_at: <%= 1.week.ago %>
   updated_at: <%= 1.day.ago %>
