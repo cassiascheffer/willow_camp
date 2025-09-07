@@ -93,7 +93,7 @@ Rails.application.configure do
       next true if host.ends_with?(".willow.camp")
 
       # Allow custom domains that exist in database
-      User.exists?(custom_domain: host)
+      Blog.exists?(custom_domain: host)
     end
   ]
 
