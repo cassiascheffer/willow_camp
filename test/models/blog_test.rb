@@ -175,6 +175,62 @@ class BlogTest < ActiveSupport::TestCase
     assert @blog.valid?
   end
 
+  test "favicon_emoji accepts complex multi-codepoint emojis" do
+    # Profession emojis (gender + ZWJ + profession)
+    @blog.favicon_emoji = "👩‍🌾"
+    assert @blog.valid?
+
+    @blog.favicon_emoji = "🧑‍💻"
+    assert @blog.valid?
+
+    @blog.favicon_emoji = "👩‍⚕️"
+    assert @blog.valid?
+
+    # Family emojis (multiple people with ZWJ)
+    @blog.favicon_emoji = "👩‍👩‍👧‍👧"
+    assert @blog.valid?
+
+    # Flag emojis (flag + ZWJ + other elements)
+    @blog.favicon_emoji = "🏳️‍🌈"
+    assert @blog.valid?
+
+    @blog.favicon_emoji = "🏴‍☠️"
+    assert @blog.valid?
+  end
+
+  test "favicon_emoji accepts skin tone modifiers" do
+    @blog.favicon_emoji = "👋🏽"
+    assert @blog.valid?
+
+    @blog.favicon_emoji = "🤝🏿"
+    assert @blog.valid?
+
+    @blog.favicon_emoji = "👍🏻"
+    assert @blog.valid?
+  end
+
+  test "favicon_emoji rejects invalid emoji combinations" do
+    # Multiple separate emojis
+    @blog.favicon_emoji = "🚀🎯"
+    assert_not @blog.valid?
+    assert_includes @blog.errors[:favicon_emoji], "must be a single emoji"
+
+    # Text mixed with emoji
+    @blog.favicon_emoji = "🚀 rocket"
+    assert_not @blog.valid?
+    assert_includes @blog.errors[:favicon_emoji], "must be a single emoji"
+
+    # Plain text
+    @blog.favicon_emoji = "abc"
+    assert_not @blog.valid?
+    assert_includes @blog.errors[:favicon_emoji], "must be a single emoji"
+
+    # Numbers
+    @blog.favicon_emoji = "123"
+    assert_not @blog.valid?
+    assert_includes @blog.errors[:favicon_emoji], "must be a single emoji"
+  end
+
   test "custom_domain uniqueness" do
     @blog.custom_domain = "example.com"
     @blog.save!

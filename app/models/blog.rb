@@ -1,5 +1,7 @@
 # ABOUTME: Blog model representing individual blogs in the multi-tenant system
 # ABOUTME: Each blog belongs to a user and contains posts, pages, and configuration
+require "unicode/emoji"
+
 class Blog < ApplicationRecord
   # Associations
   belongs_to :user, counter_cache: :blogs_count
@@ -27,7 +29,7 @@ class Blog < ApplicationRecord
   validates :favicon_emoji,
     presence: true,
     format: {
-      with: /\A(?:\p{Emoji_Presentation}|\p{Emoji}\uFE0F)\z/u,
+      with: /\A#{Unicode::Emoji::REGEX}\z/o,
       message: "must be a single emoji"
     },
     allow_blank: true
