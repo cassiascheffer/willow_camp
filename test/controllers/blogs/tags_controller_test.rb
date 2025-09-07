@@ -93,8 +93,8 @@ class Blogs::TagsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  test "should use user tenant even when user has blogs" do
-    # Verify that we consistently use user.id as tenant (even when blogs exist)
+  test "should use blog tenant when user has blogs" do
+    # Verify that we now use blog.id as tenant (after migration)
     get tags_url, headers: {host: "#{@user.subdomain}.willow.camp"}
     assert_response :success
 
@@ -103,7 +103,7 @@ class Blogs::TagsControllerTest < ActionDispatch::IntegrationTest
     assert @user.blogs.any?
     assert_not_nil @post.blog_id
 
-    # Tags should be scoped to user, not blog (for now)
+    # Tags should be scoped to blog (after migration)
     get tag_url(@tag.slug), headers: {host: "#{@user.subdomain}.willow.camp"}
     assert_response :success
   end

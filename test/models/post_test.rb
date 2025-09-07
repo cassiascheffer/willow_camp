@@ -212,20 +212,22 @@ class PostTest < ActiveSupport::TestCase
     assert_not_equal post1.id, post2.id
   end
 
-  test "should use author_id for acts_as_taggable_tenant" do
+  test "should use blog_id for acts_as_taggable_tenant" do
     user = users(:one)
+    blog = blogs(:one)
 
     @post.author = user
+    @post.blog = blog
     @post.tag_list = ["ruby", "rails"]
     @post.save!
 
-    # Verify tags are scoped to user (author)
+    # Verify tags are scoped to blog
     assert_equal ["rails", "ruby"], @post.tag_list.sort
 
-    # Check that the tag tenant is the user's ID
+    # Check that the tag tenant is the blog's ID
     tag = @post.tags.first
     tagging = tag.taggings.where(taggable: @post).first
-    assert_equal user.id, tagging.tenant
+    assert_equal blog.id, tagging.tenant
   end
 
   # Backwards Compatibility Tests

@@ -2,8 +2,7 @@ class Blogs::TagsController < Blogs::BaseController
   before_action :set_tag, only: [:show]
 
   def index
-    # Use author.id as tenant (matching Post model's acts_as_taggable_tenant :author_id)
-    @tags = ActsAsTaggableOn::Tag.for_tenant(@author.id)
+    @tags = ActsAsTaggableOn::Tag.for_tenant(@blog.id)
       .joins(:taggings)
       .joins("INNER JOIN posts ON taggings.taggable_id = posts.id AND taggings.taggable_type = 'Post'")
       .where(posts: {blog_id: @blog.id, published: true})
@@ -21,8 +20,7 @@ class Blogs::TagsController < Blogs::BaseController
   private
 
   def set_tag
-    # Use author.id as tenant (matching Post model's acts_as_taggable_tenant :author_id)
-    @tag = ActsAsTaggableOn::Tag.for_tenant(@author.id).friendly.find(params[:tag])
+    @tag = ActsAsTaggableOn::Tag.for_tenant(@blog.id).friendly.find(params[:tag])
   rescue ActiveRecord::RecordNotFound
     redirect_to root_url
   end
