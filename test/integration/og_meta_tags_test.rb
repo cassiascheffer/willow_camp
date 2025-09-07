@@ -5,8 +5,9 @@ class OgMetaTagsTest < ActionDispatch::IntegrationTest
 
   setup do
     @user = users(:one)
+    @blog = blogs(:one)
     @post = posts(:one)
-    @headers = {host: "#{@user.subdomain}.willow.camp"}
+    @headers = {host: "#{@blog.subdomain}.willow.camp"}
   end
 
   test "should render basic og meta tags" do
@@ -41,7 +42,7 @@ class OgMetaTagsTest < ActionDispatch::IntegrationTest
     doc = Nokogiri::HTML(response.body)
     og_url = doc.css('meta[property="og:url"]').first["content"]
 
-    assert og_url.include?(@user.subdomain), "URL should include subdomain"
+    assert og_url.include?(@blog.subdomain), "URL should include subdomain"
     assert og_url.include?(@post.slug), "URL should include post slug"
   end
 end

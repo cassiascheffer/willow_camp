@@ -2,8 +2,8 @@ require "test_helper"
 
 class Api::DomainValidationControllerTest < ActionDispatch::IntegrationTest
   def setup
-    @user_with_custom_domain = users(:custom_domain_user)
-    @user_with_subdomain = users(:one)
+    @blog_with_custom_domain = blogs(:custom_domain_blog)
+    @blog_with_subdomain = blogs(:one)
   end
 
   test "validates willow.camp main domain" do
@@ -23,7 +23,7 @@ class Api::DomainValidationControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "validates existing custom domain" do
-    get api_domain_validation_path, params: {domain: @user_with_custom_domain.custom_domain}
+    get api_domain_validation_path, params: {domain: @blog_with_custom_domain.custom_domain}
     assert_response :ok
   end
 
@@ -41,7 +41,7 @@ class Api::DomainValidationControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "validates domain from Host header when no domain param" do
-    get api_domain_validation_path, headers: {"Host" => @user_with_custom_domain.custom_domain}
+    get api_domain_validation_path, headers: {"Host" => @blog_with_custom_domain.custom_domain}
     assert_response :ok
   end
 
@@ -61,44 +61,44 @@ class Api::DomainValidationControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "case insensitive domain validation" do
-    get api_domain_validation_path, params: {domain: @user_with_custom_domain.custom_domain.upcase}
+    get api_domain_validation_path, params: {domain: @blog_with_custom_domain.custom_domain.upcase}
     assert_response :ok
 
-    get api_domain_validation_path, params: {domain: @user_with_custom_domain.custom_domain.titleize}
+    get api_domain_validation_path, params: {domain: @blog_with_custom_domain.custom_domain.titleize}
     assert_response :ok
   end
 
   test "validates domain with different TLDs" do
-    user_org = users(:custom_domain_no_title)
+    blog_org = blogs(:enumerator_blog)
 
-    get api_domain_validation_path, params: {domain: user_org.custom_domain}
+    get api_domain_validation_path, params: {domain: blog_org.custom_domain}
     assert_response :ok
   end
 
   test "skips CSRF token verification" do
     # This test ensures the endpoint can be called by Caddy without CSRF token
-    get api_domain_validation_path, params: {domain: @user_with_custom_domain.custom_domain}
+    get api_domain_validation_path, params: {domain: @blog_with_custom_domain.custom_domain}
     # Should not raise ActionController::InvalidAuthenticityToken
     assert_response :ok # GET request should work
   end
 
   test "responds to GET requests only" do
-    get api_domain_validation_path, params: {domain: @user_with_custom_domain.custom_domain}
+    get api_domain_validation_path, params: {domain: @blog_with_custom_domain.custom_domain}
     assert_response :ok
 
     # Non-GET requests return 404 since the route doesn't exist for them
-    post api_domain_validation_path, params: {domain: @user_with_custom_domain.custom_domain}
+    post api_domain_validation_path, params: {domain: @blog_with_custom_domain.custom_domain}
     assert_response :not_found
 
-    put api_domain_validation_path, params: {domain: @user_with_custom_domain.custom_domain}
+    put api_domain_validation_path, params: {domain: @blog_with_custom_domain.custom_domain}
     assert_response :not_found
 
-    delete api_domain_validation_path, params: {domain: @user_with_custom_domain.custom_domain}
+    delete api_domain_validation_path, params: {domain: @blog_with_custom_domain.custom_domain}
     assert_response :not_found
   end
 
   test "handles domain with port number" do
-    get api_domain_validation_path, params: {domain: "#{@user_with_custom_domain.custom_domain}:443"}
+    get api_domain_validation_path, params: {domain: "#{@blog_with_custom_domain.custom_domain}:443"}
     # Should still validate the domain part
     assert_response :ok
   end

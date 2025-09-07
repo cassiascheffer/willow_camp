@@ -6,6 +6,7 @@ class PreviewsController < ApplicationController
   layout "blog"
 
   def show
+    @blog = @post.blog
     @author = @post.author
     render "blogs/posts/show"
   end

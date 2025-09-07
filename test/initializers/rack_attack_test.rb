@@ -54,8 +54,8 @@ class RackAttackIntegrationTest < ActionDispatch::IntegrationTest
   end
 
   test "allows normal requests to existing blogs" do
-    user = users(:one)
-    host! "#{user.subdomain}.willow.camp"
+    blog = blogs(:one)
+    host! "#{blog.subdomain}.willow.camp"
 
     10.times do
       get "/"

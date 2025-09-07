@@ -1,10 +1,10 @@
-<% content_for :title, "#{blog_title_for(@author)} | Posts" %>
-<% content_for :og_title, "#{blog_title_for(@author)} | Posts" %>
-<% content_for :og_description, @author&.site_meta_description || "Latest posts from #{blog_title_for(@author)}" %>
+<% content_for :title, "#{blog_title_for(@blog)} | Posts" %>
+<% content_for :og_title, "#{blog_title_for(@blog)} | Posts" %>
+<% content_for :og_description, @blog&.meta_description || "Latest posts from #{blog_title_for(@blog)}" %>
 <% content_for :og_type, "website" %>
 <% content_for :head do %>
-  <% if @author&.site_meta_description.present? %>
-    <meta name="description" content="<%= @author.site_meta_description %>">
+  <% if @blog&.meta_description.present? %>
+    <meta name="description" content="<%= @blog.meta_description %>">
   <% end %>
 <% end %>
 <% if notice.present? %>
@@ -13,7 +13,7 @@
 <% if alert.present? %>
   <div role="alert" aria-live="assertive" class="alert alert-error" id="alert"><%= alert %></div>
 <% end %>
-<% cache [@author, @featured_posts] do %>
+<% cache [@blog, @featured_posts] do %>
   <% if @featured_posts.any? %>
     <div class="card bg-base-100 shadow-sm mb-8">
       <div class="card-body">

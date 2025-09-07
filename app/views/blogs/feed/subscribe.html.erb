@@ -1,11 +1,11 @@
-<% content_for :title, "Subscribe to #{blog_title_for(@author)}" %>
-<% content_for :og_title, "Subscribe to #{blog_title_for(@author)}" %>
-<% content_for :og_description, "Subscribe to #{blog_title_for(@author)} via RSS, Atom, or JSON Feed" %>
+<% content_for :title, "Subscribe to #{blog_title_for(@blog)}" %>
+<% content_for :og_title, "Subscribe to #{blog_title_for(@blog)}" %>
+<% content_for :og_description, "Subscribe to #{blog_title_for(@blog)} via RSS, Atom, or JSON Feed" %>
 <div class="container mx-auto max-w-2xl px-4 py-12">
   <!-- Header -->
   <div class="text-center mb-12">
     <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-primary mb-4">
-      Subscribe to <%= blog_title_for(@author) %>
+      Subscribe to <%= blog_title_for(@blog) %>
     </h1>
   </div>
   <!-- Feed Formats -->
@@ -13,9 +13,9 @@
     <div class="card-body">
       <h2 class="card-title text-2xl mb-4">Available Feed Formats</h2>
       <div class="space-y-4">
-        <%= render 'shared/feed_line', feed_name: 'RSS Feed', feed_url: posts_rss_url(url_options_for(@author).merge(format: :rss)) %>
-        <%= render 'shared/feed_line', feed_name: 'Atom Feed', feed_url: posts_atom_url(url_options_for(@author).merge(format: :atom)) %>
-        <%= render 'shared/feed_line', feed_name: 'JSON Feed', feed_url: posts_json_url(url_options_for(@author).merge(format: :json)) %>
+        <%= render 'shared/feed_line', feed_name: 'RSS Feed', feed_url: posts_rss_url(url_options_for(@blog).merge(format: :rss)) %>
+        <%= render 'shared/feed_line', feed_name: 'Atom Feed', feed_url: posts_atom_url(url_options_for(@blog).merge(format: :atom)) %>
+        <%= render 'shared/feed_line', feed_name: 'JSON Feed', feed_url: posts_json_url(url_options_for(@blog).merge(format: :json)) %>
       </div>
     </div>
   </div>

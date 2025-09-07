@@ -23,7 +23,7 @@
       <!-- Mobile menu with details/summary -->
       <details class="lg:hidden">
         <summary class="py-4 flex items-center justify-between cursor-pointer">
-          <a class="text-xl font-bold hover:text-primary transition-colors" href="<%= dashboard_path %>"><%= blog_title_for(@user) %></a>
+          <a class="text-xl font-bold hover:text-primary transition-colors" href="<%= dashboard_path %>"><%= blog_title_for(@last_viewed_blog) %></a>
           <%= heroicon "bars-3", options: { class: "h-6 w-6" } %>
         </summary>
         <div class="pb-4 space-y-2">
@@ -73,7 +73,7 @@
       </details>
       <!-- Desktop menu -->
       <div class="hidden lg:flex lg:items-center lg:justify-between py-4">
-        <a class="text-xl font-bold hover:text-primary transition-colors" href="<%= dashboard_path %>"><%= blog_title_for(@user) %></a>
+        <a class="text-xl font-bold hover:text-primary transition-colors" href="<%= dashboard_path %>"><%= blog_title_for(@last_viewed_blog) %></a>
         <div class="flex items-center space-x-4">
           <div class="dropdown dropdown-end">
             <div tabindex="0" role="button" class="link link-hover" title="Account">

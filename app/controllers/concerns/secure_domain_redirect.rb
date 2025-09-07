@@ -73,9 +73,6 @@ module SecureDomainRedirect
       return
     end
 
-    @author = @blog.user
-
-    # Use secure redirect method
     if secure_redirect_to_custom_domain(@blog, request.host, request.fullpath)
       nil
     end

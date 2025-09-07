@@ -2,16 +2,8 @@ module Dashboard
   class TagsController < BaseController
     def index
       @user = current_user
-
-      if params[:blog_subdomain].present?
-        @blog = @user.blogs.find_by(subdomain: params[:blog_subdomain])
-        redirect_to dashboard_tags_path, alert: "Blog not found" unless @blog
-        # Get tags for this specific blog
-        @tags = @blog.all_tags_with_published_and_draft_counts
-      else
-        # For now, just get all tags without pagination
-        @tags = @user.all_tags_with_published_and_draft_counts
-      end
+      # @blog is already set by BaseController
+      @tags = @blog&.all_tags_with_published_and_draft_counts || []
     end
 
     def update
@@ -21,7 +13,7 @@ module Dashboard
         respond_to do |format|
           format.turbo_stream do
             # Get updated count after renaming
-            updated_tag = current_user.all_tags_with_published_and_draft_counts.find(@tag.id)
+            updated_tag = @blog.all_tags_with_published_and_draft_counts.find(@tag.id)
             # Replace both mobile card and desktop row
             render turbo_stream: [
               turbo_stream.replace("tag_#{@tag.id}",
@@ -72,8 +64,8 @@ module Dashboard
     private
 
     def find_user_tag(tag_id)
-      # Only allow editing tags that are used by the current user's posts
-      user_tag_ids = current_user.all_tags_with_published_and_draft_counts.pluck(:id)
+      # Only allow editing tags that are used by the current blog's posts
+      user_tag_ids = @blog&.all_tags_with_published_and_draft_counts&.pluck(:id) || []
       tag = ActsAsTaggableOn::Tag.find(tag_id)
 
       unless user_tag_ids.include?(tag.id)

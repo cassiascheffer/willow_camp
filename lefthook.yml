@@ -30,10 +30,20 @@ pre-commit:
   jobs:
     - name: standard
       glob: "*.rb"
-      run: bundle exec standardrb --fix {staged_files}
+      run: |
+        bundle exec standardrb --fix {staged_files}
+        if ! git diff --quiet {staged_files}; then
+          echo "StandardRB made changes to staged files. Please review and re-stage them."
+          exit 1
+        fi
     - name: htmlbeautifier
       glob: "*.html.erb"
-      run: bundle exec htmlbeautifier {staged_files}
+      run: |
+        bundle exec htmlbeautifier {staged_files}
+        if ! git diff --quiet {staged_files}; then
+          echo "HTMLBeautifier made changes to staged files. Please review and re-stage them."
+          exit 1
+        fi
     - name: Brakeman
       tags:
         - security

@@ -22,6 +22,6 @@ class Api::DomainValidationController < ApplicationController
 
     return true if domain == "willow.camp"
 
-    User.exists?(custom_domain: domain)
+    Blog.exists?(custom_domain: domain)
   end
 end

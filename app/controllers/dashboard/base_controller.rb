@@ -2,14 +2,9 @@ module Dashboard
   class BaseController < ApplicationController
     layout "dashboard"
     before_action :authenticate_user!
-    before_action :set_author
     before_action :set_current_blog
 
     private
-
-    def set_author
-      @author = current_user
-    end
 
     def set_current_blog
       if params[:blog_subdomain].present?

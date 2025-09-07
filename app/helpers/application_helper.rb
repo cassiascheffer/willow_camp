@@ -35,18 +35,18 @@ module ApplicationHelper
     doc.to_html
   end
 
-  def blog_title_for(author)
-    return "willow.camp" if author.nil? || (author.subdomain.blank? && author.custom_domain.blank?)
-    author.blog_title.presence || author.domain || "willow.camp"
+  def blog_title_for(blog)
+    return "willow.camp" if blog.nil? || (blog.subdomain.blank? && blog.custom_domain.blank?)
+    blog.title.presence || blog.domain || "willow.camp"
   end
 
-  def url_options_for(author)
-    return {} if author.nil?
+  def url_options_for(blog)
+    return {} if blog.nil?
 
-    if author.uses_custom_domain?
-      {host: author.custom_domain}
-    elsif author.subdomain.present?
-      {subdomain: author.subdomain}
+    if blog.uses_custom_domain?
+      {host: blog.custom_domain}
+    elsif blog.subdomain.present?
+      {subdomain: blog.subdomain}
     else
       {}
     end

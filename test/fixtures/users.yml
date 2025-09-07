@@ -2,11 +2,7 @@ one:
   id: "11111111-1111-1111-1111-111111111111"
   email: one@example.com
   encrypted_password: "$2a$12$dapdHZiOTxAL8OT9yNI6e.hhTjRhWgXq7kx737t/xf8tBfQbMD2bi"
-  subdomain: one
   name: "User One"
-  blog_title: "One's Blog"
-  theme: "light"
-  slug: "user-one"
   blogs_count: 1
   created_at: <%= 1.week.ago %>
   updated_at: <%= 1.day.ago %>
@@ -15,11 +11,7 @@ two:
   id: "22222222-2222-2222-2222-222222222222"
   email: two@example.com
   encrypted_password: "$2a$12$dapdHZiOTxAL8OT9yNI6e.hhTjRhWgXq7kx737t/xf8tBfQbMD2bi"
-  subdomain: two
   name: "User Two"
-  blog_title: "Two's Blog"
-  theme: "light"
-  slug: "user-two"
   blogs_count: 1
   created_at: <%= 1.week.ago %>
   updated_at: <%= 1.day.ago %>
@@ -28,12 +20,7 @@ custom_domain_user:
   id: "33333333-3333-3333-3333-333333333333"
   email: custom@example.com
   encrypted_password: "$2a$12$dapdHZiOTxAL8OT9yNI6e.hhTjRhWgXq7kx737t/xf8tBfQbMD2bi"
-  subdomain: customuser
-  custom_domain: myblog.com
   name: "Custom Domain User"
-  blog_title: "My Custom Blog"
-  theme: "light"
-  slug: "custom-domain-user"
   blogs_count: 1
   created_at: <%= 1.week.ago %>
   updated_at: <%= 1.day.ago %>
@@ -42,10 +29,7 @@ no_blog_title:
   id: "44444444-4444-4444-4444-444444444444"
   email: notitle@example.com
   encrypted_password: "$2a$12$dapdHZiOTxAL8OT9yNI6e.hhTjRhWgXq7kx737t/xf8tBfQbMD2bi"
-  subdomain: notitle
   name: "No Blog Title User"
-  theme: "light"
-  slug: "no-blog-title-user"
   blogs_count: 1
   created_at: <%= 1.week.ago %>
   updated_at: <%= 1.day.ago %>
@@ -54,11 +38,7 @@ custom_domain_no_title:
   id: "55555555-5555-5555-5555-555555555555"
   email: customnotitle@example.com
   encrypted_password: "$2a$12$dapdHZiOTxAL8OT9yNI6e.hhTjRhWgXq7kx737t/xf8tBfQbMD2bi"
-  subdomain: customnotitle
-  custom_domain: example.org
   name: "Custom No Title User"
-  theme: "light"
-  slug: "custom-no-title-user"
   blogs_count: 0
   created_at: <%= 1.week.ago %>
   updated_at: <%= 1.day.ago %>
@@ -68,8 +48,6 @@ test_user_no_blog:
   email: testuser@example.com
   encrypted_password: "$2a$12$dapdHZiOTxAL8OT9yNI6e.hhTjRhWgXq7kx737t/xf8tBfQbMD2bi"
   name: "Test User No Blog"
-  theme: "light"
-  slug: "test-user-no-blog"
   blogs_count: 0
   created_at: <%= 1.week.ago %>
   updated_at: <%= 1.day.ago %>
@@ -78,12 +56,7 @@ enumerator_dev:
   id: "66666666-6666-6666-6666-666666666666"
   email: enumerator@example.com
   encrypted_password: "$2a$12$dapdHZiOTxAL8OT9yNI6e.hhTjRhWgXq7kx737t/xf8tBfQbMD2bi"
-  subdomain: enumerator
-  custom_domain: enumerator.dev
   name: "Enumerator User"
-  blog_title: "Enumerator Blog"
-  theme: "light"
-  slug: "enumerator-user"
   blogs_count: 1
   created_at: <%= 1.week.ago %>
   updated_at: <%= 1.day.ago %>

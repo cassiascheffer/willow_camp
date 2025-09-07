@@ -114,8 +114,8 @@ class Dashboard::PostsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "feature flag works correctly across environments" do
-    # In test environment, feature should be enabled for all users
-    assert @user.social_share_image_enabled?
+    # In test environment, feature should be enabled for all blogs
+    assert @blog.social_share_image_enabled?
 
     # Test that in production it would only work for enumerator.dev
     original_env = Rails.env
@@ -123,11 +123,11 @@ class Dashboard::PostsControllerTest < ActionDispatch::IntegrationTest
       Rails.env = ActiveSupport::StringInquirer.new("production")
 
       # Should be enabled for enumerator.dev
-      assert @user.social_share_image_enabled?
+      assert @blog.social_share_image_enabled?
 
       # Should be disabled for other domains
-      other_user = users(:one)
-      assert_not other_user.social_share_image_enabled?
+      other_blog = blogs(:one)
+      assert_not other_blog.social_share_image_enabled?
     ensure
       Rails.env = original_env
     end

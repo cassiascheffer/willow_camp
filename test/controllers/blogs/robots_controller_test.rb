@@ -5,16 +5,18 @@ module Blogs
     setup do
       @user_one = users(:one)
       @user_two = users(:two)
+      @blog_one = blogs(:one)
+      @blog_two = blogs(:two)
+      @custom_domain_blog = blogs(:custom_domain_blog)
       @post_one = posts(:one) # Published post by user_one
       @post_two = posts(:two) # Unpublished post by user_two
-      @custom_domain_user = users(:custom_domain_user)
       @custom_domain_post = posts(:custom_domain_post)
 
       # Set up host headers for subdomain-based testing
-      @user_one_host = {host: "#{@user_one.subdomain}.willow.camp"}
-      @user_two_host = {host: "#{@user_two.subdomain}.willow.camp"}
+      @user_one_host = {host: "#{@blog_one.subdomain}.willow.camp"}
+      @user_two_host = {host: "#{@blog_two.subdomain}.willow.camp"}
       @nonexistent_host = {host: "nonexistent.willow.camp"}
-      @custom_domain_host = {host: @custom_domain_user.custom_domain}
+      @custom_domain_host = {host: @custom_domain_blog.custom_domain}
     end
 
     test "should get robots.txt for user one" do
@@ -50,8 +52,8 @@ module Blogs
     end
 
     test "should redirect robots.txt from subdomain to custom domain" do
-      get robots_path(format: :txt), headers: {host: "#{@custom_domain_user.subdomain}.willow.camp"}
-      assert_redirected_to "https://#{@custom_domain_user.custom_domain}/robots.txt"
+      get robots_path(format: :txt), headers: {host: "#{@custom_domain_blog.subdomain}.willow.camp"}
+      assert_redirected_to "https://#{@custom_domain_blog.custom_domain}/robots.txt"
     end
 
     test "should not redirect when already on custom domain" do
@@ -99,12 +101,12 @@ module Blogs
     end
 
     test "should handle case insensitive custom domain" do
-      get robots_path(format: :txt), headers: {host: @custom_domain_user.custom_domain}
+      get robots_path(format: :txt), headers: {host: @custom_domain_blog.custom_domain}
       assert_response :success
     end
 
     test "should handle subdomain with willow.camp domain" do
-      get robots_path(format: :txt), headers: {host: "#{@user_one.subdomain}.willow.camp"}
+      get robots_path(format: :txt), headers: {host: "#{@blog_one.subdomain}.willow.camp"}
       assert_response :success
     end
 

@@ -25,7 +25,7 @@ class SecureDomainRedirectTest < ActionController::TestCase
 
   def setup
     @controller = TestController.new
-    @user = users(:custom_domain_user)
+    @blog = blogs(:custom_domain_blog)
   end
 
   test "valid_redirect_domain? accepts valid domains" do
@@ -122,23 +122,23 @@ end
 
 class SecureDomainRedirectIntegrationTest < ActionDispatch::IntegrationTest
   def setup
-    @user_with_custom_domain = users(:custom_domain_user)
-    @user_with_subdomain = users(:one)
+    @blog_with_custom_domain = blogs(:custom_domain_blog)
+    @blog_with_subdomain = blogs(:one)
   end
 
   test "redirects to custom domain when appropriate" do
-    # Simulate request to subdomain when user has custom domain
-    host! "#{@user_with_custom_domain.subdomain}.willow.camp"
+    # Simulate request to subdomain when blog has custom domain
+    host! "#{@blog_with_custom_domain.subdomain}.willow.camp"
 
     get posts_path
 
     assert_response :moved_permanently
-    assert_redirected_to "https://#{@user_with_custom_domain.custom_domain}#{posts_path}"
+    assert_redirected_to "https://#{@blog_with_custom_domain.custom_domain}#{posts_path}"
   end
 
   test "does not redirect when already on custom domain" do
     # Simulate request directly to custom domain
-    host! @user_with_custom_domain.custom_domain
+    host! @blog_with_custom_domain.custom_domain
 
     get posts_path
 
@@ -146,7 +146,7 @@ class SecureDomainRedirectIntegrationTest < ActionDispatch::IntegrationTest
   end
 
   test "handles users without custom domains normally" do
-    host! "#{@user_with_subdomain.subdomain}.willow.camp"
+    host! "#{@blog_with_subdomain.subdomain}.willow.camp"
 
     get posts_path
 
