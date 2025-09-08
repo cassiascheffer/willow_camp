@@ -1,6 +1,6 @@
 # ⛺ [willow.camp](https://willow.camp)
 
-[![Discord](https://img.shields.io/discord/YOUR_SERVER_ID?color=5865F2&logo=discord&logoColor=white)](https://discord.gg/g4KUdZaf)
+[![Discord](https://img.shields.io/discord/YOUR_SERVER_ID?color=5865F2&logo=discord&logoColor=white)](https://discord.gg/uZgMgtfpgC)
 [![Status](https://img.shields.io/badge/status-page-brightgreen)](https://status.willow.camp/)
 
 A blogging platform built with Ruby on Rails. Supports subdomains, custom domains, multiple themes, and markdown posts.
