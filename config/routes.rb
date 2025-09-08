@@ -46,6 +46,7 @@ Rails.application.routes.draw do
   namespace :dashboard do
     get "user/settings" => "users#show", :as => :user_settings
     patch "user/settings" => "users#update"
+    delete "user/settings" => "users#destroy"
     resources :users, only: %i[edit update]
     resources :tokens, only: %i[create destroy]
     resource :subdomain, only: %i[update]

@@ -164,4 +164,74 @@ class Dashboard::BlogsControllerTest < ActionDispatch::IntegrationTest
     follow_redirect!
     assert_match(/User cannot have more than 2 blogs/, response.body)
   end
+
+  test "should delete blog when user is owner" do
+    sign_in(@user)
+
+    Bullet.enable = false
+    assert_difference("Blog.count", -1) do
+      delete dashboard_blog_path(@blog.subdomain)
+    end
+    Bullet.enable = true
+
+    assert_redirected_to dashboard_path
+    follow_redirect!
+    assert_match(/Blog deleted successfully/, response.body)
+  end
+
+  test "should delete blog and all associated posts" do
+    sign_in(@user)
+
+    # Clear existing posts first
+    @blog.posts.destroy_all
+
+    # Create some posts for the blog
+    post1 = @blog.posts.create!(title: "Post 1", slug: "post-1", published: true, author: @user)
+    post2 = @blog.posts.create!(title: "Post 2", slug: "post-2", published: false, author: @user)
+
+    Bullet.enable = false
+    assert_difference("Blog.count", -1) do
+      assert_difference("Post.count", -2) do
+        delete dashboard_blog_path(@blog.subdomain)
+      end
+    end
+    Bullet.enable = true
+
+    assert_redirected_to dashboard_path
+
+    # Verify posts are deleted
+    assert_not Post.exists?(post1.id)
+    assert_not Post.exists?(post2.id)
+  end
+
+  test "should not delete blog for different user" do
+    other_user = users(:two)
+    sign_in(other_user)
+
+    assert_no_difference("Blog.count") do
+      delete dashboard_blog_path(@blog.subdomain)
+    end
+
+    assert_redirected_to dashboard_path
+    follow_redirect!
+    assert_match(/Blog not found/, response.body)
+  end
+
+  test "should redirect when trying to delete non-existent blog" do
+    sign_in(@user)
+
+    assert_no_difference("Blog.count") do
+      delete dashboard_blog_path("nonexistent")
+    end
+
+    assert_redirected_to dashboard_path
+  end
+
+  test "should require authentication for blog deletion" do
+    assert_no_difference("Blog.count") do
+      delete dashboard_blog_path(@blog.subdomain)
+    end
+
+    assert_redirected_to new_user_session_path
+  end
 end

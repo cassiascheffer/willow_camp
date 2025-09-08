@@ -1,5 +1,5 @@
 class Dashboard::UsersController < Dashboard::BaseController
-  before_action :set_user, only: [:show, :edit, :update]
+  before_action :set_user, only: [:show, :edit, :update, :destroy]
 
   def show
     @tokens = @user.tokens.order(created_at: :desc)
@@ -32,6 +32,15 @@ class Dashboard::UsersController < Dashboard::BaseController
       @tokens = @user.tokens.order(created_at: :desc)
       @token = UserToken.new
       render :show, status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    if @user.blogs.exists?
+      redirect_to dashboard_security_path, alert: "You must delete all your blogs before deleting your account"
+    else
+      @user.destroy!
+      redirect_to root_path, notice: "Your account has been deleted"
     end
   end
 

@@ -19,4 +19,48 @@
       <%= render "dashboard/settings/token_list", tokens: @tokens %>
     </div>
   </section>
-</main>
+  <section aria-label="Danger Zone" class="mb-8">
+    <div class="collapse collapse-arrow border border-red-200 bg-red-50">
+      <input type="checkbox" class="peer" />
+      <div class="collapse-title text-xl font-medium text-red-600">
+        <%= heroicon "exclamation-triangle", variant: :outline, options: { class: "w-6 h-6 inline mr-2" } %>
+        Danger Zone
+      </div>
+      <div class="collapse-content" data-controller="account-delete" data-account-delete-username-value="<%= current_user.name %>" data-account-delete-can-delete-value="<%= current_user.blogs.count == 0 %>">
+        <div class="pt-4">
+          <div class="flex items-start justify-between">
+            <div>
+              <h3 class="text-lg font-semibold text-red-900 mb-2">Delete your account</h3>
+              <% if current_user.blogs.count > 0 %>
+                <p class="text-red-700 text-sm mb-4">
+                  You must delete all your blogs before you can delete your account. You currently have <%= pluralize(current_user.blogs.count, 'blog') %>.
+                </p>
+              <% else %>
+                <p class="text-red-700 text-sm mb-4">
+                  Once you delete your account, there is no going back. This will permanently delete your account and all associated data.
+                </p>
+              <% end %>
+            </div>
+            <% if current_user.blogs.count > 0 %>
+              <button type="button" 
+                      data-action="account-delete#confirmDelete"
+                      class="btn btn-error btn-outline opacity-50 cursor-not-allowed"
+                      disabled="disabled">
+              <% else %>
+                <button type="button" 
+                      data-action="account-delete#confirmDelete"
+                      class="btn btn-error btn-outline">
+                <% end %>
+                <%= heroicon "trash", variant: :outline, options: { class: "w-4 h-4 mr-2" } %>
+                Delete Account
+              </button>
+            </div>
+            <%= form_with url: dashboard_user_settings_path, method: :delete, 
+                        class: "hidden", 
+                        data: { account_delete_target: "form" } do |form| %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>

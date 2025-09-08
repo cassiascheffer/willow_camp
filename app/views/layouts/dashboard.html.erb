@@ -30,9 +30,6 @@
           <% if @blog %>
             <%= link_to "Posts", dashboard_blog_path(@blog.subdomain), class: "block link link-hover font-medium py-2 #{current_page?(dashboard_blog_path(@blog.subdomain)) ? 'text-primary' : ''}" %>
             <%= link_to "Tags", dashboard_blog_tags_path(@blog.subdomain), class: "block link link-hover font-medium py-2 #{current_page?(dashboard_blog_tags_path(@blog.subdomain)) ? 'text-primary' : ''}" %>
-          <% else %>
-            <%= link_to "Posts", dashboard_path, class: "block link link-hover font-medium py-2 #{current_page?(dashboard_path) ? 'text-primary' : ''}" %>
-            <%= link_to "Tags", dashboard_tags_path, class: "block link link-hover font-medium py-2 #{current_page?(dashboard_tags_path) ? 'text-primary' : ''}" %>
           <% end %>
           <hr class="my-2">
           <div class="flex items-center justify-between">
@@ -199,9 +196,6 @@
             <% if @blog %>
               <%= link_to "Posts", dashboard_blog_path(@blog.subdomain), class: "tab #{current_page?(dashboard_blog_path(@blog.subdomain)) ? 'tab-active' : ''}" %>
               <%= link_to "Tags", dashboard_blog_tags_path(@blog.subdomain), class: "tab #{current_page?(dashboard_blog_tags_path(@blog.subdomain)) ? 'tab-active' : ''}" %>
-            <% else %>
-              <%= link_to "Posts", dashboard_path, class: "tab #{current_page?(dashboard_path) ? 'tab-active' : ''}" %>
-              <%= link_to "Tags", dashboard_tags_path, class: "tab #{current_page?(dashboard_tags_path) ? 'tab-active' : ''}" %>
             <% end %>
           </div>
         </div>
