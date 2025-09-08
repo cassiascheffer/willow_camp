@@ -53,6 +53,7 @@ gem "public_suffix"
 gem "tailwindcss-rails"
 gem "tailwindcss-ruby"
 gem "heroicons", "~> 2.2.0"
+gem "unicode-emoji"
 
 # APM and Logs
 gem "honeybadger", "~> 6.0.5"  # For error monitoring

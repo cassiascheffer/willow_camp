@@ -535,6 +535,7 @@ DEPENDENCIES
   thruster (~> 0.1.15)
   turbo-rails
   tzinfo-data
+  unicode-emoji
   web-console
 
 BUNDLED WITH
