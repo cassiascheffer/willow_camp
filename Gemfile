@@ -5,9 +5,9 @@ gem "rails"
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
 gem "propshaft"
 # Use postgresql as the database for Active Record
-gem "pg", "~> 1.6.1"
+gem "pg", "~> 1.6.2"
 # Use the Puma web server [https://github.com/puma/puma]
-gem "puma"
+gem "puma", "~> 7.0.0"
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
 gem "importmap-rails"
 # Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
@@ -46,18 +46,18 @@ gem "better_html"
 gem "commonmarker"
 gem "friendly_id"
 gem "front_matter_parser"
-gem "loops_sdk"
+gem "loops_sdk", "~> 2.0.0"
 gem "marksmith", "~> 0.4.7"
 gem "pagy"
 gem "public_suffix"
 gem "tailwindcss-rails"
-gem "tailwindcss-ruby"
+gem "tailwindcss-ruby", "~> 4.1.12"
 gem "heroicons", "~> 2.2.0"
 gem "unicode-emoji"
 
 # APM and Logs
-gem "honeybadger", "~> 6.0.5"  # For error monitoring
-gem "scout_apm", "~> 5.7.0"    # For performance monitoring
+gem "honeybadger", "~> 6.1.0"  # For error monitoring
+gem "scout_apm", "~> 5.7.1"    # For performance monitoring
 
 # Rate limiting and security
 gem "rack-attack"
