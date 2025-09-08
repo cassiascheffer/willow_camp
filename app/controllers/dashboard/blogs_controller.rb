@@ -1,7 +1,7 @@
 # ABOUTME: Dashboard controller for managing user blogs
 # ABOUTME: Handles creation and management of blogs for authenticated users
 class Dashboard::BlogsController < Dashboard::BaseController
-  before_action :set_blog, only: [:edit, :update]
+  before_action :set_blog, only: [:edit, :update, :destroy]
 
   def edit
     @about_page = @blog.pages.find_or_create_by(title: "About", slug: "about")
@@ -25,6 +25,11 @@ class Dashboard::BlogsController < Dashboard::BaseController
     else
       redirect_to dashboard_path, alert: "Error creating blog: #{@blog.errors.full_messages.join(", ")}"
     end
+  end
+
+  def destroy
+    @blog.destroy!
+    redirect_to dashboard_path, notice: "Blog deleted successfully"
   end
 
   private

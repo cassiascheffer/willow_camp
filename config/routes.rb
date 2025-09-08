@@ -57,6 +57,7 @@ Rails.application.routes.draw do
       get "tags" => "tags#index", :as => :blog_tags
       get "settings" => "blogs#edit", :as => :blog_settings
       patch "settings" => "blogs#update"
+      delete "/" => "blogs#destroy"
 
       resources :posts, only: %i[edit update destroy]
       resources :featured_posts, only: %i[update]

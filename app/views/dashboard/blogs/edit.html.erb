@@ -14,4 +14,35 @@
       <%= render "page_form", page: @about_page %>
     </div>
   </section>
+  <section aria-label="Danger Zone" class="mb-8">
+    <div class="collapse collapse-arrow border border-red-200 bg-red-50">
+      <input type="checkbox" class="peer" />
+      <div class="collapse-title text-xl font-medium text-red-600">
+        <%= heroicon "exclamation-triangle", variant: :outline, options: { class: "w-6 h-6 inline mr-2" } %>
+        Danger Zone
+      </div>
+      <div class="collapse-content" data-controller="blog-delete" data-blog-delete-subdomain-value="<%= @blog.subdomain %>">
+        <div class="pt-4">
+          <div class="flex items-start justify-between">
+            <div>
+              <h3 class="text-lg font-semibold text-red-900 mb-2">Delete this blog</h3>
+              <p class="text-red-700 text-sm mb-4">
+                Once you delete a blog, there is no going back. This will permanently delete the blog, all of its posts, pages, and associated data.
+              </p>
+            </div>
+            <button type="button" 
+                    data-action="blog-delete#confirmDelete"
+                    class="btn btn-error btn-outline">
+              <%= heroicon "trash", variant: :outline, options: { class: "w-4 h-4 mr-2" } %>
+              Delete Blog
+            </button>
+          </div>
+          <%= form_with url: dashboard_blog_path(@blog.subdomain), method: :delete, 
+                        class: "hidden", 
+                        data: { blog_delete_target: "form" } do |form| %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </section>
 </main>
