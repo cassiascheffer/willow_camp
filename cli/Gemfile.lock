@@ -24,7 +24,9 @@ GEM
     language_server-protocol (3.17.0.5)
     lint_roller (1.1.0)
     minitest (5.25.5)
-    nokogiri (1.18.8-arm64-darwin)
+    nokogiri (1.15.7-arm64-darwin)
+      racc (~> 1.4)
+    nokogiri (1.15.7-x86_64-linux)
       racc (~> 1.4)
     parallel (1.27.0)
     parser (3.3.8.0)
@@ -38,7 +40,7 @@ GEM
     regexp_parser (2.10.0)
     reverse_markdown (2.1.1)
       nokogiri
-    rexml (3.4.1)
+    rexml (3.4.2)
     rubocop (1.75.8)
       json (~> 2.3)
       language_server-protocol (~> 3.17.0.2)
@@ -80,6 +82,7 @@ GEM
 
 PLATFORMS
   arm64-darwin-24
+  x86_64-linux
 
 DEPENDENCIES
   bundler (~> 2.0)
