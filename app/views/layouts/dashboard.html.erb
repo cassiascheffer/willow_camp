@@ -148,14 +148,14 @@
                   <% if blog == @blog %>
                     <span class="flex items-center justify-between text-primary">
                       <div>
-                        <div class="font-medium"><%= blog.title || blog.subdomain %></div>
+                        <div class="font-medium"><%= blog.title.presence || blog.subdomain %></div>
                       </div>
                       <%= heroicon "check", variant: :mini, options: { class: "h-4 w-4" } %>
                     </span>
                   <% else %>
                     <a href="<%= dashboard_blog_path(blog.subdomain) %>" class="flex items-center justify-between">
                       <div>
-                        <div class="font-medium"><%= blog.title || blog.subdomain %></div>
+                        <div class="font-medium"><%= blog.title.presence || blog.subdomain %></div>
                       </div>
                     </a>
                   <% end %>
