@@ -149,7 +149,6 @@
                     <span class="flex items-center justify-between text-primary">
                       <div>
                         <div class="font-medium"><%= blog.title || blog.subdomain %></div>
-                        <div class="text-xs opacity-70"><%= blog.subdomain %>.willow.camp</div>
                       </div>
                       <%= heroicon "check", variant: :mini, options: { class: "h-4 w-4" } %>
                     </span>
@@ -157,7 +156,6 @@
                     <a href="<%= dashboard_blog_path(blog.subdomain) %>" class="flex items-center justify-between">
                       <div>
                         <div class="font-medium"><%= blog.title || blog.subdomain %></div>
-                        <div class="text-xs opacity-70"><%= blog.subdomain %>.willow.camp</div>
                       </div>
                     </a>
                   <% end %>
