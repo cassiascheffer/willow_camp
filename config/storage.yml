@@ -6,6 +6,16 @@ local:
   service: Disk
   root: <%= Rails.root.join("storage") %>
 
+# Digital Ocean Spaces configuration for production
+digitalocean:
+  service: S3
+  access_key_id: <%= ENV['DIGITAL_OCEAN_SPACES_KEY'] %>
+  secret_access_key: <%= ENV['DIGITAL_OCEAN_SPACES_SECRET'] %>
+  endpoint: <%= ENV['DIGITAL_OCEAN_SPACES_ENDPOINT'] %>
+  bucket: <%= ENV['DIGITAL_OCEAN_SPACES_BUCKET'] || 'willow-camp' %>
+  region: <%= ENV['DIGITAL_OCEAN_SPACES_REGION'] || 'tor1' %>
+  public: true
+
 # Use bin/rails credentials:edit to set the AWS secrets (as aws:access_key_id|secret_access_key)
 # amazon:
 #   service: S3

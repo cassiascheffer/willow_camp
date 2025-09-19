@@ -41,6 +41,9 @@ gem "thruster", "~> 0.1.15", require: false
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
 
+# Use Digital Ocean Spaces for Active Storage in production (S3-compatible)
+gem "aws-sdk-s3", require: false
+
 gem "acts-as-taggable-on"
 gem "better_html"
 gem "commonmarker"

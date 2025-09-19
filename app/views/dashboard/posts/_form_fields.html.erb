@@ -36,9 +36,13 @@
   <%= form.label :body, class: "label" %>
   <div data-marksmith-theme-target="wrapper">
     <%= form.marksmith :body_markdown,
-        enable_file_uploads: false,
+        enable_file_uploads: true,
         class: "textarea textarea-bordered w-full",
         style: "min-height: 600px;" %>
+  </div>
+  <div class="text-sm text-base-content/70 mt-2">
+    <%= heroicon "information-circle", options: { class: "inline w-4 h-4" } %>
+    Image uploads are free for now but will be a paid feature in the future.
   </div>
 </div>
 <div class="form-control w-full mb-4">
