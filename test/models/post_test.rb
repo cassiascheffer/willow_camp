@@ -131,38 +131,6 @@ class PostTest < ActiveSupport::TestCase
     assert_not @post.draft?
   end
 
-  # Social Share Image Tests
-  test "should have social_share_image attachment" do
-    assert_respond_to @post, :social_share_image
-  end
-
-  test "should be able to attach image" do
-    @post.save!
-    image_file = fixture_file_upload("test_image.png", "image/png")
-
-    @post.social_share_image.attach(image_file)
-
-    assert @post.social_share_image.attached?
-  end
-
-  test "should return false for attached? when no image" do
-    @post.save!
-    assert_not @post.social_share_image.attached?
-  end
-
-  test "should save successfully with attached image" do
-    image_file = fixture_file_upload("test_image.png", "image/png")
-    @post.social_share_image.attach(image_file)
-
-    assert @post.save
-    assert @post.social_share_image.attached?
-  end
-
-  test "should save successfully without attached image" do
-    assert @post.save
-    assert_not @post.social_share_image.attached?
-  end
-
   # Blog Association Tests
   test "should belong to a blog (optional)" do
     assert_respond_to @post, :blog

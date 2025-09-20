@@ -386,10 +386,6 @@ class BlogTest < ActiveSupport::TestCase
     assert @blog.uses_custom_domain?
   end
 
-  test "social_share_image_enabled? in test environment" do
-    assert @blog.social_share_image_enabled?
-  end
-
   test "should_redirect_to_custom_domain?" do
     @blog.custom_domain = nil
     assert_not @blog.should_redirect_to_custom_domain?("any.host")

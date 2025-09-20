@@ -12,7 +12,6 @@ class Post < ApplicationRecord
   # Associations
   belongs_to :author, class_name: "User"
   belongs_to :blog, optional: true
-  has_one_attached :social_share_image
   has_many_attached :content_images
 
   # Callbacks
