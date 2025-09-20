@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+# ABOUTME: Runs Rails tests with suppressed Ruby warnings to clean up marcel gem noise
+# ABOUTME: Sets RUBYOPT to suppress deprecated warnings during test execution
+
+ENV["RUBYOPT"] = "-W0"
+exec "rails", "test", *ARGV
