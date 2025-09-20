@@ -1,5 +1,8 @@
 # Single Table Inheritance: Post and Page share the same table, differentiated by the 'type' column.
 class Post < ApplicationRecord
+  # Concerns
+  include ProcessableImage
+
   # Utilities
   extend FriendlyId
   friendly_id :title, use: [:sequentially_slugged, :scoped, :history], scope: :blog

@@ -177,6 +177,13 @@ GEM
       concurrent-ruby (~> 1.1)
       webrick (~> 1.7)
       websocket-driver (~> 0.7)
+    ffi (1.17.2-aarch64-linux-gnu)
+    ffi (1.17.2-aarch64-linux-musl)
+    ffi (1.17.2-arm-linux-gnu)
+    ffi (1.17.2-arm-linux-musl)
+    ffi (1.17.2-arm64-darwin)
+    ffi (1.17.2-x86_64-linux-gnu)
+    ffi (1.17.2-x86_64-linux-musl)
     friendly_id (5.5.1)
       activerecord (>= 4.0.0)
     front_matter_parser (1.0.1)
@@ -194,6 +201,9 @@ GEM
     htmlbeautifier (1.4.3)
     i18n (1.14.7)
       concurrent-ruby (~> 1.0)
+    image_processing (1.14.0)
+      mini_magick (>= 4.9.5, < 6)
+      ruby-vips (>= 2.0.17, < 3)
     importmap-rails (2.2.2)
       actionpack (>= 6.0.0)
       activesupport (>= 6.0.0)
@@ -243,6 +253,8 @@ GEM
     marksmith (0.4.7)
       activesupport
     matrix (0.4.3)
+    mini_magick (5.3.1)
+      logger
     mini_mime (1.1.5)
     minitest (5.25.5)
     msgpack (1.8.0)
@@ -403,6 +415,9 @@ GEM
       rubocop (>= 1.75.0, < 2.0)
       rubocop-ast (>= 1.38.0, < 2.0)
     ruby-progressbar (1.13.0)
+    ruby-vips (2.2.5)
+      ffi (~> 1.12)
+      logger
     scout_apm (5.7.1)
       parser
     securerandom (0.4.1)
@@ -526,6 +541,7 @@ DEPENDENCIES
   heroicons (~> 2.2.0)
   honeybadger (~> 6.1.0)
   htmlbeautifier
+  image_processing (~> 1.2)
   importmap-rails
   jbuilder
   kamal
@@ -544,6 +560,7 @@ DEPENDENCIES
   rails-controller-testing
   rails_best_practices
   rails_semantic_logger
+  ruby-vips
   scout_apm (~> 5.7.1)
   solid_cable
   solid_cache
