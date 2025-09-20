@@ -1,4 +1,5 @@
 require "test_helper"
+require "ruby-vips"
 
 class ImageProcessingJobTest < ActiveJob::TestCase
   def setup
@@ -60,7 +61,7 @@ class ImageProcessingJobTest < ActiveJob::TestCase
     )
 
     # This should raise an error when trying to process the invalid image
-    assert_raises(MiniMagick::Error) do
+    assert_raises(Vips::Error) do
       ImageProcessingJob.perform_now(bad_blob.id)
     end
   end

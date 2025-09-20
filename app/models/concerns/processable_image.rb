@@ -40,11 +40,14 @@ module ProcessableImage
     # Only queue processing for images
     return unless blob.content_type&.start_with?("image/")
 
-    # Skip if already processed
-    return if blob.metadata["processed"]
+    # Skip if already processed or queued
+    return if blob.metadata["processed"] || blob.metadata["processing_queued"]
+
+    # Mark as queued to prevent duplicate processing
+    blob.update!(metadata: blob.metadata.merge("processing_queued" => true))
 
     ImageProcessingJob.perform_later(blob.id)
-    Rails.logger.info "Queued image processing for blob #{blob.id}"
+    Rails.logger.info "Queued image processing for blob #{blob.id} (attachment callback)"
   rescue => e
     Rails.logger.error "Failed to queue image processing for blob #{blob.id}: #{e.message}"
   end

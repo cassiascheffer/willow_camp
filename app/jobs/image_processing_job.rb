@@ -16,8 +16,8 @@ class ImageProcessingJob < ApplicationJob
     processor = ImageProcessor.new(blob)
     processor.process!
 
-    # Mark as processed
-    blob.update!(metadata: blob.metadata.merge("processed" => true))
+    # Mark as processed and clear queued flag
+    blob.update!(metadata: blob.metadata.merge("processed" => true, "processing_queued" => false))
   rescue ActiveRecord::RecordNotFound
     # Blob was deleted before we could process it
     Rails.logger.info "ImageProcessingJob: Blob #{blob_id} not found, skipping"

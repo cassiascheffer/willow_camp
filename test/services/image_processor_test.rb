@@ -1,5 +1,5 @@
 require "test_helper"
-require "mini_magick"
+require "ruby-vips"
 
 class ImageProcessorTest < ActiveSupport::TestCase
   def setup
@@ -20,10 +20,11 @@ class ImageProcessorTest < ActiveSupport::TestCase
     temp_file = Tempfile.new(["processed", ".jpg"])
     begin
       File.binwrite(temp_file.path, processed_data)
-      processed_image = MiniMagick::Image.open(temp_file.path)
+      processed_image = Vips::Image.new_from_file(temp_file.path)
 
       # Image should be valid after processing
-      assert processed_image.valid?
+      assert processed_image.width > 0
+      assert processed_image.height > 0
 
       # File size should be positive
       assert processed_data.size > 0
@@ -96,11 +97,11 @@ class ImageProcessorTest < ActiveSupport::TestCase
     temp_file = Tempfile.new(["processed", ".jpg"])
     begin
       File.binwrite(temp_file.path, processed_data)
-      image = MiniMagick::Image.open(temp_file.path)
+      image = Vips::Image.new_from_file(temp_file.path)
 
-      # Image should be properly oriented
-      # (actual orientation check would depend on test image)
-      assert image.valid?
+      # Image should be properly oriented and valid
+      assert image.width > 0
+      assert image.height > 0
     ensure
       temp_file.close!
     end

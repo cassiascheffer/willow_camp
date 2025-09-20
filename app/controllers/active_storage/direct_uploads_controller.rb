@@ -4,6 +4,12 @@
 class ActiveStorage::DirectUploadsController < ActiveStorage::BaseController
   def create
     blob = ActiveStorage::Blob.create_before_direct_upload!(**blob_args)
+
+    # Queue processing for image blobs after they're created
+    if blob.content_type&.start_with?("image/")
+      ProcessBlobAfterCreationJob.perform_later(blob.id)
+    end
+
     render json: direct_upload_json(blob)
   end
 

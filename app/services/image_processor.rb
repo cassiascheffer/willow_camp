@@ -1,8 +1,8 @@
 # ABOUTME: Service class that handles image processing - removes EXIF data and optimizes file size
-# ABOUTME: Works with Active Storage blobs to create optimized variants without metadata
+# ABOUTME: Works with Active Storage blobs to create optimized variants without metadata using libvips
 
 class ImageProcessor
-  require "image_processing/mini_magick"
+  require "image_processing/vips"
 
   attr_reader :blob
 
@@ -37,36 +37,32 @@ class ImageProcessor
   end
 
   def process_image(source_path)
-    pipeline = ImageProcessing::MiniMagick.source(source_path)
+    # Process with Vips directly to have more control over metadata removal
+    image = Vips::Image.new_from_file(source_path, access: :sequential)
 
-    # Strip EXIF data and optimize based on format
-    pipeline = case blob.content_type
+    # Auto-rotate based on EXIF orientation
+    image = image.autorot
+
+    # Remove all metadata by creating a new image without it
+    image = image.copy(interpretation: image.interpretation)
+
+    # Create temporary file for the processed image
+    temp_file = Tempfile.new(["processed", File.extname(source_path)])
+
+    # Save with format-specific optimization
+    case blob.content_type
     when "image/jpeg", "image/jpg"
-      pipeline
-        .strip # Remove all EXIF data
-        .quality(85) # Optimize JPEG quality
-        .interlace("Plane") # Progressive JPEG
+      image.jpegsave(temp_file.path, Q: 85, interlace: true, strip: true)
     when "image/png"
-      pipeline
-        .strip # Remove all metadata
-        .quality(95) # PNG compression
-    when "image/gif"
-      pipeline
-        .strip # Remove metadata
+      image.pngsave(temp_file.path, compression: 9, strip: true)
     when "image/webp"
-      pipeline
-        .strip # Remove metadata
-        .quality(85) # WebP quality
+      image.webpsave(temp_file.path, Q: 85, strip: true)
     else
-      # Default processing for other formats
-      pipeline.strip
+      # Default to JPEG for other formats
+      image.jpegsave(temp_file.path, Q: 85, strip: true)
     end
 
-    # Apply auto-orient to fix rotation issues from removed EXIF
-    pipeline = pipeline.auto_orient
-
-    # Process and return tempfile
-    pipeline.call
+    temp_file
   end
 
   def create_optimized_variants
