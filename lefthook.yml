@@ -16,7 +16,7 @@ pre-push:
       tags:
         - backend
         - testing
-      run: bin/rails test
+      run: bin/test
 
     - name: gems audit
       tags:
