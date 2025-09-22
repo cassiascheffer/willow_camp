@@ -84,8 +84,11 @@ class Post < ApplicationRecord
   end
 
   def set_html
-    self.body_html = PostMarkdown.new(body_markdown).to_html
-    # Detect if markdown contains mermaid diagrams
-    self.has_mermaid_diagrams = body_markdown&.include?("```mermaid") || false
+    # Only convert markdown to HTML if body_markdown is present and body_html hasn't been set directly
+    if body_markdown.present? && !body_html_changed?
+      self.body_html = PostMarkdown.new(body_markdown).to_html
+      # Detect if markdown contains mermaid diagrams
+      self.has_mermaid_diagrams = body_markdown&.include?("```mermaid") || false
+    end
   end
 end

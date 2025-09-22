@@ -17,11 +17,10 @@
     <%= form.label :slug, class: "label" %>
     <%= form.text_field :slug, class: "input input-bordered w-full" %>
   </div>
-  <div class="form-control w-full mb-4">
+  <div class="form-control w-full mb-4" data-controller="quill" data-quill-enable-file-uploads-value="true">
     <%= form.label :body, class: "label" %>
-    <%= form.marksmith :body_markdown,
-        enable_file_uploads: true,
-        class: "textarea textarea-bordered w-full" %>
+    <div data-quill-target="editor" style="min-height: 400px;"></div>
+    <%= form.hidden_field :body_html, data: { "quill-target": "input" } %>
   </div>
   <div class="form-control w-full mb-4">
     <%= form.label :published, class: "label" %>

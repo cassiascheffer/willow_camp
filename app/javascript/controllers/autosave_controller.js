@@ -224,7 +224,7 @@ export default class extends Controller {
   // Scroll position management
   saveScrollPosition() {
     // Save scroll position for all scrollable elements
-    const scrollableElements = document.querySelectorAll('[data-marksmith-editor], .marksmith-editor, .textarea, textarea')
+    const scrollableElements = document.querySelectorAll('.ql-editor, .textarea, textarea')
     scrollableElements.forEach(element => {
       if (element.scrollHeight > element.clientHeight) {
         this.scrollPositions.set(element, {

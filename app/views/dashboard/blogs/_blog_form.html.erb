@@ -48,18 +48,12 @@
       <%= form.text_area :meta_description, required: false, 'aria-describedby': "site_meta_description_help", maxlength: 255, class: "textarea textarea-bordered w-full" %>
       <div id="site_meta_description_help" class="text-xs text-gray-500 mt-2">Used for SEO on index pages of your blog</div>
     </div>
-    <div class="form-control w-full mb-4">
+    <div class="form-control w-full mb-4" data-controller="quill" data-quill-enable-file-uploads-value="false">
       <%= form.label :post_footer_markdown, "Post Footer", class: "label" %>
-      <%= form.marksmith :post_footer_markdown,
-          enable_file_uploads: false,
-          required: false,
-          'aria-describedby': "post_footer_help",
-          maxlength: 10000,
-          class: "textarea textarea-bordered w-full",
-          style: "min-height: 200px;",
-          placeholder: "Write your footer content in Markdown..." %>
+      <div data-quill-target="editor" style="min-height: 200px;"></div>
+      <%= form.hidden_field :post_footer_html, data: { "quill-target": "input" }, maxlength: 10000 %>
       <div id="post_footer_help" class="text-xs text-gray-500 mt-2">
-        This footer will appear at the bottom of every blog post on this blog. You can use Markdown formatting.
+        This footer will appear at the bottom of every blog post on this blog. You can use rich text formatting.
       </div>
     </div>
     <div class="form-control mb-4">
