@@ -56,7 +56,7 @@ class Dashboard::Settings::AboutPagesController < Dashboard::BaseController
   def page_params
     params.require(:page).permit(
       :title,
-      :body_markdown,
+      :body_html,
       :published,
       :slug
     )

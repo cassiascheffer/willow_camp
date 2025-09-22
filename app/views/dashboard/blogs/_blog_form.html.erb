@@ -50,8 +50,7 @@
     </div>
     <div class="form-control w-full mb-4">
       <%= form.label :post_footer_markdown, "Post Footer", class: "label" %>
-      <%= form.marksmith :post_footer_markdown,
-          enable_file_uploads: false,
+      <%= form.text_area :post_footer_markdown,
           required: false,
           'aria-describedby': "post_footer_help",
           maxlength: 10000,

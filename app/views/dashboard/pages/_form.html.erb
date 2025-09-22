@@ -17,11 +17,9 @@
     <%= form.label :slug, class: "label" %>
     <%= form.text_field :slug, class: "input input-bordered w-full" %>
   </div>
-  <div class="form-control w-full mb-4">
-    <%= form.label :body, class: "label" %>
-    <%= form.marksmith :body_markdown,
-        enable_file_uploads: true,
-        class: "textarea textarea-bordered w-full" %>
+  <div class="form-control w-full mb-4" data-controller="tinymce">
+    <%= form.label :body_html, "Content", class: "label" %>
+    <%= form.text_area :body_html, data: { "tinymce-target": "editor" }, rows: 40, class: "textarea" %>
   </div>
   <div class="form-control w-full mb-4">
     <%= form.label :published, class: "label" %>

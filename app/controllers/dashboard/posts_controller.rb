@@ -47,7 +47,7 @@ class Dashboard::PostsController < Dashboard::BlogBaseController
 
   def post_params
     params.require(:post).permit(
-      :title, :tag_list, :slug, :body_markdown, :published,
+      :title, :tag_list, :slug, :body_html, :published,
       :published_at, :meta_description, :featured
     )
   end

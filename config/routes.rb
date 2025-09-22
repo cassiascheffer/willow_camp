@@ -60,7 +60,9 @@ Rails.application.routes.draw do
       patch "settings" => "blogs#update"
       delete "/" => "blogs#destroy"
 
-      resources :posts, only: %i[edit update destroy]
+      resources :posts, only: %i[edit update destroy] do
+        resources :image_uploads, only: [:create]
+      end
       resources :featured_posts, only: %i[update]
       resources :untitled_posts, only: %i[create]
       resources :tags, only: %i[update destroy]

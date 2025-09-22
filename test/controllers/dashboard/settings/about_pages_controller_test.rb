@@ -13,7 +13,7 @@ class Dashboard::Settings::AboutPagesControllerTest < ActionDispatch::Integratio
       post dashboard_settings_about_pages_url(blog_subdomain: @blog.subdomain), params: {
         page: {
           title: "About Me",
-          body_markdown: "This is my about page",
+          body_html: "This is my about page",
           published: true,
           slug: "about-me-test"
         }
@@ -27,7 +27,7 @@ class Dashboard::Settings::AboutPagesControllerTest < ActionDispatch::Integratio
     page = @blog.pages.find_by(title: "About Me")
     assert_not_nil page, "Page should exist with title 'About Me'"
     assert_equal "About Me", page.title
-    assert_equal "This is my about page", page.body_markdown
+    assert_equal "This is my about page", page.body_html
     assert_equal @blog, page.blog
     assert_equal @user, page.author
   end
@@ -67,7 +67,7 @@ class Dashboard::Settings::AboutPagesControllerTest < ActionDispatch::Integratio
     patch dashboard_settings_about_page_url(blog_subdomain: @blog.subdomain, slug: @page.slug), params: {
       page: {
         title: "Updated About",
-        body_markdown: "Updated content"
+        body_html: "Updated content"
       }
     }
 
@@ -76,14 +76,14 @@ class Dashboard::Settings::AboutPagesControllerTest < ActionDispatch::Integratio
 
     @page.reload
     assert_equal "Updated About", @page.title
-    assert_equal "Updated content", @page.body_markdown
+    assert_equal "Updated content", @page.body_html
   end
 
   test "should update about page with turbo stream" do
     patch dashboard_settings_about_page_url(blog_subdomain: @blog.subdomain, slug: @page.slug), params: {
       page: {
         title: "Updated About",
-        body_markdown: "Updated content"
+        body_html: "Updated content"
       }
     }, as: :turbo_stream
 

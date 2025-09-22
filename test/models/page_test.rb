@@ -134,13 +134,13 @@ class PageTest < ActiveSupport::TestCase
 
     page = blog.pages.create!(
       title: "Privacy Policy",
-      body_markdown: "# Privacy Policy\n\nWe respect your privacy.",
+      body_html: "<h1>Privacy Policy</h1><p>We respect your privacy.</p>",
       author: @user
     )
 
     reloaded_page = Page.find(page.id)
     assert_equal "Privacy Policy", reloaded_page.title
-    assert_equal "# Privacy Policy\n\nWe respect your privacy.", reloaded_page.body_markdown
+    assert_equal "<h1>Privacy Policy</h1><p>We respect your privacy.</p>", reloaded_page.body_html
     assert_match(/Privacy Policy/, reloaded_page.body_html)
     assert_match(/<h1/, reloaded_page.body_html)
   end

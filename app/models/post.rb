@@ -24,7 +24,7 @@ class Post < ApplicationRecord
   # Validations
   validates :title, presence: true, length: {maximum: 255}
   validates :published, inclusion: {in: [true, false]}, allow_nil: true
-  validates :body_markdown, length: {maximum: 100000}, allow_blank: true
+  validates :body_html, length: {maximum: 100000}, allow_blank: true
   validates :published_at, presence: true, if: :published
   validates :meta_description, length: {maximum: 255}, allow_blank: true
 
@@ -84,8 +84,8 @@ class Post < ApplicationRecord
   end
 
   def set_html
-    self.body_html = PostMarkdown.new(body_markdown).to_html
-    # Detect if markdown contains mermaid diagrams
-    self.has_mermaid_diagrams = body_markdown&.include?("```mermaid") || false
+    # No longer converting from markdown - body_html is set directly
+    # Detect if content contains mermaid diagrams
+    self.has_mermaid_diagrams = body_html&.include?("mermaid") || false
   end
 end

@@ -71,8 +71,8 @@ class PostTest < ActiveSupport::TestCase
     assert_equal user.id, post.author_id, "Post's author_id should match the author's id"
   end
 
-  test "should generate HTML from markdown" do
-    @post.body_markdown = "# Hello World\n\nThis is a test."
+  test "should save and display HTML content" do
+    @post.body_html = "<h1>Hello World</h1><p>This is a test.</p>"
     @post.save!
 
     assert_not_nil @post.body_html
@@ -81,23 +81,23 @@ class PostTest < ActiveSupport::TestCase
   end
 
   test "should detect mermaid diagrams and set has_mermaid_diagrams flag" do
-    @post.body_markdown = "```mermaid\ngraph TD\n  A --> B\n```"
+    @post.body_html = "<div class=\"mermaid\">graph TD\n  A --> B</div>"
 
     @post.save!
 
     assert @post.has_mermaid_diagrams, "Post should detect mermaid diagrams"
     assert_not_nil @post.body_html
-    assert_match(/<pre[^>]*lang="mermaid"/, @post.body_html)
+    assert_includes @post.body_html, "mermaid"
   end
 
   test "should not detect mermaid when only regular code blocks present" do
-    @post.body_markdown = "```ruby\nputs 'test'\n```"
+    @post.body_html = "<pre><code class=\"language-ruby\">puts 'test'</code></pre>"
 
     @post.save!
 
     assert_not @post.has_mermaid_diagrams, "Post should not detect mermaid diagrams"
     assert_not_nil @post.body_html
-    assert_includes @post.body_html, '<pre lang="ruby"'
+    assert_includes @post.body_html, "language-ruby"
   end
 
   test "should handle empty markdown" do

@@ -10,11 +10,9 @@
         </ul>
       </div>
     <% end %>
-    <div class="form-control w-full mb-4">
-      <%= form.label :body, class: "label" %>
-      <%= form.marksmith :body_markdown,
-          enable_file_uploads: false,
-          class: "textarea textarea-bordered w-full" %>
+    <div class="form-control w-full mb-4" data-controller="tinymce">
+      <%= form.label :body_html, "Content", class: "label" %>
+      <%= form.text_area :body_html, data: { "tinymce-target": "editor" }, rows: 30, class: "textarea" %>
     </div>
     <div class="flex flex-col lg:flex-row lg:gap-4 lg:items-end mb-4">
       <div class="form-control w-full lg:w-auto mb-4 lg:mb-0">
