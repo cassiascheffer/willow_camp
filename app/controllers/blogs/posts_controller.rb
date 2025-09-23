@@ -29,6 +29,6 @@ class Blogs::PostsController < Blogs::BaseController
   private
 
   def set_post
-    @post = @blog.posts.published.find_by(slug: params[:slug])
+    @post = @blog.posts.published.includes(:rich_text_body_content).find_by(slug: params[:slug])
   end
 end

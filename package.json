@@ -6,5 +6,7 @@
     "prettier-plugin-tailwindcss": "^0.6.12"
   },
   "dependencies": {
+    "@rails/actiontext": "^8.0.300",
+    "trix": "^2.1.15"
   }
 }

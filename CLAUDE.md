@@ -71,3 +71,4 @@ Uses Rails default Minitest framework. Tests are organized by type:
 
 Configured for containerized deployment using Kamal. The Dockerfile and docker-compose.yml handle production setup. Environment variables are managed through Rails credentials.
 - We are in the middle of a migration. Users used to have blog metadata as attributes on their record. Now each user has many blogs. We have not run the migration in production yet. Any work we do should keep the models backwawrds-compatible. We can change controllers viewss and routes to not be backwards compatible.
+- When migrating data in a database, use a rake task. Do not wirte data migratons in the Rails migrations meant for schema migrations.

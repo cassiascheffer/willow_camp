@@ -24,11 +24,16 @@ module WillowCamp
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
 
+    config.generators do |g|
+      g.orm :active_record, primary_key_type: :uuid
+    end
+
     config.log_tags = {
       request_id: :request_id,
       remote_ip: :remote_ip,
       host: ->(request) { request.host }
     }
+
     # Setup structured logging with Semantic Logger
     config.log_level = ENV["LOG_LEVEL"] || (Rails.env.production? ? :info : :debug)
     config.semantic_logger.application = "willow_camp"

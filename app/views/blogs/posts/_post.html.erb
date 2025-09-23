@@ -1,3 +1,7 @@
 <%= tag.div id: dom_id(post), class: "prose prose-lg max-w-none", "data-controller": ("mermaid" if post.has_mermaid_diagrams) do %>
-  <%= sanitize(post.body_html, tags: %w(table th tr td span) + ActionView::Helpers::SanitizeHelper.sanitizer_vendor.safe_list_sanitizer.allowed_tags.to_a, attributes: %w(class) + ActionView::Helpers::SanitizeHelper.sanitizer_vendor.safe_list_sanitizer.allowed_attributes.to_a) %>
+  <% if post.body_content.present? %>
+    <%= post.body_content %>
+  <% else %>
+    <%= sanitize(post.body_html, tags: %w(table th tr td span) + ActionView::Helpers::SanitizeHelper.sanitizer_vendor.safe_list_sanitizer.allowed_tags.to_a, attributes: %w(class) + ActionView::Helpers::SanitizeHelper.sanitizer_vendor.safe_list_sanitizer.allowed_attributes.to_a) %>
+  <% end %>
 <% end %>

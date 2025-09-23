@@ -13,6 +13,7 @@ class Post < ApplicationRecord
   belongs_to :author, class_name: "User"
   belongs_to :blog, optional: true
   has_many_attached :content_images
+  has_rich_text :body_content
 
   # Callbacks
   before_validation :set_published_at
@@ -75,6 +76,21 @@ class Post < ApplicationRecord
     !published
   end
 
+  # Backwards compatibility methods for body_html
+  def body_html
+    # If we have ActionText content, use it
+    return body_content.to_s if body_content.present?
+    # Otherwise fall back to the column value (for existing records)
+    read_attribute(:body_html)
+  end
+
+  def body_html=(value)
+    # When setting body_html directly, update the ActionText content
+    self.body_content = value
+    # Also store in the column for backwards compatibility during migration
+    write_attribute(:body_html, value)
+  end
+
   private
 
   def set_published_at
@@ -84,7 +100,10 @@ class Post < ApplicationRecord
   end
 
   def set_html
-    self.body_html = PostMarkdown.new(body_markdown).to_html
+    html_content = PostMarkdown.new(body_markdown).to_html
+    # Set both ActionText and column for backwards compatibility
+    self.body_content = html_content
+    write_attribute(:body_html, html_content)
     # Detect if markdown contains mermaid diagrams
     self.has_mermaid_diagrams = body_markdown&.include?("```mermaid") || false
   end

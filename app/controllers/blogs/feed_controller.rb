@@ -5,6 +5,7 @@ module Blogs
 
     def show
       @posts = @blog.posts.published
+        .includes(:rich_text_body_content)
         .order(published_at: :desc, created_at: :desc)
         .limit(20)
 
