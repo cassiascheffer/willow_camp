@@ -280,20 +280,20 @@ class BlogTest < ActiveSupport::TestCase
   end
 
   # Callback Tests
-  test "sets post_footer_html from markdown before save" do
+  test "sets post_footer_content from markdown before save" do
     @blog.post_footer_markdown = "**Bold footer**"
     @blog.save!
-    assert_match(/<strong>Bold footer<\/strong>/, @blog.post_footer_html)
+    assert_match(/<strong>Bold footer<\/strong>/, @blog.post_footer_content.to_s)
   end
 
-  test "clears post_footer_html when markdown is blank" do
+  test "clears post_footer_content when markdown is blank" do
     @blog.post_footer_markdown = "**Bold footer**"
     @blog.save!
-    assert_not_nil @blog.post_footer_html
+    assert @blog.post_footer_content.present?
 
     @blog.post_footer_markdown = ""
     @blog.save!
-    assert_nil @blog.post_footer_html
+    assert @blog.post_footer_content.blank?
   end
 
   test "creates about page after create" do

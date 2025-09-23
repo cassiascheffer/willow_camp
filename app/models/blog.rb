@@ -123,30 +123,12 @@ class Blog < ApplicationRecord
     current_host != custom_domain
   end
 
-  # Backwards compatibility methods for post_footer_html
-  def post_footer_html
-    # If we have ActionText content, use it
-    return post_footer_content.to_s if post_footer_content.present?
-    # Otherwise fall back to the column value (for existing records)
-    read_attribute(:post_footer_html)
-  end
-
-  def post_footer_html=(value)
-    # When setting post_footer_html directly, update the ActionText content
-    self.post_footer_content = value
-    # Also store in the column for backwards compatibility during migration
-    write_attribute(:post_footer_html, value)
-  end
-
   private
 
   def set_post_footer_html
-    html_content = if post_footer_markdown.present?
+    self.post_footer_content = if post_footer_markdown.present?
       PostMarkdown.new(post_footer_markdown).to_html
     end
-    # Set both ActionText and column for backwards compatibility
-    self.post_footer_content = html_content
-    write_attribute(:post_footer_html, html_content)
   end
 
   def ensure_about_page

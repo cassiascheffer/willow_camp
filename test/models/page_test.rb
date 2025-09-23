@@ -141,8 +141,8 @@ class PageTest < ActiveSupport::TestCase
     reloaded_page = Page.find(page.id)
     assert_equal "Privacy Policy", reloaded_page.title
     assert_equal "# Privacy Policy\n\nWe respect your privacy.", reloaded_page.body_markdown
-    assert_match(/Privacy Policy/, reloaded_page.body_html)
-    assert_match(/<h1/, reloaded_page.body_html)
+    assert_match(/Privacy Policy/, reloaded_page.body_content.to_s)
+    assert_match(/<h1/, reloaded_page.body_content.to_s)
   end
 
   test "should work with acts_as_taggable through blog tenant" do

@@ -76,21 +76,6 @@ class Post < ApplicationRecord
     !published
   end
 
-  # Backwards compatibility methods for body_html
-  def body_html
-    # If we have ActionText content, use it
-    return body_content.to_s if body_content.present?
-    # Otherwise fall back to the column value (for existing records)
-    read_attribute(:body_html)
-  end
-
-  def body_html=(value)
-    # When setting body_html directly, update the ActionText content
-    self.body_content = value
-    # Also store in the column for backwards compatibility during migration
-    write_attribute(:body_html, value)
-  end
-
   private
 
   def set_published_at
@@ -100,10 +85,7 @@ class Post < ApplicationRecord
   end
 
   def set_html
-    html_content = PostMarkdown.new(body_markdown).to_html
-    # Set both ActionText and column for backwards compatibility
-    self.body_content = html_content
-    write_attribute(:body_html, html_content)
+    self.body_content = PostMarkdown.new(body_markdown).to_html
     # Detect if markdown contains mermaid diagrams
     self.has_mermaid_diagrams = body_markdown&.include?("```mermaid") || false
   end

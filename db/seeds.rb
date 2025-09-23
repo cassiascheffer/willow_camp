@@ -10,21 +10,10 @@
 
 # rubocop:disable Rails/Output
 
-# Support both single-blog (old format) and multi-blog (new format) seeding
-# Use SINGLE_BLOG=true rails db:seed for old format (commit 290f2372)
-# Use rails db:seed for new multi-blog format
-single_blog_mode = ENV["SINGLE_BLOG"] == "true"
-
-if single_blog_mode
-  puts "=== Running in SINGLE BLOG mode (old format) ==="
-  puts "Seeding user fields directly without blogs table"
-else
-  puts "=== Running in MULTI BLOG mode (new format) ==="
-  puts "Seeding with separate blogs table"
-end
+puts "=== Seeding database with blogs and posts ==="
 
 User.destroy_all
-Blog.destroy_all unless single_blog_mode
+Blog.destroy_all
 
 users = [
   {
@@ -52,81 +41,153 @@ users = [
 ]
 
 users.each do |user_data|
-  if single_blog_mode
-    # Old format: blog fields directly on User model
-    user = User.find_or_create_by!(email: user_data[:email]) do |u|
-      u.password = user_data[:password]
-      u.name = user_data[:name]
-      # Blog fields that existed on User model in old format
-      u.subdomain = user_data[:subdomain]
-      u.blog_title = user_data[:blog_title]
-      u.slug = user_data[:slug]
-      u.site_meta_description = user_data[:site_meta_description]
-      u.favicon_emoji = user_data[:favicon_emoji]
-      u.theme = user_data[:theme]
-      u.custom_domain = nil
-      u.post_footer_markdown = nil
-      u.post_footer_html = nil
-      u.no_index = false
-    end
-    puts "Created user: #{user.email} with blog fields (subdomain: #{user.subdomain})"
-
-    # Create posts associated directly with user (no blog_id)
-    100.times do |i|
-      user.posts.create! do |post|
-        post.title = Faker::Books::Lovecraft.tome
-        post.body_markdown = Faker::Markdown.sandwich(sentences: 6, repeat: 3)
-        post.published = Faker::Boolean.boolean
-        post.published_at = Faker::Date.between(from: 2.days.ago, to: Time.zone.today)
-        post.tag_list = ["dogs", "cats", "fun!"]
-        post.featured = i < 3 # First 3 posts are featured
-        post.meta_description = Faker::Lorem.sentence(word_count: 12, supplemental: true, random_words_to_add: 8) if Faker::Boolean.boolean(true_ratio: 0.7)
-        # No blog_id in old format
-      end
-      print "."
-    end
-    puts ""
-    puts "Created 100 posts for user: #{user.name} (3 featured)"
-  else
-    # New format: separate User and Blog models
-    user = User.find_or_create_by!(email: user_data[:email]) do |u|
-      u.password = user_data[:password]
-      u.name = user_data[:name]
-    end
-    puts "Created user: #{user.email}"
-
-    # Create primary blog for the user
-    blog = user.blogs.find_or_create_by!(subdomain: user_data[:subdomain]) do |b|
-      b.title = user_data[:blog_title]
-      b.slug = user_data[:slug]
-      b.meta_description = user_data[:site_meta_description]
-      b.favicon_emoji = user_data[:favicon_emoji]
-      b.theme = user_data[:theme]
-      b.primary = true
-      b.custom_domain = nil
-      b.post_footer_markdown = nil
-      b.post_footer_html = nil
-      b.no_index = false
-    end
-    puts "Created blog: #{blog.title} with subdomain: #{blog.subdomain}"
-
-    # Create posts associated with both user and blog
-    100.times do |i|
-      blog.posts.create! do |post|
-        post.title = Faker::Books::Lovecraft.tome
-        post.body_markdown = Faker::Markdown.sandwich(sentences: 6, repeat: 3)
-        post.published = Faker::Boolean.boolean
-        post.published_at = Faker::Date.between(from: 2.days.ago, to: Time.zone.today)
-        post.tag_list = ["dogs", "cats", "fun!"]
-        post.featured = i < 3 # First 3 posts are featured
-        post.meta_description = Faker::Lorem.sentence(word_count: 12, supplemental: true, random_words_to_add: 8) if Faker::Boolean.boolean(true_ratio: 0.7)
-        post.author = user
-      end
-      print "."
-    end
-    puts ""
-    puts "Created 100 posts for blog: #{blog.title} (3 featured)"
+  # Create User
+  user = User.find_or_create_by!(email: user_data[:email]) do |u|
+    u.password = user_data[:password]
+    u.name = user_data[:name]
   end
+  puts "Created user: #{user.email}"
+
+  # Create primary blog for the user
+  blog = user.blogs.find_or_create_by!(subdomain: user_data[:subdomain]) do |b|
+    b.title = user_data[:blog_title]
+    b.slug = user_data[:slug]
+    b.meta_description = user_data[:site_meta_description]
+    b.favicon_emoji = user_data[:favicon_emoji]
+    b.theme = user_data[:theme]
+    b.primary = true
+    b.custom_domain = nil
+    b.post_footer_markdown = nil
+    b.no_index = false
+  end
+  puts "Created blog: #{blog.title} with subdomain: #{blog.subdomain}"
+
+  # Create posts associated with both user and blog
+  100.times do |i|
+    # Every post gets a mermaid diagram
+    diagram_type = i % 5
+
+    body_content = case diagram_type
+    when 0
+      # Flowchart
+      <<~MARKDOWN
+        #{Faker::Lorem.paragraph(sentence_count: 3)}
+
+        ## #{["Process Flow", "Workflow", "Decision Tree", "System Flow"].sample}
+
+        ```mermaid
+        graph TD
+            A[#{Faker::Lorem.word.capitalize}] --> B{#{Faker::Lorem.question}}
+            B -->|Yes| C[#{Faker::Lorem.words(number: 2).join(" ").capitalize}]
+            B -->|No| D[#{Faker::Lorem.words(number: 2).join(" ").capitalize}]
+            C --> E[Complete]
+            D --> F[Review]
+            F --> B
+        ```
+
+        #{Faker::Markdown.sandwich(sentences: 6, repeat: 2)}
+      MARKDOWN
+    when 1
+      # Sequence diagram
+      <<~MARKDOWN
+        #{Faker::Lorem.paragraph(sentence_count: 2)}
+
+        ## #{["System Architecture", "API Flow", "User Journey", "Data Flow"].sample}
+
+        ```mermaid
+        sequenceDiagram
+            participant Client
+            participant Server
+            participant Database
+            participant Cache
+            Client->>Server: #{Faker::Lorem.words(number: 2).join(" ").capitalize}
+            Server->>Cache: Check Cache
+            Cache-->>Server: #{["Cache Miss", "Cache Hit"].sample}
+            Server->>Database: Query Data
+            Database-->>Server: Return Results
+            Server->>Cache: Update Cache
+            Server-->>Client: Response
+        ```
+
+        #{Faker::Markdown.sandwich(sentences: 4, repeat: 3)}
+      MARKDOWN
+    when 2
+      # Pie chart
+      <<~MARKDOWN
+        #{Faker::Lorem.paragraph(sentence_count: 2)}
+
+        ## #{["Statistics", "Distribution", "Analysis", "Breakdown"].sample}
+
+        ```mermaid
+        pie title #{Faker::Lorem.words(number: 2).join(" ").capitalize}
+            "#{Faker::Lorem.word.capitalize}" : #{rand(10..40)}
+            "#{Faker::Lorem.word.capitalize}" : #{rand(10..30)}
+            "#{Faker::Lorem.word.capitalize}" : #{rand(10..25)}
+            "#{Faker::Lorem.word.capitalize}" : #{rand(5..20)}
+            "Other" : #{rand(5..15)}
+        ```
+
+        #{Faker::Markdown.sandwich(sentences: 5, repeat: 2)}
+      MARKDOWN
+    when 3
+      # Gantt chart
+      <<~MARKDOWN
+        #{Faker::Lorem.paragraph(sentence_count: 2)}
+
+        ## #{["Project Timeline", "Schedule", "Roadmap", "Development Plan"].sample}
+
+        ```mermaid
+        gantt
+            title #{Faker::Lorem.words(number: 3).join(" ").capitalize}
+            dateFormat  YYYY-MM-DD
+            section Phase 1
+            Task A           :2024-01-01, 30d
+            Task B           :after Task A, 20d
+            section Phase 2
+            Task C           :2024-02-15, 25d
+            Task D           :after Task C, 15d
+            section Phase 3
+            Task E           :2024-03-20, 35d
+        ```
+
+        #{Faker::Markdown.sandwich(sentences: 4, repeat: 2)}
+      MARKDOWN
+    when 4
+      # State diagram
+      <<~MARKDOWN
+        #{Faker::Lorem.paragraph(sentence_count: 3)}
+
+        ## #{["State Machine", "Status Flow", "Lifecycle", "State Transitions"].sample}
+
+        ```mermaid
+        stateDiagram-v2
+            [*] --> Draft
+            Draft --> Review: Submit
+            Review --> Approved: Approve
+            Review --> Draft: Reject
+            Approved --> Published: Publish
+            Published --> Archived: Archive
+            Archived --> [*]
+        ```
+
+        #{Faker::Markdown.sandwich(sentences: 5, repeat: 2)}
+      MARKDOWN
+    end
+
+    blog.posts.create! do |post|
+      post.title = Faker::Books::Lovecraft.tome
+      post.body_markdown = body_content
+      post.published = Faker::Boolean.boolean
+      post.published_at = Faker::Date.between(from: 2.days.ago, to: Time.zone.today)
+      post.tag_list = ["dogs", "cats", "fun!"]
+      post.featured = i < 3 # First 3 posts are featured
+      post.meta_description = Faker::Lorem.sentence(word_count: 12, supplemental: true, random_words_to_add: 8) if Faker::Boolean.boolean(true_ratio: 0.7)
+      post.author = user
+    end
+    print "."
+  end
+  puts ""
+  puts "Created 100 posts for blog: #{blog.title} (3 featured, all with mermaid diagrams)"
 end
 
 # rubocop:enable Rails/Output

@@ -75,9 +75,9 @@ class PostTest < ActiveSupport::TestCase
     @post.body_markdown = "# Hello World\n\nThis is a test."
     @post.save!
 
-    assert_not_nil @post.body_html
-    assert_includes @post.body_html, "Hello World"
-    assert_includes @post.body_html, "<p>This is a test.</p>"
+    assert @post.body_content.present?
+    assert_includes @post.body_content.to_s, "Hello World"
+    assert_includes @post.body_content.to_s, "<p>This is a test.</p>"
   end
 
   test "should detect mermaid diagrams and set has_mermaid_diagrams flag" do
@@ -86,8 +86,8 @@ class PostTest < ActiveSupport::TestCase
     @post.save!
 
     assert @post.has_mermaid_diagrams, "Post should detect mermaid diagrams"
-    assert_not_nil @post.body_html
-    assert_match(/<pre[^>]*lang="mermaid"/, @post.body_html)
+    assert @post.body_content.present?
+    assert_match(/<pre[^>]*lang="mermaid"/, @post.body_content.to_s)
   end
 
   test "should not detect mermaid when only regular code blocks present" do
@@ -96,15 +96,15 @@ class PostTest < ActiveSupport::TestCase
     @post.save!
 
     assert_not @post.has_mermaid_diagrams, "Post should not detect mermaid diagrams"
-    assert_not_nil @post.body_html
-    assert_includes @post.body_html, '<pre lang="ruby"'
+    assert @post.body_content.present?
+    assert_includes @post.body_content.to_s, '<pre lang="ruby"'
   end
 
   test "should handle empty markdown" do
     @post.body_markdown = ""
     @post.save!
 
-    assert_nil @post.body_html
+    assert @post.body_content.blank?
     assert_not @post.has_mermaid_diagrams
   end
 
@@ -112,7 +112,7 @@ class PostTest < ActiveSupport::TestCase
     @post.body_markdown = nil
     @post.save!
 
-    assert_nil @post.body_html
+    assert @post.body_content.blank?
     assert_not @post.has_mermaid_diagrams
   end
 
@@ -262,7 +262,7 @@ class PostTest < ActiveSupport::TestCase
       published: true
       tags: ["ruby", "legacy"]
       ---
-      
+
       This is legacy content.
     MARKDOWN
 
@@ -290,7 +290,7 @@ class PostTest < ActiveSupport::TestCase
       published: true
       tags: ["ruby", "modern"]
       ---
-      
+
       This is modern content.
     MARKDOWN
 
@@ -317,7 +317,7 @@ class PostTest < ActiveSupport::TestCase
       title: "Auto Author Post"
       published: true
       ---
-      
+
       Author should be inferred from blog.
     MARKDOWN
 

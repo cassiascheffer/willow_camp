@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_23_113325) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_23_120106) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -63,7 +63,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_23_113325) do
     t.string "custom_domain"
     t.string "theme", default: "light"
     t.text "post_footer_markdown"
-    t.text "post_footer_html"
     t.boolean "no_index", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -94,7 +93,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_23_113325) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "body_markdown"
-    t.text "body_html"
     t.string "slug"
     t.string "meta_description"
     t.uuid "author_id", null: false
