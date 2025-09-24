@@ -17,7 +17,7 @@ class Post < ApplicationRecord
 
   # Callbacks
   before_validation :set_published_at
-  before_save :set_html
+  before_save :set_html, if: -> { body_markdown.present? }
 
   # Delegations
   delegate :name, to: :author, prefix: true
