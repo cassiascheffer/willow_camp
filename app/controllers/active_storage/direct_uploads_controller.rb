@@ -7,7 +7,7 @@ class ActiveStorage::DirectUploadsController < ActiveStorage::BaseController
 
     # Queue processing for image blobs after they're created
     if blob.content_type&.start_with?("image/")
-      ProcessBlobAfterCreationJob.perform_later(blob.id)
+      ImageProcessingJob.set(wait: 10.seconds).perform_later(blob.id)
     end
 
     render json: direct_upload_json(blob)
