@@ -1,5 +1,6 @@
 class Blogs::BaseController < ApplicationController
   include SecureDomainRedirect
+
   layout "blog"
   before_action :set_author
 

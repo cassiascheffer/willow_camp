@@ -2,6 +2,7 @@ require "test_helper"
 
 class PostTest < ActiveSupport::TestCase
   include ActionDispatch::TestProcess::FixtureFile
+
   setup do
     @post = Post.new(
       author: users(:one),

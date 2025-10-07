@@ -13,6 +13,7 @@ Rails.application.config.after_initialize do
 
         ActsAsTaggableOn::Tag.class_eval do
           extend FriendlyId
+
           friendly_id :name, use: [:slugged, :finders]
 
           # Determines when friendly_id should generate a new slug

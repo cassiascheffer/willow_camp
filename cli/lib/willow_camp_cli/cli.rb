@@ -508,7 +508,7 @@ module WillowCampCLI
       # Fix malformed links that span multiple lines with extra content
       # Pattern: [\n\nTITLE\n\nExtra content\n\n ![](image) more text](URL)
       # Should become: [TITLE](URL)
-      content.gsub(/\[\s*\n\s*\n\s*([^\n]+).*?\]\((https?:\/\/[^\)]+)\)/m) do |match|
+      content.gsub(/\[\s*\n\s*\n\s*([^\n]+).*?\]\((https?:\/\/[^)]+)\)/m) do |match|
         title = $1.strip
         url = $2
 

@@ -24,7 +24,7 @@ module SecureDomainRedirect
     return false if domain.blank?
 
     # Ensure domain matches the stored format validation
-    return false unless domain.match?(/\A[a-z0-9\-]+(\.[a-z0-9\-]+)*\.[a-z]{2,}\z/)
+    return false unless domain.match?(/\A[a-z0-9-]+(\.[a-z0-9-]+)*\.[a-z]{2,}\z/)
 
     # Prevent localhost, IP addresses, and other potentially dangerous domains
     return false if domain.match?(/localhost|127\.0\.0\.1|0\.0\.0\.0|::1/)
