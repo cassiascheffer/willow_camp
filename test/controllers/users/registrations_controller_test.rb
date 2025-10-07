@@ -34,4 +34,68 @@ class Users::RegistrationsControllerTest < ActionDispatch::IntegrationTest
 
     assert_equal dashboard_path, controller.after_sign_up_path_for(user)
   end
+
+  test "should return ambiguous error when email is already taken" do
+    existing_user = users(:one)
+
+    post user_registration_url, params: {
+      user: {
+        email: existing_user.email,
+        password: "validpassword123",
+        password_confirmation: "validpassword123"
+      }
+    }
+
+    assert_response :unprocessable_entity
+    assert_select ".alert-error",
+      text: /Oops! That information didn't work. Please check your email and password and try again./
+    # Should NOT reveal specific validation errors like "already been taken"
+    assert_select ".alert-error", text: /already been taken/i, count: 0
+    assert_select ".alert-error", text: /has been taken/i, count: 0
+  end
+
+  test "should return ambiguous error when password is too short" do
+    post user_registration_url, params: {
+      user: {
+        email: "newuser@example.com",
+        password: "short",
+        password_confirmation: "short"
+      }
+    }
+
+    assert_response :unprocessable_entity
+    assert_select ".alert-error",
+      text: /Oops! That information didn't work. Please check your email and password and try again./
+    # Should NOT reveal specific password requirements like "too short" or "minimum"
+    assert_select ".alert-error", text: /too short/i, count: 0
+    assert_select ".alert-error", text: /minimum/i, count: 0
+  end
+
+  test "should return same error message for email taken and password issues" do
+    existing_user = users(:one)
+
+    # Test with taken email
+    post user_registration_url, params: {
+      user: {
+        email: existing_user.email,
+        password: "validpassword123",
+        password_confirmation: "validpassword123"
+      }
+    }
+    assert_response :unprocessable_entity
+    assert_select ".alert-error",
+      text: /Oops! That information didn.t work. Please check your email and password and try again./
+
+    # Test with short password
+    post user_registration_url, params: {
+      user: {
+        email: "newuser@example.com",
+        password: "short",
+        password_confirmation: "short"
+      }
+    }
+    assert_response :unprocessable_entity
+    assert_select ".alert-error",
+      text: /Oops! That information didn.t work. Please check your email and password and try again./
+  end
 end
