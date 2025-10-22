@@ -111,4 +111,47 @@ class Blogs::PostsControllerTest < ActionDispatch::IntegrationTest
 
     assert_select "p", text: @post.meta_description
   end
+
+  test "should set cache control headers on post show" do
+    get "/#{@post.slug}", headers: {host: "#{@blog.subdomain}.willow.camp"}
+    assert_response :success
+
+    cache_control = response.headers["Cache-Control"]
+    assert_includes cache_control, "max-age=300", "Should cache for 5 minutes (300 seconds)"
+    assert_includes cache_control, "public", "Should be publicly cacheable"
+  end
+
+  test "should set ETag header on post show" do
+    get "/#{@post.slug}", headers: {host: "#{@blog.subdomain}.willow.camp"}
+    assert_response :success
+    assert_not_nil response.headers["ETag"], "ETag header should be present"
+  end
+
+  test "should return 304 when content has not changed" do
+    get "/#{@post.slug}", headers: {host: "#{@blog.subdomain}.willow.camp"}
+    assert_response :success
+    etag = response.headers["ETag"]
+
+    get "/#{@post.slug}", headers: {host: "#{@blog.subdomain}.willow.camp", "If-None-Match" => etag}
+    assert_response :not_modified
+  end
+
+  test "should return 200 when content has changed" do
+    get "/#{@post.slug}", headers: {host: "#{@blog.subdomain}.willow.camp"}
+    assert_response :success
+    old_etag = response.headers["ETag"]
+
+    @post.update!(title: "Updated Title")
+
+    get "/#{@post.slug}", headers: {host: "#{@blog.subdomain}.willow.camp", "If-None-Match" => old_etag}
+    assert_response :success
+    new_etag = response.headers["ETag"]
+    assert_not_equal old_etag, new_etag, "ETag should change when post is updated"
+  end
+
+  test "should not set cache headers for non-existent posts" do
+    get "/nonexistent-post", headers: {host: "#{@blog.subdomain}.willow.camp"}
+    assert_response :not_found
+    assert_nil response.headers["ETag"], "ETag should not be set for 404 responses"
+  end
 end

@@ -23,12 +23,20 @@ class Blogs::PostsController < Blogs::BaseController
         format.html { render "not_found", status: :not_found }
         format.any { head :not_found }
       end
+    else
+      expires_in 5.minutes, public: true
+      # stale? returns true if we need to render, false if returning 304
+      # Only eager load rich text content if we're actually going to render
+      if stale?(@post, public: true)
+        @post = @blog.posts.published.includes(:rich_text_body_content).find(@post.id)
+      end
     end
   end
 
   private
 
   def set_post
-    @post = @blog.posts.published.includes(:rich_text_body_content).find_by(slug: params[:slug])
+    # Load minimal post data for conditional GET check
+    @post = @blog.posts.published.find_by(slug: params[:slug])
   end
 end
