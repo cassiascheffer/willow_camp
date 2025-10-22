@@ -1,8 +1,8 @@
 # syntax=docker/dockerfile:1
 # check=error=true
 
-# This Dockerfile is designed for production, not development. Use with Kamal or build'n'run by hand:
-# docker build -t willow_camp.
+# This Dockerfile is designed for production, not development. Use with Fly.io or build'n'run by hand:
+# docker build -t willow_camp .
 # docker run -d -p 80:80 -e RAILS_MASTER_KEY=<value from config/master.key> --name willow_camp willow_camp
 
 # For a containerized dev environment, see Dev Containers: https://guides.rubyonrails.org/getting_started_with_devcontainer.html
