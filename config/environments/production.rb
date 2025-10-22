@@ -93,7 +93,10 @@ Rails.application.configure do
       next true if host.ends_with?(".willow.camp")
 
       # Allow custom domains that exist in database
-      Blog.exists?(custom_domain: host)
+      # Cache the lookup to avoid database queries on every request
+      Rails.cache.fetch("custom_domain_exists:#{host}", expires_in: 5.minutes) do
+        Blog.exists?(custom_domain: host)
+      end
     end
   ]
 

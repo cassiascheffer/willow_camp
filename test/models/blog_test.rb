@@ -326,6 +326,67 @@ class BlogTest < ActiveSupport::TestCase
     end
   end
 
+  test "clears custom domain cache when custom domain changes" do
+    # Use memory store for this test since test env uses null_store
+    with_cache_store(:memory_store) do
+      @blog.custom_domain = "example.com"
+      @blog.save!
+
+      # Set a cache value for the old domain
+      Rails.cache.write("custom_domain_exists:example.com", true)
+      assert Rails.cache.exist?("custom_domain_exists:example.com")
+
+      # Change the custom domain
+      @blog.update!(custom_domain: "newdomain.com")
+
+      # Old domain cache should be cleared
+      assert_not Rails.cache.exist?("custom_domain_exists:example.com")
+    end
+  end
+
+  test "clears cache for both old and new domains when custom domain changes" do
+    with_cache_store(:memory_store) do
+      @blog.custom_domain = "example.com"
+      @blog.save!
+
+      # Set cache values for both domains
+      Rails.cache.write("custom_domain_exists:example.com", true)
+      Rails.cache.write("custom_domain_exists:newdomain.com", false)
+
+      # Change the custom domain
+      @blog.update!(custom_domain: "newdomain.com")
+
+      # Both caches should be cleared
+      assert_not Rails.cache.exist?("custom_domain_exists:example.com")
+      assert_not Rails.cache.exist?("custom_domain_exists:newdomain.com")
+    end
+  end
+
+  test "does not clear cache when custom domain is not changed" do
+    with_cache_store(:memory_store) do
+      @blog.custom_domain = "example.com"
+      @blog.save!
+
+      Rails.cache.write("custom_domain_exists:example.com", true)
+
+      # Update a different attribute
+      @blog.update!(title: "New Title")
+
+      # Cache should still exist
+      assert Rails.cache.exist?("custom_domain_exists:example.com")
+    end
+  end
+
+  private
+
+  def with_cache_store(store_type)
+    old_cache = Rails.cache
+    Rails.cache = ActiveSupport::Cache.lookup_store(store_type)
+    yield
+  ensure
+    Rails.cache = old_cache
+  end
+
   # Scope Tests
   test "by_domain scope with subdomain" do
     @blog.subdomain = "testblog"

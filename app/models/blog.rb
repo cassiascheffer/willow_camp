@@ -16,6 +16,7 @@ class Blog < ApplicationRecord
   # Callbacks
   before_save :set_post_footer_html
   after_create_commit :ensure_about_page
+  after_save :clear_custom_domain_cache, if: :saved_change_to_custom_domain?
 
   # Validations
   validates :subdomain,
@@ -162,5 +163,12 @@ class Blog < ApplicationRecord
       errors.add(:base, "User cannot have more than 2 blogs")
       nil
     end
+  end
+
+  def clear_custom_domain_cache
+    # Clear cache for both old and new custom domains when changed
+    old_domain, new_domain = saved_change_to_custom_domain
+    Rails.cache.delete("custom_domain_exists:#{old_domain}") if old_domain.present?
+    Rails.cache.delete("custom_domain_exists:#{new_domain}") if new_domain.present?
   end
 end
