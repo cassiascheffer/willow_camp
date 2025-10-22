@@ -15,6 +15,10 @@ class Blogs::PostsController < Blogs::BaseController
         .not_page
         .order(published_at: :desc)
     )
+
+    # Cache index page based on most recently updated post
+    expires_in 5.minutes, public: true
+    fresh_when(@blog.posts.published.maximum(:updated_at), public: true)
   end
 
   def show
