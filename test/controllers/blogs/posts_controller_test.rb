@@ -154,4 +154,65 @@ class Blogs::PostsControllerTest < ActionDispatch::IntegrationTest
     assert_response :not_found
     assert_nil response.headers["ETag"], "ETag should not be set for 404 responses"
   end
+
+  test "should render pages in navigation" do
+    # Create a page to appear in navigation
+    @blog.pages.create!(
+      title: "Test Page",
+      body_markdown: "Test content",
+      author: @blog.user,
+      published: true
+    )
+
+    get "/#{@post.slug}", headers: {host: "#{@blog.subdomain}.willow.camp"}
+    assert_response :success
+
+    # Check that page appears in navigation
+    assert_select "nav a", text: "Test Page"
+    assert_select "nav a", text: "Subscribe"
+  end
+
+  test "should not show unpublished pages in navigation" do
+    # Create an unpublished page
+    @blog.pages.create!(
+      title: "Draft Page",
+      body_markdown: "Draft content",
+      author: @blog.user,
+      published: false
+    )
+
+    get "/#{@post.slug}", headers: {host: "#{@blog.subdomain}.willow.camp"}
+    assert_response :success
+
+    # Draft page should not appear in navigation
+    assert_select "nav a", text: "Draft Page", count: 0
+  end
+
+  test "should use fragment caching for navigation" do
+    with_cache_store(:memory_store) do
+      # First request creates the cache
+      get "/#{@post.slug}", headers: {host: "#{@blog.subdomain}.willow.camp"}
+      assert_response :success
+      assert_select "nav a", text: "Subscribe"
+
+      # Second request should use cached fragments and render correctly
+      get "/#{@post.slug}", headers: {host: "#{@blog.subdomain}.willow.camp"}
+      assert_response :success
+      assert_select "nav a", text: "Subscribe"
+
+      # Verify navigation still works with caching enabled
+      assert_select "nav#mobile-nav"
+      assert_select "nav#navigation"
+    end
+  end
+
+  private
+
+  def with_cache_store(store_type)
+    old_cache = Rails.cache
+    Rails.cache = ActiveSupport::Cache.lookup_store(store_type)
+    yield
+  ensure
+    Rails.cache = old_cache
+  end
 end

@@ -52,16 +52,18 @@
           <span class="sr-only">Open menu</span>
         </summary>
         <nav id="mobile-nav" class="pb-4 space-y-2" aria-label="Mobile navigation menu" data-mobile-menu-target="nav">
-          <% if @blog&.pages&.present? %>
-            <% @blog.pages.published.each do |page| %>
-              <a href="<%= post_path(page) %>" class="block link link-hover font-medium py-2" aria-label="<%= page.title %>">
-                <%= page.title %>
-              </a>
+          <% cache([@blog, "mobile_pages_nav", @blog&.pages&.maximum(:updated_at)]) do %>
+            <% if @blog&.pages&.present? %>
+              <% @blog.pages.published.each do |page| %>
+                <a href="<%= post_path(page) %>" class="block link link-hover font-medium py-2" aria-label="<%= page.title %>">
+                  <%= page.title %>
+                </a>
+              <% end %>
             <% end %>
+            <a href="<%= subscribe_path %>" class="block link link-hover font-medium py-2" title="Subscribe to RSS Feed" aria-label="Subscribe to RSS Feed">
+              Subscribe
+            </a>
           <% end %>
-          <a href="<%= subscribe_path %>" class="block link link-hover font-medium py-2" title="Subscribe to RSS Feed" aria-label="Subscribe to RSS Feed">
-            Subscribe
-          </a>
         </nav>
       </details>
       <!-- Desktop menu -->
@@ -70,16 +72,18 @@
           <%= blog_title_for(@blog) %>
         </a>
         <nav id="navigation" class="space-x-4" aria-label="Main navigation">
-          <% if @blog&.pages&.present? %>
-            <% @blog.pages.published.each do |page| %>
-              <a href="<%= post_path(page) %>" class="link link-hover font-medium" aria-label="<%= page.title %>">
-                <%= page.title %>
-              </a>
+          <% cache([@blog, "desktop_pages_nav", @blog&.pages&.maximum(:updated_at)]) do %>
+            <% if @blog&.pages&.present? %>
+              <% @blog.pages.published.each do |page| %>
+                <a href="<%= post_path(page) %>" class="link link-hover font-medium" aria-label="<%= page.title %>">
+                  <%= page.title %>
+                </a>
+              <% end %>
             <% end %>
+            <a href="<%= subscribe_path %>" class="link link-hover font-medium" title="Subscribe to RSS Feed" aria-label="Subscribe to RSS Feed">
+              Subscribe
+            </a>
           <% end %>
-          <a href="<%= subscribe_path %>" class="link link-hover font-medium" title="Subscribe to RSS Feed" aria-label="Subscribe to RSS Feed">
-            Subscribe
-          </a>
         </nav>
       </div>
     </header>
