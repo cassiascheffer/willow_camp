@@ -313,7 +313,7 @@ GEM
       date
       stringio
     public_suffix (6.0.2)
-    puma (7.0.4)
+    puma (7.1.0)
       nio4r (~> 2.0)
     raabro (1.4.0)
     racc (1.8.1)
@@ -555,7 +555,7 @@ DEPENDENCIES
   pg (~> 1.6.2)
   propshaft
   public_suffix
-  puma (~> 7.0.2)
+  puma (~> 7.1.0)
   rack-attack
   rack-mini-profiler
   rails
