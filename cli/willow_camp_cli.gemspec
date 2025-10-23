@@ -28,4 +28,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency "json", "~> 2.0"
   spec.add_dependency "fileutils", "~> 1.0"
   spec.add_dependency "reverse_markdown", "~> 2.1"
+  spec.add_dependency "nokogiri", ">= 1.18.4"
 end
