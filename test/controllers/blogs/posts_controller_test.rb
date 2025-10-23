@@ -244,6 +244,22 @@ class Blogs::PostsControllerTest < ActionDispatch::IntegrationTest
     assert_not_equal old_etag, new_etag, "ETag should change when posts are updated"
   end
 
+  test "should not set session cookie for public blog pages" do
+    get "/#{@post.slug}", headers: {host: "#{@blog.subdomain}.willow.camp"}
+    assert_response :success
+
+    # Should not send session cookie
+    assert_nil response.headers["Set-Cookie"], "Public blog pages should not set cookies"
+  end
+
+  test "should not set session cookie for index" do
+    get posts_url, headers: @headers
+    assert_response :success
+
+    # Should not send session cookie
+    assert_nil response.headers["Set-Cookie"], "Public blog index should not set cookies"
+  end
+
   private
 
   def with_cache_store(store_type)
