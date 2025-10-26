@@ -7,6 +7,26 @@
 @layer components {
   @import "../stylesheets/components/_pagy.css";
 
+  /* Mermaid diagram styles - prevent prose interference */
+  .prose .mermaid-diagram {
+    margin-top: 1.25em;
+    margin-bottom: 1.25em;
+    display: flex;
+    justify-content: center;
+    font-family: inherit;
+  }
+
+  .prose .mermaid-diagram svg {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Prevent prose from styling SVG elements inside Mermaid diagrams */
+  .prose .mermaid-diagram svg * {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
   /* Choices.js Styles with DaisyUI theme integration */
   :root {
     --choices-focus-color: var(--color-primary);

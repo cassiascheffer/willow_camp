@@ -18,12 +18,20 @@ export default class extends Controller {
     try {
       const mermaidModule = await import("mermaid")
       const mermaid = mermaidModule.default || mermaidModule
-      
+
       // Initialize mermaid with configuration (only once)
       if (!this.constructor.mermaidInitialized) {
+        // Detect current theme from DaisyUI
+        const currentTheme = document.documentElement.getAttribute('data-theme')
+        const darkThemes = ['dark', 'synthwave', 'halloween', 'forest', 'black', 'luxury', 'dracula', 'business', 'night', 'coffee', 'dim', 'sunset']
+        const isDark = darkThemes.includes(currentTheme) || (!currentTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)
+
         mermaid.initialize({
           startOnLoad: false,
-          theme: 'default'
+          theme: isDark ? 'dark' : 'default',
+          themeVariables: {
+            darkMode: isDark
+          }
         })
         this.constructor.mermaidInitialized = true
       }
