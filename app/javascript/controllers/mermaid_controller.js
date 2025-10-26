@@ -28,10 +28,7 @@ export default class extends Controller {
 
         mermaid.initialize({
           startOnLoad: false,
-          theme: isDark ? 'dark' : 'default',
-          themeVariables: {
-            darkMode: isDark
-          }
+          theme: isDark ? 'dark' : 'default'
         })
         this.constructor.mermaidInitialized = true
       }
