@@ -55,7 +55,7 @@ gem "marksmith", "~> 0.4.7"
 gem "pagy"
 gem "public_suffix"
 gem "tailwindcss-rails"
-gem "tailwindcss-ruby", "~> 4.1.12"
+gem "tailwindcss-ruby", "~> 4.1.16"
 gem "heroicons", "~> 2.2.0"
 gem "unicode-emoji"
 
