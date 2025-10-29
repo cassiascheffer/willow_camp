@@ -60,7 +60,7 @@ gem "heroicons", "~> 2.2.0"
 gem "unicode-emoji"
 
 # APM and Logs
-gem "honeybadger", "~> 6.1.2"  # For error monitoring
+gem "honeybadger", "~> 6.1.3"  # For error monitoring
 gem "scout_apm", "~> 5.7.1"    # For performance monitoring
 
 # Rate limiting and security
