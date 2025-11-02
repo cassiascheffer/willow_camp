@@ -26,7 +26,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `rails db:reset` - Drop, create, migrate, and seed database
 
 ### Deployment
-- `bin/kamal deploy` - Deploy using Kamal (Docker-based deployment)
+- `flyctl deploy` - Deploy to Fly.io
+- `flyctl ssh console` - SSH into running Fly.io container
+- `flyctl logs` - View application logs
 - `rails assets:precompile` - Compile assets for production
 
 ## Architecture
@@ -69,6 +71,26 @@ Uses Rails default Minitest framework. Tests are organized by type:
 
 ### Deployment
 
-Configured for containerized deployment using Kamal. The Dockerfile and docker-compose.yml handle production setup. Environment variables are managed through Rails credentials.
+Configured for containerized deployment on Fly.io. The Dockerfile handles production builds and the fly.toml file configures the Fly.io deployment settings.
+
+**Initial Setup:**
+1. Install Fly.io CLI: `brew install flyctl` (macOS) or see https://fly.io/docs/hands-on/install-flyctl/
+2. Authenticate: `flyctl auth login`
+3. Launch the app (first time only): `flyctl launch --no-deploy` - This reads fly.toml but doesn't deploy yet
+4. Set secrets:
+   - `flyctl secrets set RAILS_MASTER_KEY=<your-master-key>`
+   - `flyctl secrets set DATABASE_URL=<your-digital-ocean-postgres-url>`
+5. Deploy: `flyctl deploy`
+
+**Environment Variables:**
+- DATABASE_URL - Points to Digital Ocean PostgreSQL database
+- RAILS_MASTER_KEY - Rails credentials encryption key
+- Other secrets managed through `flyctl secrets set KEY=value`
+
+**Database Setup:**
+The app uses an existing Digital Ocean PostgreSQL database. The database.yml is configured to use DATABASE_URL in production, which supports multiple databases (primary, cache, queue, cable) on the same Postgres cluster.
+
+**Health Checks:**
+The app exposes a `/up` endpoint for health checks, configured in fly.toml.
 - We are in the middle of a migration. Users used to have blog metadata as attributes on their record. Now each user has many blogs. We have not run the migration in production yet. Any work we do should keep the models backwawrds-compatible. We can change controllers viewss and routes to not be backwards compatible.
 - When migrating data in a database, use a rake task. Do not wirte data migratons in the Rails migrations meant for schema migrations.

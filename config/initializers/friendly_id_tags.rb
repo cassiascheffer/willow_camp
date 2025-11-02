@@ -4,6 +4,9 @@ require "friendly_id"
 
 # Wait until ActsAsTaggableOn is loaded before applying the patch
 Rails.application.config.after_initialize do
+  # Skip during asset compilation (Docker build time)
+  next if ENV["COMPILING_ASSETS"].present?
+
   if defined?(ActsAsTaggableOn::Tag)
     # Skip the friendly_id setup if the slug column doesn't exist yet
     # This allows migrations to run without errors
@@ -38,7 +41,10 @@ Rails.application.config.after_initialize do
           tag.save
         end
       end
-    rescue ActiveRecord::NoDatabaseError, ActiveRecord::StatementInvalid => e
+    rescue ActiveRecord::NoDatabaseError,
+           ActiveRecord::StatementInvalid,
+           PG::ConnectionBad,
+           ActiveRecord::ConnectionNotEstablished => e
       # Silently continue if database doesn't exist yet or has issues
       # This allows rake db:create, db:migrate to work properly
       Rails.logger.debug { "FriendlyId for tags not initialized: #{e.message}" }
