@@ -419,8 +419,6 @@ GEM
     ruby-vips (2.2.5)
       ffi (~> 1.12)
       logger
-    scout_apm (5.7.1)
-      parser
     securerandom (0.4.1)
     semantic_logger (4.17.0)
       concurrent-ruby (~> 1.0)
@@ -563,7 +561,6 @@ DEPENDENCIES
   rails_best_practices
   rails_semantic_logger
   ruby-vips
-  scout_apm (~> 5.7.1)
   solid_cable
   solid_cache
   solid_queue
