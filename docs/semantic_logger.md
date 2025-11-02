@@ -73,7 +73,7 @@ JSON format for structured logging:
 ## Environment Variables
 
 - `LOG_LEVEL`: Control verbosity (debug, info, warn, error, fatal)
-- `DISABLE_SQL_LOGGING`: Disable SQL query logging in production (Scout APM handles this)
+- `DISABLE_SQL_LOGGING`: Disable SQL query logging in production
 - `RAILS_ENV`: Determines output format and destinations
 
 ## Observability Features
@@ -88,7 +88,6 @@ The application outputs standard JSON logs that can be ingested by any log aggre
 Honeybadger handles error tracking separately from logs:
 - Exception capture and alerting
 - Error grouping and trends
-- Integration with Scout APM traces
 
 ## Best Practices
 
