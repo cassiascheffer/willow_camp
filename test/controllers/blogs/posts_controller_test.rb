@@ -132,7 +132,7 @@ class Blogs::PostsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     etag = response.headers["ETag"]
 
-    get "/#{@post.slug}", headers: {host: "#{@blog.subdomain}.willow.camp", "If-None-Match" => etag}
+    get "/#{@post.slug}", headers: {:host => "#{@blog.subdomain}.willow.camp", "If-None-Match" => etag}
     assert_response :not_modified
   end
 
@@ -143,7 +143,7 @@ class Blogs::PostsControllerTest < ActionDispatch::IntegrationTest
 
     @post.update!(title: "Updated Title")
 
-    get "/#{@post.slug}", headers: {host: "#{@blog.subdomain}.willow.camp", "If-None-Match" => old_etag}
+    get "/#{@post.slug}", headers: {:host => "#{@blog.subdomain}.willow.camp", "If-None-Match" => old_etag}
     assert_response :success
     new_etag = response.headers["ETag"]
     assert_not_equal old_etag, new_etag, "ETag should change when post is updated"
