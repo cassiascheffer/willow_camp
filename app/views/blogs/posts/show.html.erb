@@ -30,8 +30,7 @@
       </div>
     <% end %>
     <%# Ensure that even if @post is a Page, we render blog/posts/_post %>
-    <% post_partial = "blogs/posts/post" %>
-    <%= render partial: post_partial, object: @post %>
+    <%= render partial: "blogs/posts/post", object: @post %>
   </article>
   <% if @post.tags.any? %>
     <nav class="text-sm text-base-content/70 my-8" aria-label="Post tags" role="navigation">

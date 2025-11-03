@@ -52,7 +52,7 @@
           <span class="sr-only">Open menu</span>
         </summary>
         <nav id="mobile-nav" class="pb-4 space-y-2" aria-label="Mobile navigation menu" data-mobile-menu-target="nav">
-          <% cache([@blog, "mobile_pages_nav", @blog&.pages&.maximum(:updated_at)]) do %>
+          <% cache(["blog", @blog&.id, "mobile_pages_nav", @blog&.pages&.maximum(:updated_at)]) do %>
             <% if @blog&.pages&.present? %>
               <% @blog.pages.published.each do |page| %>
                 <a href="<%= post_path(page) %>" class="block link link-hover font-medium py-2" aria-label="<%= page.title %>">
@@ -72,7 +72,7 @@
           <%= blog_title_for(@blog) %>
         </a>
         <nav id="navigation" class="space-x-4" aria-label="Main navigation">
-          <% cache([@blog, "desktop_pages_nav", @blog&.pages&.maximum(:updated_at)]) do %>
+          <% cache(["blog", @blog&.id, "desktop_pages_nav", @blog&.pages&.maximum(:updated_at)]) do %>
             <% if @blog&.pages&.present? %>
               <% @blog.pages.published.each do |page| %>
                 <a href="<%= post_path(page) %>" class="link link-hover font-medium" aria-label="<%= page.title %>">
