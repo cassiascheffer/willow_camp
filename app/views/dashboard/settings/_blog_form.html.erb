@@ -30,13 +30,9 @@
       </div>
       <div class="form-control w-full">
         <%= form.label :custom_domain, "Custom Domain (optional)", class: "label" %>
-        <%= form.text_field :custom_domain, required: false, placeholder: "myblog.com", class: "input input-bordered w-full", autocapitalize: "off", data: { domain_downcase_target: "customDomain", action: "input->domain-downcase#downcaseInput" } %>
+        <%= form.text_field :custom_domain, required: false, placeholder: "myblog.com", class: "input input-bordered w-full", autocapitalize: "off", disabled: true, data: { domain_downcase_target: "customDomain", action: "input->domain-downcase#downcaseInput" } %>
         <div class="text-xs text-gray-500 mt-1">
-          Use your own domain instead of a subdomain. After saving, add a CNAME record in your DNS settings:<br>
-          <strong>Name:</strong> @ (or your domain) → <strong>Value:</strong>
-          <pre><%= blog.subdomain %>.willow.camp</pre>
-          <br>
-          SSL certificates will be automatically provisioned.
+          To set up a custom domain, please contact <a href="mailto:cassia@willow.camp" class="link">cassia@willow.camp</a>.
         </div>
       </div>
     </div>
