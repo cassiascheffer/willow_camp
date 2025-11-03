@@ -92,6 +92,11 @@ Rails.application.configure do
       next true if host == "willow.camp"
       next true if host.ends_with?(".willow.camp")
 
+      # Allow deployment platform domains (e.g., .ondigitalocean.app)
+      if ENV["DEPLOYMENT_HOST"].present?
+        next true if host == ENV["DEPLOYMENT_HOST"] || host.ends_with?(".#{ENV["DEPLOYMENT_HOST"]}")
+      end
+
       # Allow custom domains that exist in database
       # Cache the lookup to avoid database queries on every request
       Rails.cache.fetch("custom_domain_exists:#{host}", expires_in: 5.minutes) do
