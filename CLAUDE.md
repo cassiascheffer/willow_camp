@@ -120,6 +120,25 @@ Uses Rails 8 multiple databases for different concerns:
 - `queue` - Solid Queue background jobs
 - `cable` - Solid Cable WebSocket connections
 
+### Background Job Processing
+
+Uses **Solid Queue** for background jobs (configured in `config/environments/production.rb:58-59`):
+
+**Production Setup:**
+- Solid Queue runs **inline within the Puma web process**
+- Controlled by `SOLID_QUEUE_IN_PUMA=true` environment variable (set in `config/deploy.yml`)
+- The Puma Solid Queue plugin is loaded via `config/puma.rb:42`
+- This single-process approach is ideal for single-server deployments
+
+**Alternative Setup (Multi-Server):**
+- For multi-server deployments, you can run dedicated job workers
+- Uncomment the `job:` section in `config/deploy.yml` (lines 11-14)
+- Set `SOLID_QUEUE_IN_PUMA=false` or remove the variable
+- Job workers will use `bin/jobs` to run the Solid Queue CLI
+
+**Development:**
+- Jobs are processed inline by default (no separate process required)
+
 ## API
 
 Token-based authentication for programmatic access:
