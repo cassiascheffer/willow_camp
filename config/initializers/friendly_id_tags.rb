@@ -42,9 +42,9 @@ Rails.application.config.after_initialize do
         end
       end
     rescue ActiveRecord::NoDatabaseError,
-           ActiveRecord::StatementInvalid,
-           PG::ConnectionBad,
-           ActiveRecord::ConnectionNotEstablished => e
+      ActiveRecord::StatementInvalid,
+      PG::ConnectionBad,
+      ActiveRecord::ConnectionNotEstablished => e
       # Silently continue if database doesn't exist yet or has issues
       # This allows rake db:create, db:migrate to work properly
       Rails.logger.debug { "FriendlyId for tags not initialized: #{e.message}" }
