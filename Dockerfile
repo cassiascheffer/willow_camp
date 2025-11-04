@@ -48,8 +48,15 @@ RUN bundle install && \
 # Copy node_modules from node stage
 COPY --from=node /app/node_modules ./node_modules
 
+# Bust cache to ensure code changes are always picked up
+# DigitalOcean App Platform provides COMMIT_SHA automatically
+ARG COMMIT_SHA=unknown
+
 # Copy application code
 COPY . .
+
+# Record build commit for debugging
+RUN echo "Built from commit: ${COMMIT_SHA}" > /rails/BUILD_INFO
 
 # Precompile bootsnap code for faster boot times
 # Note: This must run after COPY to ensure fresh code is compiled
@@ -58,11 +65,6 @@ RUN bundle exec bootsnap precompile app/ lib/
 # Precompiling assets for production without requiring secret RAILS_MASTER_KEY
 # Note: Assets must be recompiled whenever code changes
 RUN SECRET_KEY_BASE_DUMMY=1 COMPILING_ASSETS=1 ./bin/rails assets:precompile --quiet
-
-# Bust cache to ensure code changes are always picked up
-# DigitalOcean App Platform provides COMMIT_SHA automatically
-ARG COMMIT_SHA=unknown
-RUN echo "Built from commit: ${COMMIT_SHA}" > /rails/BUILD_INFO
 
 # Final stage for app image
 FROM base
