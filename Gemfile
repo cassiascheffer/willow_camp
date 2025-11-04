@@ -61,7 +61,6 @@ gem "unicode-emoji"
 
 # APM and Logs
 gem "honeybadger", "~> 6.1.2"  # For error monitoring
-gem "scout_apm", "~> 5.7.1"    # For performance monitoring
 
 # Rate limiting and security
 gem "rack-attack"

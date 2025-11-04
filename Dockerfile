@@ -25,6 +25,12 @@ ENV RAILS_ENV="production" \
     BUNDLE_PATH="/usr/local/bundle" \
     BUNDLE_WITHOUT="development"
 
+# Node stage for installing JavaScript dependencies
+FROM node:lts-slim AS node
+WORKDIR /app
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile
+
 # Throw-away build stage to reduce size of final image
 FROM base AS build
 
@@ -39,6 +45,9 @@ RUN bundle install && \
     rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
     bundle exec bootsnap precompile --gemfile
 
+# Copy node_modules from node stage
+COPY --from=node /app/node_modules ./node_modules
+
 # Copy application code
 COPY . .
 
@@ -46,7 +55,7 @@ COPY . .
 RUN bundle exec bootsnap precompile app/ lib/
 
 # Precompiling assets for production without requiring secret RAILS_MASTER_KEY
-RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
+RUN SECRET_KEY_BASE_DUMMY=1 COMPILING_ASSETS=1 ./bin/rails assets:precompile
 
 # Final stage for app image
 FROM base

@@ -13,7 +13,7 @@
 <% if alert.present? %>
   <div role="alert" aria-live="assertive" class="alert alert-error" id="alert"><%= alert %></div>
 <% end %>
-<% cache [@blog, @featured_posts] do %>
+<% cache ["blog", @blog&.id, "featured_posts", @featured_posts] do %>
   <% if @featured_posts.any? %>
     <div class="card bg-base-100 shadow-sm mb-8">
       <div class="card-body">
