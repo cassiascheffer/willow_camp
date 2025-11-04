@@ -57,7 +57,7 @@ RUN bundle exec bootsnap precompile app/ lib/
 
 # Precompiling assets for production without requiring secret RAILS_MASTER_KEY
 # Note: Assets must be recompiled whenever code changes
-RUN SECRET_KEY_BASE_DUMMY=1 COMPILING_ASSETS=1 ./bin/rails assets:precompile
+RUN SECRET_KEY_BASE_DUMMY=1 COMPILING_ASSETS=1 ./bin/rails assets:precompile --quiet
 
 # Bust cache to ensure code changes are always picked up
 # DigitalOcean App Platform provides COMMIT_SHA automatically
