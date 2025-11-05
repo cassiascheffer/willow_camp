@@ -48,10 +48,8 @@ RUN bundle install && \
 # Copy node_modules from node stage
 COPY --from=node /app/node_modules ./node_modules
 
-# Cache bust using commit hash from Digital Ocean
-ARG COMMIT_HASH=dev
 RUN echo "Building from commit: ${COMMIT_HASH}"
-
+ARG COMMIT_HASH=dev
 # Copy application code
 COPY . .
 
