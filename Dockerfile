@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 # check=error=true
 
-# This Dockerfile is designed for production, not development. Use with Fly.io or build'n'run by hand:
+# This Dockerfile is designed for production, not development.
 # docker build -t willow_camp .
 
 # docker run -d -p 80:80 -e RAILS_MASTER_KEY=<value from config/master.key> --name willow_camp willow_camp
@@ -15,9 +15,10 @@ FROM docker.io/library/ruby:$RUBY_VERSION-slim AS base
 WORKDIR /rails
 
 # Install base packages
-RUN apt-get update -qq && \
-  apt-get install --no-install-recommends -y curl libjemalloc2 libvips postgresql-client && \
-  rm -rf /var/lib/apt/lists /var/cache/apt/archives
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+  --mount=type=cache,target=/var/lib/apt,sharing=locked \
+  apt-get update -qq && \
+  apt-get install --no-install-recommends -y curl libjemalloc2 libvips postgresql-client
 
 # Set production environment
 ENV RAILS_ENV="production" \
@@ -35,9 +36,10 @@ RUN yarn install --frozen-lockfile
 FROM base AS build
 
 # Install packages needed to build gems
-RUN apt-get update -qq && \
-  apt-get install --no-install-recommends -y build-essential git libpq-dev libyaml-dev pkg-config libvips-dev && \
-  rm -rf /var/lib/apt/lists /var/cache/apt/archives
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+  --mount=type=cache,target=/var/lib/apt,sharing=locked \
+  apt-get update -qq && \
+  apt-get install --no-install-recommends -y build-essential git libpq-dev libyaml-dev pkg-config libvips-dev
 
 # Install application gems
 COPY Gemfile Gemfile.lock ./
