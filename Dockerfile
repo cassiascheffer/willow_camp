@@ -48,9 +48,7 @@ RUN bundle install && \
 # Copy node_modules from node stage
 COPY --from=node /app/node_modules ./node_modules
 
-RUN echo "Building from commit: ${COMMIT_HASH}"
 ARG COMMIT_HASH=dev
-# Copy application code
 COPY . .
 
 # Precompile bootsnap code for faster boot times
