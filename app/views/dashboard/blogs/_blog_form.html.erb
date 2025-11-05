@@ -32,7 +32,7 @@
         <%= form.label :custom_domain, "Custom Domain (optional)", class: "label" %>
         <%= form.text_field :custom_domain, required: false, placeholder: "myblog.com", class: "input input-bordered w-full", autocapitalize: "off", disabled: true, data: { domain_downcase_target: "customDomain", action: "input->domain-downcase#downcaseInput" } %>
         <div class="text-xs text-gray-500 mt-1">
-          To set up a custom domain for your blog, please reach out to <a href="mailto:cassia@willow.camp" class="link">cassia@willow.camp</a>
+          To set up a custom domain for your blog, please reach out on <%= link_to "Discord", "https://discord.gg/uZgMgtfpgC", class: "link", target: "_blank", rel: "noopener" %>
         </div>
       </div>
     </div>
