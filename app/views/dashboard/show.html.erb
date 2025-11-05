@@ -69,5 +69,5 @@
       <% end %>
     </section>
   <% end %>
-  <%== pagy_nav(@pagy) if !@new_blog && (@pagy&.pages || 0) > 1 %>
+  <%== @pagy.series_nav if !@new_blog && (@pagy&.pages || 0) > 1 %>
 </div>

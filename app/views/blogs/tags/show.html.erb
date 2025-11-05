@@ -20,7 +20,7 @@
     <% end %>
     <%= link_to "All Tags", tags_path, class: "btn btn-outline btn-sm" %>
     <nav aria-label="Tagged posts pagination" role="navigation">
-      <%== pagy_nav(@pagy) if @pagy.pages > 1 %>
+      <%== @pagy.series_nav if @pagy.pages > 1 %>
     </nav>
   </div>
 </div>
