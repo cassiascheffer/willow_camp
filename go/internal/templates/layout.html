@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="{{.Blog.Theme}}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Title}}</title>
+    {{if .Blog.MetaDescription}}
+    <meta name="description" content="{{.Blog.MetaDescription}}">
+    {{end}}
+
+    <!-- Open Graph meta tags -->
+    <meta property="og:title" content="{{.Title}}">
+    <meta property="og:type" content="website">
+
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>{{if .Blog.FaviconEmoji}}{{.Blog.FaviconEmoji}}{{else}}🏕️{{end}}</text></svg>">
+
+    <!-- Tailwind CSS + DaisyUI via CDN for now -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.24/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        body { font-family: 'Courier New', monospace; }
+    </style>
+</head>
+<body class="font-mono">
+    <header class="bg-base-100 shadow-md w-full px-8 py-4">
+        <nav class="max-w-4xl mx-auto flex items-center justify-between">
+            <a href="/" class="text-xl font-bold hover:text-primary transition-colors">
+                {{if .Blog.Title}}{{.Blog.Title}}{{else}}WillowCamp{{end}}
+            </a>
+            <div class="space-x-4">
+                <a href="/" class="hover:text-primary">Home</a>
+                <a href="/feed.xml" class="hover:text-primary">RSS</a>
+            </div>
+        </nav>
+    </header>
+
+    <main id="main-content" class="max-w-4xl mx-auto px-8 py-8">
+        {{template "content" .}}
+    </main>
+
+    <footer class="max-w-4xl mx-auto px-8 py-8 text-center text-sm text-base-content/60">
+        <p>Powered by <a href="https://willow.camp" class="hover:text-primary">willow.camp</a></p>
+    </footer>
+</body>
+</html>
