@@ -77,6 +77,11 @@ func main() {
 	e.POST("/logout", h.Logout)
 	e.GET("/logout", h.Logout)
 
+	// Dashboard routes (protected)
+	dashboard := e.Group("/dashboard")
+	dashboard.Use(authService.RequireAuth)
+	dashboard.GET("", h.Dashboard)
+
 	// Public blog routes (with multi-tenant middleware)
 	blog := e.Group("")
 	blog.Use(middleware.BlogResolver(repos.Blog))

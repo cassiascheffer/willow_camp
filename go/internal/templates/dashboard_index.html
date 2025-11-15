@@ -1,0 +1,32 @@
+{{define "content"}}
+<div class="max-w-4xl mx-auto">
+    <h1 class="text-3xl font-bold mb-8">Your Blogs</h1>
+
+    {{if .Blogs}}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {{range .Blogs}}
+        <div class="card bg-base-100 shadow-xl">
+            <div class="card-body">
+                <h2 class="card-title">{{if .Title}}{{.Title}}{{else}}Untitled Blog{{end}}</h2>
+                {{if .Subdomain}}
+                <p class="text-sm text-base-content/60">{{.Subdomain}}.willow.camp</p>
+                {{end}}
+                {{if .CustomDomain}}
+                <p class="text-sm text-base-content/60">{{.CustomDomain}}</p>
+                {{end}}
+                <div class="card-actions justify-end mt-4">
+                    <a href="/dashboard/blogs/{{.ID}}/posts" class="btn btn-primary btn-sm">Manage Posts</a>
+                    <a href="/dashboard/blogs/{{.ID}}/settings" class="btn btn-ghost btn-sm">Settings</a>
+                </div>
+            </div>
+        </div>
+        {{end}}
+    </div>
+    {{else}}
+    <div class="text-center py-12">
+        <p class="text-xl text-base-content/60 mb-4">You don't have any blogs yet.</p>
+        <a href="https://willow.camp" class="btn btn-primary">Create Your First Blog</a>
+    </div>
+    {{end}}
+</div>
+{{end}}
