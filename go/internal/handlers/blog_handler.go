@@ -11,7 +11,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-const postsPerPage = 10
+const postsPerPage = 50
 
 // BlogIndex shows the blog's published posts
 func (h *Handlers) BlogIndex(c echo.Context) error {

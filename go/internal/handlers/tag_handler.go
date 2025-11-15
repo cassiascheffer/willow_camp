@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/cassiascheffer/willow_camp/internal/middleware"
 	"github.com/cassiascheffer/willow_camp/internal/models"
@@ -39,9 +40,20 @@ func (h *Handlers) TagShow(c echo.Context) error {
 
 	tagSlug := c.Param("tag_slug")
 
+	// Get page number from query param
+	page := 1
+	if pageStr := c.QueryParam("page"); pageStr != "" {
+		if p, err := strconv.Atoi(pageStr); err == nil && p > 0 {
+			page = p
+		}
+	}
+
+	// Calculate offset
+	offset := (page - 1) * postsPerPage
+
 	// For now, we'll fetch all posts and filter by tag in memory
 	// TODO: Optimize with a proper query
-	posts, err := h.repos.Post.ListPublished(c.Request().Context(), blog.ID, 100, 0)
+	allPosts, err := h.repos.Post.ListPublished(c.Request().Context(), blog.ID, 10000, 0)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to load posts")
 	}
@@ -49,7 +61,7 @@ func (h *Handlers) TagShow(c echo.Context) error {
 	// Load tags for each post and filter
 	var filteredPosts []*models.Post
 	var tagName string
-	for _, post := range posts {
+	for _, post := range allPosts {
 		tags, err := h.repos.Tag.FindTagsForPost(c.Request().Context(), post.ID)
 		if err != nil {
 			continue
@@ -68,11 +80,28 @@ func (h *Handlers) TagShow(c echo.Context) error {
 		}
 	}
 
+	// Apply pagination to filtered results
+	totalPosts := len(filteredPosts)
+	totalPages := (totalPosts + postsPerPage - 1) / postsPerPage
+
+	// Slice the filtered posts for the current page
+	start := offset
+	end := offset + postsPerPage
+	if start > totalPosts {
+		start = totalPosts
+	}
+	if end > totalPosts {
+		end = totalPosts
+	}
+	paginatedPosts := filteredPosts[start:end]
+
 	data := map[string]interface{}{
-		"Blog":    blog,
-		"Title":   "Posts tagged \"" + tagName + "\" - " + getTitle(blog),
-		"Posts":   filteredPosts,
-		"TagName": tagName,
+		"Blog":        blog,
+		"Title":       "Posts tagged \"" + tagName + "\" - " + getTitle(blog),
+		"Posts":       paginatedPosts,
+		"TagName":     tagName,
+		"CurrentPage": page,
+		"TotalPages":  totalPages,
 	}
 
 	return renderTemplate(c, "tag_show.html", data)
