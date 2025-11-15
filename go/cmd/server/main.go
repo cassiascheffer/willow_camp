@@ -81,6 +81,7 @@ func main() {
 	dashboard := e.Group("/dashboard")
 	dashboard.Use(authService.RequireAuth)
 	dashboard.GET("", h.Dashboard)
+	dashboard.GET("/blogs/:blog_id/posts", h.BlogPosts)
 
 	// Public blog routes (with multi-tenant middleware)
 	blog := e.Group("")

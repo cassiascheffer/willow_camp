@@ -1,0 +1,59 @@
+{{define "content"}}
+<div class="flex justify-between items-center mb-8">
+    <h1 class="text-3xl font-bold">Posts</h1>
+    <a href="/dashboard/blogs/{{.Blog.ID}}/posts/new" class="btn btn-primary">New Post</a>
+</div>
+
+{{if .Posts}}
+<div class="overflow-x-auto">
+    <table class="table table-zebra w-full">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Status</th>
+                <th>Updated</th>
+                <th class="text-right">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{range .Posts}}
+            <tr>
+                <td>
+                    <div class="font-medium">{{if .Title}}{{.Title}}{{else}}(Untitled){{end}}</div>
+                    {{if .Slug}}
+                    <div class="text-sm text-base-content/60">/{{.Slug}}</div>
+                    {{end}}
+                </td>
+                <td>
+                    {{if .IsPublished}}
+                    <span class="badge badge-success">Published</span>
+                    {{else}}
+                    <span class="badge badge-warning">Draft</span>
+                    {{end}}
+                    {{if .Featured}}
+                    <span class="badge badge-info ml-2">Featured</span>
+                    {{end}}
+                </td>
+                <td class="text-sm text-base-content/60">
+                    {{.UpdatedAt.Format "Jan 02, 2006"}}
+                </td>
+                <td class="text-right">
+                    <div class="btn-group">
+                        <a href="/dashboard/blogs/{{$.Blog.ID}}/posts/{{.ID}}/edit" class="btn btn-sm btn-ghost">Edit</a>
+                        <form method="POST" action="/dashboard/blogs/{{$.Blog.ID}}/posts/{{.ID}}/delete" class="inline" onsubmit="return confirm('Are you sure you want to delete this post?');">
+                            <button type="submit" class="btn btn-sm btn-ghost text-error">Delete</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            {{end}}
+        </tbody>
+    </table>
+</div>
+{{else}}
+<div class="text-center py-12 bg-base-100 rounded-lg">
+    <p class="text-xl text-base-content/60 mb-4">No posts yet!</p>
+    <a href="/dashboard/blogs/{{.Blog.ID}}/posts/new" class="btn btn-primary">Create Your First Post</a>
+</div>
+{{end}}
+{{end}}

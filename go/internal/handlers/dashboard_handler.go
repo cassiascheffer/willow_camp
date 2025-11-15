@@ -5,8 +5,13 @@ import (
 	"net/http"
 
 	"github.com/cassiascheffer/willow_camp/internal/auth"
+	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 )
+
+func parseUUID(s string) (uuid.UUID, error) {
+	return uuid.Parse(s)
+}
 
 // Dashboard shows the main dashboard
 func (h *Handlers) Dashboard(c echo.Context) error {
@@ -34,6 +39,43 @@ func (h *Handlers) Dashboard(c echo.Context) error {
 	}
 
 	return renderDashboardTemplate(c, "dashboard_index.html", data)
+}
+
+// BlogPosts shows the post list for a specific blog
+func (h *Handlers) BlogPosts(c echo.Context) error {
+	user := auth.GetUser(c)
+	if user == nil {
+		return echo.NewHTTPError(http.StatusUnauthorized, "Unauthorized")
+	}
+
+	blogID, err := parseUUID(c.Param("blog_id"))
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "Invalid blog ID")
+	}
+
+	// Verify blog belongs to user
+	blog, err := h.repos.Blog.FindByID(c.Request().Context(), blogID)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusNotFound, "Blog not found")
+	}
+	if blog.UserID != user.ID {
+		return echo.NewHTTPError(http.StatusForbidden, "Access denied")
+	}
+
+	// Get all posts (including drafts) for this blog
+	posts, err := h.repos.Post.ListAll(c.Request().Context(), blogID, 100, 0)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to load posts")
+	}
+
+	data := map[string]interface{}{
+		"Title": "Posts - " + getTitle(blog),
+		"User":  user,
+		"Blog":  blog,
+		"Posts": posts,
+	}
+
+	return renderDashboardTemplate(c, "posts_list.html", data)
 }
 
 func renderDashboardTemplate(c echo.Context, templateName string, data interface{}) error {
