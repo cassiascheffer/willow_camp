@@ -1,9 +1,18 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html data-theme="{{if .Blog}}{{.Blog.Theme}}{{else}}light{{end}}">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{.Title}} - Dashboard</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>{{.Title}}</title>
+    <meta name="current-theme" content="{{if .Blog}}{{.Blog.Theme}}{{else}}light{{end}}">
+
+    <!-- Favicon from OpenMoji assets -->
+    {{$emojiFilename := .EmojiFilename}}
+    <link rel="icon" href="/openmoji-32x32-ico/{{$emojiFilename}}.ico" sizes="32x32">
+    <link rel="icon" href="/openmoji-svg-color/{{$emojiFilename}}.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/openmoji-apple-touch-icon-180x180/{{$emojiFilename}}.png">
 
     <!-- Tailwind CSS + DaisyUI via CDN -->
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.24/dist/full.min.css" rel="stylesheet" type="text/css" />
@@ -13,33 +22,208 @@
         body { font-family: 'Courier New', monospace; }
     </style>
 </head>
-<body class="font-mono bg-base-200">
-    <header class="navbar bg-base-100 shadow-md">
-        <div class="flex-1">
-            <a href="/dashboard" class="btn btn-ghost normal-case text-xl">WillowCamp Dashboard</a>
-        </div>
-        <div class="flex-none gap-2">
-            {{if .User}}
-            <div class="dropdown dropdown-end">
-                <label tabindex="0" class="btn btn-ghost btn-circle avatar placeholder">
-                    <div class="bg-neutral-focus text-neutral-content rounded-full w-10">
-                        <span class="text-xl">{{if .User.Name}}{{index .User.Name 0}}{{else}}U{{end}}</span>
-                    </div>
-                </label>
-                <ul tabindex="0" class="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52">
-                    <li class="menu-title">
-                        <span>{{if .User.Name}}{{.User.Name}}{{else}}{{.User.Email}}{{end}}</span>
-                    </li>
-                    <li><a href="/dashboard/settings">Settings</a></li>
-                    <li><a href="/logout">Logout</a></li>
-                </ul>
+<body class="font-mono">
+    <nav class="bg-base-100 shadow-md w-full px-8" aria-label="Main Navigation">
+        <!-- Mobile menu with details/summary -->
+        <details class="lg:hidden">
+            <summary class="py-4 flex items-center justify-between cursor-pointer">
+                <a class="text-xl font-bold hover:text-primary transition-colors" href="{{.NavPath}}">{{.NavTitle}}</a>
+                {{heroicon "bars-3" "h-6 w-6"}}
+            </summary>
+            <div class="pb-4 space-y-2">
+                {{if .Blog}}
+                <a href="/dashboard/blogs/{{.Blog.ID}}/posts" class="block link link-hover font-medium py-2">Posts</a>
+                <a href="/dashboard/blogs/{{.Blog.ID}}/tags" class="block link link-hover font-medium py-2">Tags</a>
+                {{end}}
+                <hr class="my-2">
+                <div class="flex items-center justify-between">
+                    {{if .Blog}}
+                    <a href="/dashboard/blogs/{{.Blog.ID}}/settings" class="link link-hover font-medium py-2" title="Settings">
+                        {{heroicon "cog-6-tooth" "h-5 w-5"}}
+                    </a>
+                    {{else}}
+                    <a href="/dashboard/settings" class="link link-hover font-medium py-2" title="Settings">
+                        {{heroicon "cog-6-tooth" "h-5 w-5"}}
+                    </a>
+                    {{end}}
+                    <details class="dropdown dropdown-end">
+                        <summary class="link link-hover font-medium py-2 cursor-pointer" title="Account">
+                            {{heroicon "user-circle" "h-5 w-5"}}
+                        </summary>
+                        <ul class="dropdown-content menu bg-base-100 rounded-box z-[1] w-64 p-2 shadow-lg border mt-2">
+                            {{if .Blog}}
+                            <li class="pointer-events-none">
+                                <div class="flex items-center gap-3 bg-base-200 rounded-lg px-3 py-2 mb-2">
+                                    <img src="/openmoji-svg-color/{{$emojiFilename}}.svg" alt="{{.Blog.FaviconEmoji}}" class="w-8 h-8">
+                                    <div>
+                                        <div class="font-semibold">{{if .Blog.Title}}{{.Blog.Title}}{{else}}{{.Blog.Subdomain}}{{end}}</div>
+                                        <div class="text-xs opacity-70">{{.Blog.Subdomain}}.willow.camp</div>
+                                    </div>
+                                </div>
+                            </li>
+                            <div class="divider my-1"></div>
+                            {{end}}
+                            <li class="menu-title">
+                                <span>Your Blogs</span>
+                            </li>
+                            {{range .User.Blogs}}
+                            <li>
+                                {{if eq .ID $.Blog.ID}}
+                                <span class="flex items-center justify-between text-primary">
+                                    <div>
+                                        <div class="font-medium">{{if .Title}}{{.Title}}{{else}}{{.Subdomain}}{{end}}</div>
+                                        <div class="text-xs opacity-70">{{.Subdomain}}.willow.camp</div>
+                                    </div>
+                                    {{heroiconMini "check" "h-4 w-4"}}
+                                </span>
+                                {{else}}
+                                <a href="/dashboard/blogs/{{.ID}}/posts" class="flex items-center justify-between">
+                                    <div>
+                                        <div class="font-medium">{{if .Title}}{{.Title}}{{else}}{{.Subdomain}}{{end}}</div>
+                                        <div class="text-xs opacity-70">{{.Subdomain}}.willow.camp</div>
+                                    </div>
+                                </a>
+                                {{end}}
+                            </li>
+                            {{end}}
+                            <div class="divider my-1"></div>
+                            {{if lt (len .User.Blogs) 2}}
+                            <li>
+                                <a href="/dashboard?new_blog=true" class="flex items-center gap-2">
+                                    {{heroiconMini "plus" "h-4 w-4"}}
+                                    Add another blog
+                                </a>
+                            </li>
+                            {{end}}
+                            <li>
+                                <a href="/dashboard/security" class="flex items-center gap-2">
+                                    {{heroiconMini "lock-closed" "h-4 w-4"}}
+                                    Security
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/logout" class="flex items-center gap-2">
+                                    {{heroiconMini "arrow-left-start-on-rectangle" "h-4 w-4"}}
+                                    Log out
+                                </a>
+                            </li>
+                        </ul>
+                    </details>
+                </div>
             </div>
-            {{end}}
-        </div>
-    </header>
+        </details>
 
-    <main class="container mx-auto px-4 py-8">
+        <!-- Desktop menu -->
+        <div class="hidden lg:flex lg:items-center lg:justify-between py-4">
+            <a class="text-xl font-bold hover:text-primary transition-colors" href="{{.NavPath}}">{{.NavTitle}}</a>
+            <div class="flex items-center space-x-4">
+                {{if .Blog}}
+                <a href="/dashboard/blogs/{{.Blog.ID}}/settings" class="link link-hover" title="Settings">
+                    {{heroicon "cog-6-tooth" "h-5 w-5"}}
+                </a>
+                {{else}}
+                <a href="/dashboard/settings" class="link link-hover" title="Settings">
+                    {{heroicon "cog-6-tooth" "h-5 w-5"}}
+                </a>
+                {{end}}
+                <div class="dropdown dropdown-end">
+                    <div tabindex="0" role="button" class="link link-hover" title="Account">
+                        {{heroicon "user-circle" "h-5 w-5"}}
+                    </div>
+                    <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-64 p-2 shadow-lg border mt-2">
+                        {{if .Blog}}
+                        <li class="pointer-events-none">
+                            <div class="flex items-center gap-3 bg-base-200 rounded-lg px-3 py-2 mb-2">
+                                <img src="/openmoji-svg-color/{{$emojiFilename}}.svg" alt="{{.Blog.FaviconEmoji}}" class="w-8 h-8">
+                                <div>
+                                    <div class="font-semibold">{{if .Blog.Title}}{{.Blog.Title}}{{else}}{{.Blog.Subdomain}}{{end}}</div>
+                                    <div class="text-xs opacity-70">{{.Blog.Subdomain}}.willow.camp</div>
+                                </div>
+                            </div>
+                        </li>
+                        <div class="divider my-1"></div>
+                        {{end}}
+                        <li class="menu-title">
+                            <span>Your Blogs</span>
+                        </li>
+                        {{range .User.Blogs}}
+                        <li>
+                            {{if eq .ID $.Blog.ID}}
+                            <span class="flex items-center justify-between text-primary">
+                                <div>
+                                    <div class="font-medium">{{if .Title}}{{.Title}}{{else}}{{.Subdomain}}{{end}}</div>
+                                </div>
+                                {{heroiconMini "check" "h-4 w-4"}}
+                            </span>
+                            {{else}}
+                            <a href="/dashboard/blogs/{{.ID}}/posts" class="flex items-center justify-between">
+                                <div>
+                                    <div class="font-medium">{{if .Title}}{{.Title}}{{else}}{{.Subdomain}}{{end}}</div>
+                                </div>
+                            </a>
+                            {{end}}
+                        </li>
+                        {{end}}
+                        <div class="divider my-1"></div>
+                        {{if lt (len .User.Blogs) 2}}
+                        <li>
+                            <a href="/dashboard?new_blog=true" class="flex items-center gap-2">
+                                {{heroiconMini "plus" "h-4 w-4"}}
+                                Add another blog
+                            </a>
+                        </li>
+                        {{end}}
+                        <li>
+                            <a href="/dashboard/security" class="flex items-center gap-2">
+                                {{heroiconMini "lock-closed" "h-4 w-4"}}
+                                Security
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/logout" class="flex items-center gap-2">
+                                {{heroiconMini "arrow-left-start-on-rectangle" "h-4 w-4"}}
+                                Log out
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-6xl mx-auto p-4" aria-label="Dashboard Content">
+        <header aria-label="Dashboard Header" class="flex justify-between items-center mb-6">
+            <div class="flex items-center gap-4">
+                <div role="tablist" class="tabs tabs-boxed hidden lg:flex">
+                    {{if .Blog}}
+                    <a href="/dashboard/blogs/{{.Blog.ID}}/posts" class="tab {{if .ActiveTab}}{{if eq .ActiveTab "posts"}}tab-active{{end}}{{end}}">Posts</a>
+                    <a href="/dashboard/blogs/{{.Blog.ID}}/tags" class="tab {{if .ActiveTab}}{{if eq .ActiveTab "tags"}}tab-active{{end}}{{end}}">Tags</a>
+                    {{end}}
+                </div>
+            </div>
+            <div class="flex gap-2">
+                {{if .Blog}}
+                <form action="/dashboard/blogs/{{.Blog.ID}}/posts/untitled" method="POST">
+                    <button type="submit" class="btn btn-sm btn-primary">New Post</button>
+                </form>
+                <a href="https://{{.Blog.Subdomain}}.willow.camp/" class="btn btn-sm btn-outline" target="_blank">View Site</a>
+                {{end}}
+            </div>
+        </header>
         {{template "content" .}}
     </main>
+
+    <footer class="footer p-4 bg-base-200 text-base-content" aria-label="Footer">
+        <div class="container mx-auto flex gap-4">
+            <p>willow.camp</p>
+            <p class="text-sm text-base-content/60"><a href="/terms" class="link hover:link-primary">Terms of Service</a></p>
+            <p class="text-sm text-base-content/60"><a href="https://status.willow.camp/" class="link hover:link-primary" target="_blank" rel="noopener">Status</a></p>
+            <p class="text-sm text-base-content/60"><a href="https://discord.gg/uZgMgtfpgC" class="link hover:link-primary" target="_blank" rel="noopener">Discord</a></p>
+        </div>
+    </footer>
+
+    <div id="flash-messages" class="toast toast-bottom toast-end z-50">
+        <!-- Flash messages will be rendered here -->
+    </div>
 </body>
 </html>

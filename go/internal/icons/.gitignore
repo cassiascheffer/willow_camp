@@ -1,0 +1,4 @@
+# Generated icon files - regenerate with: go generate ./generate
+icons/
+custom/
+provider.go

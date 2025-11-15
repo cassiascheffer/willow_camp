@@ -27,6 +27,9 @@ type User struct {
 	BlogsCount         int        `db:"blogs_count" json:"blogs_count"`
 	CreatedAt          time.Time  `db:"created_at" json:"created_at"`
 	UpdatedAt          time.Time  `db:"updated_at" json:"updated_at"`
+
+	// Not from database - populated by separate queries
+	Blogs []*Blog `json:"blogs,omitempty"`
 }
 
 // Blog represents a multi-tenant blog
