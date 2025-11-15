@@ -1,7 +1,32 @@
 {{define "content"}}
-<h1 class="text-3xl font-bold mb-8">Blog Settings</h1>
+<div x-data="{
+    saving: false,
+    theme: '{{if .Blog.Theme}}{{.Blog.Theme}}{{else}}light{{end}}',
+    emoji: '{{if .Blog.FaviconEmoji}}{{.Blog.FaviconEmoji}}{{else}}🏕️{{end}}',
+    subdomain: '{{if .Blog.Subdomain}}{{.Blog.Subdomain}}{{end}}',
+    customDomain: '{{if .Blog.CustomDomain}}{{.Blog.CustomDomain}}{{end}}',
+    subdomainError: '',
+    validateSubdomain() {
+        const sd = this.subdomain.toLowerCase().trim();
+        if (sd === '') {
+            this.subdomainError = 'Subdomain is required';
+            return false;
+        }
+        if (!/^[a-z0-9-]+$/.test(sd)) {
+            this.subdomainError = 'Only lowercase letters, numbers, and hyphens allowed';
+            return false;
+        }
+        if (sd.startsWith('-') || sd.endsWith('-')) {
+            this.subdomainError = 'Cannot start or end with hyphen';
+            return false;
+        }
+        this.subdomainError = '';
+        return true;
+    }
+}">
+    <h1 class="text-3xl font-bold mb-8">Blog Settings</h1>
 
-<form method="POST" action="/dashboard/blogs/{{.Blog.ID}}/settings" class="max-w-2xl space-y-6">
+    <form method="POST" action="/dashboard/blogs/{{.Blog.ID}}/settings" class="max-w-2xl space-y-6" @submit="saving = true">
     <div class="form-control">
         <label class="label">
             <span class="label-text font-semibold">Blog Title</span>
@@ -14,9 +39,19 @@
             <span class="label-text font-semibold">Subdomain</span>
         </label>
         <div class="input-group">
-            <input type="text" name="subdomain" value="{{if .Blog.Subdomain}}{{.Blog.Subdomain}}{{end}}" class="input input-bordered flex-1" />
+            <input type="text"
+                   name="subdomain"
+                   x-model="subdomain"
+                   @blur="subdomain = subdomain.toLowerCase(); validateSubdomain()"
+                   @input="validateSubdomain()"
+                   class="input input-bordered flex-1"
+                   :class="{ 'input-error': subdomainError }"
+                   required />
             <span class="bg-base-300 px-4 flex items-center">.willow.camp</span>
         </div>
+        <label class="label" x-show="subdomainError" x-transition>
+            <span class="label-text-alt text-error" x-text="subdomainError"></span>
+        </label>
     </div>
 
     <div class="form-control">
@@ -30,20 +65,37 @@
         <label class="label">
             <span class="label-text font-semibold">Theme</span>
         </label>
-        <select name="theme" class="select select-bordered">
-            <option value="light" {{if eq .Blog.Theme "light"}}selected{{end}}>Light</option>
-            <option value="dark" {{if eq .Blog.Theme "dark"}}selected{{end}}>Dark</option>
-            <option value="cupcake" {{if eq .Blog.Theme "cupcake"}}selected{{end}}>Cupcake</option>
-            <option value="forest" {{if eq .Blog.Theme "forest"}}selected{{end}}>Forest</option>
-            <option value="retro" {{if eq .Blog.Theme "retro"}}selected{{end}}>Retro</option>
+        <select name="theme" x-model="theme" class="select select-bordered" @change="document.documentElement.setAttribute('data-theme', theme)">
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+            <option value="cupcake">Cupcake</option>
+            <option value="forest">Forest</option>
+            <option value="retro">Retro</option>
+            <option value="cyberpunk">Cyberpunk</option>
+            <option value="valentine">Valentine</option>
+            <option value="aqua">Aqua</option>
         </select>
+        <label class="label">
+            <span class="label-text-alt">Theme preview updates immediately</span>
+        </label>
     </div>
 
     <div class="form-control">
         <label class="label">
             <span class="label-text font-semibold">Favicon Emoji</span>
         </label>
-        <input type="text" name="favicon_emoji" value="{{if .Blog.FaviconEmoji}}{{.Blog.FaviconEmoji}}{{end}}" placeholder="🏕️" class="input input-bordered w-24" maxlength="2" />
+        <div class="flex gap-4 items-center">
+            <input type="text"
+                   name="favicon_emoji"
+                   x-model="emoji"
+                   placeholder="🏕️"
+                   class="input input-bordered w-24 text-2xl text-center"
+                   maxlength="2" />
+            <div class="text-4xl" x-text="emoji"></div>
+        </div>
+        <label class="label">
+            <span class="label-text-alt">Common options: 🏕️ 📝 ✍️ 💭 🌿 ⭐ 🚀 💡 📚 🎨</span>
+        </label>
     </div>
 
     <div class="form-control">
@@ -68,8 +120,13 @@
     </div>
 
     <div class="flex gap-4">
-        <button type="submit" class="btn btn-primary">Save Settings</button>
+        <button type="submit"
+                class="btn btn-primary"
+                :disabled="saving || subdomainError"
+                x-text="saving ? 'Saving...' : 'Save Settings'">
+        </button>
         <a href="/dashboard/blogs/{{.Blog.ID}}/posts" class="btn btn-ghost">Cancel</a>
     </div>
 </form>
+</div>
 {{end}}
