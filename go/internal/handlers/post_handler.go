@@ -190,6 +190,40 @@ func (h *Handlers) UpdatePost(c echo.Context) error {
 	return c.Redirect(http.StatusFound, "/dashboard/blogs/"+blogID.String()+"/posts")
 }
 
+// DeletePost handles post deletion
+func (h *Handlers) DeletePost(c echo.Context) error {
+	user := auth.GetUser(c)
+	if user == nil {
+		return echo.NewHTTPError(http.StatusUnauthorized, "Unauthorized")
+	}
+
+	blogID, err := parseUUID(c.Param("blog_id"))
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "Invalid blog ID")
+	}
+
+	postID, err := parseUUID(c.Param("post_id"))
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "Invalid post ID")
+	}
+
+	blog, err := h.repos.Blog.FindByID(c.Request().Context(), blogID)
+	if err != nil || blog.UserID != user.ID {
+		return echo.NewHTTPError(http.StatusForbidden, "Access denied")
+	}
+
+	post, err := h.repos.Post.FindByID(c.Request().Context(), postID)
+	if err != nil || post.BlogID != blogID {
+		return echo.NewHTTPError(http.StatusNotFound, "Post not found")
+	}
+
+	if err := h.repos.Post.Delete(c.Request().Context(), postID); err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to delete post")
+	}
+
+	return c.Redirect(http.StatusFound, "/dashboard/blogs/"+blogID.String()+"/posts")
+}
+
 func stringPtr(s string) *string {
 	if s == "" {
 		return nil
