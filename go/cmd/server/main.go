@@ -87,6 +87,8 @@ func main() {
 	dashboard.GET("/blogs/:blog_id/posts/:post_id/edit", h.EditPost)
 	dashboard.POST("/blogs/:blog_id/posts/:post_id", h.UpdatePost)
 	dashboard.POST("/blogs/:blog_id/posts/:post_id/delete", h.DeletePost)
+	dashboard.GET("/blogs/:blog_id/settings", h.BlogSettings)
+	dashboard.POST("/blogs/:blog_id/settings", h.UpdateBlogSettings)
 
 	// Public blog routes (with multi-tenant middleware)
 	blog := e.Group("")

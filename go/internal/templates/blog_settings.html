@@ -1,0 +1,75 @@
+{{define "content"}}
+<h1 class="text-3xl font-bold mb-8">Blog Settings</h1>
+
+<form method="POST" action="/dashboard/blogs/{{.Blog.ID}}/settings" class="max-w-2xl space-y-6">
+    <div class="form-control">
+        <label class="label">
+            <span class="label-text font-semibold">Blog Title</span>
+        </label>
+        <input type="text" name="title" value="{{if .Blog.Title}}{{.Blog.Title}}{{end}}" class="input input-bordered" />
+    </div>
+
+    <div class="form-control">
+        <label class="label">
+            <span class="label-text font-semibold">Subdomain</span>
+        </label>
+        <div class="input-group">
+            <input type="text" name="subdomain" value="{{if .Blog.Subdomain}}{{.Blog.Subdomain}}{{end}}" class="input input-bordered flex-1" />
+            <span class="bg-base-300 px-4 flex items-center">.willow.camp</span>
+        </div>
+    </div>
+
+    <div class="form-control">
+        <label class="label">
+            <span class="label-text font-semibold">Custom Domain (optional)</span>
+        </label>
+        <input type="text" name="custom_domain" value="{{if .Blog.CustomDomain}}{{.Blog.CustomDomain}}{{end}}" placeholder="blog.example.com" class="input input-bordered" />
+    </div>
+
+    <div class="form-control">
+        <label class="label">
+            <span class="label-text font-semibold">Theme</span>
+        </label>
+        <select name="theme" class="select select-bordered">
+            <option value="light" {{if eq .Blog.Theme "light"}}selected{{end}}>Light</option>
+            <option value="dark" {{if eq .Blog.Theme "dark"}}selected{{end}}>Dark</option>
+            <option value="cupcake" {{if eq .Blog.Theme "cupcake"}}selected{{end}}>Cupcake</option>
+            <option value="forest" {{if eq .Blog.Theme "forest"}}selected{{end}}>Forest</option>
+            <option value="retro" {{if eq .Blog.Theme "retro"}}selected{{end}}>Retro</option>
+        </select>
+    </div>
+
+    <div class="form-control">
+        <label class="label">
+            <span class="label-text font-semibold">Favicon Emoji</span>
+        </label>
+        <input type="text" name="favicon_emoji" value="{{if .Blog.FaviconEmoji}}{{.Blog.FaviconEmoji}}{{end}}" placeholder="🏕️" class="input input-bordered w-24" maxlength="2" />
+    </div>
+
+    <div class="form-control">
+        <label class="label">
+            <span class="label-text font-semibold">Meta Description</span>
+        </label>
+        <textarea name="meta_description" rows="3" class="textarea textarea-bordered" placeholder="Brief description for SEO">{{if .Blog.MetaDescription}}{{.Blog.MetaDescription}}{{end}}</textarea>
+    </div>
+
+    <div class="form-control">
+        <label class="label">
+            <span class="label-text font-semibold">Post Footer (Markdown)</span>
+        </label>
+        <textarea name="post_footer_markdown" rows="4" class="textarea textarea-bordered font-mono" placeholder="Appears at the bottom of every post">{{if .Blog.PostFooterMarkdown}}{{.Blog.PostFooterMarkdown}}{{end}}</textarea>
+    </div>
+
+    <div class="form-control">
+        <label class="label cursor-pointer justify-start gap-2">
+            <input type="checkbox" name="no_index" class="checkbox" {{if .Blog.NoIndex}}checked{{end}} />
+            <span class="label-text">No Index (hide from search engines)</span>
+        </label>
+    </div>
+
+    <div class="flex gap-4">
+        <button type="submit" class="btn btn-primary">Save Settings</button>
+        <a href="/dashboard/blogs/{{.Blog.ID}}/posts" class="btn btn-ghost">Cancel</a>
+    </div>
+</form>
+{{end}}
