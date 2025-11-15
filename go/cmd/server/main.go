@@ -82,6 +82,10 @@ func main() {
 	dashboard.Use(authService.RequireAuth)
 	dashboard.GET("", h.Dashboard)
 	dashboard.GET("/blogs/:blog_id/posts", h.BlogPosts)
+	dashboard.GET("/blogs/:blog_id/posts/new", h.NewPost)
+	dashboard.POST("/blogs/:blog_id/posts", h.CreatePost)
+	dashboard.GET("/blogs/:blog_id/posts/:post_id/edit", h.EditPost)
+	dashboard.POST("/blogs/:blog_id/posts/:post_id", h.UpdatePost)
 
 	// Public blog routes (with multi-tenant middleware)
 	blog := e.Group("")
