@@ -1,23 +1,38 @@
 {{define "content"}}
-<div class="max-w-4xl mx-auto">
+<div class="max-w-4xl mx-auto" x-data="{
+    saving: false,
+    published: {{if .Post}}{{if .Post.Published}}{{.Post.Published}}{{else}}false{{end}}{{else}}false{{end}},
+    featured: {{if .Post}}{{if .Post.Featured}}true{{else}}false{{end}}{{else}}false{{end}}
+}">
     <div class="flex justify-between items-center mb-8">
         <h1 class="text-3xl font-bold">{{if .IsEdit}}Edit Post{{else}}New Post{{end}}</h1>
         <a href="/dashboard/blogs/{{.Blog.ID}}/posts" class="btn btn-ghost">Cancel</a>
     </div>
 
-    <form method="POST" action="{{if .IsEdit}}/dashboard/blogs/{{.Blog.ID}}/posts/{{.Post.ID}}{{else}}/dashboard/blogs/{{.Blog.ID}}/posts{{end}}" class="space-y-6">
+    <form method="POST"
+          action="{{if .IsEdit}}/dashboard/blogs/{{.Blog.ID}}/posts/{{.Post.ID}}{{else}}/dashboard/blogs/{{.Blog.ID}}/posts{{end}}"
+          class="space-y-6"
+          @submit="saving = true">
         <div class="form-control">
             <label class="label">
                 <span class="label-text font-semibold">Title</span>
             </label>
-            <input type="text" name="title" value="{{if .Post}}{{if .Post.Title}}{{.Post.Title}}{{end}}{{end}}" class="input input-bordered w-full" required autofocus />
+            <input type="text"
+                   name="title"
+                   value="{{if .Post}}{{if .Post.Title}}{{.Post.Title}}{{end}}{{end}}"
+                   class="input input-bordered w-full"
+                   required
+                   autofocus />
         </div>
 
         <div class="form-control">
             <label class="label">
                 <span class="label-text font-semibold">Content (Markdown)</span>
             </label>
-            <textarea name="body_markdown" rows="20" class="textarea textarea-bordered w-full font-mono" placeholder="Write your post in markdown...">{{if .Post}}{{if .Post.BodyMarkdown}}{{.Post.BodyMarkdown}}{{end}}{{end}}</textarea>
+            <textarea name="body_markdown"
+                      rows="20"
+                      class="textarea textarea-bordered w-full font-mono"
+                      placeholder="Write your post in markdown...">{{if .Post}}{{if .Post.BodyMarkdown}}{{.Post.BodyMarkdown}}{{end}}{{end}}</textarea>
             <label class="label">
                 <span class="label-text-alt">Supports GitHub Flavored Markdown</span>
             </label>
@@ -27,27 +42,40 @@
             <label class="label">
                 <span class="label-text font-semibold">Meta Description (optional)</span>
             </label>
-            <textarea name="meta_description" rows="2" class="textarea textarea-bordered w-full" placeholder="Brief description for SEO and social sharing">{{if .Post}}{{if .Post.MetaDescription}}{{.Post.MetaDescription}}{{end}}{{end}}</textarea>
+            <textarea name="meta_description"
+                      rows="2"
+                      class="textarea textarea-bordered w-full"
+                      placeholder="Brief description for SEO and social sharing">{{if .Post}}{{if .Post.MetaDescription}}{{.Post.MetaDescription}}{{end}}{{end}}</textarea>
         </div>
 
         <div class="flex gap-4">
             <div class="form-control">
                 <label class="label cursor-pointer gap-2">
-                    <input type="checkbox" name="published" class="checkbox" {{if .Post}}{{if .Post.IsPublished}}checked{{end}}{{end}} />
-                    <span class="label-text">Published</span>
+                    <input type="checkbox"
+                           name="published"
+                           class="checkbox"
+                           x-model="published" />
+                    <span class="label-text" x-text="published ? 'Published' : 'Draft'"></span>
                 </label>
             </div>
 
             <div class="form-control">
                 <label class="label cursor-pointer gap-2">
-                    <input type="checkbox" name="featured" class="checkbox" {{if .Post}}{{if .Post.Featured}}checked{{end}}{{end}} />
+                    <input type="checkbox"
+                           name="featured"
+                           class="checkbox"
+                           x-model="featured" />
                     <span class="label-text">Featured</span>
                 </label>
             </div>
         </div>
 
         <div class="flex gap-4">
-            <button type="submit" class="btn btn-primary">{{if .IsEdit}}Update Post{{else}}Create Post{{end}}</button>
+            <button type="submit"
+                    class="btn btn-primary"
+                    :disabled="saving"
+                    x-text="saving ? 'Saving...' : '{{if .IsEdit}}Update Post{{else}}Create Post{{end}}'">
+            </button>
             <a href="/dashboard/blogs/{{.Blog.ID}}/posts" class="btn btn-ghost">Cancel</a>
         </div>
     </form>
