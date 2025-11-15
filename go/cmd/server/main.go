@@ -93,6 +93,8 @@ func main() {
 	blog.Use(middleware.BlogResolver(repos.Blog))
 	blog.GET("/", h.BlogIndex)
 	blog.GET("/feed.xml", h.RSSFeed)
+	blog.GET("/sitemap.xml", h.Sitemap)
+	blog.GET("/robots.txt", h.RobotsTxt)
 	blog.GET("/tags", h.TagsIndex)
 	blog.GET("/tags/:tag_slug", h.TagShow)
 	blog.GET("/:slug", h.PostShow)
