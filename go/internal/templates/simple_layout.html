@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Title}} - WillowCamp</title>
+
+    <!-- Tailwind CSS + DaisyUI via CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.24/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        body { font-family: 'Courier New', monospace; }
+    </style>
+</head>
+<body class="font-mono bg-base-200">
+    <main class="min-h-screen flex items-center justify-center p-4">
+        {{template "content" .}}
+    </main>
+</body>
+</html>

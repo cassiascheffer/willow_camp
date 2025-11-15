@@ -154,3 +154,22 @@ func renderTemplate(c echo.Context, templateName string, data interface{}) error
 
 	return tmpl.Execute(c.Response().Writer, data)
 }
+
+func renderSimpleTemplate(c echo.Context, templateName string, data interface{}) error {
+	// Simple template rendering without blog layout (for auth pages, etc.)
+	tmpl := template.New("simple_layout.html")
+
+	// Parse simple layout and content templates
+	tmpl, err := tmpl.ParseFiles(
+		"internal/templates/simple_layout.html",
+		"internal/templates/"+templateName,
+	)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "Template error: "+err.Error())
+	}
+
+	c.Response().Header().Set("Content-Type", "text/html; charset=utf-8")
+	c.Response().WriteHeader(http.StatusOK)
+
+	return tmpl.Execute(c.Response().Writer, data)
+}

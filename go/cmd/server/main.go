@@ -9,6 +9,7 @@ import (
 	"os/signal"
 	"time"
 
+	"github.com/cassiascheffer/willow_camp/internal/auth"
 	"github.com/cassiascheffer/willow_camp/internal/handlers"
 	"github.com/cassiascheffer/willow_camp/internal/middleware"
 	"github.com/cassiascheffer/willow_camp/internal/repository"
@@ -22,6 +23,12 @@ func main() {
 	dbURL := os.Getenv("DATABASE_URL")
 	if dbURL == "" {
 		log.Fatal("DATABASE_URL environment variable is required")
+	}
+
+	sessionSecret := os.Getenv("SESSION_SECRET")
+	if sessionSecret == "" {
+		sessionSecret = "dev-secret-change-in-production"
+		log.Println("Warning: Using default SESSION_SECRET. Set SESSION_SECRET env var in production!")
 	}
 
 	port := os.Getenv("PORT")
@@ -46,6 +53,9 @@ func main() {
 	// Initialize repositories
 	repos := repository.NewRepositories(pool)
 
+	// Initialize auth
+	authService := auth.New(repos.User, sessionSecret)
+
 	// Initialize Echo
 	e := echo.New()
 	e.HideBanner = true
@@ -55,18 +65,23 @@ func main() {
 	e.Use(echomiddleware.Recover())
 	e.Use(echomiddleware.CORS())
 
-	// Multi-tenant middleware
-	e.Use(middleware.BlogResolver(repos.Blog))
-
 	// Static files
 	e.Static("/static", "static")
 
 	// Initialize handlers
-	h := handlers.New(repos)
+	h := handlers.New(repos, authService)
 
-	// Public blog routes
-	e.GET("/", h.BlogIndex)
-	e.GET("/:slug", h.PostShow)
+	// Auth routes (no blog middleware needed)
+	e.GET("/login", h.LoginPage)
+	e.POST("/login", h.LoginSubmit)
+	e.POST("/logout", h.Logout)
+	e.GET("/logout", h.Logout)
+
+	// Public blog routes (with multi-tenant middleware)
+	blog := e.Group("")
+	blog.Use(middleware.BlogResolver(repos.Blog))
+	blog.GET("/", h.BlogIndex)
+	blog.GET("/:slug", h.PostShow)
 
 	// Health check
 	e.GET("/health", func(c echo.Context) error {
