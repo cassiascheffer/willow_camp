@@ -54,12 +54,24 @@ func GetBlog(c echo.Context) *models.Blog {
 
 // extractDomain extracts the subdomain or returns the full domain for custom domain lookup
 // For willow.camp domains: extracts subdomain (e.g., "myblog" from "myblog.willow.camp")
+// For localhost development: extracts subdomain (e.g., "myblog" from "myblog.localhost")
 // For custom domains: returns full domain (e.g., "example.com")
 func extractDomain(host string) string {
 	// Check if it's a willow.camp subdomain
 	if strings.HasSuffix(host, ".willow.camp") {
 		// Extract subdomain
 		subdomain := strings.TrimSuffix(host, ".willow.camp")
+		// Handle nested subdomains (take the first part only)
+		if idx := strings.Index(subdomain, "."); idx != -1 {
+			return subdomain[:idx]
+		}
+		return subdomain
+	}
+
+	// Check if it's a localhost subdomain (for development)
+	if strings.HasSuffix(host, ".localhost") {
+		// Extract subdomain
+		subdomain := strings.TrimSuffix(host, ".localhost")
 		// Handle nested subdomains (take the first part only)
 		if idx := strings.Index(subdomain, "."); idx != -1 {
 			return subdomain[:idx]
