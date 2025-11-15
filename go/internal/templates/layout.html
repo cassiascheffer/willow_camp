@@ -1,47 +1,108 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="{{.Blog.Theme}}">
+<html lang="en" data-theme="{{if .Blog.Theme}}{{.Blog.Theme}}{{else}}light{{end}}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="current-theme" content="{{if .Blog.Theme}}{{.Blog.Theme}}{{else}}light{{end}}">
+
     <title>{{.Title}}</title>
-    {{if .Blog.MetaDescription}}
-    <meta name="description" content="{{.Blog.MetaDescription}}">
+
+    <!-- Open Graph meta tags for social media sharing -->
+    <meta property="og:title" content="{{.OGTitle}}">
+    <meta property="og:description" content="{{.OGDescription}}">
+    <meta property="og:type" content="{{.OGType}}">
+    <meta property="og:url" content="{{.CurrentURL}}">
+    <meta property="og:site_name" content="{{.BlogTitle}}">
+    <meta property="og:locale" content="en_CA">
+    {{if .OGImage}}
+    <meta property="og:image" content="{{.OGImage}}">
     {{end}}
 
-    <!-- Open Graph meta tags -->
-    <meta property="og:title" content="{{.Title}}">
-    <meta property="og:type" content="website">
+    <!-- Twitter Card meta tags -->
+    <meta name="twitter:title" content="{{.OGTitle}}">
+    <meta name="twitter:description" content="{{.OGDescription}}">
 
-    <!-- Favicon -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>{{if .Blog.FaviconEmoji}}{{.Blog.FaviconEmoji}}{{else}}🏕️{{end}}</text></svg>">
+    <!-- Article-specific Open Graph meta tags -->
+    {{if .ArticlePublishedTime}}
+    <meta property="article:published_time" content="{{.ArticlePublishedTime}}">
+    {{end}}
+    {{if .ArticleAuthor}}
+    <meta property="article:author" content="{{.ArticleAuthor}}">
+    {{end}}
+    {{range .ArticleTags}}
+    <meta property="article:tag" content="{{.}}">
+    {{end}}
 
-    <!-- Tailwind CSS + DaisyUI via CDN for now -->
+    <!-- Feed discovery links -->
+    <link type="application/rss+xml" rel="alternate" href="/feed.rss" title="{{.BlogTitle}} RSS Feed">
+    <link type="application/atom+xml" rel="alternate" href="/feed.atom" title="{{.BlogTitle}} Atom Feed">
+    <link type="application/feed+json" rel="alternate" href="/feed.json" title="{{.BlogTitle}} JSON Feed">
+
+    <!-- Favicon from OpenMoji assets -->
+    <link rel="icon" href="/openmoji-32x32-ico/{{.EmojiFilename}}.ico" sizes="32x32">
+    <link rel="icon" href="/openmoji-svg-color/{{.EmojiFilename}}.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/openmoji-apple-touch-icon-180x180/{{.EmojiFilename}}.png">
+
+    <!-- Tailwind CSS + DaisyUI via CDN -->
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.24/dist/full.min.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Accessibility styles -->
+    <link rel="stylesheet" href="/static/accessibility.css">
+
+    <!-- Alpine.js for interactivity -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     <style>
         body { font-family: 'Courier New', monospace; }
     </style>
 </head>
 <body class="font-mono">
-    <header class="bg-base-100 shadow-md w-full px-8 py-4">
-        <nav class="max-w-4xl mx-auto flex items-center justify-between">
-            <a href="/" class="text-xl font-bold hover:text-primary transition-colors">
-                {{if .Blog.Title}}{{.Blog.Title}}{{else}}WillowCamp{{end}}
+    <!-- Skip links for keyboard navigation -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <header class="bg-base-100 shadow-md w-full px-8">
+        <!-- Mobile menu with improved accessibility -->
+        <details class="lg:hidden" role="navigation" aria-label="Mobile navigation" x-data="{ open: false }" @toggle="open = $el.open">
+            <summary class="py-4 flex items-center justify-between cursor-pointer" :aria-expanded="open" aria-controls="mobile-nav">
+                <a href="/" class="text-xl font-bold hover:text-primary transition-colors" aria-label="Home">
+                    {{.BlogTitle}}
+                </a>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6" aria-hidden="true" role="img">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                </svg>
+                <span class="sr-only">Open menu</span>
+            </summary>
+            <nav id="mobile-nav" class="pb-4 space-y-2" aria-label="Mobile navigation menu">
+                <a href="/subscribe" class="block link link-hover font-medium py-2" title="Subscribe to RSS Feed" aria-label="Subscribe to RSS Feed">
+                    Subscribe
+                </a>
+            </nav>
+        </details>
+
+        <!-- Desktop menu -->
+        <div class="hidden lg:flex lg:items-center lg:justify-between py-4">
+            <a href="/" class="text-xl font-bold hover:text-primary transition-colors" aria-label="Home">
+                {{.BlogTitle}}
             </a>
-            <div class="space-x-4">
-                <a href="/" class="hover:text-primary">Home</a>
-                <a href="/feed.xml" class="hover:text-primary">RSS</a>
-            </div>
-        </nav>
+            <nav id="navigation" class="space-x-4" aria-label="Main navigation">
+                <a href="/subscribe" class="link link-hover font-medium" title="Subscribe to RSS Feed" aria-label="Subscribe to RSS Feed">
+                    Subscribe
+                </a>
+            </nav>
+        </div>
     </header>
 
-    <main id="main-content" class="max-w-4xl mx-auto px-8 py-8">
+    <main id="main-content" class="max-w-3xl mx-auto p-8">
         {{template "content" .}}
     </main>
 
-    <footer class="max-w-4xl mx-auto px-8 py-8 text-center text-sm text-base-content/60">
-        <p>Powered by <a href="https://willow.camp" class="hover:text-primary">willow.camp</a></p>
+    <footer class="footer p-4 bg-base-200 text-base-content">
+        <div class="container mx-auto text-center">
+            <p>Made with <a href="https://willow.camp">willow.camp</a> · <a href="https://status.willow.camp/" target="_blank" rel="noopener">Status</a></p>
+        </div>
     </footer>
 </body>
 </html>

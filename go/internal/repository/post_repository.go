@@ -99,6 +99,27 @@ func (r *PostRepository) ListPublished(ctx context.Context, blogID uuid.UUID, li
 	return r.scanPosts(rows)
 }
 
+// ListFeatured lists featured published posts for a blog
+func (r *PostRepository) ListFeatured(ctx context.Context, blogID uuid.UUID, limit int) ([]*models.Post, error) {
+	query := `
+		SELECT id, blog_id, author_id, title, slug, body_markdown, meta_description,
+		       published, published_at, type, has_mermaid_diagrams, featured,
+		       created_at, updated_at
+		FROM posts
+		WHERE blog_id = $1 AND published = true AND featured = true AND (type IS NULL OR type = 'Post')
+		ORDER BY published_at DESC NULLS LAST, created_at DESC
+		LIMIT $2
+	`
+
+	rows, err := r.pool.Query(ctx, query, blogID, limit)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query featured posts: %w", err)
+	}
+	defer rows.Close()
+
+	return r.scanPosts(rows)
+}
+
 // ListAll lists all posts for a blog (including drafts) with pagination
 func (r *PostRepository) ListAll(ctx context.Context, blogID uuid.UUID, limit, offset int) ([]*models.Post, error) {
 	query := `

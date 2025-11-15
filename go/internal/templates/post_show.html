@@ -1,28 +1,30 @@
 {{define "content"}}
-<article>
-    <header class="mb-8">
-        <h1 class="text-3xl font-bold mb-4">{{if .Post.Title}}{{.Post.Title}}{{end}}</h1>
+<div class="">
+    <article>
+        <h1 class="text-3xl font-bold mb-6">{{if .Post.Title}}{{.Post.Title}}{{end}}</h1>
 
         {{if .Post.PublishedAt}}
         <div class="mb-6">
-            <p class="text-sm text-base-content/60">
-                Published on <time datetime="{{.Post.PublishedAt.Format "2006-01-02"}}">{{.Post.PublishedAt.Format "January 02, 2006"}}</time>
-            </p>
+            {{if .AuthorName}}
+            <p class="font-medium">{{.AuthorName}}</p>
+            {{end}}
+            <p class="text-sm text-base-content/60">Published on {{.Post.PublishedAt.Format "January 02, 2006"}}</p>
         </div>
         {{end}}
-    </header>
 
-    <div class="prose prose-lg max-w-none">
-        {{.RenderedContent}}
-    </div>
+        <div id="post_{{.Post.ID}}" class="prose prose-lg max-w-none"{{if .Post.HasMermaidDiagrams}} data-controller="mermaid"{{end}}>
+            {{.RenderedContent}}
+        </div>
+    </article>
 
     {{if .Tags}}
-    <nav class="text-sm text-base-content/70 my-8" aria-label="Post tags">
-        <span>Tagged:</span>
-        <ul class="inline-flex flex-wrap gap-2 ml-2">
+    <nav class="text-sm text-base-content/70 my-8" aria-label="Post tags" role="navigation">
+        <span class="sr-only">This post is tagged with:</span>
+        <span aria-hidden="true">Tagged:</span>
+        <ul class="inline-flex flex-wrap gap-2 ml-2" role="list">
             {{range .Tags}}
             <li>
-                <a href="/tags/{{.Slug}}" class="badge badge-ghost badge-sm hover:badge-primary">
+                <a href="/tags/{{.Slug}}" class="badge badge-ghost badge-sm hover:badge-primary" aria-label="View all posts tagged with {{.Name}}">
                     {{.Name}}
                 </a>
             </li>
@@ -31,16 +33,16 @@
     </nav>
     {{end}}
 
-    {{if .Blog.PostFooterMarkdown}}
+    {{if .PostFooter}}
     <footer class="mt-8 pt-6 border-t border-base-300">
-        <div class="prose prose-sm max-w-none text-base-content/70">
+        <div class="prose prose-sm max-w-none">
             {{.PostFooter}}
         </div>
     </footer>
     {{end}}
 
     <div class="mt-8 border-t border-base-300 pt-6">
-        <a href="/" class="btn btn-ghost btn-sm">← Back to posts</a>
+        <a href="/" class="btn btn-ghost btn-sm">Back to posts</a>
     </div>
-</article>
+</div>
 {{end}}

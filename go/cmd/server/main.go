@@ -66,7 +66,11 @@ func main() {
 	e.Use(echomiddleware.CORS())
 
 	// Static files
-	e.Static("/static", "static")
+	e.Static("/static", "go/static")
+	// OpenMoji assets from Rails public directory
+	e.Static("/openmoji-32x32-ico", "../public/openmoji-32x32-ico")
+	e.Static("/openmoji-svg-color", "../public/openmoji-svg-color")
+	e.Static("/openmoji-apple-touch-icon-180x180", "../public/openmoji-apple-touch-icon-180x180")
 
 	// Initialize handlers
 	h := handlers.New(repos, authService)
