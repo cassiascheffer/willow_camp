@@ -92,6 +92,7 @@ func main() {
 	blog := e.Group("")
 	blog.Use(middleware.BlogResolver(repos.Blog))
 	blog.GET("/", h.BlogIndex)
+	blog.GET("/feed.xml", h.RSSFeed)
 	blog.GET("/tags", h.TagsIndex)
 	blog.GET("/tags/:tag_slug", h.TagShow)
 	blog.GET("/:slug", h.PostShow)
