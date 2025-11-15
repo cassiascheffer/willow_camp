@@ -1,0 +1,60 @@
+{{define "content"}}
+<h1 class="text-3xl font-bold mb-8">Account Settings</h1>
+
+<div class="max-w-2xl space-y-8">
+    <!-- Profile Settings -->
+    <div class="card bg-base-100 shadow-xl">
+        <div class="card-body">
+            <h2 class="card-title">Profile</h2>
+            <form method="POST" action="/dashboard/settings" class="space-y-4">
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">Name</span>
+                    </label>
+                    <input type="text" name="name" value="{{if .User.Name}}{{.User.Name}}{{end}}" class="input input-bordered" />
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">Email</span>
+                    </label>
+                    <input type="email" name="email" value="{{.User.Email}}" class="input input-bordered" required />
+                </div>
+
+                <button type="submit" class="btn btn-primary">Update Profile</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Password Change -->
+    <div class="card bg-base-100 shadow-xl">
+        <div class="card-body">
+            <h2 class="card-title">Change Password</h2>
+            <form method="POST" action="/dashboard/settings/password" class="space-y-4">
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">Current Password</span>
+                    </label>
+                    <input type="password" name="current_password" class="input input-bordered" required />
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">New Password</span>
+                    </label>
+                    <input type="password" name="new_password" class="input input-bordered" required />
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">Confirm New Password</span>
+                    </label>
+                    <input type="password" name="confirm_password" class="input input-bordered" required />
+                </div>
+
+                <button type="submit" class="btn btn-primary">Change Password</button>
+            </form>
+        </div>
+    </div>
+</div>
+{{end}}
