@@ -1,18 +1,30 @@
 {{define "content"}}
-<div class="max-w-4xl mx-auto" x-data="{
-    saving: false,
-    published: {{if .Post}}{{if .Post.Published}}{{.Post.Published}}{{else}}false{{end}}{{else}}false{{end}},
-    featured: {{if .Post}}{{if .Post.Featured}}true{{else}}false{{end}}{{else}}false{{end}}
-}">
+<div class="max-w-4xl mx-auto" x-data="autosaveForm()" x-init="init()">
     <div class="flex justify-between items-center mb-8">
         <h1 class="text-3xl font-bold">{{if .IsEdit}}Edit Post{{else}}New Post{{end}}</h1>
-        <a href="/dashboard/blogs/{{.Blog.ID}}/posts" class="btn btn-ghost">Cancel</a>
+        <div class="flex items-center gap-4">
+            <!-- Autosave status indicator -->
+            <div x-show="saveStatus"
+                 x-transition
+                 class="text-sm"
+                 :class="{
+                     'text-gray-600': saveStatus === 'saving',
+                     'text-green-600': saveStatus === 'saved',
+                     'text-red-600': saveStatus === 'error'
+                 }">
+                <span x-text="saveStatusText"></span>
+            </div>
+            <a href="/dashboard/blogs/{{.Blog.ID}}/posts" class="btn btn-ghost">Cancel</a>
+        </div>
     </div>
 
     <form method="POST"
           action="{{if .IsEdit}}/dashboard/blogs/{{.Blog.ID}}/posts/{{.Post.ID}}{{else}}/dashboard/blogs/{{.Blog.ID}}/posts{{end}}"
           class="space-y-6"
-          @submit="saving = true">
+          @submit="onSubmit"
+          @change="markDirty"
+          @keydown.window.prevent.meta.s="triggerAutosave"
+          @keydown.window.prevent.ctrl.s="triggerAutosave">
         <div class="form-control">
             <label class="label">
                 <span class="label-text font-semibold">Title</span>
@@ -80,4 +92,135 @@
         </div>
     </form>
 </div>
+
+<script>
+function autosaveForm() {
+    return {
+        // State
+        saving: false,
+        published: {{if .Post}}{{if .Post.Published}}true{{else}}false{{end}}{{else}}false{{end}},
+        featured: {{if .Post}}{{if .Post.Featured}}true{{else}}false{{end}}{{else}}false{{end}},
+        isDirty: false,
+        saveStatus: null, // 'saving', 'saved', 'error'
+        saveStatusText: '',
+        autosaveTimer: null,
+        scrollPosition: 0,
+        originalValues: {},
+        isEdit: {{if .IsEdit}}true{{else}}false{{end}},
+        blogId: '{{.Blog.ID}}',
+        postId: '{{if .Post}}{{.Post.ID}}{{end}}',
+
+        // Initialize
+        init() {
+            // Only enable autosave for edit mode
+            if (!this.isEdit) return;
+
+            // Store original form values
+            this.captureOriginalValues();
+
+            // Start autosave timer (every 30 seconds)
+            this.startAutosaveTimer();
+        },
+
+        // Capture original form values for dirty checking
+        captureOriginalValues() {
+            const form = this.$el.querySelector('form');
+            const formData = new FormData(form);
+            this.originalValues = {};
+            for (let [key, value] of formData.entries()) {
+                this.originalValues[key] = value;
+            }
+        },
+
+        // Mark form as dirty when changed
+        markDirty() {
+            this.isDirty = true;
+        },
+
+        // Start periodic autosave timer
+        startAutosaveTimer() {
+            this.autosaveTimer = setInterval(() => {
+                if (this.isDirty && !this.saving) {
+                    this.performAutosave();
+                }
+            }, 30000); // 30 seconds
+        },
+
+        // Trigger autosave manually (Cmd+S / Ctrl+S)
+        triggerAutosave(event) {
+            if (this.isEdit && !this.saving) {
+                this.performAutosave();
+            }
+        },
+
+        // Perform autosave
+        async performAutosave() {
+            if (!this.isEdit) return;
+
+            // Save current scroll position
+            this.scrollPosition = window.scrollY;
+
+            // Set saving status
+            this.saving = true;
+            this.saveStatus = 'saving';
+            this.saveStatusText = 'Saving...';
+
+            try {
+                // Get form data
+                const form = this.$el.querySelector('form');
+                const formData = new FormData(form);
+
+                // Convert to JSON
+                const data = {};
+                for (let [key, value] of formData.entries()) {
+                    data[key] = value;
+                }
+
+                // Send autosave request
+                const response = await fetch(`/dashboard/blogs/${this.blogId}/posts/${this.postId}/autosave`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    // Success
+                    this.saveStatus = 'saved';
+                    this.saveStatusText = 'Saved';
+                    this.isDirty = false;
+
+                    // Hide success message after 2 seconds
+                    setTimeout(() => {
+                        this.saveStatus = null;
+                    }, 2000);
+                } else {
+                    // Error
+                    this.saveStatus = 'error';
+                    this.saveStatusText = 'Error saving';
+                }
+            } catch (error) {
+                // Network error
+                this.saveStatus = 'error';
+                this.saveStatusText = 'Connection error';
+            } finally {
+                this.saving = false;
+
+                // Restore scroll position
+                window.scrollTo(0, this.scrollPosition);
+            }
+        },
+
+        // Handle form submission
+        onSubmit(event) {
+            this.saving = true;
+            // Clear autosave timer on submit
+            if (this.autosaveTimer) {
+                clearInterval(this.autosaveTimer);
+            }
+        }
+    };
+}
+</script>
 {{end}}

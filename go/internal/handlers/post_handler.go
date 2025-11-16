@@ -190,6 +190,83 @@ func (h *Handlers) UpdatePost(c echo.Context) error {
 	return c.Redirect(http.StatusFound, "/dashboard/blogs/"+blogID.String()+"/posts")
 }
 
+// AutosavePost handles autosave for post editing
+func (h *Handlers) AutosavePost(c echo.Context) error {
+	user := auth.GetUser(c)
+	if user == nil {
+		return c.JSON(http.StatusUnauthorized, map[string]string{"error": "Unauthorized"})
+	}
+
+	blogID, err := parseUUID(c.Param("blog_id"))
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid blog ID"})
+	}
+
+	postID, err := parseUUID(c.Param("post_id"))
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid post ID"})
+	}
+
+	blog, err := h.repos.Blog.FindByID(c.Request().Context(), blogID)
+	if err != nil || blog.UserID != user.ID {
+		return c.JSON(http.StatusForbidden, map[string]string{"error": "Access denied"})
+	}
+
+	post, err := h.repos.Post.FindByID(c.Request().Context(), postID)
+	if err != nil || post.BlogID != blogID {
+		return c.JSON(http.StatusNotFound, map[string]string{"error": "Post not found"})
+	}
+
+	// Parse JSON request body
+	var req struct {
+		Title           string `json:"title"`
+		BodyMarkdown    string `json:"body_markdown"`
+		MetaDescription string `json:"meta_description"`
+		Published       string `json:"published"` // "on" or empty
+		Featured        string `json:"featured"`  // "on" or empty
+	}
+
+	if err := c.Bind(&req); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid request body"})
+	}
+
+	// Validate required fields
+	if req.Title == "" {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Title is required"})
+	}
+
+	// Update slug if title changed
+	if post.Title == nil || *post.Title != req.Title {
+		postSlug := slug.Make(req.Title)
+		post.Slug = &postSlug
+	}
+
+	// Update fields
+	post.Title = &req.Title
+	post.BodyMarkdown = &req.BodyMarkdown
+	post.MetaDescription = stringPtr(req.MetaDescription)
+
+	published := req.Published == "on"
+	post.Published = &published
+	post.Featured = req.Featured == "on"
+
+	// Set published_at if newly published
+	if published && (post.PublishedAt == nil) {
+		now := time.Now()
+		post.PublishedAt = &now
+	}
+
+	if err := h.repos.Post.Update(c.Request().Context(), post); err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to save post"})
+	}
+
+	// Return minimal JSON response
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"status":     "saved",
+		"updated_at": time.Now(),
+	})
+}
+
 // DeletePost handles post deletion
 func (h *Handlers) DeletePost(c echo.Context) error {
 	user := auth.GetUser(c)
