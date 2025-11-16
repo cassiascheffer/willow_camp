@@ -33,4 +33,8 @@ vendor/
 # OS files
 .DS_Store
 Thumbs.db
-server
+
+# Frontend build
+node_modules/
+static/dist/
+package-lock.json

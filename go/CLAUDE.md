@@ -24,6 +24,7 @@ This directory contains an in-progress migration of Willow Camp from Ruby on Rai
 - **Templates**: Go html/template (matching DaisyUI styling from Rails)
 - **Authentication**: Session-based with bcrypt (compatible with Rails Devise)
 - **Icons**: Heroicons (embedded SVGs, matching Rails)
+- **Frontend Build**: Vite + Tailwind CSS + DaisyUI + Alpine.js
 
 ### Directory Structure
 
@@ -40,13 +41,48 @@ go/
 │   ├── helpers/         # Utility functions
 │   ├── templates/       # Go templates (layout, pages)
 │   └── icons/           # Generated heroicons (see below)
+├── src/                 # Frontend source files
+│   ├── main.js          # JavaScript entry point (Alpine.js)
+│   └── main.css         # CSS entry point (Tailwind directives)
+├── static/              # Static assets
+│   ├── accessibility.css    # Accessibility styles (imported by main.css)
+│   └── dist/            # Built frontend assets (gitignored)
+│       ├── main.css     # Compiled CSS bundle
+│       └── main.js      # Compiled JS bundle
 ├── go.mod               # Go module dependencies
+├── package.json         # Frontend dependencies
+├── vite.config.js       # Vite build configuration
+├── tailwind.config.js   # Tailwind CSS configuration
+├── postcss.config.js    # PostCSS configuration
 └── CLAUDE.md           # This file
 ```
 
 ## Development Commands
 
-### Building
+### Frontend Build
+
+**First time setup**: Install frontend dependencies:
+
+```bash
+cd go
+npm install
+```
+
+**Build frontend assets**:
+
+```bash
+# Development build with watch mode
+npm run dev
+
+# Production build
+npm run build
+```
+
+The build outputs to `static/dist/` which is served by the Go server at `/static/dist/`.
+
+**Important**: You must build the frontend assets before running the server, otherwise CSS/JS will not load.
+
+### Building the Go Server
 
 ```bash
 cd go
@@ -54,18 +90,52 @@ go build -o server ./cmd/server     # Build the server binary
 ./server                             # Run the server (requires DATABASE_URL)
 ```
 
-### Running
+### Running in Development
+
+**Option 1: Use the run script (recommended)**
+
+The easiest way to run both Vite and Go together:
 
 ```bash
-# Set required environment variables
+cd go
+./run.sh
+```
+
+This script:
+- Starts Vite dev server in the background
+- Starts the Go server in the foreground
+- Handles cleanup when you press Ctrl+C (kills both processes)
+- Uses default DATABASE_URL if not set
+
+**Option 2: Run in separate terminals**
+
+**Terminal 1** - Frontend build with watch mode:
+```bash
+cd go
+npm run dev
+```
+
+**Terminal 2** - Go server:
+```bash
+cd go
 export DATABASE_URL="postgres://user:pass@localhost/willow_camp_development"
 export SESSION_SECRET="your-secret-here"
 export PORT="3001"  # Optional, defaults to 3001
-
 ./server
 ```
 
 The server will run on `http://localhost:3001` (or the port you specify).
+
+### Production Build
+
+For production, build the frontend once:
+
+```bash
+cd go
+npm run build      # Build frontend assets to static/dist/
+go build -o server ./cmd/server
+./server
+```
 
 ### Icons Generation
 
@@ -163,6 +233,24 @@ Templates use DaisyUI classes to match the Rails application exactly:
 - Same color scheme and themes
 - Same navigation structure
 
+### Frontend Asset Pipeline
+
+The Go app uses **Vite** for frontend builds, replacing CDN links:
+
+**Development workflow**:
+1. Edit CSS in `src/main.css` or JS in `src/main.js`
+2. Vite watches for changes and rebuilds automatically
+3. Refresh browser to see changes
+
+**How it works**:
+- `src/main.js` imports `src/main.css` and Alpine.js
+- `src/main.css` includes Tailwind directives and accessibility styles
+- Vite bundles everything to `static/dist/main.css` and `static/dist/main.js`
+- Templates reference the built assets at `/static/dist/`
+- Tailwind scans `internal/templates/**/*.html` for classes to include
+
+**Built assets are gitignored** - you must run `npm run build` after cloning.
+
 ## Migration Progress
 
 ### Completed Features
@@ -246,6 +334,17 @@ Templates use DaisyUI classes to match the Rails application exactly:
 
 ## Common Issues
 
+### CSS/JS not loading
+
+**Error**: Styles not applying or Alpine.js not working.
+
+**Solution**: Frontend assets haven't been built. Run:
+```bash
+cd go
+npm install
+npm run build
+```
+
 ### Icons not building
 
 See "Icons Generation" section above. You need to generate icons after cloning.
@@ -268,6 +367,13 @@ cd go
 ### Port already in use
 
 Rails runs on 3000, Go defaults to 3001. Change with `PORT` environment variable.
+
+### Tailwind classes not applying
+
+If you add new Tailwind classes and they don't appear:
+1. Make sure Vite dev server is running (`npm run dev`)
+2. Check that `tailwind.config.js` includes your template path
+3. Rebuild with `npm run build`
 
 ## Contributing
 

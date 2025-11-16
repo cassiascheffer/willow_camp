@@ -8,6 +8,7 @@ import (
 	"github.com/cassiascheffer/willow_camp/internal/models"
 	"github.com/cassiascheffer/willow_camp/internal/repository"
 	"github.com/labstack/echo/v4"
+	"github.com/weppos/publicsuffix-go/publicsuffix"
 )
 
 const blogContextKey = "blog"
@@ -21,6 +22,11 @@ func BlogResolver(blogRepo *repository.BlogRepository) echo.MiddlewareFunc {
 			// Strip port if present
 			if idx := strings.Index(host, ":"); idx != -1 {
 				host = host[:idx]
+			}
+
+			// Skip blog resolution for root willow.camp domain (no subdomain)
+			if host == "willow.camp" || host == "localhost" {
+				return echo.NewHTTPError(http.StatusNotFound, "Not a blog domain")
 			}
 
 			// Extract subdomain or use full domain for custom domain lookup
@@ -56,19 +62,9 @@ func GetBlog(c echo.Context) *models.Blog {
 // For willow.camp domains: extracts subdomain (e.g., "myblog" from "myblog.willow.camp")
 // For localhost development: extracts subdomain (e.g., "myblog" from "myblog.localhost")
 // For custom domains: returns full domain (e.g., "example.com")
+// Uses publicsuffix package for accurate subdomain identification
 func extractDomain(host string) string {
-	// Check if it's a willow.camp subdomain
-	if strings.HasSuffix(host, ".willow.camp") {
-		// Extract subdomain
-		subdomain := strings.TrimSuffix(host, ".willow.camp")
-		// Handle nested subdomains (take the first part only)
-		if idx := strings.Index(subdomain, "."); idx != -1 {
-			return subdomain[:idx]
-		}
-		return subdomain
-	}
-
-	// Check if it's a localhost subdomain (for development)
+	// Handle localhost development specially (not a valid public suffix)
 	if strings.HasSuffix(host, ".localhost") {
 		// Extract subdomain
 		subdomain := strings.TrimSuffix(host, ".localhost")
@@ -79,6 +75,34 @@ func extractDomain(host string) string {
 		return subdomain
 	}
 
+	// Parse the domain using publicsuffix
+	domainName, err := publicsuffix.Parse(host)
+	if err != nil {
+		// If we can't parse the domain, return the full host
+		// This handles edge cases like IP addresses or malformed domains
+		return host
+	}
+
+	// Get the registrable domain (eTLD+1)
+	// For "myblog.willow.camp", this returns "willow.camp"
+	// For "example.com", this returns "example.com"
+	// For "blog.example.co.uk", this returns "example.co.uk"
+	registrableDomain := domainName.SLD + "." + domainName.TLD
+
+	// Check if this is a willow.camp subdomain
+	if registrableDomain == "willow.camp" {
+		// Check if there's a subdomain
+		if domainName.TRD != "" {
+			// Return only the first part of the subdomain
+			// e.g., "www.myblog" -> "www"
+			parts := strings.Split(domainName.TRD, ".")
+			return parts[0]
+		}
+		// No subdomain, return empty (this shouldn't happen in normal flow)
+		return ""
+	}
+
 	// For custom domains, return the full host
+	// This handles both apex domains (example.com) and subdomains (blog.example.com)
 	return host
 }

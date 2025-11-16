@@ -10,6 +10,7 @@ import (
 	"github.com/cassiascheffer/willow_camp/internal/models"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
+	"github.com/patrickward/go-heroicons"
 )
 
 func parseUUID(s string) (uuid.UUID, error) {
@@ -21,6 +22,7 @@ type dashboardTemplateData struct {
 	Title         string
 	User          *models.User
 	Blog          *models.Blog
+	Blogs         []*models.Blog
 	Posts         []*models.Post
 	ActiveTab     string
 	NavTitle      string
@@ -75,6 +77,12 @@ func (h *Handlers) Dashboard(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to load blogs")
 	}
 
+	// Debug logging
+	c.Logger().Infof("User ID: %s, Found %d blogs", user.ID, len(blogs))
+	for i, blog := range blogs {
+		c.Logger().Infof("Blog %d: ID=%s, Subdomain=%v, Primary=%v", i, blog.ID, blog.Subdomain, blog.Primary)
+	}
+
 	// Attach blogs to user for template
 	user.Blogs = blogs
 
@@ -88,6 +96,9 @@ func (h *Handlers) Dashboard(c echo.Context) error {
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to prepare data")
 	}
+
+	// Add blogs to template data
+	data.Blogs = blogs
 
 	return renderDashboardTemplate(c, "dashboard_index.html", data)
 }
@@ -148,14 +159,14 @@ func (h *Handlers) BlogPosts(c echo.Context) error {
 func templateFuncs() template.FuncMap {
 	return template.FuncMap{
 		"heroicon": func(name string, class string) template.HTML {
-			svg, err := icons.RenderIcon(name, "outline", class)
+			svg, err := icons.RenderIcon(name, heroicons.IconOutline, class)
 			if err != nil {
 				return template.HTML("")
 			}
 			return svg
 		},
 		"heroiconMini": func(name string, class string) template.HTML {
-			svg, err := icons.RenderIcon(name, "mini", class)
+			svg, err := icons.RenderIcon(name, heroicons.IconMini, class)
 			if err != nil {
 				return template.HTML("")
 			}
@@ -170,8 +181,8 @@ func renderDashboardTemplate(c echo.Context, templateName string, data interface
 
 	// Parse dashboard layout and content templates
 	tmpl, err := tmpl.ParseFiles(
-		"go/internal/templates/dashboard_layout.html",
-		"go/internal/templates/"+templateName,
+		"internal/templates/dashboard_layout.html",
+		"internal/templates/"+templateName,
 	)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Template error: "+err.Error())

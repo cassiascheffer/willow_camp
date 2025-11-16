@@ -14,12 +14,11 @@
     <link rel="icon" href="/openmoji-svg-color/{{$emojiFilename}}.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/openmoji-apple-touch-icon-180x180/{{$emojiFilename}}.png">
 
-    <!-- Tailwind CSS + DaisyUI via CDN -->
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.24/dist/full.min.css" rel="stylesheet" type="text/css" />
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Bundled CSS with Tailwind + DaisyUI -->
+    <link rel="stylesheet" href="/static/dist/main.css">
 
-    <!-- Alpine.js for interactivity -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- Bundled JS with Alpine.js -->
+    <script type="module" src="/static/dist/main.js"></script>
 
     <style>
         body { font-family: 'Courier New', monospace; }
@@ -71,7 +70,7 @@
                             </li>
                             {{range .User.Blogs}}
                             <li>
-                                {{if eq .ID $.Blog.ID}}
+                                {{if and $.Blog (eq .ID $.Blog.ID)}}
                                 <span class="flex items-center justify-between text-primary">
                                     <div>
                                         <div class="font-medium">{{if .Title}}{{.Title}}{{else}}{{.Subdomain}}{{end}}</div>
@@ -151,7 +150,7 @@
                         </li>
                         {{range .User.Blogs}}
                         <li>
-                            {{if eq .ID $.Blog.ID}}
+                            {{if and $.Blog (eq .ID $.Blog.ID)}}
                             <span class="flex items-center justify-between text-primary">
                                 <div>
                                     <div class="font-medium">{{if .Title}}{{.Title}}{{else}}{{.Subdomain}}{{end}}</div>

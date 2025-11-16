@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Simple script to run the Go server
+# Script to run both Vite dev server and Go server
 
 # Set DATABASE_URL if not already set
 if [ -z "$DATABASE_URL" ]; then
@@ -12,13 +12,38 @@ if [ -z "$PORT" ]; then
     export PORT="3001"
 fi
 
-echo "Starting WillowCamp Go server..."
+# Cleanup function to kill background processes
+cleanup() {
+    echo ""
+    echo "Shutting down..."
+    if [ ! -z "$GO_PID" ]; then
+        kill $GO_PID 2>/dev/null
+    fi
+    exit
+}
+
+# Set trap to cleanup on script exit
+trap cleanup INT TERM EXIT
+
+echo "Starting WillowCamp development environment..."
 echo "DATABASE_URL: $DATABASE_URL"
 echo "PORT: $PORT"
 echo ""
+
+# Start Go server in the background
+echo "Starting Go server..."
+./bin/server &
+GO_PID=$!
+echo "Go server running (PID: $GO_PID)"
 echo "Once started, you can access your blog at:"
 echo "  http://localhost:$PORT"
 echo ""
 
-# Run the server
-./bin/server
+# Give Go server a moment to start
+sleep 2
+
+echo "Starting Vite dev server..."
+echo ""
+
+# Run Vite in the foreground
+npm run dev
