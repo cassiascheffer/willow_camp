@@ -39,6 +39,16 @@
 
         <div class="form-control">
             <label class="label">
+                <span class="label-text font-semibold">Tags</span>
+            </label>
+            <input type="text" name="tags" value="{{.TagsString}}" class="input input-bordered w-full" placeholder="tag1, tag2, tag3" />
+            <label class="label">
+                <span class="label-text-alt">Comma-separated tags</span>
+            </label>
+        </div>
+
+        <div class="form-control">
+            <label class="label">
                 <span class="label-text font-semibold">Content (Markdown)</span>
             </label>
             <textarea name="body_markdown"

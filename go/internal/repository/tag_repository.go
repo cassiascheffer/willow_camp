@@ -89,3 +89,57 @@ func (r *TagRepository) ListForBlog(ctx context.Context, blogID uuid.UUID) ([]mo
 
 	return tags, nil
 }
+
+// FindOrCreateByName finds or creates a tag by name
+func (r *TagRepository) FindOrCreateByName(ctx context.Context, name string, slug string) (*models.Tag, error) {
+	// Try to find existing tag by name
+	query := `SELECT id, name, slug, taggings_count, created_at, updated_at FROM tags WHERE name = $1`
+	var tag models.Tag
+	err := r.pool.QueryRow(ctx, query, name).Scan(
+		&tag.ID, &tag.Name, &tag.Slug, &tag.TaggingsCount,
+		&tag.CreatedAt, &tag.UpdatedAt,
+	)
+	if err == nil {
+		return &tag, nil
+	}
+
+	// Tag doesn't exist, create it
+	insertQuery := `
+		INSERT INTO tags (id, name, slug, taggings_count, created_at, updated_at)
+		VALUES (gen_random_uuid(), $1, $2, 0, NOW(), NOW())
+		RETURNING id, name, slug, taggings_count, created_at, updated_at
+	`
+	err = r.pool.QueryRow(ctx, insertQuery, name, slug).Scan(
+		&tag.ID, &tag.Name, &tag.Slug, &tag.TaggingsCount,
+		&tag.CreatedAt, &tag.UpdatedAt,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create tag: %w", err)
+	}
+
+	return &tag, nil
+}
+
+// CreateTagging creates a tagging relationship between a post and a tag
+func (r *TagRepository) CreateTagging(ctx context.Context, postID, tagID uuid.UUID) error {
+	query := `
+		INSERT INTO taggings (id, tag_id, taggable_id, taggable_type, created_at)
+		VALUES (gen_random_uuid(), $1, $2, 'Post', NOW())
+		ON CONFLICT DO NOTHING
+	`
+	_, err := r.pool.Exec(ctx, query, tagID, postID)
+	if err != nil {
+		return fmt.Errorf("failed to create tagging: %w", err)
+	}
+	return nil
+}
+
+// DeleteTaggingsForPost removes all tag associations for a post
+func (r *TagRepository) DeleteTaggingsForPost(ctx context.Context, postID uuid.UUID) error {
+	query := `DELETE FROM taggings WHERE taggable_id = $1 AND taggable_type = 'Post'`
+	_, err := r.pool.Exec(ctx, query, postID)
+	if err != nil {
+		return fmt.Errorf("failed to delete taggings: %w", err)
+	}
+	return nil
+}
