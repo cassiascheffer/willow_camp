@@ -25,8 +25,9 @@ func BlogResolver(blogRepo *repository.BlogRepository) echo.MiddlewareFunc {
 			}
 
 			// Skip blog resolution for root willow.camp domain (no subdomain)
+			// These requests will proceed without a blog in context (for landing page)
 			if host == "willow.camp" || host == "localhost" {
-				return echo.NewHTTPError(http.StatusNotFound, "Not a blog domain")
+				return next(c)
 			}
 
 			// Extract subdomain or use full domain for custom domain lookup

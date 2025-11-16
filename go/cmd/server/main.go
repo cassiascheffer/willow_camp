@@ -94,9 +94,6 @@ func main() {
 	e.POST("/logout", h.Logout)
 	e.GET("/logout", h.Logout)
 
-	// Home page (root domain only, before blog routes)
-	e.GET("/", h.HomePage)
-
 	// Dashboard routes (protected)
 	dashboard := e.Group("/dashboard")
 	dashboard.Use(authService.RequireAuth)

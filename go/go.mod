@@ -8,7 +8,6 @@ require (
 	github.com/gosimple/slug v1.15.0
 	github.com/jackc/pgx/v5 v5.7.6
 	github.com/labstack/echo/v4 v4.13.4
-	github.com/patrickward/go-heroicons v0.0.0-20250219180616-bbd6099d5765
 	github.com/weppos/publicsuffix-go v0.50.0
 	github.com/yuin/goldmark v1.7.13
 	github.com/yuin/goldmark-highlighting/v2 v2.0.0-20230729083705-37449abec8cc

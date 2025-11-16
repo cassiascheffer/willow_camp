@@ -15,10 +15,13 @@ import (
 const postsPerPage = 50
 
 // BlogIndex shows the blog's published posts
+// If no blog is resolved (root domain), shows the home/landing page instead
 func (h *Handlers) BlogIndex(c echo.Context) error {
 	blog := middleware.GetBlog(c)
 	if blog == nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, "Blog not found in context")
+		// No blog in context means we're on the root domain (willow.camp or localhost)
+		// Show the marketing/landing page
+		return h.HomePage(c)
 	}
 
 	// Get page number from query param

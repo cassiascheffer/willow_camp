@@ -6,11 +6,9 @@ import (
 
 	"github.com/cassiascheffer/willow_camp/internal/auth"
 	"github.com/cassiascheffer/willow_camp/internal/helpers"
-	"github.com/cassiascheffer/willow_camp/internal/icons"
 	"github.com/cassiascheffer/willow_camp/internal/models"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
-	"github.com/patrickward/go-heroicons"
 )
 
 func parseUUID(s string) (uuid.UUID, error) {
@@ -159,18 +157,10 @@ func (h *Handlers) BlogPosts(c echo.Context) error {
 func templateFuncs() template.FuncMap {
 	return template.FuncMap{
 		"heroicon": func(name string, class string) template.HTML {
-			svg, err := icons.RenderIcon(name, heroicons.IconOutline, class)
-			if err != nil {
-				return template.HTML("")
-			}
-			return svg
+			return helpers.Icon("24/outline/"+name, class)
 		},
 		"heroiconMini": func(name string, class string) template.HTML {
-			svg, err := icons.RenderIcon(name, heroicons.IconMini, class)
-			if err != nil {
-				return template.HTML("")
-			}
-			return svg
+			return helpers.Icon("20/solid/"+name, class)
 		},
 	}
 }

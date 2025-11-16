@@ -139,61 +139,93 @@ go build -o server ./cmd/server
 ./server
 ```
 
-### Icons Generation
+### Icons
 
-**Important**: The `internal/icons/` directory contains generated code that is gitignored.
+The app uses [Heroicons](https://heroicons.com) from the official Tailwind Labs repository. Icons are fetched as SVG files and rendered in templates using helper functions.
 
 #### How Icons Work
 
-1. **Source**: Icon definitions in `internal/icons/generate/main.go`
-2. **Generator**: Uses `github.com/patrickward/go-heroicons` to fetch and embed SVGs
-3. **Output**: Creates `provider.go` and SVG files in `internal/icons/`
-4. **Ignored**: All generated files are in `.gitignore` (must regenerate after clone)
+1. **Source**: Official heroicons GitHub repository: https://github.com/tailwindlabs/heroicons
+2. **Storage**: SVG files committed to `internal/templates/icons/`
+3. **Fetching**: `scripts/fetch-heroicons.sh` downloads icons from GitHub
+4. **Rendering**: `helpers.Icon()` function loads SVGs and applies CSS classes
 
-#### Generating Icons
+#### Fetching Icons
+
+The icons are committed to the repository, so they're available immediately after cloning. You only need to run the fetch script when adding new icons or updating existing ones:
 
 ```bash
 cd go
-go run ./internal/icons/generate
+./scripts/fetch-heroicons.sh
 ```
 
-This will:
-- Download heroicons from GitHub to `/tmp/heroicons`
-- Generate `internal/icons/provider.go` with embedded SVGs
-- Create `internal/icons/icons/*.svg` files
-- Create `internal/icons/custom/missing.svg` fallback
+This downloads SVG files from the heroicons repository and saves them to `internal/templates/icons/`.
 
-**You must run this after**:
-- Cloning the repository
-- Adding new icons to the generator
-- Switching between commits that change icon requirements
+**Run this script when**:
+- Adding new icons to the script
+- Updating to new versions of heroicons
 
 #### Adding New Icons
 
-Edit `internal/icons/generate/main.go` and add to the `Icons` slice:
+Edit `scripts/fetch-heroicons.sh` and add the icon path to the `icons` array:
 
-```go
-{Name: "your-icon-name", Type: heroicons.IconOutline},  // 24px outline
-{Name: "your-icon-name", Type: heroicons.IconMini},     // 20px solid
-```
-
-Then regenerate with `go run ./internal/icons/generate`.
-
-#### Troubleshooting Icons
-
-**Error**: `no required module provides package github.com/cassiascheffer/willow_camp/internal/icons`
-
-**Solution**: Icons haven't been generated yet. Run:
 ```bash
-go run ./internal/icons/generate
-go build -o server ./cmd/server
+declare -a icons=(
+    # Add your icon here
+    "24/outline/your-icon-name"  # 24px outline icon
+    "20/solid/your-icon-name"    # 20px solid icon (mini)
+    "16/solid/your-icon-name"    # 16px solid icon (micro)
+)
 ```
 
-**Why are icons gitignored?**
-- Generated files should be reproducible
-- Reduces repository size
-- Generator pulls latest heroicons automatically
-- Prevents merge conflicts in generated code
+Then re-run the script:
+
+```bash
+./scripts/fetch-heroicons.sh
+```
+
+#### Using Icons in Templates
+
+Templates use the `heroicon` and `heroiconMini` functions to render icons with custom classes:
+
+```html
+{{heroicon "check" "h-5 w-5"}}          <!-- 24px outline icon -->
+{{heroiconMini "plus" "h-4 w-4"}}       <!-- 20px solid icon -->
+```
+
+The functions:
+- Load the SVG file from `internal/templates/icons/`
+- Remove hardcoded attributes (width, height, stroke color)
+- Add the provided CSS classes
+- Return template.HTML for safe rendering
+
+#### Icon Directory Structure
+
+```
+internal/templates/icons/
+├── 24/
+│   ├── outline/         # 24px outline icons
+│   │   ├── check.svg
+│   │   ├── cog-6-tooth.svg
+│   │   └── ...
+│   └── solid/           # 24px solid icons
+│       └── ...
+├── 20/
+│   └── solid/           # 20px solid icons (mini)
+│       ├── check.svg
+│       ├── plus.svg
+│       └── ...
+└── 16/
+    └── solid/           # 16px solid icons (micro)
+        └── ...
+```
+
+**Why commit icons to the repository?**
+- Simple deployment (no build-time fetching required)
+- Small package size (~20KB for all icons)
+- Guarantees availability (no external dependency at deploy time)
+- Easy to update via `scripts/fetch-heroicons.sh`
+- No dependencies in go.mod for icon handling
 
 ## Database
 
