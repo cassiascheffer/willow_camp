@@ -71,16 +71,18 @@ npm install
 **Build frontend assets**:
 
 ```bash
-# Development build with watch mode
+# Development build with watch mode (rebuilds on file changes)
 npm run dev
 
-# Production build
+# Production build (one-time build)
 npm run build
 ```
 
-The build outputs to `static/dist/` which is served by the Go server at `/static/dist/`.
-
-**Important**: You must build the frontend assets before running the server, otherwise CSS/JS will not load.
+**Important**:
+- The build outputs to `static/dist/` which is served by the Go server at `/static/dist/`
+- This is **server-side rendering** - the Go server serves the built CSS/JS files
+- In dev mode, `npm run dev` runs `vite build --watch` which writes files to disk (not an in-memory dev server)
+- You must build assets before running the Go server, or styles won't load
 
 ### Building the Go Server
 
@@ -235,19 +237,27 @@ Templates use DaisyUI classes to match the Rails application exactly:
 
 ### Frontend Asset Pipeline
 
-The Go app uses **Vite** for frontend builds, replacing CDN links:
+The Go app uses **Vite** for frontend builds with **server-side rendering**:
 
 **Development workflow**:
-1. Edit CSS in `src/main.css` or JS in `src/main.js`
-2. Vite watches for changes and rebuilds automatically
-3. Refresh browser to see changes
+1. Run `npm run dev` in one terminal (builds and watches for changes)
+2. Run Go server in another terminal
+3. Edit CSS in `src/main.css` or JS in `src/main.js`
+4. Vite rebuilds automatically to `static/dist/`
+5. Refresh browser to see changes
 
 **How it works**:
 - `src/main.js` imports `src/main.css` and Alpine.js
-- `src/main.css` includes Tailwind directives and accessibility styles
+- `src/main.css` imports accessibility.css and includes Tailwind directives
 - Vite bundles everything to `static/dist/main.css` and `static/dist/main.js`
-- Templates reference the built assets at `/static/dist/`
+- Go server serves these files at `/static/dist/` (NOT a proxy to Vite dev server)
+- Templates reference the built assets: `<link href="/static/dist/main.css">`
 - Tailwind scans `internal/templates/**/*.html` for classes to include
+
+**Key difference from typical Vite setup**:
+- We use `vite build --watch` instead of `vite dev` for development
+- This writes files to disk so the Go server can serve them
+- It's server-side rendering, not a client-side SPA
 
 **Built assets are gitignored** - you must run `npm run build` after cloning.
 

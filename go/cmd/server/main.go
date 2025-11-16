@@ -79,7 +79,7 @@ func main() {
 	e.Use(echomiddleware.Secure())
 
 	// Static files
-	e.Static("/static", "go/static")
+	e.Static("/static", "static")
 	// OpenMoji assets from Rails public directory
 	e.Static("/openmoji-32x32-ico", "../public/openmoji-32x32-ico")
 	e.Static("/openmoji-svg-color", "../public/openmoji-svg-color")

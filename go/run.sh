@@ -30,6 +30,16 @@ echo "DATABASE_URL: $DATABASE_URL"
 echo "PORT: $PORT"
 echo ""
 
+# Build the Go server
+echo "Building Go server..."
+go build -o bin/server ./cmd/server
+if [ $? -ne 0 ]; then
+    echo "Failed to build Go server"
+    exit 1
+fi
+echo "Build complete!"
+echo ""
+
 # Start Go server in the background
 echo "Starting Go server..."
 ./bin/server &

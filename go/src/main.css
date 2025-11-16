@@ -1,6 +1,6 @@
+/* Import accessibility styles - must come before @tailwind */
+@import '../static/accessibility.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* Import accessibility styles */
-@import '../static/accessibility.css';
