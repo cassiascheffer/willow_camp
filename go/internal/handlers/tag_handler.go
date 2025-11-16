@@ -28,7 +28,7 @@ func (h *Handlers) TagsIndex(c echo.Context) error {
 		"Tags":  tags,
 	}
 
-	return renderTemplate(c, "tags_index.html", data)
+	return h.renderTemplate(c, "tags_index.html", data)
 }
 
 // TagShow shows posts for a specific tag
@@ -104,5 +104,5 @@ func (h *Handlers) TagShow(c echo.Context) error {
 		"TotalPages":  totalPages,
 	}
 
-	return renderTemplate(c, "tag_show.html", data)
+	return h.renderTemplate(c, "tag_show.html", data)
 }

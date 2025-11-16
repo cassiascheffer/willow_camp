@@ -9,6 +9,10 @@
 
     <title>{{.Title}}</title>
 
+    {{if .MetaDescription}}
+    <meta name="description" content="{{.MetaDescription}}">
+    {{end}}
+
     <!-- Open Graph meta tags for social media sharing -->
     <meta property="og:title" content="{{.OGTitle}}">
     <meta property="og:description" content="{{.OGDescription}}">
@@ -46,14 +50,10 @@
     <link rel="apple-touch-icon" href="/openmoji-apple-touch-icon-180x180/{{.EmojiFilename}}.png">
 
     <!-- Bundled CSS with Tailwind + DaisyUI -->
-    <link rel="stylesheet" href="/static/dist/main.css">
+    <link rel="stylesheet" href="/static/dist/main.css?v=2">
 
     <!-- Bundled JS with Alpine.js -->
     <script type="module" src="/static/dist/main.js"></script>
-
-    <style>
-        body { font-family: 'Courier New', monospace; }
-    </style>
 </head>
 <body class="font-mono">
     <!-- Skip links for keyboard navigation -->
@@ -72,6 +72,11 @@
                 <span class="sr-only">Open menu</span>
             </summary>
             <nav id="mobile-nav" class="pb-4 space-y-2" aria-label="Mobile navigation menu">
+                {{range .Pages}}
+                <a href="/{{if .Slug}}{{.Slug}}{{end}}" class="block link link-hover font-medium py-2" aria-label="{{if .Title}}{{.Title}}{{end}}">
+                    {{if .Title}}{{.Title}}{{end}}
+                </a>
+                {{end}}
                 <a href="/subscribe" class="block link link-hover font-medium py-2" title="Subscribe to RSS Feed" aria-label="Subscribe to RSS Feed">
                     Subscribe
                 </a>
@@ -84,6 +89,11 @@
                 {{.BlogTitle}}
             </a>
             <nav id="navigation" class="space-x-4" aria-label="Main navigation">
+                {{range .Pages}}
+                <a href="/{{if .Slug}}{{.Slug}}{{end}}" class="link link-hover font-medium" aria-label="{{if .Title}}{{.Title}}{{end}}">
+                    {{if .Title}}{{.Title}}{{end}}
+                </a>
+                {{end}}
                 <a href="/subscribe" class="link link-hover font-medium" title="Subscribe to RSS Feed" aria-label="Subscribe to RSS Feed">
                     Subscribe
                 </a>
@@ -96,9 +106,11 @@
     </main>
 
     <footer class="footer p-4 bg-base-200 text-base-content">
+        {{if .Blog}}
         <div class="container mx-auto text-center">
             <p>Made with <a href="https://willow.camp">willow.camp</a> · <a href="https://status.willow.camp/" target="_blank" rel="noopener">Status</a></p>
         </div>
+        {{end}}
     </footer>
 </body>
 </html>

@@ -24,6 +24,19 @@ func Icon(path string, class string) template.HTML {
 	svg = removeAttribute(svg, "height")
 	svg = removeAttribute(svg, "stroke", "#0F172A") // Remove hardcoded stroke color
 
+	// Determine if this is an outline icon (needs stroke) or solid icon (needs fill)
+	isOutline := strings.Contains(path, "/outline/")
+
+	// Add currentColor to make icons inherit text color
+	if isOutline {
+		// Add stroke="currentColor" for outline icons
+		svg = strings.Replace(svg, "<svg ", `<svg stroke="currentColor" `, 1)
+	} else {
+		// Add fill="currentColor" for solid icons (and remove hardcoded fill)
+		svg = removeAttribute(svg, "fill", "#0F172A")
+		svg = strings.Replace(svg, "<svg ", `<svg fill="currentColor" `, 1)
+	}
+
 	// Add or append to class attribute
 	if class != "" {
 		if strings.Contains(svg, `class="`) {

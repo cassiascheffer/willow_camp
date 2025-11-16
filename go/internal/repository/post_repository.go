@@ -158,6 +158,95 @@ func (r *PostRepository) CountPublished(ctx context.Context, blogID uuid.UUID) (
 	return count, nil
 }
 
+// ListPublishedPages lists published pages for a blog
+func (r *PostRepository) ListPublishedPages(ctx context.Context, blogID uuid.UUID) ([]*models.Post, error) {
+	query := `
+		SELECT id, blog_id, author_id, title, slug, body_markdown, meta_description,
+		       published, published_at, type, has_mermaid_diagrams, featured,
+		       created_at, updated_at
+		FROM posts
+		WHERE blog_id = $1 AND published = true AND type = 'Page'
+		ORDER BY title ASC
+	`
+
+	rows, err := r.pool.Query(ctx, query, blogID)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query pages: %w", err)
+	}
+	defer rows.Close()
+
+	return r.scanPosts(rows)
+}
+
+// FindOrCreateAboutPage finds or creates the About page for a blog
+func (r *PostRepository) FindOrCreateAboutPage(ctx context.Context, blogID, authorID uuid.UUID) (*models.Post, error) {
+	// Try to find existing About page
+	query := `
+		SELECT id, blog_id, author_id, title, slug, body_markdown, meta_description,
+		       published, published_at, type, has_mermaid_diagrams, featured,
+		       created_at, updated_at
+		FROM posts
+		WHERE blog_id = $1 AND slug = 'about' AND type = 'Page'
+		LIMIT 1
+	`
+
+	var page models.Post
+	err := r.pool.QueryRow(ctx, query, blogID).Scan(
+		&page.ID, &page.BlogID, &page.AuthorID, &page.Title, &page.Slug,
+		&page.BodyMarkdown, &page.MetaDescription, &page.Published, &page.PublishedAt,
+		&page.Type, &page.HasMermaidDiagrams, &page.Featured,
+		&page.CreatedAt, &page.UpdatedAt,
+	)
+
+	if err == nil {
+		return &page, nil
+	}
+
+	if !errors.Is(err, pgx.ErrNoRows) {
+		return nil, fmt.Errorf("failed to find about page: %w", err)
+	}
+
+	// Create new About page if it doesn't exist
+	published := false
+	page = models.Post{
+		ID:           uuid.New(),
+		BlogID:       blogID,
+		AuthorID:     authorID,
+		Title:        stringPtr("About"),
+		Slug:         stringPtr("about"),
+		Type:         stringPtr("Page"),
+		Published:    &published,
+		BodyMarkdown: stringPtr(""),
+	}
+
+	createQuery := `
+		INSERT INTO posts (id, blog_id, author_id, title, slug, body_markdown, meta_description,
+		                   published, published_at, type, has_mermaid_diagrams, featured,
+		                   created_at, updated_at)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, NOW(), NOW())
+	`
+
+	_, err = r.pool.Exec(ctx, createQuery,
+		page.ID, page.BlogID, page.AuthorID, page.Title, page.Slug, page.BodyMarkdown,
+		page.MetaDescription, page.Published, page.PublishedAt, page.Type,
+		page.HasMermaidDiagrams, page.Featured,
+	)
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to create about page: %w", err)
+	}
+
+	return &page, nil
+}
+
+// Helper function for creating string pointers
+func stringPtr(s string) *string {
+	if s == "" {
+		return nil
+	}
+	return &s
+}
+
 // Create creates a new post
 func (r *PostRepository) Create(ctx context.Context, post *models.Post) error {
 	query := `

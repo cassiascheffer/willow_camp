@@ -139,3 +139,16 @@ func (r *BlogRepository) Update(ctx context.Context, blog *models.Blog) error {
 
 	return nil
 }
+
+// Delete deletes a blog and all associated posts/pages
+func (r *BlogRepository) Delete(ctx context.Context, id uuid.UUID) error {
+	// Note: Posts will be deleted automatically via ON DELETE CASCADE in the database
+	query := `DELETE FROM blogs WHERE id = $1`
+
+	_, err := r.pool.Exec(ctx, query, id)
+	if err != nil {
+		return fmt.Errorf("failed to delete blog: %w", err)
+	}
+
+	return nil
+}

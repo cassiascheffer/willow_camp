@@ -1,6 +1,12 @@
-/* Import accessibility styles - must come before @tailwind */
+/* Import accessibility styles */
 @import '../static/accessibility.css';
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Import Choices.js styles */
+@import 'choices.js/public/assets/styles/choices.css';
+
+/* Tailwind v4 + plugins */
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+@plugin "daisyui" {
+  themes: all;
+}

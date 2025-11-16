@@ -15,14 +15,10 @@
     <link rel="apple-touch-icon" href="/openmoji-apple-touch-icon-180x180/{{$emojiFilename}}.png">
 
     <!-- Bundled CSS with Tailwind + DaisyUI -->
-    <link rel="stylesheet" href="/static/dist/main.css">
+    <link rel="stylesheet" href="/static/dist/main.css?v=2">
 
     <!-- Bundled JS with Alpine.js -->
     <script type="module" src="/static/dist/main.js"></script>
-
-    <style>
-        body { font-family: 'Courier New', monospace; }
-    </style>
 </head>
 <body class="font-mono">
     <nav class="bg-base-100 shadow-md w-full px-8" aria-label="Main Navigation">
@@ -34,8 +30,8 @@
             </summary>
             <div class="pb-4 space-y-2">
                 {{if .Blog}}
-                <a href="/dashboard/blogs/{{.Blog.ID}}/posts" class="block link link-hover font-medium py-2">Posts</a>
-                <a href="/dashboard/blogs/{{.Blog.ID}}/tags" class="block link link-hover font-medium py-2">Tags</a>
+                <a href="/dashboard/blogs/{{.Blog.ID}}/posts" class="block link link-hover font-medium py-2 {{if .ActiveTab}}{{if eq .ActiveTab "posts"}}text-primary{{end}}{{end}}">Posts</a>
+                <a href="/dashboard/blogs/{{.Blog.ID}}/tags" class="block link link-hover font-medium py-2 {{if .ActiveTab}}{{if eq .ActiveTab "tags"}}text-primary{{end}}{{end}}">Tags</a>
                 {{end}}
                 <hr class="my-2">
                 <div class="flex items-center justify-between">
@@ -58,7 +54,7 @@
                                 <div class="flex items-center gap-3 bg-base-200 rounded-lg px-3 py-2 mb-2">
                                     <img src="/openmoji-svg-color/{{$emojiFilename}}.svg" alt="{{.Blog.FaviconEmoji}}" class="w-8 h-8">
                                     <div>
-                                        <div class="font-semibold">{{if .Blog.Title}}{{.Blog.Title}}{{else}}{{.Blog.Subdomain}}{{end}}</div>
+                                        <div class="font-semibold">{{if hasText .Blog.Title}}{{.Blog.Title}}{{else}}{{.Blog.Subdomain}}{{end}}</div>
                                         <div class="text-xs opacity-70">{{.Blog.Subdomain}}.willow.camp</div>
                                     </div>
                                 </div>
@@ -73,7 +69,7 @@
                                 {{if and $.Blog (eq .ID $.Blog.ID)}}
                                 <span class="flex items-center justify-between text-primary">
                                     <div>
-                                        <div class="font-medium">{{if .Title}}{{.Title}}{{else}}{{.Subdomain}}{{end}}</div>
+                                        <div class="font-medium">{{if hasText .Title}}{{.Title}}{{else}}{{.Subdomain}}{{end}}</div>
                                         <div class="text-xs opacity-70">{{.Subdomain}}.willow.camp</div>
                                     </div>
                                     {{heroiconMini "check" "h-4 w-4"}}
@@ -81,7 +77,7 @@
                                 {{else}}
                                 <a href="/dashboard/blogs/{{.ID}}/posts" class="flex items-center justify-between">
                                     <div>
-                                        <div class="font-medium">{{if .Title}}{{.Title}}{{else}}{{.Subdomain}}{{end}}</div>
+                                        <div class="font-medium">{{if hasText .Title}}{{.Title}}{{else}}{{.Subdomain}}{{end}}</div>
                                         <div class="text-xs opacity-70">{{.Subdomain}}.willow.camp</div>
                                     </div>
                                 </a>
@@ -138,7 +134,7 @@
                             <div class="flex items-center gap-3 bg-base-200 rounded-lg px-3 py-2 mb-2">
                                 <img src="/openmoji-svg-color/{{$emojiFilename}}.svg" alt="{{.Blog.FaviconEmoji}}" class="w-8 h-8">
                                 <div>
-                                    <div class="font-semibold">{{if .Blog.Title}}{{.Blog.Title}}{{else}}{{.Blog.Subdomain}}{{end}}</div>
+                                    <div class="font-semibold">{{if hasText .Blog.Title}}{{.Blog.Title}}{{else}}{{.Blog.Subdomain}}{{end}}</div>
                                     <div class="text-xs opacity-70">{{.Blog.Subdomain}}.willow.camp</div>
                                 </div>
                             </div>
@@ -153,14 +149,14 @@
                             {{if and $.Blog (eq .ID $.Blog.ID)}}
                             <span class="flex items-center justify-between text-primary">
                                 <div>
-                                    <div class="font-medium">{{if .Title}}{{.Title}}{{else}}{{.Subdomain}}{{end}}</div>
+                                    <div class="font-medium">{{if hasText .Title}}{{.Title}}{{else}}{{.Subdomain}}{{end}}</div>
                                 </div>
                                 {{heroiconMini "check" "h-4 w-4"}}
                             </span>
                             {{else}}
                             <a href="/dashboard/blogs/{{.ID}}/posts" class="flex items-center justify-between">
                                 <div>
-                                    <div class="font-medium">{{if .Title}}{{.Title}}{{else}}{{.Subdomain}}{{end}}</div>
+                                    <div class="font-medium">{{if hasText .Title}}{{.Title}}{{else}}{{.Subdomain}}{{end}}</div>
                                 </div>
                             </a>
                             {{end}}

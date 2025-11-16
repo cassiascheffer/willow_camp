@@ -3,6 +3,8 @@ package handlers
 import (
 	"html/template"
 	"net/http"
+	"sort"
+	"strings"
 
 	"github.com/cassiascheffer/willow_camp/internal/auth"
 	"github.com/cassiascheffer/willow_camp/internal/helpers"
@@ -13,6 +15,27 @@ import (
 
 func parseUUID(s string) (uuid.UUID, error) {
 	return uuid.Parse(s)
+}
+
+// sortBlogsByTitle sorts blogs alphabetically by title (or subdomain if no title)
+func sortBlogsByTitle(blogs []*models.Blog) {
+	sort.Slice(blogs, func(i, j int) bool {
+		titleI := ""
+		if blogs[i].Title != nil && *blogs[i].Title != "" {
+			titleI = *blogs[i].Title
+		} else if blogs[i].Subdomain != nil {
+			titleI = *blogs[i].Subdomain
+		}
+
+		titleJ := ""
+		if blogs[j].Title != nil && *blogs[j].Title != "" {
+			titleJ = *blogs[j].Title
+		} else if blogs[j].Subdomain != nil {
+			titleJ = *blogs[j].Subdomain
+		}
+
+		return strings.ToLower(titleI) < strings.ToLower(titleJ)
+	})
 }
 
 // dashboardTemplateData holds all data needed for dashboard layout
@@ -75,30 +98,14 @@ func (h *Handlers) Dashboard(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to load blogs")
 	}
 
-	// Debug logging
-	c.Logger().Infof("User ID: %s, Found %d blogs", user.ID, len(blogs))
-	for i, blog := range blogs {
-		c.Logger().Infof("Blog %d: ID=%s, Subdomain=%v, Primary=%v", i, blog.ID, blog.Subdomain, blog.Primary)
+	// If user has no blogs, show error
+	if len(blogs) == 0 {
+		return echo.NewHTTPError(http.StatusNotFound, "No blogs found")
 	}
 
-	// Attach blogs to user for template
-	user.Blogs = blogs
-
-	// If user has only one blog, redirect to that blog's posts
-	if len(blogs) == 1 {
-		return c.Redirect(http.StatusFound, "/dashboard/blogs/"+blogs[0].ID.String()+"/posts")
-	}
-
-	// Prepare dashboard data
-	data, err := h.prepareDashboardData(user, nil, "Dashboard")
-	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to prepare data")
-	}
-
-	// Add blogs to template data
-	data.Blogs = blogs
-
-	return renderDashboardTemplate(c, "dashboard_index.html", data)
+	// Redirect to default blog (primary blog or first blog)
+	// FindByUserID orders by "primary" DESC, created_at ASC, so the first blog is the default
+	return c.Redirect(http.StatusFound, "/dashboard/blogs/"+blogs[0].ID.String()+"/posts")
 }
 
 // BlogPosts shows the post list for a specific blog
@@ -127,6 +134,9 @@ func (h *Handlers) BlogPosts(c echo.Context) error {
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to load blogs")
 	}
+
+	// Sort blogs by title for display (matching Rails behavior)
+	sortBlogsByTitle(blogs)
 	user.Blogs = blogs
 
 	// Get all posts (including drafts) for this blog
@@ -161,6 +171,12 @@ func templateFuncs() template.FuncMap {
 		},
 		"heroiconMini": func(name string, class string) template.HTML {
 			return helpers.Icon("20/solid/"+name, class)
+		},
+		"hasText": func(s *string) bool {
+			return s != nil && *s != ""
+		},
+		"allThemes": func() []string {
+			return helpers.AllThemes()
 		},
 	}
 }

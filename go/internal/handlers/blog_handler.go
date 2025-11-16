@@ -66,7 +66,7 @@ func (h *Handlers) BlogIndex(c echo.Context) error {
 		"TotalPages":    totalPages,
 	}
 
-	return renderTemplate(c, "blog_index.html", data)
+	return h.renderTemplate(c, "blog_index.html", data)
 }
 
 // PostShow shows a single post
@@ -152,6 +152,12 @@ func (h *Handlers) PostShow(c echo.Context) error {
 		}
 	}
 
+	// Set meta description for SEO (separate from OGDescription)
+	metaDescription := ""
+	if post.MetaDescription != nil && *post.MetaDescription != "" {
+		metaDescription = *post.MetaDescription
+	}
+
 	data := map[string]interface{}{
 		"Blog":                 blog,
 		"Title":                title,
@@ -162,12 +168,13 @@ func (h *Handlers) PostShow(c echo.Context) error {
 		"AuthorName":           authorName,
 		"OGType":               ogType,
 		"OGDescription":        ogDescription,
+		"MetaDescription":      metaDescription,
 		"ArticlePublishedTime": articlePublishedTime,
 		"ArticleAuthor":        authorName,
 		"ArticleTags":          articleTags,
 	}
 
-	return renderTemplate(c, "post_show.html", data)
+	return h.renderTemplate(c, "post_show.html", data)
 }
 
 // Helper functions
@@ -185,7 +192,7 @@ func getTitle(blog *models.Blog) string {
 	return "willow.camp"
 }
 
-func enrichTemplateData(c echo.Context, blog *models.Blog, data map[string]interface{}) map[string]interface{} {
+func (h *Handlers) enrichTemplateData(c echo.Context, blog *models.Blog, data map[string]interface{}) map[string]interface{} {
 	// Ensure we have all required fields for the layout
 	if _, exists := data["Title"]; !exists {
 		data["Title"] = getTitle(blog)
@@ -200,6 +207,14 @@ func enrichTemplateData(c echo.Context, blog *models.Blog, data map[string]inter
 		emojiFilename = helpers.EmojiToOpenmojiFilename(*blog.FaviconEmoji)
 	}
 	data["EmojiFilename"] = emojiFilename
+
+	// Fetch published pages for navigation
+	pages, err := h.repos.Post.ListPublishedPages(c.Request().Context(), blog.ID)
+	if err != nil {
+		// Don't fail the whole page if pages fail to load
+		pages = []*models.Post{}
+	}
+	data["Pages"] = pages
 
 	// Open Graph defaults
 	if _, exists := data["OGTitle"]; !exists {
@@ -226,7 +241,7 @@ func enrichTemplateData(c echo.Context, blog *models.Blog, data map[string]inter
 	return data
 }
 
-func renderTemplate(c echo.Context, templateName string, data interface{}) error {
+func (h *Handlers) renderTemplate(c echo.Context, templateName string, data interface{}) error {
 	// Convert data to map and enrich with layout requirements
 	blog := middleware.GetBlog(c)
 	dataMap, ok := data.(map[string]interface{})
@@ -235,7 +250,7 @@ func renderTemplate(c echo.Context, templateName string, data interface{}) error
 	}
 
 	if blog != nil {
-		dataMap = enrichTemplateData(c, blog, dataMap)
+		dataMap = h.enrichTemplateData(c, blog, dataMap)
 	}
 
 	// Create template with helper functions

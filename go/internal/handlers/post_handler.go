@@ -72,16 +72,17 @@ func (h *Handlers) CreatePost(c echo.Context) error {
 
 	// Create post
 	post := &models.Post{
-		ID:              uuid.New(),
-		BlogID:          blogID,
-		AuthorID:        user.ID,
-		Title:           &title,
-		Slug:            &postSlug,
-		BodyMarkdown:    &bodyMarkdown,
-		MetaDescription: stringPtr(metaDescription),
-		Published:       &published,
-		Featured:        featured,
-		Type:            stringPtr("Post"),
+		ID:                 uuid.New(),
+		BlogID:             blogID,
+		AuthorID:           user.ID,
+		Title:              &title,
+		Slug:               &postSlug,
+		BodyMarkdown:       &bodyMarkdown,
+		MetaDescription:    stringPtr(metaDescription),
+		Published:          &published,
+		Featured:           featured,
+		Type:               stringPtr("Post"),
+		HasMermaidDiagrams: detectMermaidDiagrams(bodyMarkdown),
 	}
 
 	if published {
@@ -203,6 +204,7 @@ func (h *Handlers) UpdatePost(c echo.Context) error {
 	post.MetaDescription = stringPtr(metaDescription)
 	post.Published = &published
 	post.Featured = featured
+	post.HasMermaidDiagrams = detectMermaidDiagrams(bodyMarkdown)
 
 	// Set published_at if newly published
 	if published && (post.PublishedAt == nil) {
@@ -277,6 +279,7 @@ func (h *Handlers) AutosavePost(c echo.Context) error {
 	post.Title = &req.Title
 	post.BodyMarkdown = &req.BodyMarkdown
 	post.MetaDescription = stringPtr(req.MetaDescription)
+	post.HasMermaidDiagrams = detectMermaidDiagrams(req.BodyMarkdown)
 
 	published := req.Published == "on"
 	post.Published = &published
@@ -338,6 +341,11 @@ func stringPtr(s string) *string {
 		return nil
 	}
 	return &s
+}
+
+// detectMermaidDiagrams checks if markdown contains mermaid diagrams
+func detectMermaidDiagrams(markdown string) bool {
+	return strings.Contains(markdown, "```mermaid")
 }
 
 func joinStrings(strs []string, sep string) string {

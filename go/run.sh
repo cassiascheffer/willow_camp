@@ -30,6 +30,16 @@ echo "DATABASE_URL: $DATABASE_URL"
 echo "PORT: $PORT"
 echo ""
 
+# Build frontend assets first
+echo "Building frontend assets..."
+npm run build
+if [ $? -ne 0 ]; then
+    echo "Failed to build frontend assets"
+    exit 1
+fi
+echo "Frontend build complete!"
+echo ""
+
 # Build the Go server
 echo "Building Go server..."
 go build -o bin/server ./cmd/server

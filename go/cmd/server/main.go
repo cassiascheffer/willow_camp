@@ -84,6 +84,7 @@ func main() {
 	e.Static("/openmoji-32x32-ico", "../public/openmoji-32x32-ico")
 	e.Static("/openmoji-svg-color", "../public/openmoji-svg-color")
 	e.Static("/openmoji-apple-touch-icon-180x180", "../public/openmoji-apple-touch-icon-180x180")
+	e.File("/openmoji-map.json", "../public/openmoji-map.json")
 
 	// Initialize handlers
 	h := handlers.New(repos, authService)
@@ -107,6 +108,9 @@ func main() {
 	dashboard.POST("/blogs/:blog_id/posts/:post_id/delete", h.DeletePost)
 	dashboard.GET("/blogs/:blog_id/settings", h.BlogSettings)
 	dashboard.POST("/blogs/:blog_id/settings", h.UpdateBlogSettings)
+	dashboard.POST("/blogs/:blog_id/settings/about", h.UpdateAboutPage)
+	dashboard.POST("/blogs/:blog_id/settings/about/delete", h.DeleteAboutPage)
+	dashboard.POST("/blogs/:blog_id/delete", h.DeleteBlog)
 	dashboard.GET("/settings", h.UserSettings)
 	dashboard.POST("/settings", h.UpdateUserSettings)
 	dashboard.POST("/settings/password", h.UpdatePassword)
