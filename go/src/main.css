@@ -1,8 +1,11 @@
 /* Import accessibility styles */
 @import '../static/accessibility.css';
 
-/* Import Choices.js styles */
+/* Import Choices.js base styles */
 @import 'choices.js/public/assets/styles/choices.css';
+
+/* Import custom Choices.js theme styles */
+@import './choices-custom.css';
 
 /* Tailwind v4 + plugins */
 @import "tailwindcss";

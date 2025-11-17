@@ -53,7 +53,41 @@ func (r *TagRepository) FindTagsForPost(ctx context.Context, postID uuid.UUID) (
 	return tags, nil
 }
 
-// ListForBlog lists all tags used in a blog with post counts
+// ListAllForBlog lists all tags used in a blog (including drafts)
+func (r *TagRepository) ListAllForBlog(ctx context.Context, blogID uuid.UUID) ([]string, error) {
+	query := `
+		SELECT DISTINCT t.name
+		FROM tags t
+		INNER JOIN taggings tg ON t.id = tg.tag_id
+		INNER JOIN posts p ON tg.taggable_id = p.id
+		WHERE p.blog_id = $1 AND tg.taggable_type = 'Post'
+		ORDER BY t.name
+	`
+
+	rows, err := r.pool.Query(ctx, query, blogID)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query tag names: %w", err)
+	}
+	defer rows.Close()
+
+	var tagNames []string
+	for rows.Next() {
+		var name string
+		err := rows.Scan(&name)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan tag name: %w", err)
+		}
+		tagNames = append(tagNames, name)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating tag names: %w", err)
+	}
+
+	return tagNames, nil
+}
+
+// ListForBlog lists all tags used in a blog with post counts (published only)
 func (r *TagRepository) ListForBlog(ctx context.Context, blogID uuid.UUID) ([]models.Tag, error) {
 	query := `
 		SELECT DISTINCT t.id, t.name, t.slug, t.taggings_count, t.created_at, t.updated_at

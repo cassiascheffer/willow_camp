@@ -50,6 +50,37 @@ func (r *PostRepository) FindBySlug(ctx context.Context, blogID uuid.UUID, slug 
 	return &post, nil
 }
 
+// FindMaxSlugNumber finds the highest numeric suffix for slugs matching a base pattern
+// Returns 0 if base slug doesn't exist, 1 if base slug exists with no numbered versions,
+// or the highest number + 1 if numbered versions exist
+func (r *PostRepository) FindMaxSlugNumber(ctx context.Context, blogID, authorID uuid.UUID, baseSlug string, excludePostID *uuid.UUID) (int, error) {
+	query := `
+		SELECT
+			COALESCE(
+				MAX(
+					CASE
+						WHEN slug ~ ('^' || $3 || '-[0-9]+$')
+						THEN CAST(regexp_replace(slug, '^' || $3 || '-', '') AS INTEGER)
+						WHEN slug = $3 THEN 0
+						ELSE NULL
+					END
+				), -1
+			) as max_number
+		FROM posts
+		WHERE blog_id = $1 AND author_id = $2
+			AND (slug = $3 OR slug ~ ('^' || $3 || '-[0-9]+$'))
+			AND ($4::uuid IS NULL OR id != $4)
+	`
+
+	var maxNum int
+	err := r.pool.QueryRow(ctx, query, blogID, authorID, baseSlug, excludePostID).Scan(&maxNum)
+	if err != nil {
+		return 0, fmt.Errorf("failed to find max slug number: %w", err)
+	}
+
+	return maxNum, nil
+}
+
 // FindByID finds a post by ID
 func (r *PostRepository) FindByID(ctx context.Context, id uuid.UUID) (*models.Post, error) {
 	query := `

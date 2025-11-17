@@ -1,10 +1,12 @@
 package handlers
 
 import (
+	"encoding/json"
 	"html/template"
 	"net/http"
 	"sort"
 	"strings"
+	"time"
 
 	"github.com/cassiascheffer/willow_camp/internal/auth"
 	"github.com/cassiascheffer/willow_camp/internal/helpers"
@@ -45,10 +47,14 @@ type dashboardTemplateData struct {
 	Blog          *models.Blog
 	Blogs         []*models.Blog
 	Posts         []*models.Post
+	Post          *models.Post
 	ActiveTab     string
 	NavTitle      string
 	NavPath       string
 	EmojiFilename string
+	IsEdit        bool
+	TagsString    string
+	AllTags       []string // All tag names for the blog (for choices.js)
 }
 
 // prepareDashboardData populates common dashboard layout data
@@ -177,6 +183,44 @@ func templateFuncs() template.FuncMap {
 		},
 		"allThemes": func() []string {
 			return helpers.AllThemes()
+		},
+		"deref": func(ptr interface{}) interface{} {
+			if ptr == nil {
+				return nil
+			}
+			switch v := ptr.(type) {
+			case *string:
+				if v == nil {
+					return ""
+				}
+				return *v
+			case *bool:
+				if v == nil {
+					return false
+				}
+				return *v
+			case *int:
+				if v == nil {
+					return 0
+				}
+				return *v
+			default:
+				return ptr
+			}
+		},
+		"formatDateTime": func(t *time.Time) string {
+			if t == nil {
+				return ""
+			}
+			// Format as "2006-01-02T15:04" for datetime-local input
+			return t.Format("2006-01-02T15:04")
+		},
+		"toJSON": func(v interface{}) (template.JS, error) {
+			bytes, err := json.Marshal(v)
+			if err != nil {
+				return "", err
+			}
+			return template.JS(bytes), nil
 		},
 	}
 }

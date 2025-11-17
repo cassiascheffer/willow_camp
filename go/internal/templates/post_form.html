@@ -1,236 +1,213 @@
 {{define "content"}}
-<div class="max-w-4xl mx-auto" x-data="autosaveForm()" x-init="init()">
-    <div class="flex justify-between items-center mb-8">
-        <h1 class="text-3xl font-bold">{{if .IsEdit}}Edit Post{{else}}New Post{{end}}</h1>
-        <div class="flex items-center gap-4">
-            <!-- Autosave status indicator -->
-            <div x-show="saveStatus"
-                 x-transition
-                 class="text-sm"
-                 :class="{
-                     'text-gray-600': saveStatus === 'saving',
-                     'text-green-600': saveStatus === 'saved',
-                     'text-red-600': saveStatus === 'error'
-                 }">
-                <span x-text="saveStatusText"></span>
+<div class="flex flex-col items-center justify-center min-h-screen">
+  <div class="card w-full lg:w-3/4">
+    <div class="card-body" x-data="autosaveForm({{.IsEdit}}, '{{.Blog.ID}}', '{{if .Post}}{{.Post.ID}}{{end}}', {{if .Post}}{{if .Post.Published}}{{if deref .Post.Published}}'true'{{else}}'false'{{end}}{{else}}'false'{{end}}{{else}}'false'{{end}})">
+      <h1 class="card-title text-2xl font-bold">
+        Editing post
+      </h1>
+      <div id="autosave_status" class="sticky top-0 z-10">
+        <span x-show="saveStatus"
+              x-transition
+              class="badge badge-sm"
+              :class="{
+                'badge-neutral': saveStatus === 'saving',
+                'badge-success': saveStatus === 'saved',
+                'badge-error': saveStatus === 'error'
+              }">
+          <span x-text="saveStatusText"></span>
+        </span>
+      </div>
+      <form method="POST"
+            action="{{if .IsEdit}}/dashboard/blogs/{{.Blog.ID}}/posts/{{.Post.ID}}{{else}}/dashboard/blogs/{{.Blog.ID}}/posts{{end}}"
+            id="post_form"
+            class="form-control"
+            x-ref="form"
+            @submit="onSubmit"
+            @change="markDirty"
+            @keydown.window.prevent.meta.s="triggerAutosave"
+            @keydown.window.prevent.ctrl.s="triggerAutosave">
+
+        <!-- Title Field -->
+        <div class="form-control w-full mb-4">
+          <label class="label">Title</label>
+          <input type="text"
+                 name="title"
+                 value="{{if .Post}}{{if .Post.Title}}{{deref .Post.Title}}{{end}}{{end}}"
+                 class="input input-bordered w-full"
+                 required
+                 autofocus />
+        </div>
+
+        <!-- Slug and Tags Fields (side by side on lg) -->
+        <div class="flex flex-col lg:flex-row lg:gap-4 mb-4">
+          <div class="form-control w-full lg:w-1/2 mb-4 lg:mb-0">
+            <div class="tooltip tooltip-top" data-tip="slugs are auto-generated">
+              <label class="label">Slug</label>
+              <input type="text"
+                     name="slug"
+                     value="{{if .Post}}{{if .Post.Slug}}{{deref .Post.Slug}}{{end}}{{end}}"
+                     class="input input-bordered w-full"
+                     disabled />
             </div>
-            <a href="/dashboard/blogs/{{.Blog.ID}}/posts" class="btn btn-ghost">Cancel</a>
-        </div>
-    </div>
-
-    <form method="POST"
-          action="{{if .IsEdit}}/dashboard/blogs/{{.Blog.ID}}/posts/{{.Post.ID}}{{else}}/dashboard/blogs/{{.Blog.ID}}/posts{{end}}"
-          class="space-y-6"
-          @submit="onSubmit"
-          @change="markDirty"
-          @keydown.window.prevent.meta.s="triggerAutosave"
-          @keydown.window.prevent.ctrl.s="triggerAutosave">
-        <div class="form-control">
-            <label class="label">
-                <span class="label-text font-semibold">Title</span>
-            </label>
-            <input type="text"
-                   name="title"
-                   value="{{if .Post}}{{if .Post.Title}}{{.Post.Title}}{{end}}{{end}}"
-                   class="input input-bordered w-full"
-                   required
-                   autofocus />
+          </div>
+          <div class="form-control w-full lg:w-1/2" x-data="tagChoices({{toJSON .AllTags}}, '{{.TagsString}}')">
+            <label class="label">Tag list</label>
+            <input type="hidden" name="tags" value="{{.TagsString}}" x-ref="input" />
+            <select multiple x-ref="select" class="w-full"></select>
+          </div>
         </div>
 
-        <div class="form-control">
-            <label class="label">
-                <span class="label-text font-semibold">Tags</span>
-            </label>
-            <input type="text" name="tags" value="{{.TagsString}}" class="input input-bordered w-full" placeholder="tag1, tag2, tag3" />
-            <label class="label">
-                <span class="label-text-alt">Comma-separated tags</span>
-            </label>
+        <!-- Meta Description -->
+        <div class="form-control w-full mb-4">
+          <label class="label">Meta Description</label>
+          <textarea name="meta_description"
+                    rows="2"
+                    maxlength="255"
+                    class="textarea textarea-bordered w-full">{{if .Post}}{{if .Post.MetaDescription}}{{deref .Post.MetaDescription}}{{end}}{{end}}</textarea>
         </div>
 
-        <div class="form-control">
-            <label class="label">
-                <span class="label-text font-semibold">Content (Markdown)</span>
-            </label>
-            <textarea name="body_markdown"
-                      rows="20"
-                      class="textarea textarea-bordered w-full font-mono"
-                      placeholder="Write your post in markdown...">{{if .Post}}{{if .Post.BodyMarkdown}}{{.Post.BodyMarkdown}}{{end}}{{end}}</textarea>
-            <label class="label">
-                <span class="label-text-alt">Supports GitHub Flavored Markdown</span>
-            </label>
+        <!-- Body Markdown -->
+        <div class="form-control w-full mb-4">
+          <label class="label">Body</label>
+          <textarea name="body_markdown"
+                    rows="20"
+                    class="textarea textarea-bordered w-full font-mono"
+                    style="min-height: 600px;"
+                    placeholder="Write your post in markdown...">{{if .Post}}{{if .Post.BodyMarkdown}}{{deref .Post.BodyMarkdown}}{{end}}{{end}}</textarea>
+          <div class="text-sm text-base-content/70 mt-2">
+            {{heroicon "information-circle" "inline w-4 h-4"}}
+            Image uploads are free for now but will be a paid feature in the future.
+          </div>
         </div>
 
-        <div class="form-control">
-            <label class="label">
-                <span class="label-text font-semibold">Meta Description (optional)</span>
-            </label>
-            <textarea name="meta_description"
-                      rows="2"
-                      class="textarea textarea-bordered w-full"
-                      placeholder="Brief description for SEO and social sharing">{{if .Post}}{{if .Post.MetaDescription}}{{.Post.MetaDescription}}{{end}}{{end}}</textarea>
+        <!-- Published Date -->
+        <div class="form-control w-full mb-4">
+          <label class="label">Published Date</label>
+          <input type="datetime-local"
+                 name="published_at"
+                 value="{{if .Post}}{{if .Post.PublishedAt}}{{formatDateTime .Post.PublishedAt}}{{end}}{{end}}"
+                 class="input input-bordered w-full" />
         </div>
 
-        <div class="flex gap-4">
-            <div class="form-control">
-                <label class="label cursor-pointer gap-2">
-                    <input type="checkbox"
-                           name="published"
-                           class="checkbox"
-                           x-model="published" />
-                    <span class="label-text" x-text="published ? 'Published' : 'Draft'"></span>
-                </label>
-            </div>
-
-            <div class="form-control">
-                <label class="label cursor-pointer gap-2">
-                    <input type="checkbox"
-                           name="featured"
-                           class="checkbox"
-                           x-model="featured" />
-                    <span class="label-text">Featured</span>
-                </label>
-            </div>
-        </div>
-
-        <div class="flex gap-4">
+        <!-- Buttons -->
+        <div class="flex gap-4 mt-6">
+          {{if .Post}}
+            {{if .Post.Published}}
+              {{if deref .Post.Published}}
+                <input type="hidden" name="published" value="true" id="post_published" />
+                <button type="submit"
+                        class="btn btn-primary btn-soft w-full text-sm md:text-base"
+                        :disabled="saving"
+                        x-text="saving ? 'Saving...' : 'Save'">
+                </button>
+              {{else}}
+                <input type="hidden" name="published" value="false" id="post_published" x-model="publishedValue" />
+                <button type="submit"
+                        class="btn btn-secondary btn-soft flex-1 text-sm md:text-base"
+                        :disabled="saving"
+                        x-text="saving ? 'Saving draft...' : 'Save draft'"
+                        @click="publishedValue = 'false'">
+                </button>
+                <button type="submit"
+                        class="btn btn-primary btn-soft flex-1 text-sm md:text-base"
+                        :disabled="saving"
+                        x-text="saving ? 'Publishing...' : 'Publish'"
+                        @click="publishedValue = 'true'">
+                </button>
+              {{end}}
+            {{else}}
+              <input type="hidden" name="published" value="false" id="post_published" x-model="publishedValue" />
+              <button type="submit"
+                      class="btn btn-secondary btn-soft flex-1 text-sm md:text-base"
+                      :disabled="saving"
+                      x-text="saving ? 'Saving draft...' : 'Save draft'"
+                      @click="publishedValue = 'false'">
+              </button>
+              <button type="submit"
+                      class="btn btn-primary btn-soft flex-1 text-sm md:text-base"
+                      :disabled="saving"
+                      x-text="saving ? 'Publishing...' : 'Publish'"
+                      @click="publishedValue = 'true'">
+              </button>
+            {{end}}
+          {{else}}
+            <input type="hidden" name="published" value="false" id="post_published" x-model="publishedValue" />
             <button type="submit"
-                    class="btn btn-primary"
+                    class="btn btn-secondary btn-soft flex-1 text-sm md:text-base"
                     :disabled="saving"
-                    x-text="saving ? 'Saving...' : '{{if .IsEdit}}Update Post{{else}}Create Post{{end}}'">
+                    x-text="saving ? 'Saving draft...' : 'Save draft'"
+                    @click="publishedValue = 'false'">
             </button>
-            <a href="/dashboard/blogs/{{.Blog.ID}}/posts" class="btn btn-ghost">Cancel</a>
+            <button type="submit"
+                    class="btn btn-primary btn-soft flex-1 text-sm md:text-base"
+                    :disabled="saving"
+                    x-text="saving ? 'Publishing...' : 'Publish'"
+                    @click="publishedValue = 'true'">
+            </button>
+          {{end}}
         </div>
-    </form>
+      </form>
+
+      {{if .IsEdit}}
+      <!-- Post Actions -->
+      <div class="mt-4" x-data="{ dropdownOpen: false }">
+        <div class="lg:flex lg:justify-between">
+          <div class="order-2 lg:order-1 mt-4 lg:mt-0">
+            <a href="/dashboard/blogs/{{.Blog.ID}}/posts" class="underline flex items-center gap-1">
+              {{heroiconMini "arrow-left" "h-4 w-4"}}
+              Back to Dashboard
+            </a>
+          </div>
+          <div class="flex gap-2 justify-end order-1 lg:order-2">
+            <div class="dropdown dropdown-end dropdown-top">
+              <div tabindex="0" role="button" class="btn btn-outline" aria-label="Post actions menu">
+                {{heroicon "ellipsis-vertical" "h-5 w-5"}}
+              </div>
+              <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow" aria-label="Post actions">
+                <li>
+                  {{if .Post.Published}}
+                    {{if deref .Post.Published}}
+                      <a href="https://{{if .Blog.Subdomain}}{{deref .Blog.Subdomain}}{{end}}.willow.camp/{{if .Post.Slug}}{{deref .Post.Slug}}{{end}}" target="_blank">
+                        View post
+                      </a>
+                    {{else}}
+                      <a href="/dashboard/blogs/{{.Blog.ID}}/posts/{{.Post.ID}}/preview" target="_blank">
+                        Preview post
+                      </a>
+                    {{end}}
+                  {{else}}
+                    <a href="/dashboard/blogs/{{.Blog.ID}}/posts/{{.Post.ID}}/preview" target="_blank">
+                      Preview post
+                    </a>
+                  {{end}}
+                </li>
+                {{if .Post.Published}}
+                  {{if deref .Post.Published}}
+                    <li>
+                      <form method="POST" action="/dashboard/blogs/{{.Blog.ID}}/posts/{{.Post.ID}}/unpublish">
+                        <button type="submit">Unpublish</button>
+                      </form>
+                    </li>
+                  {{end}}
+                {{end}}
+                <li>
+                  <button type="button"
+                          class="text-error"
+                          @click="if(confirm('Are you sure you want to delete this post?')) { document.getElementById('delete_form').submit(); }">
+                    Delete
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hidden delete form -->
+      <form id="delete_form" method="POST" action="/dashboard/blogs/{{.Blog.ID}}/posts/{{.Post.ID}}/delete" style="display: none;">
+      </form>
+      {{end}}
+    </div>
+  </div>
 </div>
-
-<script>
-function autosaveForm() {
-    return {
-        // State
-        saving: false,
-        published: {{if .Post}}{{if .Post.Published}}true{{else}}false{{end}}{{else}}false{{end}},
-        featured: {{if .Post}}{{if .Post.Featured}}true{{else}}false{{end}}{{else}}false{{end}},
-        isDirty: false,
-        saveStatus: null, // 'saving', 'saved', 'error'
-        saveStatusText: '',
-        autosaveTimer: null,
-        scrollPosition: 0,
-        originalValues: {},
-        isEdit: {{if .IsEdit}}true{{else}}false{{end}},
-        blogId: '{{.Blog.ID}}',
-        postId: '{{if .Post}}{{.Post.ID}}{{end}}',
-
-        // Initialize
-        init() {
-            // Only enable autosave for edit mode
-            if (!this.isEdit) return;
-
-            // Store original form values
-            this.captureOriginalValues();
-
-            // Start autosave timer (every 30 seconds)
-            this.startAutosaveTimer();
-        },
-
-        // Capture original form values for dirty checking
-        captureOriginalValues() {
-            const form = this.$el.querySelector('form');
-            const formData = new FormData(form);
-            this.originalValues = {};
-            for (let [key, value] of formData.entries()) {
-                this.originalValues[key] = value;
-            }
-        },
-
-        // Mark form as dirty when changed
-        markDirty() {
-            this.isDirty = true;
-        },
-
-        // Start periodic autosave timer
-        startAutosaveTimer() {
-            this.autosaveTimer = setInterval(() => {
-                if (this.isDirty && !this.saving) {
-                    this.performAutosave();
-                }
-            }, 30000); // 30 seconds
-        },
-
-        // Trigger autosave manually (Cmd+S / Ctrl+S)
-        triggerAutosave(event) {
-            if (this.isEdit && !this.saving) {
-                this.performAutosave();
-            }
-        },
-
-        // Perform autosave
-        async performAutosave() {
-            if (!this.isEdit) return;
-
-            // Save current scroll position
-            this.scrollPosition = window.scrollY;
-
-            // Set saving status
-            this.saving = true;
-            this.saveStatus = 'saving';
-            this.saveStatusText = 'Saving...';
-
-            try {
-                // Get form data
-                const form = this.$el.querySelector('form');
-                const formData = new FormData(form);
-
-                // Convert to JSON
-                const data = {};
-                for (let [key, value] of formData.entries()) {
-                    data[key] = value;
-                }
-
-                // Send autosave request
-                const response = await fetch(`/dashboard/blogs/${this.blogId}/posts/${this.postId}/autosave`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data)
-                });
-
-                if (response.ok) {
-                    // Success
-                    this.saveStatus = 'saved';
-                    this.saveStatusText = 'Saved';
-                    this.isDirty = false;
-
-                    // Hide success message after 2 seconds
-                    setTimeout(() => {
-                        this.saveStatus = null;
-                    }, 2000);
-                } else {
-                    // Error
-                    this.saveStatus = 'error';
-                    this.saveStatusText = 'Error saving';
-                }
-            } catch (error) {
-                // Network error
-                this.saveStatus = 'error';
-                this.saveStatusText = 'Connection error';
-            } finally {
-                this.saving = false;
-
-                // Restore scroll position
-                window.scrollTo(0, this.scrollPosition);
-            }
-        },
-
-        // Handle form submission
-        onSubmit(event) {
-            this.saving = true;
-            // Clear autosave timer on submit
-            if (this.autosaveTimer) {
-                clearInterval(this.autosaveTimer);
-            }
-        }
-    };
-}
-</script>
 {{end}}
