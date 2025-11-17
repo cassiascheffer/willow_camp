@@ -4,7 +4,7 @@
   <section aria-label="Blog Details" class="mb-8">
     <h1 class="text-3xl font-bold mb-4">Blog Settings</h1>
     <div class="card p-4">
-      <form method="POST" action="/dashboard/blogs/{{.Blog.ID}}/settings" class="space-y-4" x-data="domainDowncase()">
+      <form method="POST" action="/dashboard/blogs/{{deref .Blog.Subdomain}}/settings" class="space-y-4" x-data="domainDowncase()">
         <!-- Title and Favicon Emoji Row -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
           <!-- Title Field -->
@@ -161,7 +161,7 @@
       <p class="text-zinc-500 text-sm pb-2">
         The About page will show up on the top nav next to the RSS link for this blog.
       </p>
-      <form method="POST" action="/dashboard/blogs/{{.Blog.ID}}/settings/about" class="space-y-4">
+      <form method="POST" action="/dashboard/blogs/{{deref .Blog.Subdomain}}/settings/about" class="space-y-4">
         <!-- Body Markdown Field -->
         <div class="form-control w-full mb-4">
           <label class="label">
@@ -191,7 +191,7 @@
             {{if .AboutPage.ID}}
             <button type="button"
                     class="btn btn-error w-full lg:w-auto"
-                    onclick="if(confirm('Are you sure you want to delete this page?')) { this.form.action='/dashboard/blogs/{{.Blog.ID}}/settings/about/delete'; this.form.submit(); }">
+                    onclick="if(confirm('Are you sure you want to delete this page?')) { this.form.action='/dashboard/blogs/{{deref .Blog.Subdomain}}/settings/about/delete'; this.form.submit(); }">
               Delete Page
             </button>
             {{end}}
@@ -227,7 +227,7 @@
           </div>
 
           <!-- Hidden form for deletion -->
-          <form method="POST" action="/dashboard/blogs/{{.Blog.ID}}/delete" x-ref="deleteForm" style="display: none;"></form>
+          <form method="POST" action="/dashboard/blogs/{{deref .Blog.Subdomain}}/delete" x-ref="deleteForm" style="display: none;"></form>
 
           <!-- First confirmation modal -->
           <div x-show="showModal"

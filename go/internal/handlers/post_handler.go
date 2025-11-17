@@ -21,14 +21,10 @@ func (h *Handlers) NewPost(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusUnauthorized, "Unauthorized")
 	}
 
-	blogID, err := parseUUID(c.Param("blog_id"))
+	// Get blog by subdomain and verify ownership
+	blog, err := h.getBlogBySubdomainParam(c, user)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, "Invalid blog ID")
-	}
-
-	blog, err := h.repos.Blog.FindByID(c.Request().Context(), blogID)
-	if err != nil || blog.UserID != user.ID {
-		return echo.NewHTTPError(http.StatusForbidden, "Access denied")
+		return err
 	}
 
 	// Get user's blogs for dropdown
@@ -39,7 +35,7 @@ func (h *Handlers) NewPost(c echo.Context) error {
 	user.Blogs = blogs
 
 	// Load all tags for the blog (for choices.js dropdown)
-	allTags, err := h.repos.Tag.ListAllForBlog(c.Request().Context(), blogID)
+	allTags, err := h.repos.Tag.ListAllForBlog(c.Request().Context(), blog.ID)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to load all tags")
 	}
@@ -69,14 +65,10 @@ func (h *Handlers) CreatePost(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusUnauthorized, "Unauthorized")
 	}
 
-	blogID, err := parseUUID(c.Param("blog_id"))
+	// Get blog by subdomain and verify ownership
+	blog, err := h.getBlogBySubdomainParam(c, user)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, "Invalid blog ID")
-	}
-
-	blog, err := h.repos.Blog.FindByID(c.Request().Context(), blogID)
-	if err != nil || blog.UserID != user.ID {
-		return echo.NewHTTPError(http.StatusForbidden, "Access denied")
+		return err
 	}
 
 	// Get form data
@@ -89,7 +81,7 @@ func (h *Handlers) CreatePost(c echo.Context) error {
 
 	// Generate unique slug from title
 	baseSlug := slug.Make(title)
-	postSlug, err := h.generateUniqueSlug(c.Request().Context(), blogID, user.ID, baseSlug, nil)
+	postSlug, err := h.generateUniqueSlug(c.Request().Context(), blog.ID, user.ID, baseSlug, nil)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to generate slug")
 	}
@@ -97,7 +89,7 @@ func (h *Handlers) CreatePost(c echo.Context) error {
 	// Create post
 	post := &models.Post{
 		ID:                 uuid.New(),
-		BlogID:             blogID,
+		BlogID:             blog.ID,
 		AuthorID:           user.ID,
 		Title:              &title,
 		Slug:               &postSlug,
@@ -123,7 +115,10 @@ func (h *Handlers) CreatePost(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to update tags")
 	}
 
-	return c.Redirect(http.StatusFound, "/dashboard/blogs/"+blogID.String()+"/posts")
+	if blog.Subdomain != nil {
+		return c.Redirect(http.StatusFound, "/dashboard/blogs/"+*blog.Subdomain+"/posts")
+	}
+	return echo.NewHTTPError(http.StatusInternalServerError, "Blog subdomain not found")
 }
 
 // CreateUntitledPost creates a new untitled draft post and redirects to edit
@@ -133,18 +128,10 @@ func (h *Handlers) CreateUntitledPost(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusUnauthorized, "Unauthorized")
 	}
 
-	blogID, err := parseUUID(c.Param("blog_id"))
+	// Get blog by subdomain and verify ownership
+	blog, err := h.getBlogBySubdomainParam(c, user)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, "Invalid blog ID")
-	}
-
-	// Verify blog belongs to user
-	blog, err := h.repos.Blog.FindByID(c.Request().Context(), blogID)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusNotFound, "Blog not found")
-	}
-	if blog.UserID != user.ID {
-		return echo.NewHTTPError(http.StatusForbidden, "Access denied")
+		return err
 	}
 
 	// Create untitled post with unique slug using timestamp
@@ -156,7 +143,7 @@ func (h *Handlers) CreateUntitledPost(c echo.Context) error {
 
 	post := &models.Post{
 		ID:           uuid.New(),
-		BlogID:       blogID,
+		BlogID:       blog.ID,
 		AuthorID:     user.ID,
 		Title:        &title,
 		Slug:         &uniqueSlug,
@@ -170,7 +157,10 @@ func (h *Handlers) CreateUntitledPost(c echo.Context) error {
 	}
 
 	// Redirect to edit page
-	return c.Redirect(http.StatusFound, "/dashboard/blogs/"+blogID.String()+"/posts/"+post.ID.String()+"/edit")
+	if blog.Subdomain != nil {
+		return c.Redirect(http.StatusFound, "/dashboard/blogs/"+*blog.Subdomain+"/posts/"+post.ID.String()+"/edit")
+	}
+	return echo.NewHTTPError(http.StatusInternalServerError, "Blog subdomain not found")
 }
 
 // EditPost shows the edit post form
@@ -180,9 +170,10 @@ func (h *Handlers) EditPost(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusUnauthorized, "Unauthorized")
 	}
 
-	blogID, err := parseUUID(c.Param("blog_id"))
+	// Get blog by subdomain and verify ownership
+	blog, err := h.getBlogBySubdomainParam(c, user)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, "Invalid blog ID")
+		return err
 	}
 
 	postID, err := parseUUID(c.Param("post_id"))
@@ -190,13 +181,8 @@ func (h *Handlers) EditPost(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, "Invalid post ID")
 	}
 
-	blog, err := h.repos.Blog.FindByID(c.Request().Context(), blogID)
-	if err != nil || blog.UserID != user.ID {
-		return echo.NewHTTPError(http.StatusForbidden, "Access denied")
-	}
-
 	post, err := h.repos.Post.FindByID(c.Request().Context(), postID)
-	if err != nil || post.BlogID != blogID {
+	if err != nil || post.BlogID != blog.ID {
 		return echo.NewHTTPError(http.StatusNotFound, "Post not found")
 	}
 
@@ -224,7 +210,7 @@ func (h *Handlers) EditPost(c echo.Context) error {
 	}
 
 	// Load all tags for the blog (for choices.js dropdown)
-	allTags, err := h.repos.Tag.ListAllForBlog(c.Request().Context(), blogID)
+	allTags, err := h.repos.Tag.ListAllForBlog(c.Request().Context(), blog.ID)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to load all tags")
 	}
@@ -254,9 +240,10 @@ func (h *Handlers) UpdatePost(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusUnauthorized, "Unauthorized")
 	}
 
-	blogID, err := parseUUID(c.Param("blog_id"))
+	// Get blog by subdomain and verify ownership
+	blog, err := h.getBlogBySubdomainParam(c, user)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, "Invalid blog ID")
+		return err
 	}
 
 	postID, err := parseUUID(c.Param("post_id"))
@@ -264,13 +251,8 @@ func (h *Handlers) UpdatePost(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, "Invalid post ID")
 	}
 
-	blog, err := h.repos.Blog.FindByID(c.Request().Context(), blogID)
-	if err != nil || blog.UserID != user.ID {
-		return echo.NewHTTPError(http.StatusForbidden, "Access denied")
-	}
-
 	post, err := h.repos.Post.FindByID(c.Request().Context(), postID)
-	if err != nil || post.BlogID != blogID {
+	if err != nil || post.BlogID != blog.ID {
 		return echo.NewHTTPError(http.StatusNotFound, "Post not found")
 	}
 
@@ -315,7 +297,10 @@ func (h *Handlers) UpdatePost(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to update tags")
 	}
 
-	return c.Redirect(http.StatusFound, "/dashboard/blogs/"+blogID.String()+"/posts")
+	if blog.Subdomain != nil {
+		return c.Redirect(http.StatusFound, "/dashboard/blogs/"+*blog.Subdomain+"/posts")
+	}
+	return echo.NewHTTPError(http.StatusInternalServerError, "Blog subdomain not found")
 }
 
 // AutosavePost handles autosave for post editing
@@ -325,9 +310,10 @@ func (h *Handlers) AutosavePost(c echo.Context) error {
 		return c.JSON(http.StatusUnauthorized, map[string]string{"error": "Unauthorized"})
 	}
 
-	blogID, err := parseUUID(c.Param("blog_id"))
+	// Get blog by subdomain and verify ownership
+	blog, err := h.getBlogBySubdomainParam(c, user)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid blog ID"})
+		return c.JSON(http.StatusForbidden, map[string]string{"error": "Access denied"})
 	}
 
 	postID, err := parseUUID(c.Param("post_id"))
@@ -335,13 +321,8 @@ func (h *Handlers) AutosavePost(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid post ID"})
 	}
 
-	blog, err := h.repos.Blog.FindByID(c.Request().Context(), blogID)
-	if err != nil || blog.UserID != user.ID {
-		return c.JSON(http.StatusForbidden, map[string]string{"error": "Access denied"})
-	}
-
 	post, err := h.repos.Post.FindByID(c.Request().Context(), postID)
-	if err != nil || post.BlogID != blogID {
+	if err != nil || post.BlogID != blog.ID {
 		return c.JSON(http.StatusNotFound, map[string]string{"error": "Post not found"})
 	}
 
@@ -417,9 +398,10 @@ func (h *Handlers) DeletePost(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusUnauthorized, "Unauthorized")
 	}
 
-	blogID, err := parseUUID(c.Param("blog_id"))
+	// Get blog by subdomain and verify ownership
+	blog, err := h.getBlogBySubdomainParam(c, user)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, "Invalid blog ID")
+		return err
 	}
 
 	postID, err := parseUUID(c.Param("post_id"))
@@ -427,13 +409,8 @@ func (h *Handlers) DeletePost(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, "Invalid post ID")
 	}
 
-	blog, err := h.repos.Blog.FindByID(c.Request().Context(), blogID)
-	if err != nil || blog.UserID != user.ID {
-		return echo.NewHTTPError(http.StatusForbidden, "Access denied")
-	}
-
 	post, err := h.repos.Post.FindByID(c.Request().Context(), postID)
-	if err != nil || post.BlogID != blogID {
+	if err != nil || post.BlogID != blog.ID {
 		return echo.NewHTTPError(http.StatusNotFound, "Post not found")
 	}
 
@@ -441,7 +418,10 @@ func (h *Handlers) DeletePost(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to delete post")
 	}
 
-	return c.Redirect(http.StatusFound, "/dashboard/blogs/"+blogID.String()+"/posts")
+	if blog.Subdomain != nil {
+		return c.Redirect(http.StatusFound, "/dashboard/blogs/"+*blog.Subdomain+"/posts")
+	}
+	return echo.NewHTTPError(http.StatusInternalServerError, "Blog subdomain not found")
 }
 
 func stringPtr(s string) *string {

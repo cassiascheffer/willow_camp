@@ -19,6 +19,25 @@ func parseUUID(s string) (uuid.UUID, error) {
 	return uuid.Parse(s)
 }
 
+// getBlogBySubdomainParam fetches a blog by the :subdomain route parameter and verifies ownership
+func (h *Handlers) getBlogBySubdomainParam(c echo.Context, user *models.User) (*models.Blog, error) {
+	subdomain := c.Param("subdomain")
+	if subdomain == "" {
+		return nil, echo.NewHTTPError(http.StatusBadRequest, "Invalid blog subdomain")
+	}
+
+	blog, err := h.repos.Blog.FindBySubdomain(c.Request().Context(), subdomain)
+	if err != nil {
+		return nil, echo.NewHTTPError(http.StatusNotFound, "Blog not found")
+	}
+
+	if blog.UserID != user.ID {
+		return nil, echo.NewHTTPError(http.StatusForbidden, "Access denied")
+	}
+
+	return blog, nil
+}
+
 // sortBlogsByTitle sorts blogs alphabetically by title (or subdomain if no title)
 func sortBlogsByTitle(blogs []*models.Blog) {
 	sort.Slice(blogs, func(i, j int) bool {
@@ -74,7 +93,11 @@ func (h *Handlers) prepareDashboardData(user *models.User, blog *models.Blog, ti
 		} else {
 			data.NavTitle = "willow.camp"
 		}
-		data.NavPath = "/dashboard/blogs/" + blog.ID.String() + "/posts"
+		if blog.Subdomain != nil {
+			data.NavPath = "/dashboard/blogs/" + *blog.Subdomain + "/posts"
+		} else {
+			data.NavPath = "/dashboard"
+		}
 
 		// Set emoji filename for favicon
 		emoji := "🏕️" // Default camping emoji
@@ -111,7 +134,10 @@ func (h *Handlers) Dashboard(c echo.Context) error {
 
 	// Redirect to default blog (primary blog or first blog)
 	// FindByUserID orders by "primary" DESC, created_at ASC, so the first blog is the default
-	return c.Redirect(http.StatusFound, "/dashboard/blogs/"+blogs[0].ID.String()+"/posts")
+	if blogs[0].Subdomain != nil {
+		return c.Redirect(http.StatusFound, "/dashboard/blogs/"+*blogs[0].Subdomain+"/posts")
+	}
+	return echo.NewHTTPError(http.StatusInternalServerError, "Blog subdomain not found")
 }
 
 // BlogPosts shows the post list for a specific blog
@@ -121,18 +147,10 @@ func (h *Handlers) BlogPosts(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusUnauthorized, "Unauthorized")
 	}
 
-	blogID, err := parseUUID(c.Param("blog_id"))
+	// Get blog by subdomain and verify ownership
+	blog, err := h.getBlogBySubdomainParam(c, user)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, "Invalid blog ID")
-	}
-
-	// Verify blog belongs to user
-	blog, err := h.repos.Blog.FindByID(c.Request().Context(), blogID)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusNotFound, "Blog not found")
-	}
-	if blog.UserID != user.ID {
-		return echo.NewHTTPError(http.StatusForbidden, "Access denied")
+		return err
 	}
 
 	// Get user's blogs for dropdown
@@ -146,7 +164,7 @@ func (h *Handlers) BlogPosts(c echo.Context) error {
 	user.Blogs = blogs
 
 	// Get all posts (including drafts) for this blog
-	posts, err := h.repos.Post.ListAll(c.Request().Context(), blogID, 100, 0)
+	posts, err := h.repos.Post.ListAll(c.Request().Context(), blog.ID, 100, 0)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to load posts")
 	}

@@ -1,7 +1,7 @@
 {{define "content"}}
 <div class="flex flex-col items-center justify-center min-h-screen">
   <div class="card w-full lg:w-3/4">
-    <div class="card-body" x-data="autosaveForm({{.IsEdit}}, '{{.Blog.ID}}', '{{if .Post}}{{.Post.ID}}{{end}}', {{if .Post}}{{if .Post.Published}}{{if deref .Post.Published}}'true'{{else}}'false'{{end}}{{else}}'false'{{end}}{{else}}'false'{{end}})">
+    <div class="card-body" x-data="autosaveForm({{.IsEdit}}, '{{deref .Blog.Subdomain}}', '{{if .Post}}{{.Post.ID}}{{end}}', {{if .Post}}{{if .Post.Published}}{{if deref .Post.Published}}'true'{{else}}'false'{{end}}{{else}}'false'{{end}}{{else}}'false'{{end}})">
       <h1 class="card-title text-2xl font-bold">
         Editing post
       </h1>
@@ -18,7 +18,7 @@
         </span>
       </div>
       <form method="POST"
-            action="{{if .IsEdit}}/dashboard/blogs/{{.Blog.ID}}/posts/{{.Post.ID}}{{else}}/dashboard/blogs/{{.Blog.ID}}/posts{{end}}"
+            action="{{if .IsEdit}}/dashboard/blogs/{{deref .Blog.Subdomain}}/posts/{{.Post.ID}}{{else}}/dashboard/blogs/{{deref .Blog.Subdomain}}/posts{{end}}"
             id="post_form"
             class="form-control"
             x-ref="form"
@@ -153,7 +153,7 @@
       <div class="mt-4" x-data="{ dropdownOpen: false }">
         <div class="lg:flex lg:justify-between">
           <div class="order-2 lg:order-1 mt-4 lg:mt-0">
-            <a href="/dashboard/blogs/{{.Blog.ID}}/posts" class="underline flex items-center gap-1">
+            <a href="/dashboard/blogs/{{deref .Blog.Subdomain}}/posts" class="underline flex items-center gap-1">
               {{heroiconMini "arrow-left" "h-4 w-4"}}
               Back to Dashboard
             </a>
@@ -171,12 +171,12 @@
                         View post
                       </a>
                     {{else}}
-                      <a href="/dashboard/blogs/{{.Blog.ID}}/posts/{{.Post.ID}}/preview" target="_blank">
+                      <a href="/dashboard/blogs/{{deref .Blog.Subdomain}}/posts/{{.Post.ID}}/preview" target="_blank">
                         Preview post
                       </a>
                     {{end}}
                   {{else}}
-                    <a href="/dashboard/blogs/{{.Blog.ID}}/posts/{{.Post.ID}}/preview" target="_blank">
+                    <a href="/dashboard/blogs/{{deref .Blog.Subdomain}}/posts/{{.Post.ID}}/preview" target="_blank">
                       Preview post
                     </a>
                   {{end}}
@@ -184,7 +184,7 @@
                 {{if .Post.Published}}
                   {{if deref .Post.Published}}
                     <li>
-                      <form method="POST" action="/dashboard/blogs/{{.Blog.ID}}/posts/{{.Post.ID}}/unpublish">
+                      <form method="POST" action="/dashboard/blogs/{{deref .Blog.Subdomain}}/posts/{{.Post.ID}}/unpublish">
                         <button type="submit">Unpublish</button>
                       </form>
                     </li>
@@ -204,7 +204,7 @@
       </div>
 
       <!-- Hidden delete form -->
-      <form id="delete_form" method="POST" action="/dashboard/blogs/{{.Blog.ID}}/posts/{{.Post.ID}}/delete" style="display: none;">
+      <form id="delete_form" method="POST" action="/dashboard/blogs/{{deref .Blog.Subdomain}}/posts/{{.Post.ID}}/delete" style="display: none;">
       </form>
       {{end}}
     </div>

@@ -50,6 +50,35 @@ func (r *BlogRepository) FindByDomain(ctx context.Context, domain string) (*mode
 	return &blog, nil
 }
 
+// FindBySubdomain finds a blog by its subdomain
+func (r *BlogRepository) FindBySubdomain(ctx context.Context, subdomain string) (*models.Blog, error) {
+	query := `
+		SELECT id, user_id, subdomain, title, slug, meta_description, favicon_emoji,
+		       custom_domain, theme, post_footer_markdown, no_index, "primary",
+		       created_at, updated_at
+		FROM blogs
+		WHERE subdomain = $1
+		LIMIT 1
+	`
+
+	var blog models.Blog
+	err := r.pool.QueryRow(ctx, query, subdomain).Scan(
+		&blog.ID, &blog.UserID, &blog.Subdomain, &blog.Title, &blog.Slug,
+		&blog.MetaDescription, &blog.FaviconEmoji, &blog.CustomDomain, &blog.Theme,
+		&blog.PostFooterMarkdown, &blog.NoIndex, &blog.Primary,
+		&blog.CreatedAt, &blog.UpdatedAt,
+	)
+
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, ErrBlogNotFound
+		}
+		return nil, fmt.Errorf("failed to find blog by subdomain: %w", err)
+	}
+
+	return &blog, nil
+}
+
 // FindByID finds a blog by its ID
 func (r *BlogRepository) FindByID(ctx context.Context, id uuid.UUID) (*models.Blog, error) {
 	query := `

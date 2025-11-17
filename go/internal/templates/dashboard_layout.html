@@ -30,13 +30,13 @@
             </summary>
             <div class="pb-4 space-y-2">
                 {{if .Blog}}
-                <a href="/dashboard/blogs/{{.Blog.ID}}/posts" class="block link link-hover font-medium py-2 {{if .ActiveTab}}{{if eq .ActiveTab "posts"}}text-primary{{end}}{{end}}">Posts</a>
-                <a href="/dashboard/blogs/{{.Blog.ID}}/tags" class="block link link-hover font-medium py-2 {{if .ActiveTab}}{{if eq .ActiveTab "tags"}}text-primary{{end}}{{end}}">Tags</a>
+                <a href="/dashboard/blogs/{{deref .Blog.Subdomain}}/posts" class="block link link-hover font-medium py-2 {{if .ActiveTab}}{{if eq .ActiveTab "posts"}}text-primary{{end}}{{end}}">Posts</a>
+                <a href="/dashboard/blogs/{{deref .Blog.Subdomain}}/tags" class="block link link-hover font-medium py-2 {{if .ActiveTab}}{{if eq .ActiveTab "tags"}}text-primary{{end}}{{end}}">Tags</a>
                 {{end}}
                 <hr class="my-2">
                 <div class="flex items-center justify-between">
                     {{if .Blog}}
-                    <a href="/dashboard/blogs/{{.Blog.ID}}/settings" class="link link-hover font-medium py-2" title="Settings">
+                    <a href="/dashboard/blogs/{{deref .Blog.Subdomain}}/settings" class="link link-hover font-medium py-2" title="Settings">
                         {{heroicon "cog-6-tooth" "h-5 w-5"}}
                     </a>
                     {{else}}
@@ -75,7 +75,7 @@
                                     {{heroiconMini "check" "h-4 w-4"}}
                                 </span>
                                 {{else}}
-                                <a href="/dashboard/blogs/{{.ID}}/posts" class="flex items-center justify-between">
+                                <a href="/dashboard/blogs/{{deref .Subdomain}}/posts" class="flex items-center justify-between">
                                     <div>
                                         <div class="font-medium">{{if hasText .Title}}{{.Title}}{{else}}{{.Subdomain}}{{end}}</div>
                                         <div class="text-xs opacity-70">{{.Subdomain}}.willow.camp</div>
@@ -116,7 +116,7 @@
             <a class="text-xl font-bold hover:text-primary transition-colors" href="{{.NavPath}}">{{.NavTitle}}</a>
             <div class="flex items-center space-x-4">
                 {{if .Blog}}
-                <a href="/dashboard/blogs/{{.Blog.ID}}/settings" class="link link-hover" title="Settings">
+                <a href="/dashboard/blogs/{{deref .Blog.Subdomain}}/settings" class="link link-hover" title="Settings">
                     {{heroicon "cog-6-tooth" "h-5 w-5"}}
                 </a>
                 {{else}}
@@ -154,7 +154,7 @@
                                 {{heroiconMini "check" "h-4 w-4"}}
                             </span>
                             {{else}}
-                            <a href="/dashboard/blogs/{{.ID}}/posts" class="flex items-center justify-between">
+                            <a href="/dashboard/blogs/{{deref .Subdomain}}/posts" class="flex items-center justify-between">
                                 <div>
                                     <div class="font-medium">{{if hasText .Title}}{{.Title}}{{else}}{{.Subdomain}}{{end}}</div>
                                 </div>
@@ -194,14 +194,14 @@
             <div class="flex items-center gap-4">
                 <div role="tablist" class="tabs tabs-boxed hidden lg:flex">
                     {{if .Blog}}
-                    <a href="/dashboard/blogs/{{.Blog.ID}}/posts" class="tab {{if .ActiveTab}}{{if eq .ActiveTab "posts"}}tab-active{{end}}{{end}}">Posts</a>
-                    <a href="/dashboard/blogs/{{.Blog.ID}}/tags" class="tab {{if .ActiveTab}}{{if eq .ActiveTab "tags"}}tab-active{{end}}{{end}}">Tags</a>
+                    <a href="/dashboard/blogs/{{deref .Blog.Subdomain}}/posts" class="tab {{if .ActiveTab}}{{if eq .ActiveTab "posts"}}tab-active{{end}}{{end}}">Posts</a>
+                    <a href="/dashboard/blogs/{{deref .Blog.Subdomain}}/tags" class="tab {{if .ActiveTab}}{{if eq .ActiveTab "tags"}}tab-active{{end}}{{end}}">Tags</a>
                     {{end}}
                 </div>
             </div>
             <div class="flex gap-2">
                 {{if .Blog}}
-                <form action="/dashboard/blogs/{{.Blog.ID}}/posts/untitled" method="POST">
+                <form action="/dashboard/blogs/{{deref .Blog.Subdomain}}/posts/untitled" method="POST">
                     <button type="submit" class="btn btn-sm btn-primary">New Post</button>
                 </form>
                 <a href="https://{{.Blog.Subdomain}}.willow.camp/" class="btn btn-sm btn-outline" target="_blank">View Site</a>
