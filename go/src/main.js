@@ -362,6 +362,15 @@ Alpine.data('autosaveForm', (isEdit, blogId, postId, publishedValue) => ({
       console.log('Autosave response:', response.status, response.statusText)
 
       if (response.ok) {
+        // Parse response to get the generated slug
+        const responseData = await response.json()
+
+        // Update slug field with the backend-generated slug
+        const slugInput = this.$el.querySelector('input[name="slug"]')
+        if (slugInput && responseData.slug) {
+          slugInput.value = responseData.slug
+        }
+
         // Success
         this.saveStatus = 'saved'
         this.saveStatusText = 'Saved'

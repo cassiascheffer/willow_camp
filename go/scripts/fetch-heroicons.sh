@@ -25,12 +25,18 @@ declare -a icons=(
     "24/outline/check"
     "24/outline/document"
     "24/outline/arrow-top-right-on-square"
+    "24/outline/ellipsis-vertical"
+    "24/outline/information-circle"
+    "24/outline/chevron-down"
+    "24/outline/exclamation-triangle"
+    "24/outline/trash"
 
     # 20px solid icons (mini)
     "20/solid/check"
     "20/solid/plus"
     "20/solid/lock-closed"
     "20/solid/arrow-left-start-on-rectangle"
+    "20/solid/arrow-left"
 )
 
 # Fetch each icon

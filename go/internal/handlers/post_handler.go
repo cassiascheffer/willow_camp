@@ -402,10 +402,11 @@ func (h *Handlers) AutosavePost(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to update tags"})
 	}
 
-	// Return minimal JSON response
+	// Return minimal JSON response including the generated slug
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"status":     "saved",
 		"updated_at": time.Now(),
+		"slug":       *post.Slug,
 	})
 }
 
