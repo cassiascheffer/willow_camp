@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="{{if .Blog.Theme}}{{.Blog.Theme}}{{else}}light{{end}}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="current-theme" content="{{if .Blog.Theme}}{{.Blog.Theme}}{{else}}light{{end}}">
+
+    <title>{{.Title}}</title>
+
+    {{if .MetaDescription}}
+    <meta name="description" content="{{.MetaDescription}}">
+    {{end}}
+
+    <!-- Open Graph meta tags for social media sharing -->
+    <meta property="og:title" content="{{.OGTitle}}">
+    <meta property="og:description" content="{{.OGDescription}}">
+    <meta property="og:type" content="{{.OGType}}">
+    <meta property="og:url" content="{{.CurrentURL}}">
+    <meta property="og:site_name" content="{{.BlogTitle}}">
+    <meta property="og:locale" content="en_CA">
+    {{if .OGImage}}
+    <meta property="og:image" content="{{.OGImage}}">
+    {{end}}
+
+    <!-- Twitter Card meta tags -->
+    <meta name="twitter:title" content="{{.OGTitle}}">
+    <meta name="twitter:description" content="{{.OGDescription}}">
+
+    <!-- Article-specific Open Graph meta tags -->
+    {{if .ArticlePublishedTime}}
+    <meta property="article:published_time" content="{{.ArticlePublishedTime}}">
+    {{end}}
+    {{if .ArticleAuthor}}
+    <meta property="article:author" content="{{.ArticleAuthor}}">
+    {{end}}
+    {{range .ArticleTags}}
+    <meta property="article:tag" content="{{.}}">
+    {{end}}
+
+    <!-- Feed discovery links -->
+    <link type="application/rss+xml" rel="alternate" href="/feed.rss" title="{{.BlogTitle}} RSS Feed">
+    <link type="application/atom+xml" rel="alternate" href="/feed.atom" title="{{.BlogTitle}} Atom Feed">
+    <link type="application/feed+json" rel="alternate" href="/feed.json" title="{{.BlogTitle}} JSON Feed">
+
+    <!-- Favicon from OpenMoji assets -->
+    <link rel="icon" href="/openmoji-32x32-ico/{{.EmojiFilename}}.ico" sizes="32x32">
+    <link rel="icon" href="/openmoji-svg-color/{{.EmojiFilename}}.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/openmoji-apple-touch-icon-180x180/{{.EmojiFilename}}.png">
+
+    <!-- Bundled CSS with Tailwind + DaisyUI -->
+    <link rel="stylesheet" href="/static/dist/main.css?v=2">
+
+    <!-- Bundled JS with Alpine.js -->
+    <script type="module" src="/static/dist/main.js"></script>
+</head>
+<body class="font-mono">
+    <!-- Skip links for keyboard navigation -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <header class="bg-base-100 shadow-md w-full px-8">
+        <!-- Mobile menu with improved accessibility -->
+        <details class="lg:hidden" role="navigation" aria-label="Mobile navigation" x-data="{ open: false }" @toggle="open = $el.open">
+            <summary class="py-4 flex items-center justify-between cursor-pointer" :aria-expanded="open" aria-controls="mobile-nav">
+                <a href="/" class="text-xl font-bold hover:text-primary transition-colors" aria-label="Home">
+                    {{.BlogTitle}}
+                </a>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6" aria-hidden="true" role="img">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                </svg>
+                <span class="sr-only">Open menu</span>
+            </summary>
+            <nav id="mobile-nav" class="pb-4 space-y-2" aria-label="Mobile navigation menu">
+                {{range .Pages}}
+                <a href="/{{if .Slug}}{{.Slug}}{{end}}" class="block link link-hover font-medium py-2" aria-label="{{if .Title}}{{.Title}}{{end}}">
+                    {{if .Title}}{{.Title}}{{end}}
+                </a>
+                {{end}}
+                <a href="/subscribe" class="block link link-hover font-medium py-2" title="Subscribe to RSS Feed" aria-label="Subscribe to RSS Feed">
+                    Subscribe
+                </a>
+            </nav>
+        </details>
+
+        <!-- Desktop menu -->
+        <div class="hidden lg:flex lg:items-center lg:justify-between py-4">
+            <a href="/" class="text-xl font-bold hover:text-primary transition-colors" aria-label="Home">
+                {{.BlogTitle}}
+            </a>
+            <nav id="navigation" class="space-x-4" aria-label="Main navigation">
+                {{range .Pages}}
+                <a href="/{{if .Slug}}{{.Slug}}{{end}}" class="link link-hover font-medium" aria-label="{{if .Title}}{{.Title}}{{end}}">
+                    {{if .Title}}{{.Title}}{{end}}
+                </a>
+                {{end}}
+                <a href="/subscribe" class="link link-hover font-medium" title="Subscribe to RSS Feed" aria-label="Subscribe to RSS Feed">
+                    Subscribe
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main id="main-content" class="max-w-3xl mx-auto p-8">
+        {{template "content" .}}
+    </main>
+
+    <footer class="footer p-4 bg-base-200 text-base-content">
+        {{if .Blog}}
+        <div class="container mx-auto text-center">
+            <p>Made with <a href="https://willow.camp">willow.camp</a> · <a href="https://status.willow.camp/" target="_blank" rel="noopener">Status</a></p>
+        </div>
+        {{end}}
+    </footer>
+</body>
+</html>

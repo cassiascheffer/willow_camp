@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Title}} - willow.camp</title>
+    <!-- Bundled CSS with Tailwind + DaisyUI -->
+    <link rel="stylesheet" href="/static/dist/main.css?v=2">
+
+    <!-- Bundled JS with Alpine.js -->
+    <script type="module" src="/static/dist/main.js"></script>
+</head>
+<body class="min-h-screen bg-base-200">
+    {{template "content" .}}
+</body>
+</html>
