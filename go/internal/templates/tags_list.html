@@ -1,0 +1,153 @@
+{{define "content"}}
+<div class="w-full">
+    {{if .Tags}}
+    <!-- Mobile view with cards -->
+    <div class="block lg:hidden space-y-4">
+        {{range .Tags}}
+        <div class="card bg-base-100 shadow-md" id="tag_{{.ID}}" x-data="tagItem('{{.ID}}', '{{.Name}}', '/dashboard/blogs/{{deref $.Blog.Subdomain}}/tags/{{.ID}}')">
+            <div class="card-body">
+                <div class="flex items-center justify-between mb-3">
+                    <div class="flex-1" x-show="!editing">
+                        <button type="button"
+                                class="text-left hover:bg-base-200 rounded px-2 py-1 -mx-2 -my-1 cursor-pointer transition-colors text-lg font-semibold"
+                                @click="startEdit"
+                                title="Click to edit tag name">
+                            <span x-text="displayName"></span>
+                        </button>
+                    </div>
+                    <div class="flex gap-2" x-show="!editing">
+                        <button type="button"
+                                class="btn btn-circle btn-outline btn-xs"
+                                @click="startEdit"
+                                title="Edit tag"
+                                aria-label="Edit tag {{.Name}}">
+                            {{heroiconMini "pencil" "w-4 h-4"}}
+                        </button>
+                        <button type="button"
+                                class="btn btn-circle btn-outline btn-error btn-xs"
+                                @click="confirmDelete"
+                                title="Delete tag"
+                                aria-label="Delete tag {{.Name}}">
+                            {{heroiconMini "trash" "w-4 h-4"}}
+                        </button>
+                    </div>
+                </div>
+                <!-- Edit form -->
+                <div x-show="editing" x-cloak>
+                    <div class="flex items-center gap-2 mb-3">
+                        <input type="text"
+                               x-model="editName"
+                               @keydown.enter="saveTag"
+                               @keydown.escape="cancelEdit"
+                               x-ref="input"
+                               class="input input-sm input-bordered flex-1 min-w-0" />
+                        <div class="flex gap-1">
+                            <button type="button"
+                                    @click="saveTag"
+                                    class="btn btn-xs btn-success"
+                                    title="Save">✓</button>
+                            <button type="button"
+                                    @click="cancelEdit"
+                                    class="btn btn-xs btn-outline"
+                                    title="Cancel">✕</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-3 gap-4 text-center">
+                    <div>
+                        <div class="text-sm text-gray-500">Published</div>
+                        <div class="text-lg font-semibold">{{.PublishedCount}}</div>
+                    </div>
+                    <div>
+                        <div class="text-sm text-gray-500">Drafts</div>
+                        <div class="text-lg font-semibold">{{.DraftCount}}</div>
+                    </div>
+                    <div>
+                        <div class="text-sm text-gray-500">Total</div>
+                        <div class="text-lg font-semibold">{{.TaggingsCount}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{end}}
+    </div>
+
+    <!-- Desktop view with table -->
+    <div class="hidden lg:block card bg-base-100 shadow-md">
+        <table class="table w-full border-collapse" aria-label="Tags Table">
+            <thead>
+                <tr>
+                    <th class="text-left py-2">Tag</th>
+                    <th class="text-left py-2">Published</th>
+                    <th class="text-left py-2">Drafts</th>
+                    <th class="text-left py-2">Total</th>
+                    <th class="text-left py-2"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {{range .Tags}}
+                <tr id="tag_row_{{.ID}}" x-data="tagItem('{{.ID}}', '{{.Name}}', '/dashboard/blogs/{{deref $.Blog.Subdomain}}/tags/{{.ID}}')">
+                    <td>
+                        <div x-show="!editing">
+                            <button type="button"
+                                    class="text-left hover:bg-base-200 rounded px-1 py-0.5 -mx-1 -my-0.5 cursor-pointer transition-colors"
+                                    @click="startEdit"
+                                    title="Click to edit tag name">
+                                <span x-text="displayName"></span>
+                            </button>
+                        </div>
+                        <div x-show="editing" x-cloak>
+                            <div class="flex items-center gap-2">
+                                <input type="text"
+                                       x-model="editName"
+                                       @keydown.enter="saveTag"
+                                       @keydown.escape="cancelEdit"
+                                       x-ref="input"
+                                       class="input input-sm input-bordered flex-1 min-w-0" />
+                                <div class="flex gap-1">
+                                    <button type="button"
+                                            @click="saveTag"
+                                            class="btn btn-xs btn-success"
+                                            title="Save">✓</button>
+                                    <button type="button"
+                                            @click="cancelEdit"
+                                            class="btn btn-xs btn-outline"
+                                            title="Cancel">✕</button>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>{{.PublishedCount}}</td>
+                    <td>{{.DraftCount}}</td>
+                    <td>{{.TaggingsCount}}</td>
+                    <td>
+                        <div class="flex gap-2">
+                            <button type="button"
+                                    class="btn btn-circle btn-outline btn-sm"
+                                    @click="startEdit"
+                                    title="Edit tag"
+                                    aria-label="Edit tag {{.Name}}">
+                                {{heroiconMini "pencil" "w-4 h-4"}}
+                            </button>
+                            <button type="button"
+                                    class="btn btn-circle btn-outline btn-error btn-sm"
+                                    @click="confirmDelete"
+                                    title="Delete tag"
+                                    aria-label="Delete tag {{.Name}}">
+                                {{heroiconMini "trash" "w-4 h-4"}}
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
+    </div>
+    {{else}}
+    <section class="empty-state text-center bg-base-200 rounded-lg p-12" aria-label="No Tags">
+        <p class="text-xl font-bold mb-2">No tags yet</p>
+        <p class="text-base-content">Tags will appear here when you add them to your posts</p>
+    </section>
+    {{end}}
+</div>
+{{end}}
