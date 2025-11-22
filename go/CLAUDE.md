@@ -431,3 +431,6 @@ When adding features:
 ## Questions?
 
 Check the main CLAUDE.md in the repository root for overall project conventions (spelling, code style, etc.).
+- do not try boot the app. I'll do it
+- javascript should always be in js files. don't add js directly in the html
+- I use ./run.sh to run the server. assets get rebuilt by vite

@@ -5,7 +5,6 @@ import (
 
 	"github.com/cassiascheffer/willow_camp/internal/auth"
 	"github.com/labstack/echo/v4"
-	"golang.org/x/crypto/bcrypt"
 )
 
 // BlogSettings shows the blog settings form
@@ -177,74 +176,3 @@ func (h *Handlers) DeleteBlog(c echo.Context) error {
 	return c.Redirect(http.StatusFound, "/dashboard")
 }
 
-// UserSettings shows the user settings form
-func (h *Handlers) UserSettings(c echo.Context) error {
-	user := auth.GetUser(c)
-	if user == nil {
-		return echo.NewHTTPError(http.StatusUnauthorized, "Unauthorized")
-	}
-
-	data := map[string]interface{}{
-		"Title": "Account Settings",
-		"User":  user,
-	}
-
-	return renderDashboardTemplate(c, "user_settings.html", data)
-}
-
-// UpdateUserSettings handles user profile updates
-func (h *Handlers) UpdateUserSettings(c echo.Context) error {
-	user := auth.GetUser(c)
-	if user == nil {
-		return echo.NewHTTPError(http.StatusUnauthorized, "Unauthorized")
-	}
-
-	// Get form data
-	name := c.FormValue("name")
-	email := c.FormValue("email")
-
-	user.Name = stringPtr(name)
-	user.Email = email
-
-	if err := h.repos.User.Update(c.Request().Context(), user); err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to update settings")
-	}
-
-	return c.Redirect(http.StatusFound, "/dashboard/settings")
-}
-
-// UpdatePassword handles password changes
-func (h *Handlers) UpdatePassword(c echo.Context) error {
-	user := auth.GetUser(c)
-	if user == nil {
-		return echo.NewHTTPError(http.StatusUnauthorized, "Unauthorized")
-	}
-
-	currentPassword := c.FormValue("current_password")
-	newPassword := c.FormValue("new_password")
-	confirmPassword := c.FormValue("confirm_password")
-
-	// Verify current password
-	if err := bcrypt.CompareHashAndPassword([]byte(user.EncryptedPassword), []byte(currentPassword)); err != nil {
-		return c.Redirect(http.StatusFound, "/dashboard/settings?error=invalid_password")
-	}
-
-	// Verify new passwords match
-	if newPassword != confirmPassword {
-		return c.Redirect(http.StatusFound, "/dashboard/settings?error=password_mismatch")
-	}
-
-	// Hash new password
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(newPassword), bcrypt.DefaultCost)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to hash password")
-	}
-
-	user.EncryptedPassword = string(hashedPassword)
-
-	if err := h.repos.User.Update(c.Request().Context(), user); err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to update password")
-	}
-
-	return c.Redirect(http.StatusFound, "/dashboard/settings?success=password_updated")
-}

@@ -275,6 +275,19 @@ func templateFuncs() template.FuncMap {
 			// Format as "2006-01-02T15:04" for datetime-local input
 			return t.Format("2006-01-02T15:04")
 		},
+		"formatDate": func(t interface{}) string {
+			switch v := t.(type) {
+			case time.Time:
+				return v.Format("Jan 02, 2006")
+			case *time.Time:
+				if v == nil {
+					return ""
+				}
+				return v.Format("Jan 02, 2006")
+			default:
+				return ""
+			}
+		},
 		"toJSON": func(v interface{}) (template.JS, error) {
 			bytes, err := json.Marshal(v)
 			if err != nil {

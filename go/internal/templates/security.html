@@ -1,0 +1,214 @@
+{{define "content"}}
+<main aria-label="Security Settings" class="container lg:w-3/4 mx-auto" x-data="securityPage({{if .SuccessMessage}}'{{.SuccessMessage}}'{{else}}null{{end}}, {{if .ErrorMessage}}'{{.ErrorMessage}}'{{else}}null{{end}})">
+    {{if .LastViewedBlog}}
+    <div class="mb-6">
+        <a href="/dashboard/blogs/{{deref .LastViewedBlog.Subdomain}}/posts" class="link link-hover flex items-center gap-2">
+            {{heroiconMini "arrow-left" "h-4 w-4"}}
+            Back to {{if hasText .LastViewedBlog.Title}}{{.LastViewedBlog.Title}}{{else}}{{.LastViewedBlog.Subdomain}}{{end}}
+        </a>
+    </div>
+    {{end}}
+
+    <h1 class="text-3xl font-bold mb-8">Security Settings</h1>
+
+    <section aria-label="Profile & Security" class="mb-8">
+        <div class="card p-4">
+            <h2 class="text-2xl font-semibold mb-4">Profile & Security</h2>
+
+            <form method="POST" action="/dashboard/security/profile" class="space-y-4" @submit="submitProfile">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Name</span>
+                        </label>
+                        <label class="input input-bordered validator flex items-center gap-2 w-full">
+                            {{heroicon "user" "h-[1em] opacity-50"}}
+                            <input type="text"
+                                   name="name"
+                                   value="{{deref .User.Name}}"
+                                   placeholder="Your name"
+                                   class="grow"
+                                   :disabled="savingProfile" />
+                        </label>
+                    </div>
+
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Email</span>
+                        </label>
+                        <label class="input input-bordered validator flex items-center gap-2 w-full" :class="{ 'input-error': hasProfileError() }">
+                            {{heroicon "envelope" "h-[1em] opacity-50"}}
+                            <input type="email"
+                                   name="email"
+                                   value="{{.User.Email}}"
+                                   placeholder="mail@site.com"
+                                   class="grow"
+                                   required
+                                   :disabled="savingProfile" />
+                        </label>
+                        <div x-show="hasProfileError()" class="validator-hint text-error mt-1" x-cloak>
+                            <span x-text="profileError"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-control w-full">
+                    <label class="label">
+                        <span class="label-text">Current Password</span>
+                    </label>
+                    <label class="input validator w-full" :class="{ 'input-error': getCurrentPasswordError() }">
+                        {{heroicon "key" "h-[1em] opacity-50"}}
+                        <input :type="showCurrentPassword ? 'text' : 'password'"
+                               name="current_password"
+                               autocomplete="current-password"
+                               placeholder="Current password"
+                               class="grow"
+                               required
+                               :disabled="savingProfile" />
+                        <button type="button"
+                                @click="showCurrentPassword = !showCurrentPassword"
+                                class="text-base-content/50 hover:text-base-content"
+                                :aria-label="showCurrentPassword ? 'Hide password' : 'Show password'">
+                            <span x-show="!showCurrentPassword">{{heroicon "eye" "h-5 w-5"}}</span>
+                            <span x-show="showCurrentPassword" x-cloak>{{heroicon "eye-slash" "h-5 w-5"}}</span>
+                        </button>
+                    </label>
+                    <div x-show="getCurrentPasswordError()" class="label" x-cloak>
+                        <span class="label-text-alt text-error" x-text="profileError"></span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
+                    <div class="form-control w-full">
+                        <label class="label">
+                            <span class="label-text">New Password</span>
+                        </label>
+                        <label class="input validator w-full" :class="{ 'input-error': getNewPasswordError() }">
+                            <input :type="showNewPassword ? 'text' : 'password'"
+                                   name="new_password"
+                                   autocomplete="new-password"
+                                   maxlength="72"
+                                   placeholder="New password"
+                                   class="grow"
+                                   :disabled="savingProfile" />
+                            <span class="badge badge-ghost badge-xs opacity-60">Optional</span>
+                            <button type="button"
+                                    @click="showNewPassword = !showNewPassword"
+                                    class="text-base-content/50 hover:text-base-content"
+                                    :aria-label="showNewPassword ? 'Hide password' : 'Show password'">
+                                <span x-show="!showNewPassword">{{heroicon "eye" "h-5 w-5"}}</span>
+                                <span x-show="showNewPassword" x-cloak>{{heroicon "eye-slash" "h-5 w-5"}}</span>
+                            </button>
+                        </label>
+                        <div x-show="getNewPasswordError()" class="label" x-cloak>
+                            <span class="label-text-alt text-error" x-text="profileError"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-control w-full">
+                        <label class="label">
+                            <span class="label-text">Confirm New Password</span>
+                        </label>
+                        <label class="input validator w-full" :class="{ 'input-error': getNewPasswordError() }">
+                            <input :type="showConfirmPassword ? 'text' : 'password'"
+                                   name="confirm_password"
+                                   autocomplete="new-password"
+                                   maxlength="72"
+                                   placeholder="Confirm password"
+                                   class="grow"
+                                   :disabled="savingProfile" />
+                            <span class="badge badge-ghost badge-xs opacity-60">Optional</span>
+                            <button type="button"
+                                    @click="showConfirmPassword = !showConfirmPassword"
+                                    class="text-base-content/50 hover:text-base-content"
+                                    :aria-label="showConfirmPassword ? 'Hide password' : 'Show password'">
+                                <span x-show="!showConfirmPassword">{{heroicon "eye" "h-5 w-5"}}</span>
+                                <span x-show="showConfirmPassword" x-cloak>{{heroicon "eye-slash" "h-5 w-5"}}</span>
+                            </button>
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" :disabled="savingProfile">
+                    <span x-show="!savingProfile">Update Profile</span>
+                    <span x-show="savingProfile" x-cloak>Saving...</span>
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <section aria-label="API Tokens" class="space-y-6" x-data="tokenList()">
+        <h2 class="text-2xl font-semibold">API Tokens</h2>
+        <div class="mb-4">
+            <a href="https://github.com/cassiascheffer/willow_camp#api-documentation" class="link link-primary" target="_blank">View API Documentation</a>
+        </div>
+        <div class="card p-4">
+            <h3 class="text-xl font-medium mb-2">Create New Token</h3>
+            <form method="POST" action="/dashboard/tokens" class="form-control" @submit="createToken">
+                <div class="form-control w-full mb-4">
+                    <label class="label">
+                        <span class="label-text">Token name</span>
+                    </label>
+                    <input type="text" name="name" required placeholder="API Key #1" class="input input-bordered w-full" :disabled="submitting" />
+                </div>
+                <div class="form-control w-full mb-4">
+                    <label class="label">
+                        <span class="label-text">Expiration date (optional)</span>
+                    </label>
+                    <input type="date" name="expires_at" class="input input-bordered w-full" :disabled="submitting" />
+                </div>
+                <div class="form-control w-full mt-6">
+                    <button type="submit" class="btn btn-primary w-full" :disabled="submitting">
+                        <span x-show="!submitting">Generate token</span>
+                        <span x-show="submitting" x-cloak>Creating...</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="card p-4">
+            <h3 class="text-xl font-medium mb-2">Your Tokens</h3>
+            <div class="w-full">
+                <div x-show="loading" class="text-center py-4">Loading tokens...</div>
+                <div x-show="!loading && tokens.length === 0" class="text-center text-[var(--light-muted)] dark:text-[var(--dark-muted)] py-4">No tokens created yet.</div>
+                <template x-for="token in tokens" :key="token.id">
+                    <div class="card border-base-200 border-2 shadow-xl mb-4" x-data="{ showToken: false, showCopySuccess: false }">
+                        <div class="card-body">
+                            <div class="flex items-center justify-between mb-4">
+                                <h2 class="card-title truncate" :title="token.name" x-text="token.name"></h2>
+                                <button type="button" @click="deleteToken(token.id)" class="btn btn-error btn-sm">Revoke</button>
+                            </div>
+                            <div class="mb-4">
+                                <div class="flex items-center gap-2">
+                                    <div class="flex-1 relative">
+                                        <input :type="showToken ? 'text' : 'password'" class="input input-bordered w-full font-mono text-sm pr-10" :value="token.token" disabled>
+                                        <button type="button" @click="showToken = !showToken" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-base-content/60 hover:text-base-content">
+                                            <span x-show="!showToken">{{heroicon "eye" "h-4 w-4"}}</span>
+                                            <span x-show="showToken" x-cloak>{{heroicon "eye-slash" "h-4 w-4"}}</span>
+                                        </button>
+                                    </div>
+                                    <button type="button"
+                                            class="btn btn-ghost btn-sm btn-square"
+                                            @click="navigator.clipboard.writeText(token.token); showCopySuccess = true; setTimeout(() => showCopySuccess = false, 2000)">
+                                        {{heroicon "clipboard" "h-4 w-4"}}
+                                    </button>
+                                </div>
+                                <span x-show="showCopySuccess" class="text-success text-sm mt-2">Copied!</span>
+                            </div>
+                            <div class="flex flex-col sm:flex-row sm:justify-between gap-2 text-sm text-base-content/70">
+                                <div>
+                                    <span class="font-medium">Created:</span> <span x-text="formatDate(token.created_at)"></span>
+                                </div>
+                                <div>
+                                    <span class="font-medium">Expires:</span>
+                                    <span x-text="token.expires_at ? formatDate(token.expires_at) : 'Never'"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </section>
+</main>
+{{end}}

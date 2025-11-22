@@ -30,6 +30,12 @@ declare -a icons=(
     "24/outline/chevron-down"
     "24/outline/exclamation-triangle"
     "24/outline/trash"
+    "24/outline/eye"
+    "24/outline/eye-slash"
+    "24/outline/clipboard"
+    "24/outline/envelope"
+    "24/outline/user"
+    "24/outline/key"
 
     # 20px solid icons (mini)
     "20/solid/check"

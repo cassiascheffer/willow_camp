@@ -7,6 +7,38 @@ import Alpine from 'alpinejs'
 // Make Alpine available globally
 window.Alpine = Alpine
 
+// Global toast store
+Alpine.store('toasts', {
+  items: [],
+  nextId: 1,
+
+  show(message, type = 'success') {
+    const id = this.nextId++
+    const toast = {
+      id,
+      message,
+      type,
+      visible: true
+    }
+
+    this.items.push(toast)
+
+    setTimeout(() => {
+      this.hide(id)
+    }, 4000)
+  },
+
+  hide(id) {
+    const toast = this.items.find(t => t.id === id)
+    if (toast) {
+      toast.visible = false
+      setTimeout(() => {
+        this.items = this.items.filter(t => t.id !== id)
+      }, 300)
+    }
+  }
+})
+
 // Mermaid Alpine component
 Alpine.data('mermaid', () => ({
   mermaidInitialized: false,
@@ -254,6 +286,247 @@ Alpine.data('domainDowncase', () => ({
     const end = input.selectionEnd
     input.value = input.value.toLowerCase()
     input.setSelectionRange(start, end)
+  }
+}))
+
+// Security page notifications
+Alpine.data('securityPage', (successMessage, errorMessage) => ({
+  submitting: false,
+  savingProfile: false,
+  savingPassword: false,
+  showCurrentPassword: false,
+  showNewPassword: false,
+  showConfirmPassword: false,
+  profileError: '',
+  passwordError: '',
+
+  init() {
+    const successMessages = {
+      'password_updated': 'Password updated successfully',
+      'token_created': 'Token created successfully',
+      'token_deleted': 'Token deleted successfully',
+      'profile_updated': 'Profile updated successfully'
+    }
+
+    const errorMessages = {
+      'password_required': 'Password is required',
+      'password_mismatch': 'Passwords do not match',
+      'name_required': 'Token name is required',
+      'invalid_date': 'Invalid expiration date',
+      'expiration_must_be_future': 'Expiration date must be in the future',
+      'email_required': 'Email is required',
+      'invalid_password': 'Current password is incorrect'
+    }
+
+    if (successMessage && successMessages[successMessage]) {
+      this.$store.toasts.show(successMessages[successMessage], 'success')
+    }
+
+    if (errorMessage && errorMessages[errorMessage]) {
+      this.$store.toasts.show(errorMessages[errorMessage], 'error')
+    }
+  },
+
+  async submitProfile(event) {
+    event.preventDefault()
+    this.savingProfile = true
+    this.profileError = ''
+
+    const formData = new FormData(event.target)
+
+    try {
+      const response = await fetch('/dashboard/security/profile', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json'
+        },
+        body: formData
+      })
+
+      const data = await response.json()
+
+      if (data.success) {
+        this.$store.toasts.show(data.message, 'success')
+        // Clear password fields after successful update
+        const newPasswordField = event.target.querySelector('input[name="new_password"]')
+        const confirmPasswordField = event.target.querySelector('input[name="confirm_password"]')
+        if (newPasswordField) newPasswordField.value = ''
+        if (confirmPasswordField) confirmPasswordField.value = ''
+      } else {
+        this.profileError = data.message
+      }
+    } catch (error) {
+      this.profileError = 'Failed to update profile'
+      this.$store.toasts.show('Network error. Please try again.', 'error')
+    } finally {
+      this.savingProfile = false
+    }
+  },
+
+  async submitPassword(event) {
+    event.preventDefault()
+    this.savingPassword = true
+    this.passwordError = ''
+
+    const formData = new FormData(event.target)
+
+    try {
+      const response = await fetch('/dashboard/security/password', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json'
+        },
+        body: formData
+      })
+
+      const data = await response.json()
+
+      if (data.success) {
+        this.$store.toasts.show(data.message, 'success')
+        event.target.reset()
+      } else {
+        this.passwordError = data.message
+      }
+    } catch (error) {
+      this.passwordError = 'Failed to update password'
+      this.$store.toasts.show('Network error. Please try again.', 'error')
+    } finally {
+      this.savingPassword = false
+    }
+  },
+
+  hasProfileError() {
+    return this.profileError !== ''
+  },
+
+  hasPasswordError() {
+    return this.passwordError !== ''
+  },
+
+  getCurrentPasswordError() {
+    return this.passwordError.includes('incorrect') || this.passwordError.includes('Current password')
+  },
+
+  getNewPasswordError() {
+    return this.passwordError.includes('match') || this.passwordError.includes('do not match')
+  }
+}))
+
+// Token list management
+Alpine.data('tokenList', () => ({
+  tokens: [],
+  loading: false,
+  submitting: false,
+
+  async init() {
+    await this.fetchTokens()
+  },
+
+  async fetchTokens() {
+    this.loading = true
+    try {
+      const response = await fetch('/dashboard/tokens', {
+        headers: {
+          'Accept': 'application/json'
+        }
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        // Ensure tokens is always an array, even if server returns null
+        this.tokens = data || []
+      } else {
+        console.error('Failed to fetch tokens:', response.status)
+        this.$store.toasts.show('Failed to load tokens', 'error')
+        this.tokens = []
+      }
+    } catch (error) {
+      console.error('Error fetching tokens:', error)
+      this.$store.toasts.show('Network error loading tokens', 'error')
+      this.tokens = []
+    } finally {
+      this.loading = false
+    }
+  },
+
+  async createToken(event) {
+    event.preventDefault()
+
+    if (this.submitting) return
+
+    this.submitting = true
+
+    const form = event.target
+    const formData = new FormData(form)
+
+    try {
+      const response = await fetch(form.action, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json'
+        },
+        body: formData
+      })
+
+      const data = await response.json()
+
+      if (response.ok && data.success) {
+        this.$store.toasts.show(data.message || 'Token created successfully', 'success')
+        form.reset()
+
+        // Add the new token to the list
+        if (data.token) {
+          this.tokens.unshift(data.token)
+        }
+      } else {
+        this.$store.toasts.show(data.message || 'Failed to create token', 'error')
+      }
+    } catch (error) {
+      console.error('Token creation error:', error)
+      this.$store.toasts.show('Network error. Please try again.', 'error')
+    } finally {
+      this.submitting = false
+    }
+  },
+
+  async deleteToken(tokenId) {
+    if (!confirm('Are you sure you want to revoke this token?')) {
+      return
+    }
+
+    try {
+      const response = await fetch(`/dashboard/tokens/${tokenId}/delete`, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json'
+        }
+      })
+
+      const data = await response.json()
+
+      if (response.ok && data.success) {
+        this.$store.toasts.show(data.message || 'Token deleted successfully', 'success')
+
+        // Remove token from the list
+        this.tokens = this.tokens.filter(t => t.id !== tokenId)
+      } else {
+        this.$store.toasts.show(data.message || 'Failed to delete token', 'error')
+      }
+    } catch (error) {
+      console.error('Token deletion error:', error)
+      this.$store.toasts.show('Network error. Please try again.', 'error')
+    }
+  },
+
+  formatDate(dateString) {
+    if (!dateString) return ''
+
+    const date = new Date(dateString)
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: '2-digit',
+      year: 'numeric'
+    })
   }
 }))
 
