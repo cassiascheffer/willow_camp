@@ -230,7 +230,7 @@
   display: inline-flex;
   align-items: center;
   width: 100%;
-  padding: 0rem;
+  padding: 0.5rem;
 }
 
 [dir=rtl] .choices__list--single {
@@ -241,7 +241,6 @@
 .choices__list--single .choices__item {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
 }
 
 .choices__list--multiple {
