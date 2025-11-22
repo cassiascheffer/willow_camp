@@ -43,6 +43,10 @@ declare -a icons=(
     "20/solid/lock-closed"
     "20/solid/arrow-left-start-on-rectangle"
     "20/solid/arrow-left"
+
+    # 16px solid icons (micro)
+    "16/solid/pencil"
+    "16/solid/trash"
 )
 
 # Fetch each icon
