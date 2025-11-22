@@ -93,6 +93,18 @@ type Tag struct {
 	UpdatedAt     time.Time `db:"updated_at" json:"updated_at"`
 }
 
+// TagWithCounts extends Tag with published and draft post counts
+type TagWithCounts struct {
+	ID             uuid.UUID `db:"id" json:"id"`
+	Name           string    `db:"name" json:"name"`
+	Slug           *string   `db:"slug" json:"slug"`
+	TaggingsCount  int       `db:"taggings_count" json:"taggings_count"`
+	CreatedAt      time.Time `db:"created_at" json:"created_at"`
+	UpdatedAt      time.Time `db:"updated_at" json:"updated_at"`
+	PublishedCount int       `db:"published_count" json:"published_count"`
+	DraftCount     int       `db:"draft_count" json:"draft_count"`
+}
+
 // Tagging represents the many-to-many relationship between posts and tags
 type Tagging struct {
 	ID           uuid.UUID  `db:"id" json:"id"`
