@@ -21,14 +21,14 @@
                                 @click="startEdit"
                                 title="Edit tag"
                                 aria-label="Edit tag {{.Name}}">
-                            {{heroiconMini "pencil" "w-4 h-4"}}
+                            {{heroicon "pencil" "w-4 h-4"}}
                         </button>
                         <button type="button"
                                 class="btn btn-circle btn-outline btn-error btn-xs"
                                 @click="confirmDelete"
                                 title="Delete tag"
                                 aria-label="Delete tag {{.Name}}">
-                            {{heroiconMini "trash" "w-4 h-4"}}
+                            {{heroicon "trash" "w-4 h-4"}}
                         </button>
                     </div>
                 </div>
@@ -40,7 +40,7 @@
                                @keydown.enter="saveTag"
                                @keydown.escape="cancelEdit"
                                x-ref="input"
-                               class="input input-sm input-bordered flex-1 min-w-0" />
+                               class="input input-sm input-bordered w-48 max-w-xs" />
                         <div class="flex gap-1">
                             <button type="button"
                                     @click="saveTag"
@@ -103,7 +103,7 @@
                                        @keydown.enter="saveTag"
                                        @keydown.escape="cancelEdit"
                                        x-ref="input"
-                                       class="input input-sm input-bordered flex-1 min-w-0" />
+                                       class="input input-sm input-bordered w-48 max-w-xs" />
                                 <div class="flex gap-1">
                                     <button type="button"
                                             @click="saveTag"
@@ -127,14 +127,14 @@
                                     @click="startEdit"
                                     title="Edit tag"
                                     aria-label="Edit tag {{.Name}}">
-                                {{heroiconMini "pencil" "w-4 h-4"}}
+                                {{heroicon "pencil" "w-4 h-4"}}
                             </button>
                             <button type="button"
                                     class="btn btn-circle btn-outline btn-error btn-sm"
                                     @click="confirmDelete"
                                     title="Delete tag"
                                     aria-label="Delete tag {{.Name}}">
-                                {{heroiconMini "trash" "w-4 h-4"}}
+                                {{heroicon "trash" "w-4 h-4"}}
                             </button>
                         </div>
                     </td>
