@@ -6,6 +6,7 @@ server
 *.dll
 *.so
 *.dylib
+bin.server
 
 # Test binary
 *.test
@@ -15,6 +16,7 @@ server
 
 # Go workspace file
 go.work
+go.work.sum
 
 # Dependency directories
 vendor/

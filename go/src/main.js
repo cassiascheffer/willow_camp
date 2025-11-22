@@ -17,6 +17,7 @@ import { registerSecurityPageComponent } from './components/security-page.js'
 import { registerTokenListComponent } from './components/token-list.js'
 import { registerAutosaveFormComponent } from './components/autosave-form.js'
 import { registerTagChoicesComponent } from './components/tag-choices.js'
+import { registerTagListComponent } from './components/tag-list.js'
 
 // Make Alpine available globally
 window.Alpine = Alpine
@@ -34,6 +35,7 @@ registerSecurityPageComponent(Alpine)
 registerTokenListComponent(Alpine)
 registerAutosaveFormComponent(Alpine)
 registerTagChoicesComponent(Alpine)
+registerTagListComponent(Alpine)
 
 // Start Alpine
 Alpine.start()
