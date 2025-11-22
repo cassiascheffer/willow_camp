@@ -96,10 +96,9 @@ go/
 
 - `GET /dashboard` - Dashboard home
 - `GET /dashboard/blogs/:blog_id/posts` - Post list
-- `GET /dashboard/blogs/:blog_id/posts/new` - New post form
-- `POST /dashboard/blogs/:blog_id/posts` - Create post
+- `POST /dashboard/blogs/:blog_id/posts/untitled` - Create untitled draft and redirect to edit
 - `GET /dashboard/blogs/:blog_id/posts/:post_id/edit` - Edit post form
-- `POST /dashboard/blogs/:blog_id/posts/:post_id` - Update post
+- `POST/PUT /dashboard/blogs/:blog_id/posts/:post_id` - Update post
 - `POST /dashboard/blogs/:blog_id/posts/:post_id/delete` - Delete post
 - `GET /dashboard/blogs/:blog_id/settings` - Blog settings
 - `POST /dashboard/blogs/:blog_id/settings` - Update blog settings

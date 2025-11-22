@@ -1,6 +1,6 @@
 // Post form autosave component (30s + Cmd+S/Ctrl+S)
 export function registerAutosaveFormComponent(Alpine) {
-  Alpine.data('autosaveForm', (isEdit, blogId, postId, publishedValue) => ({
+  Alpine.data('autosaveForm', (blogId, postId, publishedValue) => ({
     // State
     saving: false,
     publishedValue: publishedValue || 'false',
@@ -10,15 +10,11 @@ export function registerAutosaveFormComponent(Alpine) {
     autosaveTimer: null,
     scrollPosition: 0,
     originalValues: {},
-    isEdit: isEdit || false,
     blogId: blogId || '',
     postId: postId || '',
 
     // Initialize
     init() {
-      // Only enable autosave for edit mode
-      if (!this.isEdit) return
-
       // Store original form values
       this.captureOriginalValues()
 
@@ -52,14 +48,13 @@ export function registerAutosaveFormComponent(Alpine) {
 
     // Trigger autosave manually (Cmd+S / Ctrl+S)
     triggerAutosave(event) {
-      if (this.isEdit && !this.saving) {
+      if (!this.saving) {
         this.performAutosave()
       }
     },
 
     // Perform autosave
     async performAutosave() {
-      if (!this.isEdit) return
       if (!this.postId) {
         console.error('Cannot autosave: no post ID')
         return
@@ -88,8 +83,8 @@ export function registerAutosaveFormComponent(Alpine) {
           data[key] = value
         }
 
-        // Build URL
-        const url = `/dashboard/blogs/${this.blogId}/posts/${this.postId}/autosave`
+        // Build URL (same as manual submit - both use UpdatePost handler)
+        const url = `/dashboard/blogs/${this.blogId}/posts/${this.postId}`
         console.log('Autosaving to:', url, data)
 
         // Send autosave request
@@ -143,11 +138,91 @@ export function registerAutosaveFormComponent(Alpine) {
     },
 
     // Handle form submission
-    onSubmit(event) {
+    async onSubmit(event) {
+      event.preventDefault()
+
+      // Get which button was clicked to determine the intended published state
+      const submitter = event.submitter
+      const intendedPublished = submitter?.dataset?.published || this.publishedValue
+
       this.saving = true
-      // Clear autosave timer on submit
-      if (this.autosaveTimer) {
-        clearInterval(this.autosaveTimer)
+      this.saveStatus = 'saving'
+      this.saveStatusText = 'Saving...'
+
+      try {
+        const form = this.$refs.form
+        if (!form) {
+          throw new Error('Form not found')
+        }
+
+        const formData = new FormData(form)
+
+        // Override the published value with the intended value from the button
+        formData.set('published', intendedPublished)
+
+        // Convert to JSON
+        const data = {}
+        for (let [key, value] of formData.entries()) {
+          data[key] = value
+        }
+
+        // Always PUT (we're always editing an existing post)
+        const url = `/dashboard/blogs/${this.blogId}/posts/${this.postId}`
+
+        // Send request
+        const response = await fetch(url, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        })
+
+        if (response.ok) {
+          const responseData = await response.json()
+
+          // Update slug field if returned
+          if (responseData.slug) {
+            const slugInput = this.$el.querySelector('input[name="slug"]')
+            if (slugInput) {
+              slugInput.value = responseData.slug
+            }
+          }
+
+          // Update published_at field if returned
+          if (responseData.published_at) {
+            const publishedAtInput = this.$el.querySelector('input[name="published_at"]')
+            if (publishedAtInput) {
+              publishedAtInput.value = responseData.published_at
+            }
+          }
+
+          // Update published state
+          if (responseData.published !== undefined) {
+            this.publishedValue = responseData.published ? 'true' : 'false'
+          }
+
+          // Show success message
+          this.saveStatus = 'saved'
+          this.saveStatusText = 'Saved'
+          this.isDirty = false
+
+          // Hide success message after 2 seconds
+          setTimeout(() => {
+            this.saveStatus = null
+          }, 2000)
+        } else {
+          const errorData = await response.json().catch(() => ({}))
+          console.error('Save failed:', response.status, errorData)
+          this.saveStatus = 'error'
+          this.saveStatusText = errorData.error || 'Error saving'
+        }
+      } catch (error) {
+        console.error('Save error:', error)
+        this.saveStatus = 'error'
+        this.saveStatusText = 'Error saving'
+      } finally {
+        this.saving = false
       }
     }
   }))

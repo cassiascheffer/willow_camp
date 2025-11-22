@@ -14,113 +14,6 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-// NewPost shows the new post form
-func (h *Handlers) NewPost(c echo.Context) error {
-	user := auth.GetUser(c)
-	if user == nil {
-		return echo.NewHTTPError(http.StatusUnauthorized, "Unauthorized")
-	}
-
-	// Get blog by subdomain and verify ownership
-	blog, err := h.getBlogBySubdomainParam(c, user)
-	if err != nil {
-		return err
-	}
-
-	// Get user's blogs for dropdown
-	blogs, err := h.repos.Blog.FindByUserID(c.Request().Context(), user.ID)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to load blogs")
-	}
-	user.Blogs = blogs
-
-	// Load all tags for the blog (for choices.js dropdown)
-	allTags, err := h.repos.Tag.ListAllForBlog(c.Request().Context(), blog.ID)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to load all tags")
-	}
-
-	// Prepare dashboard data with navigation
-	title := "New Post"
-	if blog.Title != nil && *blog.Title != "" {
-		title = "New Post - " + *blog.Title
-	}
-	data, err := h.prepareDashboardData(user, blog, title)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to prepare data")
-	}
-	data.Post = nil
-	data.IsEdit = false
-	data.TagsString = ""
-	data.AllTags = allTags
-	data.ActiveTab = "posts"
-
-	return renderDashboardTemplate(c, "post_form.html", data)
-}
-
-// CreatePost handles post creation
-func (h *Handlers) CreatePost(c echo.Context) error {
-	user := auth.GetUser(c)
-	if user == nil {
-		return echo.NewHTTPError(http.StatusUnauthorized, "Unauthorized")
-	}
-
-	// Get blog by subdomain and verify ownership
-	blog, err := h.getBlogBySubdomainParam(c, user)
-	if err != nil {
-		return err
-	}
-
-	// Get form data
-	title := c.FormValue("title")
-	bodyMarkdown := c.FormValue("body_markdown")
-	metaDescription := c.FormValue("meta_description")
-	published := c.FormValue("published") == "on"
-	featured := c.FormValue("featured") == "on"
-	tagsInput := c.FormValue("tags")
-
-	// Generate unique slug from title
-	baseSlug := slug.Make(title)
-	postSlug, err := h.generateUniqueSlug(c.Request().Context(), blog.ID, user.ID, baseSlug, nil)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to generate slug")
-	}
-
-	// Create post
-	post := &models.Post{
-		ID:                 uuid.New(),
-		BlogID:             blog.ID,
-		AuthorID:           user.ID,
-		Title:              &title,
-		Slug:               &postSlug,
-		BodyMarkdown:       &bodyMarkdown,
-		MetaDescription:    stringPtr(metaDescription),
-		Published:          &published,
-		Featured:           featured,
-		Type:               stringPtr("Post"),
-		HasMermaidDiagrams: detectMermaidDiagrams(bodyMarkdown),
-	}
-
-	if published {
-		now := time.Now()
-		post.PublishedAt = &now
-	}
-
-	if err := h.repos.Post.Create(c.Request().Context(), post); err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to create post")
-	}
-
-	// Handle tags
-	if err := h.updatePostTags(c.Request().Context(), post.ID, tagsInput); err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to update tags")
-	}
-
-	if blog.Subdomain != nil {
-		return c.Redirect(http.StatusFound, "/dashboard/blogs/"+*blog.Subdomain+"/posts")
-	}
-	return echo.NewHTTPError(http.StatusInternalServerError, "Blog subdomain not found")
-}
-
 // CreateUntitledPost creates a new untitled draft post and redirects to edit
 func (h *Handlers) CreateUntitledPost(c echo.Context) error {
 	user := auth.GetUser(c)
@@ -256,19 +149,46 @@ func (h *Handlers) UpdatePost(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusNotFound, "Post not found")
 	}
 
-	// Get form data
-	title := c.FormValue("title")
-	bodyMarkdown := c.FormValue("body_markdown")
-	metaDescription := c.FormValue("meta_description")
-	published := c.FormValue("published") == "on"
-	featured := c.FormValue("featured") == "on"
-	tagsInput := c.FormValue("tags")
+	// Check if this is a JSON request
+	isJSON := c.Request().Header.Get("Content-Type") == "application/json"
+
+	var title, bodyMarkdown, metaDescription, tagsInput string
+	var published bool
+
+	if isJSON {
+		// Parse JSON request
+		var req struct {
+			Title           string `json:"title"`
+			BodyMarkdown    string `json:"body_markdown"`
+			MetaDescription string `json:"meta_description"`
+			Published       string `json:"published"`
+			Tags            string `json:"tags"`
+		}
+		if err := c.Bind(&req); err != nil {
+			return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid request"})
+		}
+		title = req.Title
+		bodyMarkdown = req.BodyMarkdown
+		metaDescription = req.MetaDescription
+		published = req.Published == "true"
+		tagsInput = req.Tags
+	} else {
+		// Get form data
+		title = c.FormValue("title")
+		bodyMarkdown = c.FormValue("body_markdown")
+		metaDescription = c.FormValue("meta_description")
+		published = c.FormValue("published") == "true"
+		tagsInput = c.FormValue("tags")
+	}
 
 	// Update slug if title changed
 	if post.Title == nil || *post.Title != title {
 		baseSlug := slug.Make(title)
 		uniqueSlug, err := h.generateUniqueSlug(c.Request().Context(), post.BlogID, post.AuthorID, baseSlug, &post.ID)
 		if err != nil {
+			if isJSON {
+				return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to generate slug"})
+			}
 			return echo.NewHTTPError(http.StatusInternalServerError, "Failed to generate slug")
 		}
 		post.Slug = &uniqueSlug
@@ -279,7 +199,7 @@ func (h *Handlers) UpdatePost(c echo.Context) error {
 	post.BodyMarkdown = &bodyMarkdown
 	post.MetaDescription = stringPtr(metaDescription)
 	post.Published = &published
-	post.Featured = featured
+	post.Featured = false
 	post.HasMermaidDiagrams = detectMermaidDiagrams(bodyMarkdown)
 
 	// Set published_at if newly published
@@ -289,106 +209,39 @@ func (h *Handlers) UpdatePost(c echo.Context) error {
 	}
 
 	if err := h.repos.Post.Update(c.Request().Context(), post); err != nil {
+		if isJSON {
+			return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to update post"})
+		}
 		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to update post")
 	}
 
 	// Handle tags
 	if err := h.updatePostTags(c.Request().Context(), post.ID, tagsInput); err != nil {
+		if isJSON {
+			return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to update tags"})
+		}
 		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to update tags")
 	}
 
+	// Return JSON response for AJAX requests
+	if isJSON {
+		publishedAt := ""
+		if post.PublishedAt != nil {
+			publishedAt = post.PublishedAt.Format("2006-01-02T15:04")
+		}
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"id":           post.ID.String(),
+			"slug":         *post.Slug,
+			"published":    *post.Published,
+			"published_at": publishedAt,
+		})
+	}
+
+	// Redirect for traditional form submissions
 	if blog.Subdomain != nil {
-		return c.Redirect(http.StatusFound, "/dashboard/blogs/"+*blog.Subdomain+"/posts")
+		return c.Redirect(http.StatusFound, "/dashboard/blogs/"+*blog.Subdomain+"/posts/"+post.ID.String()+"/edit")
 	}
 	return echo.NewHTTPError(http.StatusInternalServerError, "Blog subdomain not found")
-}
-
-// AutosavePost handles autosave for post editing
-func (h *Handlers) AutosavePost(c echo.Context) error {
-	user := auth.GetUser(c)
-	if user == nil {
-		return c.JSON(http.StatusUnauthorized, map[string]string{"error": "Unauthorized"})
-	}
-
-	// Get blog by subdomain and verify ownership
-	blog, err := h.getBlogBySubdomainParam(c, user)
-	if err != nil {
-		return c.JSON(http.StatusForbidden, map[string]string{"error": "Access denied"})
-	}
-
-	postID, err := parseUUID(c.Param("post_id"))
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid post ID"})
-	}
-
-	post, err := h.repos.Post.FindByID(c.Request().Context(), postID)
-	if err != nil || post.BlogID != blog.ID {
-		return c.JSON(http.StatusNotFound, map[string]string{"error": "Post not found"})
-	}
-
-	// Parse JSON request body
-	var req struct {
-		Title           string `json:"title"`
-		BodyMarkdown    string `json:"body_markdown"`
-		MetaDescription string `json:"meta_description"`
-		Published       string `json:"published"`     // "on" or empty
-		PublishedAt     string `json:"published_at"`  // datetime-local format
-		Tags            string `json:"tags"`          // comma-separated tags
-		Slug            string `json:"slug"`          // read-only, ignored
-	}
-
-	if err := c.Bind(&req); err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid request body"})
-	}
-
-	// Validate required fields
-	if req.Title == "" {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Title is required"})
-	}
-
-	// Update slug if title changed
-	if post.Title == nil || *post.Title != req.Title {
-		baseSlug := slug.Make(req.Title)
-		uniqueSlug, err := h.generateUniqueSlug(c.Request().Context(), post.BlogID, post.AuthorID, baseSlug, &post.ID)
-		if err != nil {
-			c.Logger().Error("AutosavePost: Failed to generate unique slug: ", err)
-			return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to generate slug"})
-		}
-		post.Slug = &uniqueSlug
-	}
-
-	// Update fields
-	post.Title = &req.Title
-	post.BodyMarkdown = &req.BodyMarkdown
-	post.MetaDescription = stringPtr(req.MetaDescription)
-	post.HasMermaidDiagrams = detectMermaidDiagrams(req.BodyMarkdown)
-
-	published := req.Published == "on"
-	post.Published = &published
-
-	// Set published_at if newly published
-	if published && (post.PublishedAt == nil) {
-		now := time.Now()
-		post.PublishedAt = &now
-	}
-
-	if err := h.repos.Post.Update(c.Request().Context(), post); err != nil {
-		c.Logger().Error("AutosavePost: Failed to update post: ", err)
-		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to save post"})
-	}
-
-	// Handle tags
-	if err := h.updatePostTags(c.Request().Context(), post.ID, req.Tags); err != nil {
-		c.Logger().Error("AutosavePost: Failed to update tags: ", err)
-		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to update tags"})
-	}
-
-	// Return minimal JSON response including the generated slug
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"status":     "saved",
-		"updated_at": time.Now(),
-		"slug":       *post.Slug,
-	})
 }
 
 // DeletePost handles post deletion

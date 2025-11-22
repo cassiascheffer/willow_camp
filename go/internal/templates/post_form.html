@@ -1,7 +1,7 @@
 {{define "content"}}
 <div class="flex flex-col items-center justify-center min-h-screen">
   <div class="card w-full lg:w-3/4">
-    <div class="card-body" x-data="autosaveForm({{.IsEdit}}, '{{deref .Blog.Subdomain}}', '{{if .Post}}{{.Post.ID}}{{end}}', {{if .Post}}{{if .Post.Published}}{{if deref .Post.Published}}'true'{{else}}'false'{{end}}{{else}}'false'{{end}}{{else}}'false'{{end}})">
+    <div class="card-body" x-data="autosaveForm('{{deref .Blog.Subdomain}}', '{{.Post.ID}}', {{if deref .Post.Published}}'true'{{else}}'false'{{end}})">
       <h1 class="card-title text-2xl font-bold">
         Editing post
       </h1>
@@ -91,60 +91,32 @@
 
         <!-- Buttons -->
         <div class="flex gap-4 mt-6">
-          {{if .Post}}
-            {{if .Post.Published}}
-              {{if deref .Post.Published}}
-                <input type="hidden" name="published" value="true" id="post_published" />
-                <button type="submit"
-                        class="btn btn-primary btn-soft w-full text-sm md:text-base"
-                        :disabled="saving"
-                        x-text="saving ? 'Saving...' : 'Save'">
-                </button>
-              {{else}}
-                <input type="hidden" name="published" value="false" id="post_published" x-model="publishedValue" />
-                <button type="submit"
-                        class="btn btn-secondary btn-soft flex-1 text-sm md:text-base"
-                        :disabled="saving"
-                        x-text="saving ? 'Saving draft...' : 'Save draft'"
-                        @click="publishedValue = 'false'">
-                </button>
-                <button type="submit"
-                        class="btn btn-primary btn-soft flex-1 text-sm md:text-base"
-                        :disabled="saving"
-                        x-text="saving ? 'Publishing...' : 'Publish'"
-                        @click="publishedValue = 'true'">
-                </button>
-              {{end}}
-            {{else}}
-              <input type="hidden" name="published" value="false" id="post_published" x-model="publishedValue" />
-              <button type="submit"
-                      class="btn btn-secondary btn-soft flex-1 text-sm md:text-base"
-                      :disabled="saving"
-                      x-text="saving ? 'Saving draft...' : 'Save draft'"
-                      @click="publishedValue = 'false'">
-              </button>
-              <button type="submit"
-                      class="btn btn-primary btn-soft flex-1 text-sm md:text-base"
-                      :disabled="saving"
-                      x-text="saving ? 'Publishing...' : 'Publish'"
-                      @click="publishedValue = 'true'">
-              </button>
-            {{end}}
-          {{else}}
-            <input type="hidden" name="published" value="false" id="post_published" x-model="publishedValue" />
-            <button type="submit"
-                    class="btn btn-secondary btn-soft flex-1 text-sm md:text-base"
-                    :disabled="saving"
-                    x-text="saving ? 'Saving draft...' : 'Save draft'"
-                    @click="publishedValue = 'false'">
-            </button>
-            <button type="submit"
-                    class="btn btn-primary btn-soft flex-1 text-sm md:text-base"
-                    :disabled="saving"
-                    x-text="saving ? 'Publishing...' : 'Publish'"
-                    @click="publishedValue = 'true'">
-            </button>
-          {{end}}
+          <input type="hidden" name="published" :value="publishedValue" id="post_published" />
+
+          <!-- Published: Show single Save button -->
+          <button type="submit"
+                  class="btn btn-primary btn-soft w-full text-sm md:text-base"
+                  :disabled="saving"
+                  x-show="publishedValue === 'true'"
+                  x-text="saving ? 'Saving...' : 'Save'"
+                  data-published="true">
+          </button>
+
+          <!-- Unpublished: Show Save draft and Publish buttons -->
+          <button type="submit"
+                  class="btn btn-secondary btn-soft flex-1 text-sm md:text-base"
+                  :disabled="saving"
+                  x-show="publishedValue === 'false'"
+                  x-text="saving ? 'Saving draft...' : 'Save draft'"
+                  data-published="false">
+          </button>
+          <button type="submit"
+                  class="btn btn-primary btn-soft flex-1 text-sm md:text-base"
+                  :disabled="saving"
+                  x-show="publishedValue === 'false'"
+                  x-text="saving ? 'Publishing...' : 'Publish'"
+                  data-published="true">
+          </button>
         </div>
       </form>
 

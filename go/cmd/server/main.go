@@ -112,7 +112,7 @@ func main() {
 	dashboard.POST("/blogs/:subdomain/posts/untitled", h.CreateUntitledPost)
 	dashboard.GET("/blogs/:subdomain/posts/:post_id/edit", h.EditPost)
 	dashboard.POST("/blogs/:subdomain/posts/:post_id", h.UpdatePost)
-	dashboard.PUT("/blogs/:subdomain/posts/:post_id/autosave", h.AutosavePost)
+	dashboard.PUT("/blogs/:subdomain/posts/:post_id", h.UpdatePost)
 	dashboard.POST("/blogs/:subdomain/posts/:post_id/delete", h.DeletePost)
 	dashboard.GET("/blogs/:subdomain/settings", h.BlogSettings)
 	dashboard.POST("/blogs/:subdomain/settings", h.UpdateBlogSettings)
