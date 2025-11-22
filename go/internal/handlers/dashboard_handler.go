@@ -74,14 +74,16 @@ type dashboardTemplateData struct {
 	IsEdit        bool
 	TagsString    string
 	AllTags       []string // All tag names for the blog (for choices.js)
+	BaseDomain    string
 }
 
 // prepareDashboardData populates common dashboard layout data
 func (h *Handlers) prepareDashboardData(user *models.User, blog *models.Blog, title string) (*dashboardTemplateData, error) {
 	data := &dashboardTemplateData{
-		Title: title,
-		User:  user,
-		Blog:  blog,
+		Title:      title,
+		User:       user,
+		Blog:       blog,
+		BaseDomain: h.baseDomain,
 	}
 
 	// Set navigation title and path
@@ -114,7 +116,7 @@ func (h *Handlers) prepareDashboardData(user *models.User, blog *models.Blog, ti
 	return data, nil
 }
 
-// Dashboard shows the main dashboard
+// Dashboard shows the main dashboard for the default blog
 func (h *Handlers) Dashboard(c echo.Context) error {
 	user := auth.GetUser(c)
 	if user == nil {
@@ -132,12 +134,36 @@ func (h *Handlers) Dashboard(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusNotFound, "No blogs found")
 	}
 
-	// Redirect to default blog (primary blog or first blog)
+	// Use default blog (primary blog or first blog)
 	// FindByUserID orders by "primary" DESC, created_at ASC, so the first blog is the default
-	if blogs[0].Subdomain != nil {
-		return c.Redirect(http.StatusFound, "/dashboard/blogs/"+*blogs[0].Subdomain+"/posts")
+	defaultBlog := blogs[0]
+
+	// Sort blogs by title for display (matching Rails behavior)
+	sortBlogsByTitle(blogs)
+	user.Blogs = blogs
+
+	// Get all posts (including drafts) for the default blog
+	posts, err := h.repos.Post.ListAll(c.Request().Context(), defaultBlog.ID, 100, 0)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to load posts")
 	}
-	return echo.NewHTTPError(http.StatusInternalServerError, "Blog subdomain not found")
+
+	// Prepare dashboard data
+	title := "Posts"
+	if defaultBlog.Title != nil && *defaultBlog.Title != "" {
+		title = "Posts - " + *defaultBlog.Title
+	} else if defaultBlog.Subdomain != nil {
+		title = "Posts - " + *defaultBlog.Subdomain
+	}
+
+	data, err := h.prepareDashboardData(user, defaultBlog, title)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to prepare data")
+	}
+	data.Posts = posts
+	data.ActiveTab = "posts"
+
+	return renderDashboardTemplate(c, "posts_list.html", data)
 }
 
 // BlogPosts shows the post list for a specific blog
@@ -195,6 +221,22 @@ func templateFuncs() template.FuncMap {
 		},
 		"heroiconMini": func(name string, class string) template.HTML {
 			return helpers.Icon("20/solid/"+name, class)
+		},
+		"blogURL": func(subdomain string, baseDomain string) string {
+			// Use http:// for localhost, https:// for everything else
+			protocol := "https://"
+			if strings.Contains(baseDomain, "localhost") {
+				protocol = "http://"
+			}
+			return protocol + subdomain + "." + baseDomain + "/"
+		},
+		"postURL": func(subdomain string, slug string, baseDomain string) string {
+			// Use http:// for localhost, https:// for everything else
+			protocol := "https://"
+			if strings.Contains(baseDomain, "localhost") {
+				protocol = "http://"
+			}
+			return protocol + subdomain + "." + baseDomain + "/" + slug
 		},
 		"hasText": func(s *string) bool {
 			return s != nil && *s != ""

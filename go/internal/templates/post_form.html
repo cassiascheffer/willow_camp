@@ -167,7 +167,7 @@
                 <li>
                   {{if .Post.Published}}
                     {{if deref .Post.Published}}
-                      <a href="https://{{if .Blog.Subdomain}}{{deref .Blog.Subdomain}}{{end}}.willow.camp/{{if .Post.Slug}}{{deref .Post.Slug}}{{end}}" target="_blank">
+                      <a href="{{postURL (deref .Blog.Subdomain) (deref .Post.Slug) .BaseDomain}}" target="_blank">
                         View post
                       </a>
                     {{else}}

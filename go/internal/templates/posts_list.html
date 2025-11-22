@@ -8,7 +8,7 @@
          aria-label="Edit post {{if .Title}}{{.Title}}{{else}}Untitled{{end}}">
         <div class="card-body">
             <div class="flex items-center mb-2">
-                {{if .Published}}
+                {{if .IsPublished}}
                 <span class="pr-2" aria-label="published">
                     {{heroicon "check" "h-5 w-5"}}
                 </span>
@@ -23,8 +23,8 @@
                 <span>
                     {{if .PublishedAt}}{{.PublishedAt.Format "Jan 02, 2006"}}{{else}}Draft{{end}}
                 </span>
-                {{if .Published}}
-                <a href="https://{{$.Blog.Subdomain}}.willow.camp/{{.Slug}}"
+                {{if .IsPublished}}
+                <a href="{{postURL $.Blog.Subdomain .Slug $.BaseDomain}}"
                    class="btn btn-sm btn-ghost"
                    target="_blank"
                    onclick="event.stopPropagation();"
@@ -55,7 +55,7 @@
             <tr onclick="window.location='/dashboard/blogs/{{deref $.Blog.Subdomain}}/posts/{{.ID}}/edit';" class="hover:bg-base-200 cursor-pointer">
                 <td class="py-2">{{if .Title}}{{.Title}}{{else}}Untitled{{end}}</td>
                 <td class="py-2">
-                    {{if .Published}}
+                    {{if .IsPublished}}
                     <span aria-label="published">
                         {{heroicon "check" "h-5 w-5"}}
                     </span>
@@ -74,8 +74,8 @@
                     {{end}}
                 </td>
                 <td class="py-2">
-                    {{if .Published}}
-                    <a href="https://{{$.Blog.Subdomain}}.willow.camp/{{.Slug}}"
+                    {{if .IsPublished}}
+                    <a href="{{postURL $.Blog.Subdomain .Slug $.BaseDomain}}"
                        class="btn btn-sm btn-ghost"
                        target="_blank"
                        onclick="event.stopPropagation();"

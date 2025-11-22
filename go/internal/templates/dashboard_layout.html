@@ -204,7 +204,7 @@
                 <form action="/dashboard/blogs/{{deref .Blog.Subdomain}}/posts/untitled" method="POST">
                     <button type="submit" class="btn btn-sm btn-primary">New Post</button>
                 </form>
-                <a href="https://{{.Blog.Subdomain}}.willow.camp/" class="btn btn-sm btn-outline" target="_blank">View Site</a>
+                <a href="{{blogURL .Blog.Subdomain .BaseDomain}}" class="btn btn-sm btn-outline" target="_blank">View Site</a>
                 {{end}}
             </div>
         </header>

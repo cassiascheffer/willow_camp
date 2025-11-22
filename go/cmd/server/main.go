@@ -36,6 +36,12 @@ func main() {
 		port = "3001"
 	}
 
+	baseDomain := os.Getenv("BASE_DOMAIN")
+	if baseDomain == "" {
+		baseDomain = "localhost:3001"
+		log.Println("Using default BASE_DOMAIN: localhost:3001 (set BASE_DOMAIN env var for production)")
+	}
+
 	// Initialize database connection pool
 	ctx := context.Background()
 	poolConfig, err := pgxpool.ParseConfig(dbURL)
@@ -74,6 +80,7 @@ func main() {
 	// Middleware
 	e.Use(echomiddleware.Logger())
 	e.Use(echomiddleware.Recover())
+	e.Use(echomiddleware.RemoveTrailingSlash())
 	e.Use(echomiddleware.CORS())
 	e.Use(echomiddleware.Gzip())
 	e.Use(echomiddleware.Secure())
@@ -87,7 +94,7 @@ func main() {
 	e.File("/openmoji-map.json", "../public/openmoji-map.json")
 
 	// Initialize handlers
-	h := handlers.New(repos, authService)
+	h := handlers.New(repos, authService, baseDomain)
 
 	// Auth routes (no blog middleware needed)
 	e.GET("/login", h.LoginPage)
@@ -99,6 +106,7 @@ func main() {
 	dashboard := e.Group("/dashboard")
 	dashboard.Use(authService.RequireAuth)
 	dashboard.GET("", h.Dashboard)
+	dashboard.GET("/", h.Dashboard)
 	dashboard.GET("/blogs/:subdomain/posts", h.BlogPosts)
 	dashboard.POST("/blogs/:subdomain/posts/untitled", h.CreateUntitledPost)
 	dashboard.GET("/blogs/:subdomain/posts/:post_id/edit", h.EditPost)
