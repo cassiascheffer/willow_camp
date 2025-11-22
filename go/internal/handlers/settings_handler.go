@@ -40,6 +40,7 @@ func (h *Handlers) BlogSettings(c echo.Context) error {
 		"Blog":          dashData.Blog,
 		"NavTitle":      dashData.NavTitle,
 		"NavPath":       dashData.NavPath,
+		"BaseDomain":    dashData.BaseDomain,
 		"EmojiFilename": dashData.EmojiFilename,
 		"AboutPage":     aboutPage,
 	}
