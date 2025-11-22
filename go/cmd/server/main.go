@@ -107,6 +107,7 @@ func main() {
 	dashboard.Use(authService.RequireAuth)
 	dashboard.GET("", h.Dashboard)
 	dashboard.GET("/", h.Dashboard)
+	dashboard.POST("/blogs", h.CreateBlog)
 	dashboard.GET("/blogs/:subdomain/posts", h.BlogPosts)
 	dashboard.POST("/blogs/:subdomain/posts/untitled", h.CreateUntitledPost)
 	dashboard.GET("/blogs/:subdomain/posts/:post_id/edit", h.EditPost)

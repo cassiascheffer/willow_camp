@@ -146,6 +146,31 @@ func (r *BlogRepository) FindByUserID(ctx context.Context, userID uuid.UUID) ([]
 	return blogs, nil
 }
 
+// Create creates a new blog
+func (r *BlogRepository) Create(ctx context.Context, userID uuid.UUID, subdomain string, primary bool) (*models.Blog, error) {
+	query := `
+		INSERT INTO blogs (user_id, subdomain, "primary", created_at, updated_at)
+		VALUES ($1, $2, $3, NOW(), NOW())
+		RETURNING id, user_id, subdomain, title, slug, meta_description, favicon_emoji,
+		          custom_domain, theme, post_footer_markdown, no_index, "primary",
+		          created_at, updated_at
+	`
+
+	var blog models.Blog
+	err := r.pool.QueryRow(ctx, query, userID, subdomain, primary).Scan(
+		&blog.ID, &blog.UserID, &blog.Subdomain, &blog.Title, &blog.Slug,
+		&blog.MetaDescription, &blog.FaviconEmoji, &blog.CustomDomain, &blog.Theme,
+		&blog.PostFooterMarkdown, &blog.NoIndex, &blog.Primary,
+		&blog.CreatedAt, &blog.UpdatedAt,
+	)
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to create blog: %w", err)
+	}
+
+	return &blog, nil
+}
+
 // Update updates a blog
 func (r *BlogRepository) Update(ctx context.Context, blog *models.Blog) error {
 	query := `
