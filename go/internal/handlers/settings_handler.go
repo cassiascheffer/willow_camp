@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"github.com/cassiascheffer/willow_camp/internal/auth"
@@ -90,6 +91,41 @@ func (h *Handlers) UpdateBlogSettings(c echo.Context) error {
 		return c.Redirect(http.StatusFound, "/dashboard/blogs/"+updatedSubdomain+"/settings")
 	}
 	return echo.NewHTTPError(http.StatusInternalServerError, "Blog subdomain not found")
+}
+
+// UpdateFaviconEmoji handles AJAX favicon emoji updates
+func (h *Handlers) UpdateFaviconEmoji(c echo.Context) error {
+	user := auth.GetUser(c)
+	if user == nil {
+		return echo.NewHTTPError(http.StatusUnauthorized, "Unauthorized")
+	}
+
+	// Get blog by subdomain and verify ownership
+	blog, err := h.getBlogBySubdomainParam(c, user)
+	if err != nil {
+		return err
+	}
+
+	// Parse JSON request body
+	var payload struct {
+		FaviconEmoji string `json:"favicon_emoji"`
+	}
+	if err := json.NewDecoder(c.Request().Body).Decode(&payload); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "Invalid request body")
+	}
+
+	// Update only the favicon emoji
+	blog.FaviconEmoji = stringPtr(payload.FaviconEmoji)
+
+	if err := h.repos.Blog.Update(c.Request().Context(), blog); err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to update favicon")
+	}
+
+	// Return JSON response
+	return c.JSON(http.StatusOK, map[string]string{
+		"status":  "success",
+		"message": "Favicon updated successfully",
+	})
 }
 
 // UpdateAboutPage handles About page updates

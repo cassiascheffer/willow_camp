@@ -16,7 +16,7 @@
           </div>
 
           <!-- Favicon Emoji Field with Picker -->
-          <div class="form-control w-full" x-data="emojiPicker()">
+          <div class="form-control w-full" x-data="emojiPicker('{{deref .Blog.Subdomain}}')">
             <label class="label">
               <span class="label-text">Favicon emoji</span>
             </label>

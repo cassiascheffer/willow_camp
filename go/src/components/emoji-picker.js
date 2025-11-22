@@ -2,10 +2,11 @@
 import Choices from 'choices.js'
 
 export function registerEmojiPickerComponent(Alpine) {
-  Alpine.data('emojiPicker', () => ({
+  Alpine.data('emojiPicker', (blogSubdomain = null) => ({
     choices: null,
     emojiData: [],
     emojiLookup: new Map(),
+    blogSubdomain: blogSubdomain,
 
     init() {
       // Load data and initialize asynchronously without blocking
@@ -89,6 +90,12 @@ export function registerEmojiPickerComponent(Alpine) {
         const selectedValue = this.choices.getValue(true)
         this.$refs.input.value = selectedValue || ''
         this.$refs.input.dispatchEvent(new Event('input', { bubbles: true }))
+
+        // Update favicon immediately and save in background
+        if (selectedValue) {
+          this.updateFavicon(selectedValue)
+          this.saveFavicon(selectedValue)
+        }
       })
     },
 
@@ -96,6 +103,60 @@ export function registerEmojiPickerComponent(Alpine) {
       const currentValue = this.$refs.input.value
       if (currentValue) {
         this.choices.setChoiceByValue(currentValue)
+      }
+    },
+
+    updateFavicon(emoji) {
+      // Get hexcode for the emoji from our lookup
+      const emojiData = this.emojiLookup.get(emoji)
+      if (!emojiData) {
+        console.warn('Could not find emoji data for:', emoji)
+        return
+      }
+
+      // Update all favicon links to use the new emoji's hexcode
+      const hexcode = emojiData.hexcode
+
+      // Update ICO favicon
+      const icoLink = document.querySelector('link[rel="icon"][sizes="32x32"]')
+      if (icoLink) {
+        icoLink.href = `/openmoji-32x32-ico/${hexcode}.ico`
+      }
+
+      // Update SVG favicon
+      const svgLink = document.querySelector('link[rel="icon"][type="image/svg+xml"]')
+      if (svgLink) {
+        svgLink.href = `/openmoji-svg-color/${hexcode}.svg`
+      }
+
+      // Update Apple touch icon
+      const appleLink = document.querySelector('link[rel="apple-touch-icon"]')
+      if (appleLink) {
+        appleLink.href = `/openmoji-apple-touch-icon-180x180/${hexcode}.png`
+      }
+    },
+
+    async saveFavicon(emoji) {
+      // Only save if we have a blog subdomain
+      if (!this.blogSubdomain) {
+        console.warn('No blog subdomain provided, skipping save')
+        return
+      }
+
+      try {
+        const response = await fetch(`/dashboard/blogs/${this.blogSubdomain}/settings/favicon`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ favicon_emoji: emoji })
+        })
+
+        if (!response.ok) {
+          console.error('Failed to save favicon:', response.statusText)
+        }
+      } catch (error) {
+        console.error('Error saving favicon:', error)
       }
     },
 

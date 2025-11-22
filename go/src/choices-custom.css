@@ -59,6 +59,7 @@
 .choices {
   position: relative;
   overflow: hidden;
+  margin-bottom: 0rem;
 }
 
 .choices:focus {

@@ -116,6 +116,7 @@ func main() {
 	dashboard.POST("/blogs/:subdomain/posts/:post_id/delete", h.DeletePost)
 	dashboard.GET("/blogs/:subdomain/settings", h.BlogSettings)
 	dashboard.POST("/blogs/:subdomain/settings", h.UpdateBlogSettings)
+	dashboard.POST("/blogs/:subdomain/settings/favicon", h.UpdateFaviconEmoji)
 	dashboard.POST("/blogs/:subdomain/settings/about", h.UpdateAboutPage)
 	dashboard.POST("/blogs/:subdomain/settings/about/delete", h.DeleteAboutPage)
 	dashboard.POST("/blogs/:subdomain/delete", h.DeleteBlog)
