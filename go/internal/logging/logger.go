@@ -12,12 +12,21 @@ import (
 // Logger wraps standard logger with structured logging
 type Logger struct {
 	*log.Logger
+	prettyPrint bool
 }
 
 // NewLogger creates a new structured logger
+// In development (when PORT=3001 or GO_ENV=development), uses pretty printing
 func NewLogger() *Logger {
+	// Determine if we're in development mode
+	prettyPrint := false
+	if os.Getenv("GO_ENV") == "development" || os.Getenv("PORT") == "3001" || os.Getenv("PORT") == "" {
+		prettyPrint = true
+	}
+
 	return &Logger{
-		Logger: log.New(os.Stdout, "", 0),
+		Logger:      log.New(os.Stdout, "", 0),
+		prettyPrint: prettyPrint,
 	}
 }
 
@@ -42,19 +51,55 @@ func (l *Logger) Debug(msg string, fields ...interface{}) {
 }
 
 func (l *Logger) log(level, msg string, fields ...interface{}) {
-	timestamp := time.Now().Format(time.RFC3339)
-	output := fmt.Sprintf("[%s] %s: %s", timestamp, level, msg)
+	timestamp := time.Now().Format("15:04:05")
 
-	if len(fields) > 0 {
-		output += " |"
-		for i := 0; i < len(fields); i += 2 {
-			if i+1 < len(fields) {
-				output += fmt.Sprintf(" %v=%v", fields[i], fields[i+1])
+	if l.prettyPrint {
+		// Pretty colored output for development
+		levelColor := getColorForLevel(level)
+		output := fmt.Sprintf("\033[90m%s\033[0m %s%-5s\033[0m %s", timestamp, levelColor, level, msg)
+
+		if len(fields) > 0 {
+			output += " \033[90m|"
+			for i := 0; i < len(fields); i += 2 {
+				if i+1 < len(fields) {
+					output += fmt.Sprintf(" %v=%v", fields[i], fields[i+1])
+				}
+			}
+			output += "\033[0m"
+		}
+
+		l.Println(output)
+	} else {
+		// Structured output for production
+		output := fmt.Sprintf("[%s] %s: %s", timestamp, level, msg)
+
+		if len(fields) > 0 {
+			output += " |"
+			for i := 0; i < len(fields); i += 2 {
+				if i+1 < len(fields) {
+					output += fmt.Sprintf(" %v=%v", fields[i], fields[i+1])
+				}
 			}
 		}
-	}
 
-	l.Println(output)
+		l.Println(output)
+	}
+}
+
+// getColorForLevel returns ANSI color codes for different log levels
+func getColorForLevel(level string) string {
+	switch level {
+	case "ERROR":
+		return "\033[31m" // Red
+	case "WARN":
+		return "\033[33m" // Yellow
+	case "INFO":
+		return "\033[32m" // Green
+	case "DEBUG":
+		return "\033[36m" // Cyan
+	default:
+		return "\033[0m" // Reset
+	}
 }
 
 // RequestLogger returns an Echo middleware for request logging

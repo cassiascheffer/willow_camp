@@ -1,0 +1,18 @@
+{{define "content"}}
+<h1 class="text-3xl font-bold mb-8">Tags</h1>
+
+{{if .Tags}}
+<div class="flex flex-wrap gap-3">
+    {{range .Tags}}
+    <a href="/tags/{{.Slug}}" class="badge badge-lg badge-outline hover:badge-primary">
+        {{.Name}}
+        <span class="ml-2 text-xs opacity-60">({{.TaggingsCount}})</span>
+    </a>
+    {{end}}
+</div>
+{{else}}
+<div class="text-center py-12">
+    <p class="text-xl text-base-content/60">No tags yet!</p>
+</div>
+{{end}}
+{{end}}

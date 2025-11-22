@@ -5,14 +5,11 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/cassiascheffer/willow_camp/internal/helpers"
 	"github.com/cassiascheffer/willow_camp/internal/markdown"
 	"github.com/cassiascheffer/willow_camp/internal/middleware"
 	"github.com/cassiascheffer/willow_camp/internal/models"
 	"github.com/labstack/echo/v4"
 )
-
-const postsPerPage = 50
 
 // BlogIndex shows the blog's published posts
 // If no blog is resolved (root domain), shows the home/landing page instead
@@ -21,7 +18,10 @@ func (h *Handlers) BlogIndex(c echo.Context) error {
 	if blog == nil {
 		// No blog in context means we're on the root domain (willow.camp or localhost)
 		// Show the marketing/landing page
-		return h.HomePage(c)
+		if h.homeHandler != nil {
+			return h.homeHandler(c)
+		}
+		return echo.NewHTTPError(http.StatusNotFound, "Blog not found")
 	}
 
 	// Get page number from query param
@@ -71,7 +71,7 @@ func (h *Handlers) BlogIndex(c echo.Context) error {
 		"TotalPages":    totalPages,
 	}
 
-	return h.renderTemplate(c, "blog_index.html", data)
+	return h.renderTemplate(c, "index.html", data)
 }
 
 // PostShow shows a single post
@@ -186,128 +186,4 @@ func (h *Handlers) PostShow(c echo.Context) error {
 	}
 
 	return h.renderTemplate(c, "post_show.html", data)
-}
-
-// Helper functions
-
-func getTitle(blog *models.Blog) string {
-	if blog.Title != nil && *blog.Title != "" {
-		return *blog.Title
-	}
-	if blog.Subdomain != nil && *blog.Subdomain != "" {
-		return *blog.Subdomain
-	}
-	if blog.CustomDomain != nil && *blog.CustomDomain != "" {
-		return *blog.CustomDomain
-	}
-	return "willow.camp"
-}
-
-func (h *Handlers) enrichTemplateData(c echo.Context, blog *models.Blog, data map[string]interface{}) map[string]interface{} {
-	// Ensure we have all required fields for the layout
-	if _, exists := data["Title"]; !exists {
-		data["Title"] = getTitle(blog)
-	}
-
-	// Blog title for display
-	data["BlogTitle"] = getTitle(blog)
-
-	// OpenMoji favicon filename
-	emojiFilename := "1F3D5" // Default camping emoji
-	if blog.FaviconEmoji != nil && *blog.FaviconEmoji != "" {
-		emojiFilename = helpers.EmojiToOpenmojiFilename(*blog.FaviconEmoji)
-	}
-	data["EmojiFilename"] = emojiFilename
-
-	// Fetch published pages for navigation
-	pages, err := h.repos.Post.ListPublishedPages(c.Request().Context(), blog.ID)
-	if err != nil {
-		// Don't fail the whole page if pages fail to load
-		logger := getLogger(c)
-		logger.Warn("Failed to load pages for navigation", "blog_id", blog.ID, "error", err)
-		pages = []*models.Post{}
-	}
-	data["Pages"] = pages
-
-	// Open Graph defaults
-	if _, exists := data["OGTitle"]; !exists {
-		data["OGTitle"] = data["Title"]
-	}
-	if _, exists := data["OGDescription"]; !exists {
-		if blog.MetaDescription != nil && *blog.MetaDescription != "" {
-			data["OGDescription"] = *blog.MetaDescription
-		} else {
-			data["OGDescription"] = "A blog powered by willow.camp"
-		}
-	}
-	if _, exists := data["OGType"]; !exists {
-		data["OGType"] = "website"
-	}
-
-	// Current URL for Open Graph
-	scheme := "http"
-	if c.Request().TLS != nil || c.Request().Header.Get("X-Forwarded-Proto") == "https" {
-		scheme = "https"
-	}
-	data["CurrentURL"] = scheme + "://" + c.Request().Host + c.Request().URL.String()
-
-	return data
-}
-
-func (h *Handlers) renderTemplate(c echo.Context, templateName string, data interface{}) error {
-	logger := getLogger(c)
-
-	// Convert data to map and enrich with layout requirements
-	blog := middleware.GetBlog(c)
-	dataMap, ok := data.(map[string]interface{})
-	if !ok {
-		dataMap = map[string]interface{}{"Data": data}
-	}
-
-	if blog != nil {
-		dataMap = h.enrichTemplateData(c, blog, dataMap)
-	}
-
-	// Create template with helper functions
-	tmpl := template.New("layout.html").Funcs(template.FuncMap{
-		"add": func(a, b int) int { return a + b },
-		"sub": func(a, b int) int { return a - b },
-	})
-
-	// Parse layout and content templates
-	tmpl, err := tmpl.ParseFiles(
-		"internal/templates/layout.html",
-		"internal/templates/"+templateName,
-	)
-	if err != nil {
-		logger.Error("Failed to parse template", "template", templateName, "error", err)
-		return echo.NewHTTPError(http.StatusInternalServerError, "Template error: "+err.Error())
-	}
-
-	c.Response().Header().Set("Content-Type", "text/html; charset=utf-8")
-	c.Response().WriteHeader(http.StatusOK)
-
-	return tmpl.Execute(c.Response().Writer, dataMap)
-}
-
-func renderSimpleTemplate(c echo.Context, templateName string, data interface{}) error {
-	logger := getLogger(c)
-
-	// Simple template rendering without blog layout (for auth pages, etc.)
-	tmpl := template.New("simple_layout.html")
-
-	// Parse simple layout and content templates
-	tmpl, err := tmpl.ParseFiles(
-		"internal/templates/simple_layout.html",
-		"internal/templates/"+templateName,
-	)
-	if err != nil {
-		logger.Error("Failed to parse simple template", "template", templateName, "error", err)
-		return echo.NewHTTPError(http.StatusInternalServerError, "Template error: "+err.Error())
-	}
-
-	c.Response().Header().Set("Content-Type", "text/html; charset=utf-8")
-	c.Response().WriteHeader(http.StatusOK)
-
-	return tmpl.Execute(c.Response().Writer, data)
 }
