@@ -21,6 +21,16 @@ func (h *Handlers) BlogSettings(c echo.Context) error {
 		return err
 	}
 
+	// Get user's blogs for dropdown
+	blogs, err := h.repos.Blog.FindByUserID(c.Request().Context(), user.ID)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to load blogs")
+	}
+
+	// Sort blogs by title for display (matching Rails behavior)
+	sortBlogsByTitle(blogs)
+	user.Blogs = blogs
+
 	// Load or create About page
 	aboutPage, err := h.repos.Post.FindOrCreateAboutPage(c.Request().Context(), blog.ID, user.ID)
 	if err != nil {
