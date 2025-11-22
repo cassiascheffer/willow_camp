@@ -363,26 +363,44 @@ Alpine.data('securityPage', (successMessage, errorMessage) => ({
       if (data.success) {
         this.$store.toasts.show(data.message, 'success')
 
-        // Clear password fields after successful update
+        // Clear password fields for security
+        if (currentPasswordField) currentPasswordField.value = ''
         if (newPasswordField) newPasswordField.value = ''
         if (confirmPasswordField) confirmPasswordField.value = ''
-        if (currentPasswordField) currentPasswordField.value = ''
+
+        // Reset password visibility toggles
+        this.showCurrentPassword = false
+        this.showNewPassword = false
+        this.showConfirmPassword = false
       } else {
         this.serverProfileError = data.message
 
-        // Set custom validity on email field if email-related error
-        const emailInput = form.querySelector('input[name="email"]')
-        if (data.message.toLowerCase().includes('email')) {
+        // Show error toast for all errors
+        this.$store.toasts.show(data.message, 'error')
+
+        // Also set custom validity on the current password field for visual feedback
+        if (data.message.toLowerCase().includes('password')) {
+          currentPasswordField?.setCustomValidity(data.message)
+          currentPasswordField?.reportValidity()
+        } else if (data.message.toLowerCase().includes('email')) {
+          const emailInput = form.querySelector('input[name="email"]')
           emailInput?.setCustomValidity(data.message)
           emailInput?.reportValidity()
         }
-
-        // Don't clear password fields on error - let user see what they entered
       }
+
+      // Always clear password fields after submission (success or error) for security
+      if (currentPasswordField) currentPasswordField.value = ''
+      if (newPasswordField) newPasswordField.value = ''
+      if (confirmPasswordField) confirmPasswordField.value = ''
     } catch (error) {
       this.serverProfileError = 'Failed to update profile'
       this.$store.toasts.show('Network error. Please try again.', 'error')
-      // Don't clear password fields on error
+
+      // Always clear password fields for security
+      if (currentPasswordField) currentPasswordField.value = ''
+      if (newPasswordField) newPasswordField.value = ''
+      if (confirmPasswordField) confirmPasswordField.value = ''
     } finally {
       this.savingProfile = false
     }
@@ -463,9 +481,17 @@ Alpine.data('tokenList', () => ({
 
     if (this.submitting) return
 
+    const form = event.target
+
+    // Validate form before submission
+    if (!form.checkValidity()) {
+      // Show validation errors
+      form.reportValidity()
+      return
+    }
+
     this.submitting = true
 
-    const form = event.target
     const formData = new FormData(form)
 
     try {

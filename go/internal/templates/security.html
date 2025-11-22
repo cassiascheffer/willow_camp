@@ -13,7 +13,7 @@
 
     <section aria-label="Profile & Security" class="mb-8">
         <div class="card p-4">
-            <form method="POST" action="/dashboard/security/profile" class="space-y-4" @submit="submitProfile" novalidate>
+            <form method="POST" action="/dashboard/security/profile" class="space-y-4" @submit="submitProfile" novalidate x-ref="profileForm">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
                     <div class="form-control">
                         <label class="label">
@@ -53,16 +53,13 @@
                     <label class="label">
                         <span class="label-text">Current Password</span>
                     </label>
-                    <label class="input validator w-full">
+                    <label class="input w-full">
                         {{heroicon "key" "h-[1em] opacity-50"}}
                         <input :type="showCurrentPassword ? 'text' : 'password'"
                                name="current_password"
                                autocomplete="current-password"
                                placeholder="Current password"
-                               class="grow validator"
-                               required
-                               minlength="6"
-                               title="Required to update profile"
+                               class="grow"
                                :disabled="savingProfile" />
                         <button type="button"
                                 @click="showCurrentPassword = !showCurrentPassword"
@@ -72,7 +69,7 @@
                             <span x-show="showCurrentPassword" x-cloak>{{heroicon "eye-slash" "h-5 w-5"}}</span>
                         </button>
                     </label>
-                    <div class="validator-hint">Required to update profile</div>
+                    <p class="text-xs text-base-content/60 mt-1">Required to update profile</p>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
@@ -98,9 +95,6 @@
                                 <span x-show="showNewPassword" x-cloak>{{heroicon "eye-slash" "h-5 w-5"}}</span>
                             </button>
                         </label>
-                        <div class="label">
-                            <span class="label-text-alt text-base-content/60">Leave blank to keep current password</span>
-                        </div>
                     </div>
 
                     <div class="form-control w-full">
@@ -143,7 +137,7 @@
         </div>
         <div class="card p-4">
             <h3 class="text-xl font-medium mb-2">Create New Token</h3>
-            <form method="POST" action="/dashboard/tokens" class="form-control" @submit="createToken">
+            <form method="POST" action="/dashboard/tokens" class="form-control" @submit="createToken" novalidate>
                 <div class="form-control w-full mb-4">
                     <label class="label">
                         <span class="label-text">Token name</span>
@@ -166,9 +160,6 @@
                            name="expires_at"
                            class="input input-bordered w-full"
                            :disabled="submitting" />
-                    <div class="label">
-                        <span class="label-text-alt text-base-content/60">Leave blank for no expiration</span>
-                    </div>
                 </div>
                 <div class="form-control w-full mt-6">
                     <button type="submit" class="btn btn-primary w-full" :disabled="submitting">
