@@ -297,8 +297,8 @@ Alpine.data('securityPage', (successMessage, errorMessage) => ({
   showCurrentPassword: false,
   showNewPassword: false,
   showConfirmPassword: false,
-  profileError: '',
-  passwordError: '',
+  serverProfileError: '',
+  serverPasswordError: '',
 
   init() {
     const successMessages = {
@@ -329,10 +329,25 @@ Alpine.data('securityPage', (successMessage, errorMessage) => ({
 
   async submitProfile(event) {
     event.preventDefault()
-    this.savingProfile = true
-    this.profileError = ''
 
-    const formData = new FormData(event.target)
+    const form = event.target
+
+    // Validate form before submission
+    if (!form.checkValidity()) {
+      // Show validation errors
+      form.reportValidity()
+      return
+    }
+
+    this.savingProfile = true
+    this.serverProfileError = ''
+
+    // Get password field references
+    const newPasswordField = form.querySelector('input[name="new_password"]')
+    const confirmPasswordField = form.querySelector('input[name="confirm_password"]')
+    const currentPasswordField = form.querySelector('input[name="current_password"]')
+
+    const formData = new FormData(form)
 
     try {
       const response = await fetch('/dashboard/security/profile', {
@@ -347,17 +362,27 @@ Alpine.data('securityPage', (successMessage, errorMessage) => ({
 
       if (data.success) {
         this.$store.toasts.show(data.message, 'success')
+
         // Clear password fields after successful update
-        const newPasswordField = event.target.querySelector('input[name="new_password"]')
-        const confirmPasswordField = event.target.querySelector('input[name="confirm_password"]')
         if (newPasswordField) newPasswordField.value = ''
         if (confirmPasswordField) confirmPasswordField.value = ''
+        if (currentPasswordField) currentPasswordField.value = ''
       } else {
-        this.profileError = data.message
+        this.serverProfileError = data.message
+
+        // Set custom validity on email field if email-related error
+        const emailInput = form.querySelector('input[name="email"]')
+        if (data.message.toLowerCase().includes('email')) {
+          emailInput?.setCustomValidity(data.message)
+          emailInput?.reportValidity()
+        }
+
+        // Don't clear password fields on error - let user see what they entered
       }
     } catch (error) {
-      this.profileError = 'Failed to update profile'
+      this.serverProfileError = 'Failed to update profile'
       this.$store.toasts.show('Network error. Please try again.', 'error')
+      // Don't clear password fields on error
     } finally {
       this.savingProfile = false
     }
@@ -366,7 +391,7 @@ Alpine.data('securityPage', (successMessage, errorMessage) => ({
   async submitPassword(event) {
     event.preventDefault()
     this.savingPassword = true
-    this.passwordError = ''
+    this.serverPasswordError = ''
 
     const formData = new FormData(event.target)
 
@@ -385,30 +410,14 @@ Alpine.data('securityPage', (successMessage, errorMessage) => ({
         this.$store.toasts.show(data.message, 'success')
         event.target.reset()
       } else {
-        this.passwordError = data.message
+        this.serverPasswordError = data.message
       }
     } catch (error) {
-      this.passwordError = 'Failed to update password'
+      this.serverPasswordError = 'Failed to update password'
       this.$store.toasts.show('Network error. Please try again.', 'error')
     } finally {
       this.savingPassword = false
     }
-  },
-
-  hasProfileError() {
-    return this.profileError !== ''
-  },
-
-  hasPasswordError() {
-    return this.passwordError !== ''
-  },
-
-  getCurrentPasswordError() {
-    return this.passwordError.includes('incorrect') || this.passwordError.includes('Current password')
-  },
-
-  getNewPasswordError() {
-    return this.passwordError.includes('match') || this.passwordError.includes('do not match')
   }
 }))
 
