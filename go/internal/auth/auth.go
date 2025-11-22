@@ -4,6 +4,7 @@ import (
 	"errors"
 	"net/http"
 
+	"github.com/cassiascheffer/willow_camp/internal/logging"
 	"github.com/cassiascheffer/willow_camp/internal/models"
 	"github.com/cassiascheffer/willow_camp/internal/repository"
 	"github.com/google/uuid"
@@ -26,10 +27,11 @@ var (
 type Auth struct {
 	userRepo *repository.UserRepository
 	store    *sessions.CookieStore
+	logger   *logging.Logger
 }
 
 // New creates a new Auth instance
-func New(userRepo *repository.UserRepository, sessionSecret string) *Auth {
+func New(userRepo *repository.UserRepository, sessionSecret string, logger *logging.Logger) *Auth {
 	// Create cookie store with secret
 	store := sessions.NewCookieStore([]byte(sessionSecret))
 	store.Options = &sessions.Options{
@@ -43,6 +45,7 @@ func New(userRepo *repository.UserRepository, sessionSecret string) *Auth {
 	return &Auth{
 		userRepo: userRepo,
 		store:    store,
+		logger:   logger,
 	}
 }
 
@@ -75,7 +78,9 @@ func (a *Auth) Login(c echo.Context, email, password string) (*models.User, erro
 
 	// Update sign-in tracking
 	ip := c.RealIP()
-	_ = a.userRepo.UpdateSignInInfo(c.Request().Context(), user.ID, ip)
+	if err := a.userRepo.UpdateSignInInfo(c.Request().Context(), user.ID, ip); err != nil {
+		a.logger.Warn("Failed to update sign-in tracking", "user_id", user.ID, "ip", ip, "error", err)
+	}
 
 	return user, nil
 }

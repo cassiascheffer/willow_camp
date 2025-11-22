@@ -434,3 +434,7 @@ Check the main CLAUDE.md in the repository root for overall project conventions 
 - do not try boot the app. I'll do it
 - javascript should always be in js files. don't add js directly in the html
 - I use ./run.sh to run the server. assets get rebuilt by vite
+- all work in the go app should be committed to go-development and pushed to github
+- Always use context7 when I need code generation, setup or configuration steps, or
+library/API documentation. This means you should automatically use the Context7 MCP
+tools to resolve library id and get library docs without me having to explicitly ask.

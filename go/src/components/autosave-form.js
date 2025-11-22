@@ -224,6 +224,68 @@ export function registerAutosaveFormComponent(Alpine) {
       } finally {
         this.saving = false
       }
+    },
+
+    // Handle unpublish action using existing UpdatePost endpoint
+    async unpublish() {
+      this.saving = true
+      this.saveStatus = 'saving'
+      this.saveStatusText = 'Unpublishing...'
+
+      try {
+        const form = this.$refs.form
+        if (!form) {
+          throw new Error('Form not found')
+        }
+
+        const formData = new FormData(form)
+
+        // Set published to false
+        formData.set('published', 'false')
+
+        // Convert to JSON
+        const data = {}
+        for (let [key, value] of formData.entries()) {
+          data[key] = value
+        }
+
+        const url = `/dashboard/blogs/${this.blogId}/posts/${this.postId}`
+
+        const response = await fetch(url, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        })
+
+        if (response.ok) {
+          const responseData = await response.json()
+
+          // Update published state
+          this.publishedValue = 'false'
+
+          // Show success message
+          this.saveStatus = 'saved'
+          this.saveStatusText = 'Unpublished'
+
+          // Hide success message after 2 seconds
+          setTimeout(() => {
+            this.saveStatus = null
+          }, 2000)
+        } else {
+          const errorData = await response.json().catch(() => ({}))
+          console.error('Unpublish failed:', response.status, errorData)
+          this.saveStatus = 'error'
+          this.saveStatusText = errorData.error || 'Error unpublishing'
+        }
+      } catch (error) {
+        console.error('Unpublish error:', error)
+        this.saveStatus = 'error'
+        this.saveStatusText = 'Error unpublishing'
+      } finally {
+        this.saving = false
+      }
     }
   }))
 }

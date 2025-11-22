@@ -1,0 +1,67 @@
+{{define "content"}}
+{{if .FeaturedPosts}}
+<div class="card bg-base-100 shadow-sm mb-8">
+    <div class="card-body">
+        <h2 class="card-title text-2xl">Featured</h2>
+        <div class="space-y-2">
+            {{range .FeaturedPosts}}
+            <article class="post-summary">
+                <a href="/{{if .Slug}}{{.Slug}}{{end}}" class="block p-4" aria-label="Read post: {{if .Title}}{{.Title}}{{end}}">
+                    <header>
+                        {{if .PublishedAt}}
+                        <time datetime="{{.PublishedAt.Format "2006-01-02T15:04:05Z07:00"}}" class="text-xs text-base-content/60 block pb-1" aria-label="Published on {{.PublishedAt.Format "January 02, 2006"}}">
+                            {{.PublishedAt.Format "Jan 02, 2006"}}
+                        </time>
+                        {{end}}
+                        <h3 class="text-lg font-medium sm:pl-3">{{if .Title}}{{.Title}}{{end}}</h3>
+                        {{if .MetaDescription}}
+                        <p class="text-sm text-base-content/70 mt-2 sm:pl-3">{{.MetaDescription}}</p>
+                        {{end}}
+                    </header>
+                </a>
+            </article>
+            {{end}}
+        </div>
+    </div>
+</div>
+{{end}}
+<div id="posts" class="space-y-8">
+    {{if .Posts}}
+        <div class="posts-list space-y-2">
+            {{range .Posts}}
+            <article class="post-summary">
+                <a href="/{{if .Slug}}{{.Slug}}{{end}}" class="block p-4" aria-label="Read post: {{if .Title}}{{.Title}}{{end}}">
+                    <header>
+                        {{if .PublishedAt}}
+                        <time datetime="{{.PublishedAt.Format "2006-01-02T15:04:05Z07:00"}}" class="text-xs text-base-content/60 block pb-1" aria-label="Published on {{.PublishedAt.Format "January 02, 2006"}}">
+                            {{.PublishedAt.Format "Jan 02, 2006"}}
+                        </time>
+                        {{end}}
+                        <h3 class="text-lg font-medium sm:pl-3">{{if .Title}}{{.Title}}{{end}}</h3>
+                    </header>
+                </a>
+            </article>
+            {{end}}
+        </div>
+        <nav aria-label="Posts pagination" role="navigation">
+            {{if gt .TotalPages 1}}
+            <div class="flex justify-center space-x-2 pt-4">
+                {{if gt .CurrentPage 1}}
+                <a href="/?page={{sub .CurrentPage 1}}" class="btn btn-sm">Previous</a>
+                {{end}}
+
+                <span class="btn btn-sm btn-disabled">Page {{.CurrentPage}} of {{.TotalPages}}</span>
+
+                {{if lt .CurrentPage .TotalPages}}
+                <a href="/?page={{add .CurrentPage 1}}" class="btn btn-sm">Next</a>
+                {{end}}
+            </div>
+            {{end}}
+        </nav>
+    {{else}}
+        <div class="text-center py-8">
+            <p class="text-xl text-base-content/60">No posts yet!</p>
+        </div>
+    {{end}}
+</div>
+{{end}}
