@@ -1,13 +1,20 @@
 // Blog favicon emoji picker component with Choices.js
+import Choices from 'choices.js'
+
 export function registerEmojiPickerComponent(Alpine) {
   Alpine.data('emojiPicker', () => ({
     choices: null,
     emojiData: [],
     emojiLookup: new Map(),
 
-    async init() {
+    init() {
+      // Load data and initialize asynchronously without blocking
+      this.loadAndInitialize()
+    },
+
+    async loadAndInitialize() {
       await this.loadEmojiData()
-      await this.initializeChoices()
+      this.initializeChoices()
       this.setInitialValue()
     },
 
@@ -56,8 +63,7 @@ export function registerEmojiPickerComponent(Alpine) {
       return name.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
     },
 
-    async initializeChoices() {
-      const Choices = (await import('choices.js')).default
+    initializeChoices() {
       const selectElement = this.$refs.select
 
       this.choices = new Choices(selectElement, {

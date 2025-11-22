@@ -92,6 +92,10 @@
   cursor: pointer;
 }
 
+.choices[data-type*=select-one] .choices__inner {
+  padding-bottom: 0;
+}
+
 .choices[data-type*=select-one] .choices__input {
   width: 100%;
   background: transparent;
@@ -157,7 +161,6 @@
   color: inherit;
 }
 
-/* FIXED: Use white X button for selected tags to ensure visibility on dark primary color background */
 .choices__list--multiple .choices__item .choices__button {
   background-image: url("data:image/svg+xml,%3Csvg width='21' height='21' viewBox='0 0 21 21' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-rule='evenodd'%3E%3Cpath d='M2.592.044l18.364 18.364-2.548 2.548L.044 2.592z'/%3E%3Cpath d='M0 18.364L18.364 0l2.548 2.548L2.548 20.912z'/%3E%3C/g%3E%3C/svg%3E");
   opacity: 0.8;
@@ -176,23 +179,23 @@
 
 .choices__inner {
   border: 1px solid var(--color-base-300);
-  padding: 0.5rem 0.75rem;
+  padding: 0rem;  /* Add vertical padding to match DaisyUI */
   border-radius: 0.5rem;
   background-color: var(--color-base-100);
-  min-height: 3rem;
-  height: auto;
+  min-height: 2.5rem;  /* Match DaisyUI input height */
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 0;
+  line-height: 1.25rem;  /* Match DaisyUI line-height */
 }
 
 .choices__inner:has(select) {
   /* Styles for select element */
   display: block;
   width: 100%;
-  padding: 0.5rem 0.75rem;
+  padding: 0rem;
   font-size: 1rem;
   line-height: 1.5rem;
   background-color: var(--color-base-100);
@@ -224,11 +227,10 @@
 }
 
 .choices__list--single {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  display: inline-flex;
+  align-items: center;
   width: 100%;
-  min-height: 1.5rem;
+  padding: 0rem;
 }
 
 [dir=rtl] .choices__list--single {
@@ -237,10 +239,9 @@
 }
 
 .choices__list--single .choices__item {
-  width: 100%;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 0.5rem;
 }
 
 .choices__list--multiple {
