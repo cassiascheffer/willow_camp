@@ -12,7 +12,7 @@ RUN npm ci --production=false
 
 # Copy frontend source files and config
 COPY src ./src
-COPY vite.config.js tailwind.config.js postcss.config.js ./
+COPY vite.config.js ./
 COPY static ./static
 
 # Build frontend assets (outputs to static/dist/)
@@ -40,7 +40,9 @@ WORKDIR /root/
 COPY --from=builder /app/server .
 
 # Copy templates (needed for rendering)
-COPY --from=builder /app/internal/templates ./internal/templates
+COPY --from=builder /app/internal/blog/templates ./internal/blog/templates
+COPY --from=builder /app/internal/dashboard/templates ./internal/dashboard/templates
+COPY --from=builder /app/internal/shared/templates ./internal/shared/templates
 
 # Copy icons (needed for template rendering)
 COPY --from=builder /app/internal/icons ./internal/icons
