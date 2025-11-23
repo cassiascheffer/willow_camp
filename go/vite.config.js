@@ -6,7 +6,7 @@ export default defineConfig(({ mode }) => ({
   plugins: [tailwindcss()],
   base: '/static/dist/',
   build: {
-    minify: false,
+    minify: mode === 'production',
     outDir: 'static/dist',
     emptyOutDir: true,
     rollupOptions: {
