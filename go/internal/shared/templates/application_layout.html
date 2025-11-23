@@ -30,7 +30,10 @@
     <!-- Bundled JS with Alpine.js -->
     <script type="module" src="/static/dist/main.js"></script>
 </head>
-<body class="font-mono flex flex-col min-h-screen" x-data="{ faviconCode: '1F3D5', faviconEmoji: '🏕️' }" x-init="
+<body class="font-mono flex flex-col min-h-screen" 
+    x-data="{ faviconCode: '1F3D5', faviconEmoji: '🏕️' }" 
+    @favicon-changed.window="faviconCode = $event.detail.code; faviconEmoji = $event.detail.emoji"
+    x-init="
     // Initialize theme from localStorage
     const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
     document.documentElement.setAttribute('data-theme', savedTheme);
@@ -70,7 +73,9 @@
             <!-- Theme and Emoji Pickers -->
             <div class="flex items-center gap-2">
                 <!-- Theme Selector -->
-                <div class="dropdown dropdown-end" x-data="{ currentTheme: 'light' }" x-init="currentTheme = localStorage.getItem('theme') || 'light'">
+                <div class="dropdown dropdown-end" x-data="{ currentTheme: 'light' }" 
+                     x-init="currentTheme = localStorage.getItem('theme') || 'light'"
+                     @theme-changed.window="currentTheme = $event.detail.theme">
                     <div tabindex="0" role="button" class="btn btn-ghost btn-sm gap-1 sm:gap-2 normal-case" aria-label="Theme selector">
                         <div :data-theme="currentTheme" class="bg-base-100 grid shrink-0 grid-cols-2 gap-0.5 rounded-md border border-base-content/10 p-1">
                             <div class="bg-base-content size-1 rounded-full"></div>
@@ -89,7 +94,7 @@
                             {{range .Themes}}
                             <button type="button"
                                     class="flex items-center gap-2 p-2 hover:bg-base-200 rounded text-xs"
-                                    @click="currentTheme = '{{.}}'; document.documentElement.setAttribute('data-theme', '{{.}}'); localStorage.setItem('theme', '{{.}}'); $event.target.closest('.dropdown').querySelector('[tabindex=\'0\']').blur()">
+                                    @click="currentTheme = '{{.}}'; document.documentElement.setAttribute('data-theme', '{{.}}'); localStorage.setItem('theme', '{{.}}'); window.dispatchEvent(new CustomEvent('theme-changed', { detail: { theme: '{{.}}' } })); $event.target.closest('.dropdown').querySelector('[tabindex=\'0\']').blur()">
                                 <div data-theme="{{.}}" class="bg-base-100 grid shrink-0 grid-cols-2 gap-0.5 rounded-md border border-base-content/10 p-1">
                                     <div class="bg-base-content size-1 rounded-full"></div>
                                     <div class="bg-primary size-1 rounded-full"></div>
@@ -121,6 +126,7 @@
                                         faviconEmoji = '{{.Emoji}}';
                                         localStorage.setItem('favicon-code', '{{.Code}}');
                                         localStorage.setItem('favicon-emoji', '{{.Emoji}}');
+                                        window.dispatchEvent(new CustomEvent('favicon-changed', { detail: { code: '{{.Code}}', emoji: '{{.Emoji}}' } }));
 
                                         // Update browser favicon
                                         document.querySelectorAll('link[rel*=\'icon\'], link[rel=\'apple-touch-icon\']').forEach(link => link.remove());
