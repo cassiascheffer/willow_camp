@@ -131,6 +131,12 @@ func (h *Handlers) renderTemplate(c echo.Context, templateName string, data inte
 	tmpl := template.New("layout.html").Funcs(template.FuncMap{
 		"add": func(a, b int) int { return a + b },
 		"sub": func(a, b int) int { return a - b },
+		"heroicon": func(name string, class string) template.HTML {
+			return helpers.Icon("24/outline/"+name, class)
+		},
+		"heroiconMini": func(name string, class string) template.HTML {
+			return helpers.Icon("20/solid/"+name, class)
+		},
 	})
 
 	// Parse layout and content templates

@@ -44,6 +44,7 @@ declare -a icons=(
     "20/solid/lock-closed"
     "20/solid/arrow-left-start-on-rectangle"
     "20/solid/arrow-left"
+    "20/solid/document-duplicate"
 )
 
 # Fetch each icon
