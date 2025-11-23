@@ -3,14 +3,18 @@
     <article>
         <h1 class="text-3xl font-bold mb-6">{{if .Post.Title}}{{.Post.Title}}{{end}}</h1>
 
-        {{if .Post.PublishedAt}}
         <div class="mb-6">
             {{if .AuthorName}}
             <p class="font-medium">{{.AuthorName}}</p>
             {{end}}
-            <p class="text-sm text-base-content/60">Published on {{.Post.PublishedAt.Format "January 02, 2006"}}</p>
+            {{if .Post.Published}}
+                {{if .Post.PublishedAt}}
+                <p class="text-sm text-base-content/60">Published on {{.Post.PublishedAt.Format "January 02, 2006"}}</p>
+                {{end}}
+            {{else}}
+                <span class="badge badge-neutral badge-sm">Draft</span>
+            {{end}}
         </div>
-        {{end}}
 
         <div id="post_{{.Post.ID}}" class="prose prose-lg max-w-none"{{if .Post.HasMermaidDiagrams}} x-data="mermaid"{{end}}>
             {{.RenderedContent}}
