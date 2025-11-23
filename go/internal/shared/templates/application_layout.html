@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>willow.camp | A blogging platform</title>
+
+    <!-- Open Graph meta tags -->
+    <meta property="og:title" content="willow.camp | A blogging platform">
+    <meta property="og:description" content="willow.camp is a small blogging platform for people who like to write.">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="willow.camp">
+    <meta property="og:locale" content="en_CA">
+
+    <!-- Twitter Card meta tags -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="willow.camp | A blogging platform">
+    <meta name="twitter:description" content="willow.camp is a small blogging platform for people who like to write.">
+
+    <!-- Default camping emoji favicon from OpenMoji -->
+    <link rel="icon" href="/openmoji-32x32-ico/1F3D5.ico" sizes="32x32">
+    <link rel="icon" href="/openmoji-svg-color/1F3D5.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/openmoji-apple-touch-icon-180x180/1F3D5.png">
+
+    <!-- Bundled CSS with Tailwind + DaisyUI -->
+    <link rel="stylesheet" href="/static/dist/main.css">
+
+    <!-- Bundled JS with Alpine.js -->
+    <script type="module" src="/static/dist/main.js"></script>
+</head>
+<body class="font-mono flex flex-col min-h-screen" 
+    x-data="{ faviconCode: '1F3D5', faviconEmoji: '🏕️' }" 
+    @favicon-changed.window="faviconCode = $event.detail.code; faviconEmoji = $event.detail.emoji"
+    x-init="
+    // Initialize theme from localStorage
+    const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', savedTheme);
+
+    // Initialize favicon from localStorage
+    faviconCode = localStorage.getItem('favicon-code') || '1F3D5';
+    faviconEmoji = localStorage.getItem('favicon-emoji') || '🏕️';
+">
+    <!-- Top Navigation -->
+    <div class="navbar bg-base-100 border-b border-base-300 px-2 sm:px-4">
+        <div class="navbar-start">
+            <div class="dropdown">
+                <div tabindex="0" role="button" class="btn btn-ghost lg:hidden" aria-label="Menu">
+                    {{heroicon "bars-3" "w-5 h-5"}}
+                </div>
+                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52 border border-base-300">
+                    <li><a href="/" class="text-sm">Home</a></li>
+                    <li><a href="/docs" class="text-sm">Docs</a></li>
+                </ul>
+            </div>
+            {{if .ShowLogo}}
+            <a href="/" class="btn btn-ghost text-lg sm:text-xl text-primary font-bold">
+                <span>
+                    <img :src="`/openmoji-svg-color/${faviconCode}.svg`" :alt="faviconEmoji" class="w-6 h-6 sm:w-8 sm:h-8 inline">
+                </span>
+                willow.camp
+            </a>
+            {{end}}
+        </div>
+        <div class="navbar-center hidden lg:flex">
+            <ul class="menu menu-horizontal px-1">
+                <li><a href="/" class="text-sm">Home</a></li>
+                <li><a href="/docs" class="text-sm">Docs</a></li>
+            </ul>
+        </div>
+        <div class="navbar-end">
+            <!-- Theme and Emoji Pickers -->
+            <div class="flex items-center gap-2">
+                <!-- Theme Selector -->
+                <div class="dropdown dropdown-end" x-data="{ currentTheme: 'light' }" 
+                     x-init="currentTheme = localStorage.getItem('theme') || 'light'"
+                     @theme-changed.window="currentTheme = $event.detail.theme">
+                    <div tabindex="0" role="button" class="btn btn-ghost btn-sm gap-1 sm:gap-2 normal-case" aria-label="Theme selector">
+                        <div :data-theme="currentTheme" class="bg-base-100 grid shrink-0 grid-cols-2 gap-0.5 rounded-md border border-base-content/10 p-1">
+                            <div class="bg-base-content size-1 rounded-full"></div>
+                            <div class="bg-primary size-1 rounded-full"></div>
+                            <div class="bg-secondary size-1 rounded-full"></div>
+                            <div class="bg-accent size-1 rounded-full"></div>
+                        </div>
+                        <span class="capitalize text-xs hidden sm:inline" x-text="currentTheme"></span>
+                    </div>
+                    <div tabindex="0" class="dropdown-content z-[1] menu p-2 shadow-lg bg-base-100 rounded-box w-64 max-h-96 overflow-y-auto border border-base-300">
+                        <div class="menu-title text-xs mb-2">
+                            Choose Theme
+                            <div class="text-xs opacity-60 mt-1">Themes by <a href="https://daisyui.com" class="link" target="_blank">daisyUI</a></div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-1">
+                            {{range .Themes}}
+                            <button type="button"
+                                    class="flex items-center gap-2 p-2 hover:bg-base-200 rounded text-xs"
+                                    @click="currentTheme = '{{.}}'; document.documentElement.setAttribute('data-theme', '{{.}}'); localStorage.setItem('theme', '{{.}}'); window.dispatchEvent(new CustomEvent('theme-changed', { detail: { theme: '{{.}}' } })); $event.target.closest('.dropdown').querySelector('[tabindex=\'0\']').blur()">
+                                <div data-theme="{{.}}" class="bg-base-100 grid shrink-0 grid-cols-2 gap-0.5 rounded-md border border-base-content/10 p-1">
+                                    <div class="bg-base-content size-1 rounded-full"></div>
+                                    <div class="bg-primary size-1 rounded-full"></div>
+                                    <div class="bg-secondary size-1 rounded-full"></div>
+                                    <div class="bg-accent size-1 rounded-full"></div>
+                                </div>
+                                <span class="capitalize flex-1 text-left">{{.}}</span>
+                            </button>
+                            {{end}}
+                        </div>
+                    </div>
+                </div>
+                <!-- Emoji Favicon Selector -->
+                <div class="dropdown dropdown-end">
+                    <div tabindex="0" role="button" class="btn btn-ghost btn-sm gap-1 normal-case" aria-label="Favicon selector">
+                        <span class="w-5 h-5">
+                            <img :src="`/openmoji-svg-color/${faviconCode}.svg`" :alt="faviconEmoji" class="w-5 h-5">
+                        </span>
+                        <span class="text-xs opacity-60 hidden sm:inline">favicon</span>
+                    </div>
+                    <div tabindex="0" class="dropdown-content z-[1] menu p-2 shadow-lg bg-base-100 rounded-box w-48 border border-base-300">
+                        <div class="menu-title text-xs mb-2">Choose Favicon</div>
+                        <div class="grid grid-cols-5 gap-2">
+                            {{range .Emojis}}
+                            <button type="button"
+                                    class="btn btn-ghost btn-sm p-1 h-auto min-h-0"
+                                    @click="
+                                        faviconCode = '{{.Code}}';
+                                        faviconEmoji = '{{.Emoji}}';
+                                        localStorage.setItem('favicon-code', '{{.Code}}');
+                                        localStorage.setItem('favicon-emoji', '{{.Emoji}}');
+                                        window.dispatchEvent(new CustomEvent('favicon-changed', { detail: { code: '{{.Code}}', emoji: '{{.Emoji}}' } }));
+
+                                        // Update browser favicon
+                                        document.querySelectorAll('link[rel*=\'icon\'], link[rel=\'apple-touch-icon\']').forEach(link => link.remove());
+
+                                        const icoLink = document.createElement('link');
+                                        icoLink.rel = 'icon';
+                                        icoLink.type = 'image/x-icon';
+                                        icoLink.sizes = '32x32';
+                                        icoLink.href = `/openmoji-32x32-ico/${faviconCode}.ico`;
+                                        document.head.appendChild(icoLink);
+
+                                        const svgLink = document.createElement('link');
+                                        svgLink.rel = 'icon';
+                                        svgLink.type = 'image/svg+xml';
+                                        svgLink.href = `/openmoji-svg-color/${faviconCode}.svg`;
+                                        document.head.appendChild(svgLink);
+
+                                        const appleLink = document.createElement('link');
+                                        appleLink.rel = 'apple-touch-icon';
+                                        appleLink.href = `/openmoji-apple-touch-icon-180x180/${faviconCode}.png`;
+                                        document.head.appendChild(appleLink);
+
+                                        $event.target.closest('.dropdown').querySelector('[tabindex=\'0\']').blur();
+                                    ">
+                                <img src="/openmoji-svg-color/{{.Code}}.svg" alt="{{.Emoji}}" class="w-6 h-6">
+                            </button>
+                            {{end}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <main class="mx-auto p-4 sm:p-6 lg:p-8 flex-1 flex items-center justify-center">
+        {{template "content" .}}
+    </main>
+    <footer class="footer p-4 bg-base-200 text-base-content">
+        <div class="container mx-auto text-center">
+            <p class="text-sm text-base-content/60"><a href="/terms" class="link hover:link-primary">Terms of Service</a></p>
+        </div>
+    </footer>
+</body>
+</html>

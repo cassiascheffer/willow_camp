@@ -171,3 +171,4 @@ Run tests frequently - all three types are required:
 - System tests (`test/system/`)
 
 Use Capybara + Cuprite for system testing (headless Chrome).
+- my github handle is cassiascheffer

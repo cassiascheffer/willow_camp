@@ -1,0 +1,108 @@
+{{define "content"}}
+<div class="container mx-auto max-w-2xl px-4 py-12">
+  <!-- Header -->
+  <div class="text-center mb-12">
+    <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-primary mb-4">
+      Subscribe to {{.BlogTitle}}
+    </h1>
+  </div>
+
+  <!-- Feed Formats -->
+  <div class="card bg-base-100 mb-12">
+    <div class="card-body">
+      <h2 class="card-title text-2xl mb-4">Available Feed Formats</h2>
+      <div class="space-y-4">
+        <!-- RSS Feed -->
+        <div class="flex items-center justify-between gap-4" x-data="{ copied: false }">
+          <div class="flex-1">
+            <span class="font-bold mr-2">RSS Feed:</span>
+            <span class="font-mono text-sm text-base-content/70" role="text">{{.RSSFeedURL}}</span>
+          </div>
+          <button class="btn btn-ghost btn-sm btn-square"
+                  @click="navigator.clipboard.writeText('{{.RSSFeedURL}}'); copied = true; setTimeout(() => copied = false, 2000)"
+                  aria-label="Copy RSS Feed URL">
+            <span x-show="!copied">
+              {{heroicon "document-duplicate" "h-4 w-4"}}
+            </span>
+            <span x-show="copied" x-cloak aria-label="Copied successfully">✓</span>
+          </button>
+        </div>
+
+        <!-- Atom Feed -->
+        <div class="flex items-center justify-between gap-4" x-data="{ copied: false }">
+          <div class="flex-1">
+            <span class="font-bold mr-2">Atom Feed:</span>
+            <span class="font-mono text-sm text-base-content/70" role="text">{{.AtomFeedURL}}</span>
+          </div>
+          <button class="btn btn-ghost btn-sm btn-square"
+                  @click="navigator.clipboard.writeText('{{.AtomFeedURL}}'); copied = true; setTimeout(() => copied = false, 2000)"
+                  aria-label="Copy Atom Feed URL">
+            <span x-show="!copied">
+              {{heroicon "document-duplicate" "h-4 w-4"}}
+            </span>
+            <span x-show="copied" x-cloak aria-label="Copied successfully">✓</span>
+          </button>
+        </div>
+
+        <!-- JSON Feed -->
+        <div class="flex items-center justify-between gap-4" x-data="{ copied: false }">
+          <div class="flex-1">
+            <span class="font-bold mr-2">JSON Feed:</span>
+            <span class="font-mono text-sm text-base-content/70" role="text">{{.JSONFeedURL}}</span>
+          </div>
+          <button class="btn btn-ghost btn-sm btn-square"
+                  @click="navigator.clipboard.writeText('{{.JSONFeedURL}}'); copied = true; setTimeout(() => copied = false, 2000)"
+                  aria-label="Copy JSON Feed URL">
+            <span x-show="!copied">
+              {{heroicon "document-duplicate" "h-4 w-4"}}
+            </span>
+            <span x-show="copied" x-cloak aria-label="Copied successfully">✓</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- What is RSS Section -->
+  <div class="mb-12 prose max-w-none">
+    <h2>What is RSS?</h2>
+    <p>
+      RSS (Really Simple Syndication) is a way to subscribe to websites and get updates automatically in your feed reader.
+      Instead of checking websites manually, you can follow all your favorite sites in one place.
+    </p>
+    <div class="not-prose flex flex-wrap gap-4 mt-4">
+      <a href="https://aboutfeeds.com/" class="link link-primary" target="_blank" rel="noopener" aria-describedby="external-link-help">
+        Learn more about feeds
+        <span class="sr-only">(opens in new tab)</span>
+      </a>
+      <a href="https://github.com/AboutRSS/ALL-about-RSS" class="link link-primary" target="_blank" rel="noopener" aria-describedby="external-link-help">
+        Everything about RSS
+        <span class="sr-only">(opens in new tab)</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- More RSS Readers -->
+  <div class="mb-12 text-center">
+    <p class="text-base-content/60 mb-3">Looking for more RSS reader options?</p>
+    <a href="https://github.com/AboutRSS/ALL-about-RSS#-rss-readers"
+       class="btn btn-outline btn-primary" target="_blank" rel="noopener" aria-describedby="external-link-help">
+      View complete list of RSS readers
+      <span class="sr-only">(opens in new tab)</span>
+    </a>
+  </div>
+
+  <!-- Instructions -->
+  <div class="prose max-w-none">
+    <h3>How to Subscribe</h3>
+    <ol>
+      <li>Choose your preferred feed reader from the list above</li>
+      <li>Click the link to subscribe directly, or copy the feed URL and paste it into your reader</li>
+      <li>Your reader will automatically check for new posts and notify you when they're published</li>
+    </ol>
+  </div>
+
+  <!-- Screen reader help for external links -->
+  <div id="external-link-help" class="sr-only">External links open in a new tab</div>
+</div>
+{{end}}

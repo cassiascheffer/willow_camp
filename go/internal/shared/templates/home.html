@@ -1,0 +1,99 @@
+{{define "content"}}
+<div class="hero h-full w-full" x-data="homePage">
+  <div class="hero-content text-center px-4 w-full max-w-3xl mx-auto">
+    <div class="w-full">
+      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-primary mb-8 md:mb-12">
+        <img :src="`/openmoji-svg-color/${faviconCode}.svg`" :alt="faviconEmoji" class="inline-block w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16"> willow.camp
+      </h1>
+      <h2 class="text-lg sm:text-xl font-light mb-12 md:mb-16 text-base-content/70">A blogging platform</h2>
+      <div class="mb-12 md:mb-16 space-y-6">
+        <p class="text-base sm:text-lg">Custom Themes, favicons, and domains. Import & Export in Markdown.</p>
+        <p class="text-base-content/60 text-sm sm:text-base">Coming soon: RSS feeds and bookmarks.</p>
+      </div>
+      <div class="flex flex-col sm:flex-row gap-6 sm:gap-8 justify-center items-center mb-12 md:mb-16">
+        <a href="/login" class="btn btn-primary btn-lg w-full sm:w-auto min-w-32">Sign In</a>
+        <a href="/login" class="btn btn-secondary btn-lg w-full sm:w-auto min-w-32">Sign Up</a>
+      </div>
+      <div class="text-base-content/60 text-sm space-y-3">
+        <p>Made by <a href="https://enumerator.dev" class="link hover:link-primary">Cassia</a> ⋅ <a href="https://letterbird.co/cassia" class="link hover:link-primary">Get in touch</a></p>
+        <p>
+          <button
+            @click="toggleEmojiPicker"
+            x-ref="emojiButton"
+            type="button"
+            class="link hover:link-primary"
+          >
+            Change icon
+          </button>
+          ⋅
+          <button
+            @click="toggleThemePicker"
+            x-ref="themeButton"
+            type="button"
+            class="link hover:link-primary"
+          >
+            Change theme (<span x-text="themes.find(t => t.id === theme)?.name || theme"></span>)
+          </button>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Emoji Picker -->
+  <div
+    x-show="showEmojiPicker"
+    x-ref="emojiPicker"
+    x-transition
+    class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-base-100 shadow-2xl rounded-lg p-6 max-w-md w-full mx-4 z-50 max-h-96 overflow-y-auto"
+  >
+    <h3 class="text-lg font-semibold mb-4">Choose an icon</h3>
+    <div class="grid grid-cols-4 gap-3">
+      <template x-for="item in commonEmojis" :key="item.hexcode">
+        <button
+          @click="selectEmoji(item.emoji, item.hexcode)"
+          type="button"
+          class="p-3 hover:bg-base-200 rounded-lg transition-colors flex flex-col items-center gap-1"
+          :title="item.annotation"
+        >
+          <img :src="`/openmoji-svg-color/${item.hexcode}.svg`" :alt="item.emoji" class="w-10 h-10">
+          <span class="text-xs text-base-content/60" x-text="item.annotation"></span>
+        </button>
+      </template>
+    </div>
+  </div>
+
+  <!-- Theme Picker -->
+  <div
+    x-show="showThemePicker"
+    x-ref="themePicker"
+    x-transition
+    class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-base-100 shadow-2xl rounded-lg p-6 max-w-md w-full mx-4 z-50 max-h-96 overflow-y-auto"
+  >
+    <h3 class="text-lg font-semibold mb-4">Choose a theme</h3>
+    <div class="grid grid-cols-2 gap-2">
+      <template x-for="themeItem in themes" :key="themeItem.id">
+        <button
+          @click="selectTheme(themeItem.id)"
+          type="button"
+          class="p-3 hover:bg-base-200 rounded-lg transition-colors text-left"
+          :class="{ 'bg-base-200': theme === themeItem.id }"
+        >
+          <span x-text="themeItem.name"></span>
+        </button>
+      </template>
+    </div>
+  </div>
+
+  <!-- Backdrop -->
+  <div
+    x-show="showEmojiPicker || showThemePicker"
+    x-transition:enter="transition-opacity ease-out duration-200"
+    x-transition:enter-start="opacity-0"
+    x-transition:enter-end="opacity-100"
+    x-transition:leave="transition-opacity ease-in duration-150"
+    x-transition:leave-start="opacity-100"
+    x-transition:leave-end="opacity-0"
+    class="fixed inset-0 bg-black/50 z-40"
+  ></div>
+</div>
+{{end}}

@@ -1,0 +1,52 @@
+{{define "content"}}
+<div class="">
+    <article>
+        <h1 class="text-3xl font-bold mb-6">{{if .Post.Title}}{{.Post.Title}}{{end}}</h1>
+
+        <div class="mb-6">
+            {{if .AuthorName}}
+            <p class="font-medium">{{.AuthorName}}</p>
+            {{end}}
+            {{if .Post.Published}}
+                {{if .Post.PublishedAt}}
+                <p class="text-sm text-base-content/60">Published on {{.Post.PublishedAt.Format "January 02, 2006"}}</p>
+                {{end}}
+            {{else}}
+                <span class="badge badge-neutral badge-sm">Draft</span>
+            {{end}}
+        </div>
+
+        <div id="post_{{.Post.ID}}" class="prose prose-lg max-w-none"{{if .Post.HasMermaidDiagrams}} x-data="mermaid"{{end}}>
+            {{.RenderedContent}}
+        </div>
+    </article>
+
+    {{if .Tags}}
+    <nav class="text-sm text-base-content/70 my-8" aria-label="Post tags" role="navigation">
+        <span class="sr-only">This post is tagged with:</span>
+        <span aria-hidden="true">Tagged:</span>
+        <ul class="inline-flex flex-wrap gap-2 ml-2" role="list">
+            {{range .Tags}}
+            <li>
+                <a href="/tags/{{.Slug}}" class="badge badge-ghost badge-sm hover:badge-primary" aria-label="View all posts tagged with {{.Name}}">
+                    {{.Name}}
+                </a>
+            </li>
+            {{end}}
+        </ul>
+    </nav>
+    {{end}}
+
+    {{if .PostFooter}}
+    <footer class="mt-8 pt-6 border-t border-base-300">
+        <div class="prose prose-sm max-w-none">
+            {{.PostFooter}}
+        </div>
+    </footer>
+    {{end}}
+
+    <div class="mt-8 border-t border-base-300 pt-6">
+        <a href="/" class="btn btn-ghost btn-sm">Back to posts</a>
+    </div>
+</div>
+{{end}}
