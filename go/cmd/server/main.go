@@ -120,6 +120,10 @@ func main() {
 	e.POST("/logout", sharedH.Logout)
 	e.GET("/logout", sharedH.Logout)
 
+	// Public pages
+	e.GET("/docs", sharedH.DocsPage)
+	e.GET("/terms", sharedH.TermsPage)
+
 	// Dashboard routes (protected)
 	dashboard := e.Group("/dashboard")
 	dashboard.Use(authService.RequireAuth)
