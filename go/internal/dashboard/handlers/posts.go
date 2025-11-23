@@ -3,11 +3,14 @@ package handlers
 import (
 	"context"
 	"fmt"
+	"html/template"
 	"net/http"
 	"strings"
 	"time"
 
 	"github.com/cassiascheffer/willow_camp/internal/auth"
+	"github.com/cassiascheffer/willow_camp/internal/helpers"
+	"github.com/cassiascheffer/willow_camp/internal/markdown"
 	"github.com/cassiascheffer/willow_camp/internal/models"
 	"github.com/google/uuid"
 	"github.com/gosimple/slug"
@@ -124,6 +127,127 @@ func (h *Handlers) EditPost(c echo.Context) error {
 	data.ActiveTab = "posts"
 
 	return renderDashboardTemplate(c, "post_form.html", data)
+}
+
+// PreviewPost shows a preview of the post using the blog layout
+// This allows users to see what their unpublished post will look like when published
+func (h *Handlers) PreviewPost(c echo.Context) error {
+	logger := getLogger(c)
+	user := auth.GetUser(c)
+	if user == nil {
+		return echo.NewHTTPError(http.StatusUnauthorized, "Unauthorized")
+	}
+
+	// Get blog by subdomain and verify ownership
+	blog, err := h.getBlogBySubdomainParam(c, user)
+	if err != nil {
+		return err
+	}
+
+	// Get post by ID
+	postID, err := parseUUID(c.Param("post_id"))
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "Invalid post ID")
+	}
+
+	post, err := h.repos.Post.FindByID(c.Request().Context(), postID)
+	if err != nil || post.BlogID != blog.ID {
+		return echo.NewHTTPError(http.StatusNotFound, "Post not found")
+	}
+
+	// Render markdown content
+	var renderedContent template.HTML
+	if post.BodyMarkdown != nil && *post.BodyMarkdown != "" {
+		rendered, err := markdown.Render(*post.BodyMarkdown)
+		if err != nil {
+			logger.Error("Failed to render post markdown", "blog_id", blog.ID, "post_id", post.ID, "error", err)
+			return echo.NewHTTPError(http.StatusInternalServerError, "Failed to render markdown")
+		}
+		renderedContent = rendered
+	}
+
+	// Render post footer if present
+	var postFooter template.HTML
+	if blog.PostFooterMarkdown != nil && *blog.PostFooterMarkdown != "" {
+		rendered, err := markdown.Render(*blog.PostFooterMarkdown)
+		if err != nil {
+			// Don't fail the whole page if footer fails
+			logger.Warn("Failed to render post footer markdown", "blog_id", blog.ID, "error", err)
+			postFooter = template.HTML("")
+		} else {
+			postFooter = rendered
+		}
+	}
+
+	// Load tags for the post
+	tags, err := h.repos.Tag.FindTagsForPost(c.Request().Context(), post.ID)
+	if err != nil {
+		// Don't fail if tags fail to load
+		logger.Warn("Failed to load tags for post", "blog_id", blog.ID, "post_id", post.ID, "error", err)
+		tags = []models.Tag{}
+	}
+
+	// Load author information
+	author, err := h.repos.User.FindByID(c.Request().Context(), post.AuthorID)
+	var authorName string
+	if err == nil && author != nil && author.Name != nil {
+		authorName = *author.Name
+	}
+
+	// Prepare template data
+	title := "Post"
+	if post.Title != nil {
+		title = *post.Title
+	}
+
+	// Set Open Graph type to "article" for posts
+	ogType := "article"
+	ogDescription := "A blog post powered by willow.camp"
+	if post.MetaDescription != nil && *post.MetaDescription != "" {
+		ogDescription = *post.MetaDescription
+	}
+
+	// Prepare article meta tags
+	var articlePublishedTime string
+	if post.PublishedAt != nil {
+		articlePublishedTime = post.PublishedAt.Format("2006-01-02T15:04:05Z07:00")
+	}
+
+	// Collect tag names for article:tag meta tags
+	var articleTags []string
+	for _, tag := range tags {
+		if tag.Name != "" {
+			articleTags = append(articleTags, tag.Name)
+		}
+	}
+
+	// Set meta description for SEO (separate from OGDescription)
+	metaDescription := ""
+	if post.MetaDescription != nil && *post.MetaDescription != "" {
+		metaDescription = *post.MetaDescription
+	}
+
+	data := map[string]interface{}{
+		"Blog":                 blog,
+		"Title":                title,
+		"Post":                 post,
+		"RenderedContent":      renderedContent,
+		"PostFooter":           postFooter,
+		"Tags":                 tags,
+		"AuthorName":           authorName,
+		"OGType":               ogType,
+		"OGDescription":        ogDescription,
+		"MetaDescription":      metaDescription,
+		"ArticlePublishedTime": articlePublishedTime,
+		"ArticleAuthor":        authorName,
+		"ArticleTags":          articleTags,
+	}
+
+	// Set blog in context so the blog template rendering works
+	c.Set("blog", blog)
+
+	// Render using the blog layout and template (not dashboard layout)
+	return renderBlogTemplate(c, blog, "post_show.html", data)
 }
 
 // UpdatePost handles post updates
@@ -352,4 +476,97 @@ func (h *Handlers) generateUniqueSlug(ctx context.Context, blogID, authorID uuid
 		return baseSlug, nil
 	}
 	return fmt.Sprintf("%s-%d", baseSlug, maxNum+1), nil
+}
+
+// renderBlogTemplate renders a blog template with blog layout (not dashboard layout)
+// This is used by PreviewPost to show posts as they would appear on the public blog
+func renderBlogTemplate(c echo.Context, blog *models.Blog, templateName string, data map[string]interface{}) error {
+	logger := getLogger(c)
+
+	// Enrich template data with blog layout requirements
+	data = enrichBlogTemplateData(c, blog, data)
+
+	// Create template with helper functions
+	tmpl := template.New("layout.html").Funcs(template.FuncMap{
+		"add": func(a, b int) int { return a + b },
+		"sub": func(a, b int) int { return a - b },
+	})
+
+	// Parse blog layout and content templates
+	tmpl, err := tmpl.ParseFiles(
+		"internal/blog/templates/layout.html",
+		"internal/blog/templates/"+templateName,
+	)
+	if err != nil {
+		logger.Error("Failed to parse blog template", "template", templateName, "error", err)
+		return echo.NewHTTPError(http.StatusInternalServerError, "Template error: "+err.Error())
+	}
+
+	c.Response().Header().Set("Content-Type", "text/html; charset=utf-8")
+	c.Response().WriteHeader(http.StatusOK)
+
+	return tmpl.Execute(c.Response().Writer, data)
+}
+
+// enrichBlogTemplateData adds layout requirements to template data
+// This is similar to the blog handlers' enrichTemplateData but without accessing h.repos
+func enrichBlogTemplateData(c echo.Context, blog *models.Blog, data map[string]interface{}) map[string]interface{} {
+	// Ensure we have all required fields for the layout
+	if _, exists := data["Title"]; !exists {
+		data["Title"] = getBlogTitle(blog)
+	}
+
+	// Blog title for display
+	data["BlogTitle"] = getBlogTitle(blog)
+
+	// OpenMoji favicon filename
+	emojiFilename := "1F3D5" // Default camping emoji
+	if blog.FaviconEmoji != nil && *blog.FaviconEmoji != "" {
+		emojiFilename = helpers.EmojiToOpenmojiFilename(*blog.FaviconEmoji)
+	}
+	data["EmojiFilename"] = emojiFilename
+
+	// Note: Pages for navigation are not included in preview for simplicity
+	// The preview handler can add them if needed
+	if _, exists := data["Pages"]; !exists {
+		data["Pages"] = []*models.Post{}
+	}
+
+	// Open Graph defaults
+	if _, exists := data["OGTitle"]; !exists {
+		data["OGTitle"] = data["Title"]
+	}
+	if _, exists := data["OGDescription"]; !exists {
+		if blog.MetaDescription != nil && *blog.MetaDescription != "" {
+			data["OGDescription"] = *blog.MetaDescription
+		} else {
+			data["OGDescription"] = "A blog powered by willow.camp"
+		}
+	}
+	if _, exists := data["OGType"]; !exists {
+		data["OGType"] = "website"
+	}
+
+	// Current URL for Open Graph
+	scheme := "http"
+	if c.Request().TLS != nil || c.Request().Header.Get("X-Forwarded-Proto") == "https" {
+		scheme = "https"
+	}
+	data["CurrentURL"] = scheme + "://" + c.Request().Host + c.Request().URL.String()
+
+	return data
+}
+
+// getBlogTitle returns the blog title for display
+func getBlogTitle(blog *models.Blog) string {
+	if blog.Title != nil && *blog.Title != "" {
+		return *blog.Title
+	}
+	if blog.Subdomain != nil && *blog.Subdomain != "" {
+		return *blog.Subdomain
+	}
+	if blog.CustomDomain != nil && *blog.CustomDomain != "" {
+		return *blog.CustomDomain
+	}
+	return "willow.camp"
 }

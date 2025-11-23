@@ -129,6 +129,7 @@ func main() {
 	dashboard.GET("/blogs/:subdomain/posts", dashboardH.BlogPosts)
 	dashboard.POST("/blogs/:subdomain/posts/untitled", dashboardH.CreateUntitledPost)
 	dashboard.GET("/blogs/:subdomain/posts/:post_id/edit", dashboardH.EditPost)
+	dashboard.GET("/blogs/:subdomain/posts/:post_id/preview", dashboardH.PreviewPost)
 	dashboard.POST("/blogs/:subdomain/posts/:post_id", dashboardH.UpdatePost)
 	dashboard.PUT("/blogs/:subdomain/posts/:post_id", dashboardH.UpdatePost)
 	dashboard.POST("/blogs/:subdomain/posts/:post_id/delete", dashboardH.DeletePost)
