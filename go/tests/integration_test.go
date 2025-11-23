@@ -9,9 +9,11 @@ import (
 	"testing"
 
 	"github.com/cassiascheffer/willow_camp/internal/auth"
-	"github.com/cassiascheffer/willow_camp/internal/handlers"
-	"github.com/cassiascheffer/willow_camp/internal/middleware"
+	bloghandlers "github.com/cassiascheffer/willow_camp/internal/blog/handlers"
+	blogmiddleware "github.com/cassiascheffer/willow_camp/internal/blog/middleware"
+	dashboardhandlers "github.com/cassiascheffer/willow_camp/internal/dashboard/handlers"
 	"github.com/cassiascheffer/willow_camp/internal/repository"
+	sharedhandlers "github.com/cassiascheffer/willow_camp/internal/shared/handlers"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/labstack/echo/v4"
@@ -40,7 +42,7 @@ func setupTestServer(t *testing.T) (*echo.Echo, *repository.Repositories) {
 	repos := repository.NewRepositories(pool)
 
 	// Initialize auth with test secret
-	authService := auth.New(repos.User, "test-secret")
+	authService := auth.New(repos.User, "test-secret", nil)
 
 	// Initialize Echo app
 	e := echo.New()
@@ -48,42 +50,44 @@ func setupTestServer(t *testing.T) (*echo.Echo, *repository.Repositories) {
 	e.Use(echomiddleware.Recover())
 
 	// Initialize handlers
-	h := handlers.New(repos, authService)
+	baseDomain := "localhost:3001"
+	blogH := bloghandlers.New(repos, authService, baseDomain)
+	dashboardH := dashboardhandlers.New(repos, authService, baseDomain)
+	sharedH := sharedhandlers.New(repos, authService, baseDomain)
 
 	// Setup routes
-	setupRoutes(e, h, authService, repos)
+	setupRoutes(e, blogH, dashboardH, sharedH, authService, repos)
 
 	return e, repos
 }
 
-func setupRoutes(e *echo.Echo, h *handlers.Handlers, authService *auth.Auth, repos *repository.Repositories) {
+func setupRoutes(e *echo.Echo, blogH *bloghandlers.Handlers, dashboardH *dashboardhandlers.Handlers, sharedH *sharedhandlers.Handlers, authService *auth.Auth, repos *repository.Repositories) {
 	// Auth routes
-	e.GET("/login", h.LoginPage)
-	e.POST("/login", h.LoginSubmit)
-	e.POST("/logout", h.Logout)
-	e.GET("/logout", h.Logout)
+	e.GET("/login", sharedH.LoginPage)
+	e.POST("/login", sharedH.LoginSubmit)
+	e.POST("/logout", sharedH.Logout)
+	e.GET("/logout", sharedH.Logout)
 
 	// Dashboard routes (protected)
 	dashboard := e.Group("/dashboard")
 	dashboard.Use(authService.RequireAuth)
-	dashboard.GET("", h.Dashboard)
-	dashboard.GET("/blogs/:blog_id/posts", h.BlogPosts)
-	dashboard.POST("/blogs/:blog_id/posts/untitled", h.CreateUntitledPost)
-	dashboard.GET("/blogs/:blog_id/posts/:post_id/edit", h.EditPost)
-	dashboard.POST("/blogs/:blog_id/posts/:post_id", h.UpdatePost)
-	dashboard.PUT("/blogs/:blog_id/posts/:post_id", h.UpdatePost)
-	dashboard.POST("/blogs/:blog_id/posts/:post_id/delete", h.DeletePost)
-	dashboard.GET("/blogs/:blog_id/settings", h.BlogSettings)
-	dashboard.POST("/blogs/:blog_id/settings", h.UpdateBlogSettings)
-	dashboard.GET("/settings", h.UserSettings)
-	dashboard.POST("/settings", h.UpdateUserSettings)
-	dashboard.POST("/settings/password", h.UpdatePassword)
+	dashboard.GET("", dashboardH.Dashboard)
+	dashboard.GET("/blogs/:subdomain/posts", dashboardH.BlogPosts)
+	dashboard.POST("/blogs/:subdomain/posts/untitled", dashboardH.CreateUntitledPost)
+	dashboard.GET("/blogs/:subdomain/posts/:post_id/edit", dashboardH.EditPost)
+	dashboard.POST("/blogs/:subdomain/posts/:post_id", dashboardH.UpdatePost)
+	dashboard.PUT("/blogs/:subdomain/posts/:post_id", dashboardH.UpdatePost)
+	dashboard.POST("/blogs/:subdomain/posts/:post_id/delete", dashboardH.DeletePost)
+	dashboard.GET("/blogs/:subdomain/settings", dashboardH.BlogSettings)
+	dashboard.POST("/blogs/:subdomain/settings", dashboardH.UpdateBlogSettings)
+	dashboard.GET("/security", dashboardH.Security)
+	dashboard.POST("/security/password", dashboardH.UpdateSecurityPassword)
 
 	// Public blog routes
 	blog := e.Group("")
-	blog.Use(middleware.BlogResolver(repos.Blog))
-	blog.GET("/", h.BlogIndex)
-	blog.GET("/:slug", h.PostShow)
+	blog.Use(blogmiddleware.BlogResolver(repos.Blog))
+	blog.GET("/", blogH.BlogIndex)
+	blog.GET("/:slug", blogH.PostShow)
 }
 
 func stringPtr(s string) *string {

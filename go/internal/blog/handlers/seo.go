@@ -4,7 +4,7 @@ import (
 	"encoding/xml"
 	"net/http"
 
-	"github.com/cassiascheffer/willow_camp/internal/middleware"
+	"github.com/cassiascheffer/willow_camp/internal/blog/middleware"
 	"github.com/labstack/echo/v4"
 )
 

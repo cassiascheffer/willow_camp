@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/cassiascheffer/willow_camp/internal/blog/middleware"
 	"github.com/cassiascheffer/willow_camp/internal/markdown"
-	"github.com/cassiascheffer/willow_camp/internal/middleware"
 	"github.com/cassiascheffer/willow_camp/internal/models"
 	"github.com/labstack/echo/v4"
 )

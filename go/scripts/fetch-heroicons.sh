@@ -5,7 +5,7 @@ set -e
 # Usage: ./scripts/fetch-heroicons.sh
 
 HEROICONS_BASE="https://raw.githubusercontent.com/tailwindlabs/heroicons/master/src"
-ICONS_DIR="internal/templates/icons"
+ICONS_DIR="internal/icons"
 
 # Create icons directory structure
 mkdir -p "$ICONS_DIR/24/outline"

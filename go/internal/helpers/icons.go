@@ -7,10 +7,10 @@ import (
 	"strings"
 )
 
-// Icon loads an SVG icon from the templates/icons directory and applies the given class
+// Icon loads an SVG icon from the icons directory and applies the given class
 func Icon(path string, class string) template.HTML {
 	// Read the SVG file
-	svgPath := fmt.Sprintf("internal/templates/icons/%s.svg", path)
+	svgPath := fmt.Sprintf("internal/icons/%s.svg", path)
 	content, err := os.ReadFile(svgPath)
 	if err != nil {
 		// Return empty string if icon not found

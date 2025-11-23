@@ -5,9 +5,9 @@ import (
 	"net/http"
 
 	"github.com/cassiascheffer/willow_camp/internal/auth"
+	"github.com/cassiascheffer/willow_camp/internal/blog/middleware"
 	"github.com/cassiascheffer/willow_camp/internal/helpers"
 	"github.com/cassiascheffer/willow_camp/internal/logging"
-	"github.com/cassiascheffer/willow_camp/internal/middleware"
 	"github.com/cassiascheffer/willow_camp/internal/models"
 	"github.com/cassiascheffer/willow_camp/internal/repository"
 	"github.com/labstack/echo/v4"

@@ -28,19 +28,30 @@ This directory contains an in-progress migration of Willow Camp from Ruby on Rai
 
 ### Directory Structure
 
+The application is organized by three main areas (blog, dashboard, shared) with shared infrastructure at the top level:
+
 ```
 go/
 ├── cmd/server/           # Application entry point
 ├── internal/
-│   ├── auth/            # Authentication (session management, bcrypt)
-│   ├── handlers/        # HTTP handlers (blog, dashboard, auth)
-│   ├── middleware/      # Blog resolver, etc.
-│   ├── models/          # Data models (matching Rails schema)
-│   ├── repository/      # Database access layer (pgx)
-│   ├── markdown/        # Markdown rendering (goldmark)
-│   ├── helpers/         # Utility functions
-│   ├── templates/       # Go templates (layout, pages)
-│   └── icons/           # Generated heroicons (see below)
+│   ├── blog/            # Public blog pages area
+│   │   ├── handlers/    # Blog handlers (posts, tags, feeds, SEO)
+│   │   ├── middleware/  # Blog resolver middleware
+│   │   └── templates/   # Blog page templates
+│   ├── dashboard/       # Dashboard/admin area
+│   │   ├── handlers/    # Dashboard handlers (posts, settings, security, tags)
+│   │   └── templates/   # Dashboard templates
+│   ├── shared/          # Shared public pages (home, auth)
+│   │   ├── handlers/    # Auth and home handlers
+│   │   └── templates/   # Simple layout for auth
+│   ├── auth/            # Authentication service (infrastructure)
+│   ├── flash/           # Flash messages (infrastructure)
+│   ├── helpers/         # Template helpers (infrastructure)
+│   ├── icons/           # Heroicon SVG files (see below)
+│   ├── logging/         # Structured logging (infrastructure)
+│   ├── markdown/        # Markdown rendering (infrastructure)
+│   ├── models/          # Data models (infrastructure)
+│   └── repository/      # Database access layer (infrastructure)
 ├── src/                 # Frontend source files
 │   ├── main.js          # JavaScript entry point (Alpine.js)
 │   └── main.css         # CSS entry point (Tailwind directives)
@@ -146,7 +157,7 @@ The app uses [Heroicons](https://heroicons.com) from the official Tailwind Labs 
 #### How Icons Work
 
 1. **Source**: Official heroicons GitHub repository: https://github.com/tailwindlabs/heroicons
-2. **Storage**: SVG files committed to `internal/templates/icons/`
+2. **Storage**: SVG files committed to `internal/icons/`
 3. **Fetching**: `scripts/fetch-heroicons.sh` downloads icons from GitHub
 4. **Rendering**: `helpers.Icon()` function loads SVGs and applies CSS classes
 
@@ -159,7 +170,7 @@ cd go
 ./scripts/fetch-heroicons.sh
 ```
 
-This downloads SVG files from the heroicons repository and saves them to `internal/templates/icons/`.
+This downloads SVG files from the heroicons repository and saves them to `internal/icons/`.
 
 **Run this script when**:
 - Adding new icons to the script
@@ -194,7 +205,7 @@ Templates use the `heroicon` and `heroiconMini` functions to render icons with c
 ```
 
 The functions:
-- Load the SVG file from `internal/templates/icons/`
+- Load the SVG file from `internal/icons/`
 - Remove hardcoded attributes (width, height, stroke color)
 - Add the provided CSS classes
 - Return template.HTML for safe rendering
@@ -202,7 +213,7 @@ The functions:
 #### Icon Directory Structure
 
 ```
-internal/templates/icons/
+internal/icons/
 ├── 24/
 │   ├── outline/         # 24px outline icons
 │   │   ├── check.svg
