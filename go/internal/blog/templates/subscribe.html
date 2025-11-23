@@ -22,7 +22,7 @@
                   @click="navigator.clipboard.writeText('{{.RSSFeedURL}}'); copied = true; setTimeout(() => copied = false, 2000)"
                   aria-label="Copy RSS Feed URL">
             <span x-show="!copied">
-              {{heroiconMini "document-duplicate" "h-4 w-4"}}
+              {{heroicon "document-duplicate" "h-4 w-4"}}
             </span>
             <span x-show="copied" x-cloak aria-label="Copied successfully">✓</span>
           </button>
@@ -38,7 +38,7 @@
                   @click="navigator.clipboard.writeText('{{.AtomFeedURL}}'); copied = true; setTimeout(() => copied = false, 2000)"
                   aria-label="Copy Atom Feed URL">
             <span x-show="!copied">
-              {{heroiconMini "document-duplicate" "h-4 w-4"}}
+              {{heroicon "document-duplicate" "h-4 w-4"}}
             </span>
             <span x-show="copied" x-cloak aria-label="Copied successfully">✓</span>
           </button>
@@ -54,7 +54,7 @@
                   @click="navigator.clipboard.writeText('{{.JSONFeedURL}}'); copied = true; setTimeout(() => copied = false, 2000)"
                   aria-label="Copy JSON Feed URL">
             <span x-show="!copied">
-              {{heroiconMini "document-duplicate" "h-4 w-4"}}
+              {{heroicon "document-duplicate" "h-4 w-4"}}
             </span>
             <span x-show="copied" x-cloak aria-label="Copied successfully">✓</span>
           </button>
