@@ -15,6 +15,9 @@ COPY src ./src
 COPY vite.config.js ./
 COPY static ./static
 
+# Copy templates (needed for Tailwind to scan for classes)
+COPY internal ./internal
+
 # Build frontend assets (outputs to static/dist/)
 RUN npm run build
 
@@ -24,7 +27,6 @@ RUN go mod download
 
 # Copy Go source code
 COPY cmd ./cmd
-COPY internal ./internal
 
 # Build the Go application
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o server ./cmd/server
