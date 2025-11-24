@@ -9,6 +9,12 @@
 
 /* Tailwind v4 + plugins */
 @import "tailwindcss";
+
+/* Tell Tailwind where to scan for class names */
+@source "../internal/blog/templates/**/*.html";
+@source "../internal/dashboard/templates/**/*.html";
+@source "../internal/shared/templates/**/*.html";
+
 @plugin "@tailwindcss/typography";
 @plugin "daisyui" {
   themes: all;
