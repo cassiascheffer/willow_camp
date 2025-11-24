@@ -15,7 +15,7 @@ import (
 const blogContextKey = "blog"
 
 // BlogResolver middleware resolves the blog from the request hostname
-func BlogResolver(blogRepo *repository.BlogRepository) echo.MiddlewareFunc {
+func BlogResolver(blogRepo *repository.BlogRepository, baseDomain string) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 			host := c.Request().Host
@@ -25,14 +25,20 @@ func BlogResolver(blogRepo *repository.BlogRepository) echo.MiddlewareFunc {
 				host = host[:idx]
 			}
 
-			// Skip blog resolution for root willow.camp domain (no subdomain)
+			// Strip port from baseDomain for comparison
+			baseDomainHost := baseDomain
+			if idx := strings.Index(baseDomainHost, ":"); idx != -1 {
+				baseDomainHost = baseDomainHost[:idx]
+			}
+
+			// Skip blog resolution for root domain (no subdomain)
 			// These requests will proceed without a blog in context (for landing page)
-			if host == "willow.camp" || host == "localhost" {
+			if host == baseDomainHost {
 				return next(c)
 			}
 
 			// Extract subdomain or use full domain for custom domain lookup
-			domain := extractDomain(host)
+			domain := extractDomain(host, baseDomainHost)
 
 			// Look up blog by subdomain or custom domain
 			blog, err := blogRepo.FindByDomain(c.Request().Context(), domain)
@@ -76,11 +82,11 @@ func GetBlog(c echo.Context) *models.Blog {
 }
 
 // extractDomain extracts the subdomain or returns the full domain for custom domain lookup
-// For willow.camp domains: extracts subdomain (e.g., "myblog" from "myblog.willow.camp")
+// For base domain subdomains: extracts subdomain (e.g., "myblog" from "myblog.willow.camp")
 // For localhost development: extracts subdomain (e.g., "myblog" from "myblog.localhost")
 // For custom domains: returns full domain (e.g., "example.com")
 // Uses publicsuffix package for accurate subdomain identification
-func extractDomain(host string) string {
+func extractDomain(host string, baseDomain string) string {
 	// Handle localhost development specially (not a valid public suffix)
 	if strings.HasSuffix(host, ".localhost") {
 		// Extract subdomain
@@ -106,8 +112,8 @@ func extractDomain(host string) string {
 	// For "blog.example.co.uk", this returns "example.co.uk"
 	registrableDomain := domainName.SLD + "." + domainName.TLD
 
-	// Check if this is a willow.camp subdomain
-	if registrableDomain == "willow.camp" {
+	// Check if this is a subdomain of our base domain
+	if registrableDomain == baseDomain {
 		// Check if there's a subdomain
 		if domainName.TRD != "" {
 			// Return only the first part of the subdomain

@@ -156,7 +156,7 @@ func main() {
 
 	// Public blog routes (with multi-tenant middleware)
 	blog := e.Group("")
-	blog.Use(blogmiddleware.BlogResolver(repos.Blog))
+	blog.Use(blogmiddleware.BlogResolver(repos.Blog, baseDomain))
 	blog.GET("/", blogH.BlogIndex)
 	blog.GET("/feed.rss", blogH.RSSFeed)
 	blog.GET("/feed.atom", blogH.AtomFeed)

@@ -56,12 +56,12 @@ func setupTestServer(t *testing.T) (*echo.Echo, *repository.Repositories) {
 	sharedH := sharedhandlers.New(repos, authService, baseDomain)
 
 	// Setup routes
-	setupRoutes(e, blogH, dashboardH, sharedH, authService, repos)
+	setupRoutes(e, blogH, dashboardH, sharedH, authService, repos, baseDomain)
 
 	return e, repos
 }
 
-func setupRoutes(e *echo.Echo, blogH *bloghandlers.Handlers, dashboardH *dashboardhandlers.Handlers, sharedH *sharedhandlers.Handlers, authService *auth.Auth, repos *repository.Repositories) {
+func setupRoutes(e *echo.Echo, blogH *bloghandlers.Handlers, dashboardH *dashboardhandlers.Handlers, sharedH *sharedhandlers.Handlers, authService *auth.Auth, repos *repository.Repositories, baseDomain string) {
 	// Auth routes
 	e.GET("/login", sharedH.LoginPage)
 	e.POST("/login", sharedH.LoginSubmit)
@@ -85,7 +85,7 @@ func setupRoutes(e *echo.Echo, blogH *bloghandlers.Handlers, dashboardH *dashboa
 
 	// Public blog routes
 	blog := e.Group("")
-	blog.Use(blogmiddleware.BlogResolver(repos.Blog))
+	blog.Use(blogmiddleware.BlogResolver(repos.Blog, baseDomain))
 	blog.GET("/", blogH.BlogIndex)
 	blog.GET("/:slug", blogH.PostShow)
 }
