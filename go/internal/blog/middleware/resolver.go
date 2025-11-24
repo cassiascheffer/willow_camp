@@ -47,11 +47,11 @@ func BlogResolver(blogRepo *repository.BlogRepository, baseDomain string) echo.M
 				logger := getLogger(c)
 
 				if errors.Is(err, repository.ErrBlogNotFound) {
-					logger.Warn("Blog not found", "domain", domain, "host", host)
+					logger.Warn("Blog not found", "domain", domain, "host", host, "status", http.StatusNotFound)
 					return echo.NewHTTPError(http.StatusNotFound, "Blog not found")
 				}
 
-				logger.Error("Failed to resolve blog", "domain", domain, "host", host, "error", err)
+				logger.Error("Failed to resolve blog", "domain", domain, "host", host, "status", http.StatusInternalServerError, "error", err)
 				return echo.NewHTTPError(http.StatusInternalServerError, "Failed to resolve blog")
 			}
 
